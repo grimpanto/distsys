@@ -1,0 +1,205 @@
+#LyX 1.5.4 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass scrbook
+\language ngerman
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Überblick und Struktur von TCP/IP
+\end_layout
+
+\begin_layout Standard
+TCP/IP ist bezüglich der Funktionen ebenfalls in Schichten aufgeteilt, auch
+ wenn die Schnittstellen zwischen den Schichten (im Gegensatz zum ISO/OSI
+ Modell) nicht definiert sind.
+ Es wird oft eine Abbildung der Schichten vom TCP/IP Stack zum OSI Modell
+ vorgenommen.
+ Auf der untersten Ebene gibt es wieder die Bitübertragungsschicht, darüber
+ die Sicherungsschicht, darüber die Vermittlungsschicht und zum Schluss
+ die Transportschicht.
+ Darüber hinaus gibt es nur noch eine Anwendungsschicht und die eigentlichen
+ Anwendungen.
+\end_layout
+
+\begin_layout Itemize
+D.h.
+ der TCP/IP Protokollstack lässt sich in diesem Sinne als ein Schichtenmodell
+ von 4 Schichten beschreiben, die jeweils 4 Schichten im ISO/OSI Referenzmodell
+ zugeordnet werden können:
+\end_layout
+
+\begin_layout Itemize
+Als unterste Schicht dient die Verbindungsschicht (engl.
+ auch network interface layer genannt), die die Bitübertragungsschicht 
+\emph on
+und
+\emph default
+ die Sicherungsschicht des ISO/OSI Modells umfasst.
+\end_layout
+
+\begin_layout Itemize
+Darauf baut die Internetschicht (engl.
+ internet layer) auf, die der Vermittlungsschicht im ISO/OSI Modell entspricht.
+ In dieser Schicht gibt es in TCP/IP die Protokolle Internet Protocol (IP),
+ Internet Control Message Protocol (ICMP), das Address Resolution Protocol
+ (ARP) und das Reverse Address Resolution Protocol (RARP).
+\end_layout
+
+\begin_layout Itemize
+Die nächste Schicht ist die Transportschicht (engl.
+ transport layer), die wiederum direkt auf die Transportschicht im ISO/OSI
+ Modell abgebildet werden kann.
+ Im TCP/IP Modell gibt es zwei verschiedene Transportprotokolle: Transport
+ Control Protocol (TCP) und User Datagram Protokoll (UDP).
+\end_layout
+
+\begin_layout Itemize
+Als nächste Schicht folgt im TCP/IP Modell direkt die Anwendungsschicht,
+ die hiermit auch die Funktionen der Sitzungsschicht und der Darstellungsschicht
+ beinhalten muss.
+ Für diese beiden Schichten des ISO/OSI Modells gibt es in TCP/IP kein Gegenstüc
+k.
+\end_layout
+
+\begin_layout Standard
+Die Abbildung 
+\begin_inset LatexCommand vref
+reference "fig:tcpip_layers"
+
+\end_inset
+
+ stellt die Schichten und die Querverbindungen dar.
+ Es ist daraus auch zu erkennen, dass das TCP/IP Modell eigentlich kein
+ striktes Schichtenmodell implementiert.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename tcpip_layers.pdf
+	BoundingBox 0bp 0bp 138mm 42mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+\begin_inset LatexCommand label
+name "fig:tcpip_layers"
+
+\end_inset
+
+TCP/IP Schichtenmodell
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Man sieht, dass in der Verbindungsschicht nicht nur IP (der eigentliche
+ Kern von TCP/IP) angesiedelt ist, sondern noch weitere Protokolle, die
+ nicht direkt zu IP gehören, jedoch ein integraler Bestandteil dieser Schicht
+ sind.
+ Dies ist einerseits ICMP, das hauptsächlich zur Benachrichtigung von Fehlern
+ in der Internetschicht dient und die Protokolle ARP und RARP, die zur Umsetzung
+ von IP Adressen in Hardwareadressen (wie z.B.
+ Ethernet-MAC-Adressen) bzw.
+ umgekehrt dienen.
+\end_layout
+
+\begin_layout Standard
+Der Hauptzweck der Internetschicht liegt in der globalen Adressierung der
+ Hosts und der Übertragung der Pakete zwischen den Hosts.
+\end_layout
+
+\begin_layout Standard
+In der Transportschicht gibt es zwei Protokolle, nämlich das verbindungsorientie
+rte, zuverlässige TCP und das verbindungslose, unzuverlässige UDP.
+\end_layout
+
+\begin_layout Standard
+Die Anwendungsschicht ist in den eigentlichen TCP/IP Standards nicht beschrieben
+ und muss, wie schon erwähnt, ebenfalls die Funktionen der Sitzungsschicht
+ und der Darstellungsschicht übernehmen.
+ D.h.
+ obwohl der TCP/IP Protokollstack vom Prinzip her ebenfalls eine Anwendungsschic
+ht vorsieht, es jedoch keinen Standard gibt, ist jede Anwendung aus diesem
+ Grund dafür selbst zuständig die benötigten Funktionen der Sitzungsschicht,
+ der Darstellungsschicht und der Anwendungsschicht zu implementieren.
+\end_layout
+
+\begin_layout Standard
+Die Protokolle IP, TCP, UDP, ICMP und ARP werden in weiterer Folge noch
+ genauer beschrieben.
+\end_layout
+
+\end_body
+\end_document

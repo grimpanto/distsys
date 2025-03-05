@@ -1,0 +1,72 @@
+
+\chapter{NAT\label{sec:NAT}}
+
+NAT (Network Address Translation) ist in Rechnernetzen der Sammelbegriff
+für Verfahren, um automatisiert und transparent Adressen in IP Paketen
+durch andere Adressen zu ersetzen. Diese Adressumsetzung wird in der
+Regel zwischen einem öffentlichen und einem internen Netz durchgeführt.
+
+Der Haupteinsatz von NAT besteht darin Netze mit privaten IP Adressen
+an das öffentliche Internet anzubinden und damit auch öffentliche
+IP Adressen zu sparen. In gewisser Weise kann es auch als eine Sicherheitsmaßnahme
+eingesetzt werden, auch wenn dies nicht die primäre treibende Absicht
+ist.
+
+Das Prinzip ist, dass am Router, der das interne vom öffentlichen
+Netz trennt eine Umsetzungstabelle enthalten ist, die eine Abbildung
+der privaten IP Adressen auf die öffentlichen IP Adressen enthält.
+Unter Umständen enthält diese Umsetzungstabelle weitere Informationen,
+um die Abbildung eindeutig zu machen.
+
+Um komplexere Protokolle (wie ftp oder VoIP) über einen NAT-Router
+betreiben zu können, muss der NAT-Router allerdings als ein Gateway
+fungieren.
+
+NAT hat trotz des komplexeren Systemaufbaus sicher dazu beigetragen,
+dass die Anzahl der freien IPv4 Adressen viel langsamer abgenommen
+hat.
+
+Es gibt zwei grundlegende Formen von NAT, die in den beiden folgenden
+Abschnitten kurz besprochen werden.
+
+
+\section{Source-NAT}
+
+Beim Source-NAT (SNAT) wird bei einer Anfrage eines Clients im lokalen
+Netz an einen Server im Internet die private Client-Adresse auf eine
+verfügbare externe Adresse geändert. Es gibt prinzipiell drei Möglichkeiten:
+\begin{labeling}{00.00.0000}
+\item [{Statisches~SNAT}] Hierbei wird jeder privaten Adresse genau eine
+externe Adresse zugeordnet. D.h. es gibt eine 1:1 Abbildung von lokalen
+zu extern verfügbaren Adressen. Dies kann notwendig sein, wenn der
+interne Rechner als Server im Internet verfügbar sein soll oder wenn
+man die Sicherheit erhöhen will (Struktur des internen Netzes wird
+nicht preisgegeben).
+\item [{Dynamisches~SNAT}] Sind mehr lokale Rechner vorhanden als externe
+Adressen zur Verfügung stehen, muss die Zuordnung von lokaler zu externer
+Adresse dynamisch vorgenommen werden. Die Zuordnungstabelle im NAT-Router
+kann noch mit zusätzlichen Informationen wie z.B. Portangaben versehen
+werden, sodass auch gleichzeitig mehr interne Rechner mit Servern
+im Internet kommunizieren können als externe Adressen zur Verfügung
+stehen.
+\item [{Masquerading}] Es handelt sich um eine Sonderform bei der alle
+internen Adressen auf \emph{eine} externe Adresse abgebildet werden.
+\end{labeling}
+
+\section{Destination-NAT}
+
+Das Destination-NAT (DNAT) ist im Grunde die Umkehrung des SNAT: Es
+wird die Ziel-Adresse abgebildet. Ein externer Client sendet eine
+Anfrage an eine extern verfügbare Adresse unseres Netzes (z.B. an
+die Adresse des NAT-Routers). Der NAT-Router bildet die Zieladresse
+z.B. auf die interne Adresse des DMZ Servers ab und leitet daher diese
+Anfrage an den DMZ Server weiter. Hier gibt es prinzipiell zwei Möglichkeiten:
+\begin{itemize}
+\item Der NAT-Router leitet alle Anfragen bzgl. einer extern verfügbaren
+Adresse an den DMZ Server weiter.
+\item Der NAT-Router leitet Anfragen bzgl. einer extern verfügbaren Adresse
+an die externe Adresse weiter, wenn zusätzliche Kriterien zutreffen.
+Das wichtigste Kriterium ist die Portangabe. D.h. nur wenn die Portangabe
+z.B. 80 ist wird an den internen DMZ Server weitergeleitet.
+\end{itemize}
+

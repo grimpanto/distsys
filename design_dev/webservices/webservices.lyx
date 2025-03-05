@@ -1,0 +1,1833 @@
+#LyX 1.5.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass scrbook
+\begin_preamble
+
+\end_preamble
+\language ngerman
+\inputencoding latin1
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 0
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Webservices
+\end_layout
+
+\begin_layout Section
+Überblick
+\begin_inset LatexCommand label
+name "sec:webservices_overview"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Minisec
+Definition
+\end_layout
+
+\begin_layout Standard
+Web Services ermöglichen Abwicklungen von Dienstleistungen und Geschäften
+ über das Internet.
+ Im engeren technischen Sinn (siehe auch http://www.w3.org/2002/ws) bedeutet
+ das ein automatisierte Kommunikation zwischen Applikationen über das Internet.
+ Es werden also nicht HTML-Seiten zu einem Webbrowser geschickt, die von
+ einem Menschen betrachtet werden, sondern Programme tauschen Daten aus
+ und starten auf entfernten Rechnern Funktionen (Remote Procedure Call).
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Webservices
+\emph default
+ sind Dienste, 
+\end_layout
+
+\begin_layout Itemize
+die im Internet angeboten werden 
+\end_layout
+
+\begin_layout Itemize
+die standardisierte XML Nachrichten verwenden 
+\end_layout
+
+\begin_layout Itemize
+die plattformübergreifend und unabhängig von der Programmiersprache sind.
+ 
+\end_layout
+
+\begin_layout Standard
+Zusätzlich sind zwei weitere Eigenschaften wünschenswert: 
+\end_layout
+
+\begin_layout Itemize
+Ein Webservice sollte 
+\emph on
+selbstbeschreibend
+\emph default
+ sein, sodass andere Anwendungen wissen wie sie das Webservice aufrufen
+ können.
+ Auch eine für Menschen lesbare Beschreibung ist sinnvoll.
+ D.h.\InsetSpace ~
+es gibt eine öffentliche Schnittstelle, die aus einer für Menschen lesbaren
+ Dokumentation besteht und einer XML Schnittstelle, die die Funktionen,
+ Argumente und Rückgabewerte beschreibt.
+ 
+\end_layout
+
+\begin_layout Itemize
+Ein Webservice sollte 
+\emph on
+gefunden
+\emph default
+ werden können.
+ Dazu muss es für den `Service Provider' eines Dienstes möglich sein, ein
+ Web-Service in einer `Service Registry' zu registrieren.
+ Weiters muss ein potentieller `Service Requestor' das Service finden und
+ danach aufrufen können.
+ 
+\end_layout
+
+\begin_layout Standard
+Damit dieses Ziel erreicht wird, bauen Webservices auf einer Reihe von Standards
+ und Spezifikation wie XML, SOAP, XML-RPC, WSDL und UDDI auf.
+\end_layout
+
+\begin_layout Standard
+SOAP, WSDL und UDDI wird intensiv von Microsoft in ihrer .NET Plattform eingesetz
+t bzw.\InsetSpace ~
+sind fester Bestandteil der J2EE von Sun.
+\end_layout
+
+\begin_layout Minisec
+Ablauf
+\end_layout
+
+\begin_layout Standard
+Nehmen wir an, dass wir ein Reisebuchungssystem entwickeln wollen und dieses
+ System dem Benutzer auch Wetterinformationen zu einem beliebigen Ort auf
+ der Welt bereitstellen soll.
+\end_layout
+
+\begin_layout Enumerate
+Der Benutzer dieses Reisebuchungssystem gibt einen Ort (z.B.
+ Peking) ein.
+ Das System kontaktiert daraufhin ein zentralisiertes Verzeichnis von Webservice
+s: `Benötige Wetterinformation von Peking'.
+ Das Verzeichnis antwortet mit Informationen über ein Webservice (von Peking)
+ und liefert eine URL auf eine Servicebeschreibung zurück.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Jetzt kann die Servicebeschreibung geladen werden (via der angegebenen URL).
+ 
+\end_layout
+
+\begin_layout Enumerate
+Danach weiß der Client wie er das Webservice aufrufen kann und führt den
+ Aufruf durch.
+ 
+\end_layout
+
+\begin_layout Minisec
+Rollen
+\end_layout
+
+\begin_layout Standard
+Prinzipiell gibt es folgende Rollen: 
+\end_layout
+
+\begin_layout Description
+Service provider stellt das Webservice zur Verfügung.
+ 
+\end_layout
+
+\begin_layout Description
+Service requestor ist der Konsument des Webservice.
+ 
+\end_layout
+
+\begin_layout Description
+Service registry ist das logisch zentralisierte Verzeichnis der Webservices.
+ 
+\end_layout
+
+\begin_layout Minisec
+Protokollstack
+\end_layout
+
+\begin_layout Description
+Discovery ist zuständig für das Publizieren und Finden von Webservices.
+ Diese Funktion wird von UDDI übernommen.
+ 
+\end_layout
+
+\begin_layout Description
+Description ist zuständig für das Beschreiben eines Webservice.
+ Dies wird von WSDL übernommen.
+ 
+\end_layout
+
+\begin_layout Description
+XML messaging ist für das Übertragen der XML Nachrichten zuständig.
+ Dies wird durch SOAP bzw.\InsetSpace ~
+XML-RPC und XML übernommen.
+ 
+\end_layout
+
+\begin_layout Description
+Transport ist das Transportprotokoll.
+ Meistens http, aber auch smtp, ftp oder beep wäre möglich.
+ 
+\end_layout
+
+\begin_layout Minisec
+Programmiermodell
+\end_layout
+
+\begin_layout Standard
+Client-seitig sind folgende Schritte notwendig:
+\end_layout
+
+\begin_layout Enumerate
+Finde das Service mittels UDDI 
+\end_layout
+
+\begin_layout Enumerate
+Lade WSDL Dokument (oder XML-RPC Anweisungen) 
+\end_layout
+
+\begin_layout Enumerate
+Erzeuge SOAP (oder XML-RPC) Client 
+\end_layout
+
+\begin_layout Enumerate
+Rufe Webservice auf 
+\end_layout
+
+\begin_layout Standard
+Server-seitig sind folgende Schritte notwendig:
+\end_layout
+
+\begin_layout Enumerate
+Implementiere Funktionalität des Webservice 
+\end_layout
+
+\begin_layout Enumerate
+Implementiere SOAP (oder XML-RPC) Wrapper 
+\end_layout
+
+\begin_layout Enumerate
+Erzeuge WSDL Dokument 
+\end_layout
+
+\begin_layout Enumerate
+Installieren des Webservice 
+\end_layout
+
+\begin_layout Enumerate
+Registrieren mittels UDDI 
+\end_layout
+
+\begin_layout Section
+XML Programmierung
+\end_layout
+
+\begin_layout Standard
+Das wahrscheinlich wichtigste Einsatzgebiet von XML liegt in der plattformübergr
+eifenden Möglichkeit zur Kommunikation in einem verteilten System.
+ XML wird auch sehr oft zur Konfiguration von Systemen eingesetzt oder es
+ gibt auch vermehrte Anwendung in Datenbanksystemen.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Gründe
+\emph default
+ liegen einerseits in der relativ einfachen Programmierung von XML Anwendungen,
+ der Möglichkeit plattformübergreifend Daten auszutauschen und auch darin,
+ dass das Format von einem Menschen gelesen und auch geändert werden kann.
+\end_layout
+
+\begin_layout Subsection
+Überblick
+\end_layout
+
+\begin_layout Standard
+Es gibt an sich 
+\emph on
+5 Programmierstile
+\emph default
+ zur Programmierung mit XML:
+\end_layout
+
+\begin_layout Description
+Push-Stil Ein 
+\emph on
+Push - Modell
+\emph default
+ ist ein Streaming-API: der Parser übernimmt die Kontrolle, liest das Dokument
+ und teilt der Anwendung mit welche XML Teile erkannt werden.
+ D.h., dass ein Start-Tag, ein Ende-Tag, Inhalt, Attribute,...
+ im XML-Dokument vorhanden sind.
+ Es wird auch als 
+\emph on
+event-basierter
+\emph default
+ Stil bezeichnet, da Event-Handler Methoden registriert werden, die im Sinne
+ eines Callback vom Parser beim Auftreten eines Starttags, eines Attributs,...
+ aufgerufen werden.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\emph on
+Vorteile
+\emph default
+ sind, dass solche Parser 
+\end_layout
+
+\begin_layout Itemize
+relativ einfach zu implementieren sind 
+\end_layout
+
+\begin_layout Itemize
+sehr schnell und effizient sind 
+\end_layout
+
+\begin_layout Itemize
+nicht das ganze Dokument auf einmal lesen müssen und daher der Speicherplatzbeda
+rf gering ist.
+ 
+\end_layout
+
+\begin_layout Standard
+Häufig eingesetzt werden diese Art von Parser in Netzwerkanwendungen, die
+ einen Stream von XML Daten verarbeiten müssen.
+\end_layout
+
+\begin_layout Standard
+Ein 
+\emph on
+Nachteil
+\emph default
+ ist, dass die Programmierung nur für bestimmte Arten von XML-Dokumenten
+ wirklich einfach ist.
+ Z.B.
+ wenn das XML-Dokument eine Liste von tausenden Bestellungen beinhaltet,
+ ist dieser Stil sehr gut geeignet, aber bei komplexen Dokumenten mit Einträgen,
+ die sich u.U.
+ noch aufeinander beziehen, nicht.
+\end_layout
+
+\begin_layout Standard
+Auf Grund der event-basierten Verarbeitung ergibt sich jedoch noch ein Nachteil,
+ die diesen Ansatz nicht für alle Anwendungen geeignet machen: Das XML Dokukumen
+t kann nicht verändert werden.
+ Ist dies gewünscht, dann muss z.B.
+ auf einen Vertreter des Baum-basierten Stiles zurückgegriffen werden.
+\end_layout
+
+\begin_layout Standard
+Der wichtigster Vertreter dieses Stiles ist SAX (Simple API for XML, http://www.s
+ax-project.org).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Pull-Stil Der 
+\emph on
+Pull-Stil
+\emph default
+ ist ebenfalls ein Streaming - API, aber die Kontrolle liegt nicht mehr
+ beim Parser sondern bei der XML Anwendung.
+ D.h.\InsetSpace ~
+die XML Anwendung fordert beim Parser immer die nächste Information an.
+ Derzeit sind Parser dieses Stiles nicht besonders weit vertreten.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+StAX (Streaming API for XML) ist ein Vertreter dieses Stiles.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Baum-basierter\InsetSpace ~
+Stil Das gesamte Dokument beim 
+\emph on
+baum-basierten Stil
+\emph default
+ wird eingelesen und im Speicher als Baumstruktur von Objekten abgelegt.
+ Die XML Anwendung kann danach durch den Baum navigieren und diesen verändern.
+ Dieser Stil wird derzeit sehr oft verwendet.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\emph on
+Vorteil
+\emph default
+ dieses Stiles ist hauptsächlich die einfache Handhabung und der größte
+ 
+\emph on
+Nachteil
+\emph default
+ liegt im Speicherbedarf großer XML Dokumente, da das gesamte Dokument im
+ Hauptspeicher abgelegt wird.
+\end_layout
+
+\begin_layout Standard
+Vertreter dieses Stiles sind das DOM Model (XML Teil) des W3C, dom4j (http://dom
+4j.org) und JDOM (http://www.jdom.org) oder XOM (http://www.xom.nu).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Daten-basierter\InsetSpace ~
+Stil Der 
+\emph on
+daten-basierte
+\emph default
+ Stil ist dem baum-basierten Stil ähnlich, jedoch gibt es anstatt den generische
+n Knoten spezielle Klassen für den jeweiligen Knotentyp.
+ D.h.\InsetSpace ~
+anstatt einer Klasse 
+\family typewriter
+Element
+\family default
+ wird bei dem Element 
+\family typewriter
+Buch
+\family default
+ eine entsprechende Klasse 
+\family typewriter
+Buch
+\family default
+ verwendet.
+ Diese Zuordnung von XML-Element zu Klasse wird meistens mittels einer DTD
+ oder eines XML Schemas vorgenommen.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Neben dem offensichtlichen Vorteil ist der Hauptnachteil dieser Variante,
+ dass eine Notwendigkeit für eine DTD oder ein XML Schema gegeben ist!
+\end_layout
+
+\begin_layout Standard
+Vertreter dieses Stiles ist JAXB (Java Architecture for XML Binding) von
+ Sun.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Abfragestil Dazu wird das XML-Dokument meistens mit XPath abgefragt oder
+ mittels XSLT transformiert.
+ Dieser Stil ist nicht weit verbreitet.
+ 
+\end_layout
+
+\begin_layout Standard
+In weiterer Folge werden die wichtigsten APIs vorgestellt.
+ Dies betrifft SAX und DOM.
+ Da es sich bei SAX und DOM nur um Spezifikationen und nicht um Software
+ handelt, gibt es auch verschiedene Implementierungen dafür.
+ Jede Implementierung bedingt in der Regel auch verschiedene Klassennamen
+ bzw.\InsetSpace ~
+Packagenamen für die Parserklasse und damit auch eine verschiedene Instanzie
+rung.
+ Um eine einheitliche und portable Instanzierung zu gewährleisten hat Sun
+ ein eigenes API definiert, das es ermöglicht verschiedene Implementierungen
+ portabel in das Programm einzubinden.
+ Dieses API nennt sich Java API for XML Processing (JAXP).
+ In den folgenden Beschreibungen und Beispielen wird JAXP verwendet.
+\end_layout
+
+\begin_layout Section
+XML-RPC
+\begin_inset LatexCommand label
+name "sec:XML-RPC"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+XML-RPC
+\emph default
+ existiert ca.\InsetSpace ~
+seit 1998 und wird häufig im Internet verwendet.
+ Es wird hauptsächlich eingesetzt, um Webservices zu betreiben (wie z.B.
+ auch von Google).
+ Es gibt ca.\InsetSpace ~
+80 Implementierungen dieses Protokolls, u.a.\InsetSpace ~
+auch für Java, C, 
+\family typewriter
+C++
+\family default
+, C#, Perl, Python, Ruby.
+ XML-RPC ist allerdings 
+\emph on
+kein
+\emph default
+ offizieller Standard, sondern wurde von der Fa.\InsetSpace ~
+UserLand entworfen und und
+ von dieser auch erstmalig implementiert.
+ Die XML-RPC Homepage ist http://www.xmlrpc.com.
+\end_layout
+
+\begin_layout Standard
+Es geht dazu einen ganz anderen Ansatz als ONC-RPC: es kodiert die Funktionsaufr
+ufe in XML und verschickt diese mittels http und der POST Methode.
+ D.h.\InsetSpace ~
+die Daten werden nicht binär kodiert sondern als Zeichen (z.B.
+ UTF-8 oder iso-8859-1) übertragen.
+ Dadurch handelt es sich natürlich auch um ein plattformunabhängiges Protokoll.
+\end_layout
+
+\begin_layout Standard
+Wieso wird das so gelöst? Dazu gibt es zumindest zwei Gründe:
+\end_layout
+
+\begin_layout Itemize
+http schafft keine Probleme beim Durchgang durch Firewalls.
+ 
+\end_layout
+
+\begin_layout Itemize
+XML ist ein Standard, der wirklich unabhängig von der Plattform ist.
+ 
+\end_layout
+
+\begin_layout Standard
+Eine Beispielanfrage kann so aussehen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=XML"
+inline false
+status open
+
+\begin_layout Standard
+
+<?xml version="1.0" encoding="iso-8859-1"?>
+\end_layout
+
+\begin_layout Standard
+
+<methodCall>
+\end_layout
+
+\begin_layout Standard
+
+  <methodName>weather.getTemperature</methodName>
+\end_layout
+
+\begin_layout Standard
+
+  <params>
+\end_layout
+
+\begin_layout Standard
+
+    <param><value>Wr.
+ Neustadt</value></param>
+\end_layout
+
+\begin_layout Standard
+
+  </params>
+\end_layout
+
+\begin_layout Standard
+
+</methodCall>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Als Antwort könnte zurückkommen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=XML"
+inline false
+status open
+
+\begin_layout Standard
+
+<?xml version="1.0" encoding="iso-8859-1">
+\end_layout
+
+\begin_layout Standard
+
+<methodResponse>
+\end_layout
+
+\begin_layout Standard
+
+  <params>
+\end_layout
+
+\begin_layout Standard
+
+    <param><value><int>35<int></value></param>
+\end_layout
+
+\begin_layout Standard
+
+  </params>
+\end_layout
+
+\begin_layout Standard
+
+</methodResponse>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Man sieht, dass der Aufbau sehr einfach ist.
+ XML-RPC lässt sich weiter so charakterisieren: 
+\end_layout
+
+\begin_layout Itemize
+Nur primitive Datentypen, aber auch Arrays und Strukturen.
+ An primitiven Datentypen gibt es lediglich int, double, Boolean, string,
+ dateTime.iso8601 und base64.
+ Keine Objekte! 
+\end_layout
+
+\begin_layout Itemize
+kein zustandsorientiertes Protokoll.
+ Es ist natürlich möglich, Zustandsinformationen als Parameter mitzugeben,
+ wie dies im Prinzip bei der klassischen Webentwicklung z.B.
+ durch Cookies realisiert wird.
+ 
+\end_layout
+
+\begin_layout Itemize
+Kein Konzept von Exceptions; jedoch kann ein Webservice einen Fehlercode
+ und eine Fehlerbeschreibung zurückliefern.
+ 
+\end_layout
+
+\begin_layout Standard
+Der Hauptgrund in der Verwendung von XML-RPC liegt in der Einfachheit.
+ Damit lassen sich schnell und unkompliziert Webservices entwickeln.
+ Ohne den Overhead von UDDI und WSDL, aber auch ohne deren Vorteile!
+\end_layout
+
+\begin_layout Minisec
+Beispiel: Berechnung der Potenz in Python
+\end_layout
+
+\begin_layout Standard
+Der Server sieht in Python folgendermaßen aus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=Python"
+inline false
+status open
+
+\begin_layout Standard
+
+import SimpleXMLRPCServer
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+server = SimpleXMLRPCServer.SimpleXMLRPCServer(("localhost",8000))
+\end_layout
+
+\begin_layout Standard
+
+server.registerfunction(pow)
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+print "Ab jetzt werden Anfragen entgegengenommen"
+\end_layout
+
+\begin_layout Standard
+
+print "Programm mittels Ctrl-C stoppen"
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+server.serveforever()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Und dazu der dazugehörige Client:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+import xmlrpclib
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+server = xmlrpclib.ServerProxy("localhost:8000")
+\end_layout
+
+\begin_layout Standard
+
+print "2 ** 3 =", server.pow(20,2)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Minisec
+Beispiel: Berechnung der Potenz in Java
+\end_layout
+
+\begin_layout Standard
+Der Server in Java sieht folgendermaßen aus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+// in einer Datei PowerHandler.java
+\end_layout
+
+\begin_layout Standard
+
+// das ist die eigentliche Serverfunktion
+\end_layout
+
+\begin_layout Standard
+
+public class PowerHandler {
+\end_layout
+
+\begin_layout Standard
+
+  public double pow(double x, double y) {
+\end_layout
+
+\begin_layout Standard
+
+    return Math.pow(x, y);
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+// in einer Datei PowerServer.java
+\end_layout
+
+\begin_layout Standard
+
+import java.io.IOException;
+\end_layout
+
+\begin_layout Standard
+
+import org.apache.xmlrpc.WebServer;
+\end_layout
+
+\begin_layout Standard
+
+import org.apache.xmlrpc.XmlRpc;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+public class PowerServer {
+\end_layout
+
+\begin_layout Standard
+
+  public static void main(String[] args) {
+\end_layout
+
+\begin_layout Standard
+
+    // verwende internen http Server; Port 8000
+\end_layout
+
+\begin_layout Standard
+
+    WebServer server = new WebServer(8000);
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    server.start(); // starten in eigenem Thread
+\end_layout
+
+\begin_layout Standard
+
+    server.addHandler("power", new PowerHandler());
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    System.out.println("Ab jetzt werden Anfragen entgegengenommen");
+\end_layout
+
+\begin_layout Standard
+
+    System.out.println("Programm mittels Ctrl-C stoppen");
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Und jetzt der Client:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+mport java.io.IOException;
+\end_layout
+
+\begin_layout Standard
+
+import java.util.Vector;
+\end_layout
+
+\begin_layout Standard
+
+import org.apache.xmlrpc.XmlRpcClient;
+\end_layout
+
+\begin_layout Standard
+
+import org.apache.xmlrpc.XmlRpcException;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+public class PowerClient {
+\end_layout
+
+\begin_layout Standard
+
+  public static void main(String[] args) 
+\end_layout
+
+\begin_layout Standard
+
+    throws IOException, XmlRpcException {
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    try {
+\end_layout
+
+\begin_layout Standard
+
+      XmlRpcClient client = new XmlRpcClient("http://localhost:8000");
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+      Vector params = new Vector();
+\end_layout
+
+\begin_layout Standard
+
+      params.addElement(new Double(2));
+\end_layout
+
+\begin_layout Standard
+
+      params.addElement(new Double(3));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+      Object result = client.execute("power.pow", params);
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+      String resultStr = result.toString();
+\end_layout
+
+\begin_layout Standard
+
+      double res = Double.parseDouble(resultStr);
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+      System.out.println("2 ** 3 = " + res);
+\end_layout
+
+\begin_layout Standard
+
+    } catch (XmlRpcException e) {
+\end_layout
+
+\begin_layout Standard
+
+      e.printStackTrace(); // reicht zum Testen
+\end_layout
+
+\begin_layout Standard
+
+    } catch (IOException e) {
+\end_layout
+
+\begin_layout Standard
+
+      e.printStackTrace(); // reicht zum Testen
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+SOAP
+\begin_inset LatexCommand label
+name "sec:SOAP"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+SOAP
+\emph default
+ (früher Simple Object Access Protocol) basiert wie XML-RPC ebenfalls auf
+ XML, ist ebenfalls ein purer RPC (d.h.\InsetSpace ~
+keine entfernte Objektaufrufe), hat
+ jedoch andere Perspektiven und geht weit über die Möglichkeiten von XML-RPC
+ hinaus:
+\end_layout
+
+\begin_layout Itemize
+Es wurde primär entwickelt, um Web-Services im großen Umfeld einzusetzen.
+ Dazu wurde die Verwendung von XML Namespaces eingesetzt (Namensgleichheit!).
+ Die Nachrichten sind (hiermit) komplizierter als bei XML-RPC.
+ 
+\end_layout
+
+\begin_layout Itemize
+Es gibt viel mehr primitive Datentypen als in XML-RPC, wie z.B.
+ unsigned-Varianten der ganzen Zahlen, positive und nicht positive Zahlen,
+ mehrdimensionale Arrays,...
+ 
+\end_layout
+
+\begin_layout Itemize
+SOAP wurde von Anfang mit dem Gedanken entworfen auch andere Transportprotokolle
+ zu nutzen, wie z.B.
+ FTP, E-Mail,...
+ auch wenn diese de facto nicht genutzt werden.
+ 
+\end_layout
+
+\begin_layout Standard
+Der Weg eines Service Requesters folgendermaßen aus:
+\end_layout
+
+\begin_layout Enumerate
+Service via UDDI finden.
+ 
+\end_layout
+
+\begin_layout Enumerate
+WSDL Datensatz oder XML-RPC Instruktionen herunterladen.
+ 
+\end_layout
+
+\begin_layout Enumerate
+XML-RPC oder SOAP Client erzeugen.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Service aufrufen.
+ 
+\end_layout
+
+\begin_layout Standard
+Ein Service Provider muss so vorgehen:
+\end_layout
+
+\begin_layout Enumerate
+Funktionalität z.B.
+ mittels EJB oder COM oder .NET entwickeln.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Wrapper entwickeln, z.B.
+ SOAP oder XML-RPC.
+ 
+\end_layout
+
+\begin_layout Enumerate
+WSDL Datensatz oder XML Instruktionen schreiben.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Service installieren.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Service via UDDI registrieren: 'UDDI cloud services' werden von Microsoft
+ und IBM zur Verfügung gestellt.
+ Das ist ein logisch zentralisiertes, aber physikalisch per Replikation
+ dezentralisiertes Verzeichnis (http://www.uddi.org/register).
+ 
+\end_layout
+
+\begin_layout Standard
+SOAP Nachrichten sind komplex und die Generierung von Stubs und Skeletons
+ wird in der Regel mit Tools durchgeführt.
+\end_layout
+
+\begin_layout Standard
+Eine Beispielanfrage kann folgendermaßen aussehen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+<?xml version="1.0" encoding="UTF-8"?>
+\end_layout
+
+\begin_layout Standard
+
+<env:Envelope
+\end_layout
+
+\begin_layout Standard
+
+  xmlns:env="http://www.w3.org/2003/05/soap/envelope/"
+\end_layout
+
+\begin_layout Standard
+
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+\end_layout
+
+\begin_layout Standard
+
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+\end_layout
+
+\begin_layout Standard
+
+  <env:Body>
+\end_layout
+
+\begin_layout Standard
+
+    <ns1:getTemperature
+\end_layout
+
+\begin_layout Standard
+
+      xmlns:ns1="urn:xmethods-Temperature"
+\end_layout
+
+\begin_layout Standard
+
+      env:encodingStyle="http://www.w3c.org/2003/05/soap/encoding/">
+\end_layout
+
+\begin_layout Standard
+
+      <zipcode xsi:type="xsd:string">2700</zipcode>
+\end_layout
+
+\begin_layout Standard
+
+    </ns1:getTemperature>
+\end_layout
+
+\begin_layout Standard
+
+  </env:Body>
+\end_layout
+
+\begin_layout Standard
+
+</env>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+und die entsprechende Antwort so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+<?xml version="1.0" encoding="UTF-8"?>
+\end_layout
+
+\begin_layout Standard
+
+<env:Envelope
+\end_layout
+
+\begin_layout Standard
+
+  xmlns:env="http://www.w3.org/2003/05/soap/envelope/"
+\end_layout
+
+\begin_layout Standard
+
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+\end_layout
+
+\begin_layout Standard
+
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+\end_layout
+
+\begin_layout Standard
+
+  <env:Body>
+\end_layout
+
+\begin_layout Standard
+
+    <ns1:getTemperatureResponse xmlns:ns1="urn:xmethods-Temperature"
+\end_layout
+
+\begin_layout Standard
+
+      env:encodingStyle="http://www.w3c.org/2003/05/soap/encoding/">
+\end_layout
+
+\begin_layout Standard
+
+      <return xsi:type="xsd:float">35</return>
+\end_layout
+
+\begin_layout Standard
+
+    </ns1:getTemperatureResponse>
+\end_layout
+
+\begin_layout Standard
+
+  </env:Body>
+\end_layout
+
+\begin_layout Standard
+
+</env>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die Implementierung von SOAP Aufrufen hängt stark von der verwendeten Technologi
+e ab.
+ Im Prinzip folgt sie natürlich der Art wie sie auch bei XML-RPC verwendet
+ wird.
+ Meistens gibt es Tools, die Stubs und Skeletons generieren und die Programmieru
+ng unterstützen.
+ In der Regel werden SOAP Webservices in einem Application Server gehostet.
+\end_layout
+
+\begin_layout Section
+WSDL
+\begin_inset LatexCommand label
+name "sec:wsdl"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Um die gewünschte unabhängige Beschreibung zu erreichen, besteht eine WSDL
+ Beschreibung eines Web-Services aus: 
+\end_layout
+
+\begin_layout Itemize
+einer Schnittstellenbeschreibung aller verfügbaren Funktionen samt der Parameter
+- und Rückgabewertbeschreibungen.
+ 
+\end_layout
+
+\begin_layout Itemize
+Angaben über das verwendete Transportprotokoll (z.B.
+ SOAP über http).
+ 
+\end_layout
+
+\begin_layout Itemize
+Adresse, unter der das Service aufzurufen ist.
+ 
+\end_layout
+
+\begin_layout Standard
+WSDL wird hauptsächlich (aber nicht ausschließlich) verwendet um SOAP Dienste
+ zu beschreiben.
+\end_layout
+
+\begin_layout Standard
+WSDL Nachrichten sind folgendermaßen aufgebaut:
+\end_layout
+
+\begin_layout Itemize
+Das Wurzelelement ist 
+\family typewriter
+definitions
+\family default
+, das alle anderen Elemente beinhaltet und auch die Namespaces definiert.
+ 
+\end_layout
+
+\begin_layout Itemize
+Das 
+\family typewriter
+types
+\family default
+ Element wird zum Definieren der Datentypen, die zwischen Client und Server
+ benötigt werden herangezogen.
+ Prinzipiell werden die Datentypen mit XML Schema spezifiziert.
+ Werden nur die XML Schema eingebauten einfachen Typen benötigt, dann wird
+ das 
+\family typewriter
+types
+\family default
+ Element nicht benötigt.
+ 
+\end_layout
+
+\begin_layout Itemize
+Es können mehrere 
+\family typewriter
+message
+\family default
+ Elemente vorkommen, die jeweils eine one-way Nachricht angeben (entweder
+ eine Anfrage oder eine Antwort).
+ So ein 
+\family typewriter
+message
+\family default
+ Element definiert den Namen der Nachricht und kann mehrere 
+\family typewriter
+part
+\family default
+ Elemente beinhalten, die entweder die Parameter der Nachricht oder die
+ Return Werte spezifizieren.
+ 
+\end_layout
+
+\begin_layout Itemize
+Das 
+\family typewriter
+portType
+\family default
+ Element kombiniert ein oder zwei 
+\family typewriter
+message
+\family default
+ Elemente zu einer vollständigen one-way oder request-response Operation.
+ Dazu wird das 
+\family typewriter
+operation
+\family default
+ Element verwendet.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Weitere Arten von Operationen sind die Gegenteile der obigen: solicit-response:
+ Service sendet eine Nachricht und empfängt eine Antwort und notification:
+ Service sendet eine Nachricht.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\family typewriter
+binding
+\family default
+ beschreibt wie eine oder mehrere Operationen versendet werden.
+ Es handelt sich hierbei in der Regel um die konkreten Daten für die SOAP
+ Dienste (aber auch HTTP GET oder HTTP POST ist gebräuchlich).
+ Für einen portType kann es mehrere bindings geben.
+ 
+\end_layout
+
+\begin_layout Itemize
+Das 
+\family typewriter
+service
+\family default
+ Element definiert die Adresse unter der das Service erreichbar ist.
+ 
+\end_layout
+
+\begin_layout Standard
+Zusätzlich gibt es noch ein 
+\family typewriter
+documentation
+\family default
+ und 
+\family typewriter
+import
+\family default
+ Element.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=XML"
+inline false
+status open
+
+\begin_layout Standard
+
+<?xml version="1.0" encoding="UTF-8"?>
+\end_layout
+
+\begin_layout Standard
+
+<!-- Dokument muss nicht unter www.htlwrn.ac.at/wsdl...
+ zu finden sein -->
+\end_layout
+
+\begin_layout Standard
+
+<definitions name="HelloService"
+\end_layout
+
+\begin_layout Standard
+
+  targetNamespace="http://www.htlwrn.ac.at/wsdl/HelloService.wsdl"
+\end_layout
+
+\begin_layout Standard
+
+  xmlns="http://schemas.xmlsoap.org/wsdl/"
+\end_layout
+
+\begin_layout Standard
+
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+\end_layout
+
+\begin_layout Standard
+
+  xmlns:tns="http://www.htlwrn.ac.at/wsdl/HelloService.wsdl"
+\end_layout
+
+\begin_layout Standard
+
+  xmlns:xsd="htp://www.w3.org/2001/XMLSchema">
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+  <!-- Funktionsaufruf besteht aus 2 Nachrichten: -->
+\end_layout
+
+\begin_layout Standard
+
+  <message name="HelloRequest">    <!-- hin -->
+\end_layout
+
+\begin_layout Standard
+
+    <part name="firstName" type="xsd:string"/>
+\end_layout
+
+\begin_layout Standard
+
+  </message>
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+  <message name="HelloResponse"> <!-- und retour -->
+\end_layout
+
+\begin_layout Standard
+
+    <part name="greeting" type="xsd:string"/>
+\end_layout
+
+\begin_layout Standard
+
+  </message>
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+  <!-- Funktion besteht aus Nachricht hin und wieder zurück -->
+\end_layout
+
+\begin_layout Standard
+
+  <portType name="HelloPortType">
+\end_layout
+
+\begin_layout Standard
+
+    <operation name="Hello">
+\end_layout
+
+\begin_layout Standard
+
+      <input message="tns:HelloRequest"/>
+\end_layout
+
+\begin_layout Standard
+
+      <output message="tns:HelloResponse"/>
+\end_layout
+
+\begin_layout Standard
+
+    </operation>
+\end_layout
+
+\begin_layout Standard
+
+  </portType>
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+  <!-- wir verwenden 'natürlich' SOAP -->
+\end_layout
+
+\begin_layout Standard
+
+  <binding name="HelloBinding" type="tns:HelloPortType">
+\end_layout
+
+\begin_layout Standard
+
+    <soap:binding style="rpc"
+\end_layout
+
+\begin_layout Standard
+
+                  transport="http://schemas.xmlsoap.org/soap/http"/>
+\end_layout
+
+\begin_layout Standard
+
+    <operation name="Hello">
+\end_layout
+
+\begin_layout Standard
+
+    <soap:operation soapAction="Hello"/>
+\end_layout
+
+\begin_layout Standard
+
+      <input>
+\end_layout
+
+\begin_layout Standard
+
+        <soap:body
+\end_layout
+
+\begin_layout Standard
+
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+\end_layout
+
+\begin_layout Standard
+
+          namespace="urn:examples:helloservice" use="encoded"/>
+\end_layout
+
+\begin_layout Standard
+
+      </input>
+\end_layout
+
+\begin_layout Standard
+
+      <output>
+\end_layout
+
+\begin_layout Standard
+
+        <soap:body
+\end_layout
+
+\begin_layout Standard
+
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+\end_layout
+
+\begin_layout Standard
+
+          namespace="urn:examples:helloservice" use="encoded"/>
+\end_layout
+
+\begin_layout Standard
+
+      </output>
+\end_layout
+
+\begin_layout Standard
+
+    </operation>
+\end_layout
+
+\begin_layout Standard
+
+  </binding>
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+  <service name="HelloService">
+\end_layout
+
+\begin_layout Standard
+
+    <documentation>WSDL File for HelloService</documentation>
+\end_layout
+
+\begin_layout Standard
+
+    <port binding="tns:HelloBinding" name="HelloPort">
+\end_layout
+
+\begin_layout Standard
+
+      <soap:address
+\end_layout
+
+\begin_layout Standard
+
+        location="http://localhost:8080/soap/servlet/rpcrouter"/>
+\end_layout
+
+\begin_layout Standard
+
+    </port>
+\end_layout
+
+\begin_layout Standard
+
+  </service>
+\end_layout
+
+\begin_layout Standard
+
+</definitions>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+UDDI
+\begin_inset LatexCommand label
+name "sec:uddi"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+UDDI kann Informationen über die Firmen (allg.\InsetSpace ~
+Organisation) und die angebotenen
+ Dienste verwalten und besteht aus zwei Teilen: Der Spezifikation, um ein
+ verteiltes Verzeichnis für Organisationen und Dienste zu erstellen und
+ einer UDDI Business Registry (UDDI `cloud service'), die diese Spezifikation
+ umsetzt.
+\end_layout
+
+\begin_layout Standard
+Daten, die verwaltet werden sind: 
+\end_layout
+
+\begin_layout Description
+White pages Allgemeines über eine Organisation: Name, Beschreibung, Kontaktinfor
+mationen,...
+ 
+\end_layout
+
+\begin_layout Description
+Yellow pages Klassifikation der Organisationen bzw.\InsetSpace ~
+der Dienste.
+ Z.B.
+ Einteilung nach Industrie, Produkt oder geographischem Standort.
+ 
+\end_layout
+
+\begin_layout Description
+Green pages Technische Informationen über ein Webservice.
+ Also zum Beispiel die Spezifikation eines Webservice und seine Adresse.
+ 
+\end_layout
+
+\begin_layout Standard
+Der prinzipielle Ablauf der Verwendung von UDDI ist schon in Abschnitt 
+\begin_inset LatexCommand ref
+reference "sec:webservices_overview"
+
+\end_inset
+
+ beschrieben.
+\end_layout
+
+\begin_layout Standard
+Technisch gesehen besteht UDDI aus 3 Teilen: 
+\end_layout
+
+\begin_layout Description
+UDDI data model Das ist ein XML Schema, um Organisationen und Dienste zu
+ beschreiben.
+ D.h.\InsetSpace ~
+es werden die Informationen hauptsächlich in businessEntity und businessServi
+ce eingeteilt.
+ Zusätzlich gibt es noch Daten, die angeben wo und wie auf ein Webservice
+ zugegriffen werden kann 
+\end_layout
+
+\begin_layout Description
+UDDI API Dabei handelt es sich um ein API, das mittels SOAP beschrieben
+ ist und zum Suchen und Veröffentlichen von UDDI Daten dient.
+ Zusäzlich können diese Operationen meistens auch über ein Webinterface
+ genutzt werden.
+ 
+\end_layout
+
+\begin_layout Description
+UDDI cloud services Die eigentliche `Implementierung' von UDDI wie oben
+ beschrieben.
+ 
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,268 @@
+#LyX 1.5.4 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass scrbook
+\language ngerman
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+WLAN
+\end_layout
+
+\begin_layout Standard
+Heute wird unter WLAN (wireless LAN) meist die in IEEE 802.11 beschriebene
+ Technologie verstanden.
+ Diese ist für den Aufbau drahtloser Netze innerhalb eines begrenzten geographis
+chen Bereich (Haushalte, Bürogebäude, Firmengelände) ausgelegt.
+\end_layout
+
+\begin_layout Section
+Prinzip
+\end_layout
+
+\begin_layout Standard
+In IEEE 802.11 sind zwei Übertragungstechniken mittels Funk im Spreizspektrumverf
+ahren bei dem das Signal auf ein breiteres Frequenzband ausgedehnt (gespreizt)
+ wird, um die Auswirkungen von Störungen durch andere Geräte zu minimieren:
+\end_layout
+
+\begin_layout Itemize
+Frequenzsprungverfahren (engl.
+ frequence hopping): es wird das Signal auf ein ständig die Frequenz wechselndes
+ Trägersignal moduliert.
+ Die Auswahl der Frequenz finden pseudozufällig mittels eines Pseudozufallszahle
+n-Generators statt.
+ Sowohl Sender als Empfänger initialisieren ihren Pseudozufallszahlen-Generator
+ gleich.
+\end_layout
+
+\begin_layout Itemize
+Direct Sequence: Dieses Spreizspektrumverfahren basiert darauf, dass jeder
+ Teilnehmer einen Code (wieder eine Pseudozufallfolge) erhält mit der er
+ seinen eigentlichen Bitstrom verknüpft.
+ Damit wird das Signal auf eine relativ große Bandbreite gespreizt.
+ Alle Sender belegen die selbe Bandbreite.
+ Der Empfänger verwendet wieder die selbe Pseudozufallsfolge und kann dadurch
+ das Signal wieder rekonstruieren.
+ In IEEE 802.11 wird eine 11 Bit lange Folge für jedes Bit in dem ursprünglichen
+ Signal verwendet.
+\end_layout
+
+\begin_layout Standard
+Die dritte Übertragungstechnik basiert auf Infrarotübertragung und ist auf
+ ca.
+ 10m Reichweite begrenzt.
+ Sender und Empfänger müssen nicht direkt aufeinander ausgerichtet sein.
+\end_layout
+
+\begin_layout Standard
+Mit den Funk-basierten Verfahren lassen sich Übertragungsraten im Bereich
+ von 11MBit/s bis 54MBit/s erzielen.
+ Der neue Standard IEEE 802.11n, der derzeit als Draft vorliegt erlaubt Datenrate
+n bis 540MBit/s (eine endgültige Version des Standard wird für 2008 erwartet).
+\end_layout
+
+\begin_layout Section
+Kollisionsvermeidung
+\end_layout
+
+\begin_layout Standard
+Das Verfahren von IEEE802.11 ist ähnlich dem CSMA/CD Verfahren von Ethernet,
+ jedoch kann keine Kollisionserkennung durchgeführt werden.
+ Lediglich eine Kollisionsvermeidung lässt sich erzielen.
+ Das liegt daran, dass nicht jeder Knoten in der Reichweite der anderen
+ befindet.
+ Zwei Probleme treten auf:
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Verborgene\InsetSpace ~
+Knoten (engl.
+ hidden node) Es kann prinzipiell vorkommen, dass es zu Kollisionen kommt,
+ diese jedoch nicht erkannt werden (siehe nachfolgende Abbildung; die Umgebung
+ von B und D ist der Übersichtlichkeit halber grau eingezeichnet).
+ Angenommen A und C möchten mit B kommunizieren und senden je einen Frame.
+ A und C können die Kollision bei B nicht erkennen! D.h.
+ A und C sind für einander verborgene Knoten.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename hidden_nodes.pdf
+	BoundingBox 0bp 0bp 47mm 22mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Exponierte\InsetSpace ~
+Knoten (engl.
+ exposed node) Angenommen B sendet an A.
+ Knoten C weiß von der Kommunikation, allerdings wäre es für C falsch anzunehmen
+, dass C an niemanden übertragen darf, nur weil C die Kommunikation an A
+ bemerkt.
+ C könnte ohne Probleme an D senden.
+\end_layout
+
+\begin_layout Standard
+In IEEE 802.11 sind zwei prinzipiell verschiedene Methoden definiert wie
+ diese Probleme gelöst werden:
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+RTS/CTS funktioniert folgendermaßen: Sender und Empfänger tauschen zusätzliche
+ Nachrichten aus, um festzulegen wer senden darf.
+ Bevor ein Sender senden will sendet dieser ein RTS (request to send) Frame
+ an den Empfänger.
+ Der Empfänger antwortet mit einem CTS (clear to send) Frame.
+ CTS reicht das Längenfeld an den Sender zurück.
+ Sieht ein anderer Knoten den CTS Frame, weiß er, dass er nahe beim Empfänger
+ liegt und daher solange nicht übertragen kann, bis ein Frame mit der spezifizie
+rten Länge übertragen wurde.
+ Ein Knoten, der zwar den RTS aber nicht den CTS sieht befindet sich nicht
+ nahe genug am Empfänger, um diesen zu stören, sodass er nach Belieben übertrage
+n kann.
+ Außerdem sendet der Empfänger nach dem Erhalt der Nachricht ein ACK an
+ den Sender.
+ Alle Stationen müssen auf dieses ACK warten bis sie übertragen können.
+ Zwei RTS Signale können trotzdem am Übertragungskanal kollidieren.
+ Da solch eine Kollision nicht erkannt werden kann, nimmt der Sender an,
+ dass eine Kollision aufgetreten ist, wenn innerhalb einer gewissen Zeitspanne
+ kein CTS erkannt wird und sendet nach einer gewissen Zeitdauer wieder (wie
+ bei Ethernet).
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+PCF (point coordination function) Der Zugangspunkt (siehe Abschnitt 
+\begin_inset LatexCommand vref
+reference "sec:wlan_netstructure"
+
+\end_inset
+
+) ist der einzige, der spontan senden darf und fragt alle Stationen permanent
+ ab (polling), ob sie etwas senden wollen.
+ Es handelt sich also um eine zentrale Zuteilung.
+ Dadurch werden Kollisionen vermieden.
+\end_layout
+
+\begin_layout Section
+Netzaufbau
+\begin_inset LatexCommand label
+name "sec:wlan_netstructure"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+IEEE 802.11 Netze können entweder als Infrastrukturnetze oder als Ad-hoc-Netze
+ aufgebaut werden.
+ Ein Infrastrukturnetz liegt vor, wenn die Teilnehmer über feste Zugangspunkte
+ (engl.
+ access point, AP) kommunizieren.
+ Ad-hoc-Netze benötigen keine Infrastruktur, d.h.
+ die Teilnehmer kommunizieren direkt miteinander und steuern den Ablauf
+ der Kommunikation.
+\end_layout
+
+\begin_layout Standard
+Bei einem Infrastrukturnetz mit mehreren APs sind diese mittels eines Verteilnet
+zes miteinander verbunden.
+ Jeder Knoten meldet sich bei einem AP an, indem er einen Probe-Frame sendet
+ (aktives Scanning), der von jedem AP beantwortet, der in der Umgebung des
+ Knoten liegt.
+ Der Knoten wählt sich darauf hin einen der AP aus.
+ Alternativ dazu gibt es die Möglichkeit, dass der AP von sich aus in regelmäßig
+en Abständen sogenannte Beacon-Frames (dt.
+ Bake) aussendet (passives Scanning) und seine Präsenz als auch die von
+ ihm unterstützten Übertragungsraten bekannt gibt.
+\end_layout
+
+\begin_layout Section
+Alternative Technologien
+\end_layout
+
+\begin_layout Subsection
+Bluetooth
+\end_layout
+
+\begin_layout Standard
+Bluetooth (IEEE 802.15.1) ist eine andere funkbasierte Technologie mit Schwerpunkt
+ der Vernetzung von Geräten über eine kurze Distanz (je nach Sendeleistung
+ von 10m bis 100m).
+ Es wurde als solches für den Einsatz als PAN konzipiert und wird deshalb
+ auch zur Vernetzung von Handys, PDAs, Computer oder Peripheriegeräten verwendet.
+ Für diese Anwendungen unterstützt es Daten und Sprache und auch eine Verschlüss
+elung.
+\end_layout
+
+\begin_layout Standard
+Um für diese Einsatzgebiete verwendbar zu sein, wurde es von Haus aus als
+ kostengünstige Technik entworfen und verwendet auch das weltweit verfügbare
+ ISM (Industrial, Scientific and Medical Band) im 2.4GHz Band.
+ Es ermöglicht Datenraten bis 700KBit/s im Download und gleichzeitig 57KBit/s
+ im Upload.
+ In der erweiterten Variante werden Datenraten bis 2.1MBit/s unterstützt.
+\end_layout
+
+\begin_layout Subsection
+IrDA
+\end_layout
+
+\begin_layout Standard
+Die IrDA-Schnittstelle (Infrared Data Association) basiert auf einer gerichteten
+ Sichtverbindung mit infrarotem Licht und hat die Zielstellung Kabelverbindungen
+ zu ersetzen.
+ Die Verbindung ist auf eine Entfernung von 2m begrenzt und ermöglicht halbduple
+x eine Datenrate von 115KBit/s.
+ In der Version 1.1 der IrDA Spezifikation ist eine Datenrate von 4MBit/s
+ möglich.
+\end_layout
+
+\end_body
+\end_document

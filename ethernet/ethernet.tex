@@ -1,0 +1,281 @@
+
+\chapter{Ethernet\label{sec:ethernet}}
+
+Ethernet wurde von der IEEE im Standard IEEE 802 und von der ISO als
+ISO-Standard 8802 als weltweiter Standard übernommen. Innerhalb dieses
+Standards gibt es viele Teilspezifikationen, die selbst wiederum gegliedert
+sind und auch andere Technologien wie Token-Ring, Token-Bus oder drahtlose
+LANs enthält.
+\begin{description}
+\item [{802.2}] Logical Link Control (LLC) ist die Übertragungssteuerung
+der Sicherungsschicht, die auf dem MAC Protokoll aufsetzt und damit
+eine Unabhängigkeit von der unterliegenden Übertragungstechnologie
+sicherstellt.
+\item [{802.3}] Medium Access Control (MAC) -- also die Zugriffssteuerung
+-- und die Spezifikation des Physical Layer (PHY) des CSMA/CD basierenden
+Ethernet. Wichtige Teile sind:
+
+\begin{description}
+\item [{802.3}] 10Base-5 Ethernet basierend auf Koaxialkabel (Thick Coax).
+10 gibt die Übertragungsgeschwindigkeit in MBit/s an, Base bedeutet
+Basisband und 5 ist die maximale Länge eines Segmentes in 100m (also
+500m).
+\item [{802.3a}] 10Base-2 Ethernet basierend auf Koaxialkabel (Thin Coax).
+Die maximale Länge eines Segmentes beträgt hier 185m, also aufgerundet
+sind das 200m. Daher kommt die Ziffer 2 in der Namensbezeichnung.
+\item [{802.3u}] 100Base-TX Ethernet basierend auf Twisted-Pair Kabel und
+100Base-FX basierend auf Glasfaser. Diese Art wird auch als Fast Ethernet
+bezeichnet.
+\item [{802.3ab}] 1000Base-T Ethernet über Cat-5 Kabel mit einer Distanz
+bis 100m. Damit man Cat-5 Kabel verwenden kann, wurden Änderungen
+am ursprünglichen Ethernet vorgenommen. Dazu zählt die Verwendung
+von 4 Aderpaaren anstatt von 2 wie bei Fast Ethernet.
+\item [{802.3z}] 1000Base-LX bzw. 1000Base-SX Ethernet über Glasfaser mit
+Distanzen von 440m bis zu 5km.
+\item [{802.3ae}] 10GBase-xx Ethernet. Die Ziele von 10GEthernet sind,
+dass es im LAN, MAN und WAN gleichermaßen einsetzbar ist und ebenfalls
+(wie 1000Base-T) eine kostengünstige Technologie ist. Dafür wurde
+festgelegt, dass nur mehr Punkt-zu-Punkt Verbindungen im Vollduplex-Betrieb
+verwendet werden und als Übertragungsmedium Glasfasern verwendet werden.
+D.h., es müssen je Vollduplex-Verbindung zwei Glasfasern verwendet
+werden. Da keine Kollisionen mehr auftreten können, ist das CSMA/CD
+Prinzip nicht mehr notwendig und große Link-Längen werden möglich.
+
+
+xx steht für verschiedene Varianten, die in Abhängigkeit der der Wellenlänge
+und der Glasfaser Distanzen von 300m bis 40km ermöglichen.
+
+\end{description}
+\item [{802.11}] Wireless LAN (WLAN). Beschreibt die Zugriffssteuerung
+und den physische Schicht für drahtlose Netze.
+\item [{802.15}] Wireless PAN. Definiert die drahtlose Kommunikation für
+den nutzernahen Bereich über kurze Distanzen. Datenraten 1MBit/s bis
+20MBit/s.
+\end{description}
+
+\section{Prinzip}
+
+
+\subsection{CSMA/CD}
+
+Bei den genannten Ethernet Varianten 10Base-5, 10Base-2 sowie dem
+Fast Ethernet handelt es sich um eine klassische Bustopologie mit
+einem Zugriffsverfahren, das auf einem Wettbewerbsverfahren basiert.
+Das bedeutet, dass alle Stationen einen gemeinsamen Übertragungskanal
+benützen und alle Stationen gleichberechtigt sind. Die Station, die
+als erstes zum Senden beginnt, darf den Übertragungskanal alleine
+nutzen. D.h. die Stationen stehen in einem Wettbewerb zueinander.
+Bei dem implementierten Wettbewerbsverfahren handelt es sich um CSMA/CD
+(carrier sense multiple access/collision detect).
+
+Jede Station, die nicht senden will hört permanent das Übertragungsmedium
+ab. Erkennt es einen Rahmen (engl. frame), der an sie gerichtet ist,
+wird dieser gelesen ansonsten wird der Rahmen ignoriert. Will eine
+Station einen oder mehrere Rahmen senden, muss ein Algorithmus abgearbeitet
+werden, da es vorkommen kann, dass zwei (oder mehrere) Stationen gleichzeitig
+(engl. multiple access) zum Senden beginnen:
+\begin{enumerate}
+\item Eine sendebereite Station hört das Übertragungsmedium ab (engl. carrier
+sense). Ist das Übertragungsmedium besetzt, wird gewartet bis dieses
+frei ist und zusätzlich werden noch zusätzliche 9.6$\mu$s gewartet
+(engl. interframe gap).
+\item Ist das Übertragungsmedium frei, beginnt die Station zu senden.
+\item Trotz Überwachung des Übertragungsmediums, kann es vorkommen, dass
+zwei Stationen zur gleichen Zeit senden. Das kann vorkommen, da beide
+Stationen ein freies Übertragungsmedium vorgefunden haben und deshalb
+zur gleichen Zeit zu senden begonnen haben. Da die Stationen jedoch
+weiter am Übertragungskanal hören, hören sie nicht ihr eigenes Signal,
+sondern das überlagerte Signal. Dieses überlagerte Signal kennzeichnet
+eine Kollision. Bei Erkennen einer Kollision (engl. collision detect)
+wird von den Stationen folgendes durchgeführt:
+
+\begin{enumerate}
+\item Die Stationen brechen das Senden ab.
+\item Die Stationen senden ein spezielles Stausignal (engl. jam signal),
+damit eindeutig eine Kollision erkannt wird.
+\item Danach wird eine variable Zeit gewartet (Backoff-Zeit), die mit jedem
+fehlgeschlagenen Sendeversuch größer werden kann.
+\end{enumerate}
+\end{enumerate}
+Damit dieser Algorithmus in dieser Form funktioniert, müssen -- in
+Abhängigkeit von der Sendegeschwindigkeit und der Netzausdehnung --
+bestimmte Anforderungen an die Länge des Stausignals bzw. an die Wartezeiten
+gestellt werden.
+
+Das Flussdiagramm in Abbildung \vref{fig:CSMA/CD} zeigt den Algorithmus
+in einer Übersicht.
+
+%
+\begin{figure}[h]
+\centering
+
+\includegraphics[bb=0bp 0bp 95mm 11cm,clip]{ethernet/csmacd_algo}
+
+\caption{\label{fig:CSMA/CD}CSMA/CD}
+
+\end{figure}
+
+
+
+\subsection{Adressierung und Rahmenaufbau}
+
+Wie im vorigen Abschnitt erläutert, sendet eine Station Frames über
+den Bus. Damit eine Station einen Frame an eine andere Station senden
+kann, wird die Adresse dieser Station benötigt.
+
+
+\subsubsection{MAC Adressen\label{sec:MAC_addresses}}
+
+MAC Adressen sind für alle IEEE 802 Standards einheitlich definiert
+und sind weltweit prinzipiell eindeutig. Diese MAC Adresse wird vom
+Hersteller in einen nichtflüchtigen Speicher der Schnittstellenkarte
+(engl. network interface card, NIC) geschrieben.
+
+Die MAC Adressen sind insgesamt 48 Bits lang setzen sich aus 3 Teilen
+zusammen: 
+\begin{enumerate}
+\item Adresstyp bestehend aus 2 Bits (höchstwertigste Bits, also Bit 47
+und Bit 46), die angeben, ob es sich um eine Individualadresse oder
+eine Gruppenadresse (Multicast-Adresse) bzw. um eine durch die IEEE
+verwaltete Adresse oder eine lokal verwaltete Adresse (private Adresse)
+handelt.
+\item die nächsten 22 Bits kennzeichnen den Hersteller der NIC und werden
+weltweit eindeutig vergeben.
+\item einem Teil, der von dem Hersteller der NIC selbst und eindeutig vergeben
+wird.
+\end{enumerate}
+Die Adresse mit dem Wert FF-FF-FF-FF-FF-FF ist die Broadcast-Adresse.
+
+Generell liest eine NIC nur die Frames, die an die eigene Adresse
+gesendet worden sind. Allerdings kann die NIC in einen anderen Modus
+geschalten werden, sodass alle Frames gelesen werden. Dieser Modus
+wird promiscuos mode (dt. ausschweifend) genannt.
+
+
+\subsubsection{Rahmenaufbau\label{sec:ethernet_frame}}
+
+Für den Aufbau eines Rahmen gibt es historisch gesehen zwei verschiedene
+Arten, wobei heutzutage nur mehr die Variante von IEEE802.3 im Einsatz
+ist. Die IEEE 802.3 Variante sieht folgendermaßen aus:
+\begin{enumerate}
+\item Präambel (7 Bytes): eine alternierenden Bitfolge (also 1010...), die
+der Synchronisation der Stationen dient.
+\item SFD (start frame delimiter, 1 Byte): alternierende Bitfolge 10101011,
+die den Start des Frame kennzeichnet.
+\item Zieladresse (6 Bytes)
+\item Quelladresse (6 Bytes)
+\item Längenfeld (2 Bytes)
+\item Datenblock (0 bis 1500 Bytes)
+\item Pad (0 bis 46 Bytes): beinhaltet der Datenblock weniger als 46 Bytes,
+dann müssen eine entsprechende Anzahl von Pad Bytes übertragen werden,
+sodass der Rahmen auf eine minimale Größe von 64 Bytes kommt.
+\item FCS (engl. frame check sequence, 4 Bytes): ein CRC, der ebenfalls
+vom Empfänger berechnet wird, sodass fehlerhafte Frames einfach erkannt
+und danach verworfen werden.
+\end{enumerate}
+
+\section{Netzaufbau}
+
+Wie schon beschrieben handelt es sich bei Ethernet um eine Bus-basierte
+Technologie. Bzgl. der Verkabelung gibt es allerdings zwei Möglichkeiten.
+Entweder die Verkabelung wird ebenfalls als Bustopologie ausgeführt
+(mittels Koaxialkabel) oder sternartig wie bei Twisted-Pair Kabeln
+bzw. bei Glasfaserkabeln.
+
+
+\subsection{Bustopologie mit Koaxialkabel}
+
+Früher eingesetzte Ethernet Technologien sind 10Base-5 bzw. 10Base-2,
+die auf Koaxialkabeln basieren (siehe \vref{sec:coaxial_cable}).
+Ein Segment besteht aus einem langen Kabel, das an beliebigen Stellen
+entweder angebohrt (10Base-5) bzw. mittels BNC Steckverbindungen (10Base-2)
+den Anschluss von Arbeitstationen ermöglicht. Mehrere Segmente können
+mittels Repeater oder Brücken zusammengeschlossen werden.
+
+Auf Grund der technischen Spezifikationen mussten folgende Bedingungen
+eingehalten werden, die unter der 5-4-3 Regel bekannt waren: Zwischen
+je zwei Endgeräten dürfen maximal 5 Segmente und 4 Repeater liegen.
+Nur an 3 Segmenten ist der Anschluss von Arbeitsstationen erlaubt.
+
+
+\subsection{Sterntopologie mit Twisted-Pair Kabel bzw. Glasfaser}
+
+Heute wird hauptsächlich die Sterntopologie verwendet. Es werden die
+Arbeitstationen sternförmig mit Kopplungselementen (siehe \vref{sec:coupling_devices})
+verbunden. Bei den Kopplungsgeräten handelt es sich hauptsächlich
+um Hubs, Bridges und Switches. In dieser Konfiguration wird die Ethernet
+Technologie im Zuge der strukturierten Verkabelung eingesetzt (siehe
+\vref{sec:structured_cabeling}).
+
+
+\section{Spanning-Tree-Algorithmus}
+
+Der Backward-Learning Algorithmus (siehe \vref{sec:coupling_devices})
+hat allerdings ein Problem sobald Schleifen in der Netzstruktur vorhanden
+sind. Schleifen entstehen, wenn redundante Pfade vorhanden sind. Solche
+redundante Pfade werden gerne verwendet, um die Verfügbarkeit des
+Netzes zu erhöhen.
+
+Das Problem lässt sich folgendermaßen beschreiben: Durch das Fluten
+in einer Schleife werden Frames im Kreis gesendet und es ensteht eine
+unnötige Last. Ist der Zielhost im Netz vorhanden, dann wird dieser
+eine Antwort schicken und die Switches können sich im Zuge des Backward-Learning
+auch die Ziel-Adresse merken, wodurch das Fluten ausbleibt und die
+Frames nicht mehr im Kreis gesendet werden. Ist der Zielhost allerdings
+nicht im Netz verfügbar ist, dann kreisen die Frames in der Schleife.
+Genauso ist problematisch wie fehlende Zielhosts ist, wenn Broadcast-
+oder Multicast-Frames verschickt werden, da kreisende Frames auch
+nicht durch Antworten der Zielhosts entfernt werden.
+
+Eine einfache Möglichkeit, die von Switches implementiert wird ist,
+dass diese automatisch einen Port abschalten, wenn die Auslastung
+auf diesen Port zu hoch (z.B. größer als 90\%) wird. Die Argumentation
+ist, dass ein solch hohes Verkehrsaufkommen im normalen Betrieb nicht
+auftritt und deshalb vermutlich kreisende Frames die Ursache sind.
+
+Die bessere Lösung, die redundante Verbindungen erst ermöglicht ist
+die Implementierung des Spanning Tree Protocol (STP, IEEE802.1). Das
+Ziel dieses Verfahrens ist, eine schleifenlose Topologie aufzubauen
+(einen Baum), die alle Switches einbindet und die redundanten Verbindungen
+deaktiviert. Stellt man sich das LAN als einen Graphen vor, der Zyklen
+enthält, dann wird durch den STP ein zyklenloser Graph generiert,
+der alle Zielhosts enthält. Eine Lastverteilung ist in diesem Fall
+nicht mehr möglich.
+
+Jeder Switch hat einen eindeutigen Identifier und tauscht mit den
+anderen Switches im Zuge des STP Konfigurationsnachrichten aus. Der
+prinzipielle Ablauf von STP sieht folgendermaßen aus:
+\begin{enumerate}
+\item Es wird der Switch mit dem kleinsten Identifier als Wurzel des Baumes
+festgelegt. Eine Wurzel leitet Frames prinzipiell an alle ihre Ports
+weiter (d.h. keiner der Ports ist deaktiviert).
+\item Dann berechnet jeder Switch den kürzesten Weg zur Wurzel und merkt
+sich den Port, der zur Wurzel führt.
+\item Alle an ein Segment angeschlossene Switches wählen einen designierten
+Switch, der alle Nachrichten aus diesem Segment an die Wurzel weiterleitet.
+Es wird derjenige Switch gewählt, der den kleinsten Weg zur Wurzel
+hat. Gibt es mehrere Switches mit dem kleinsten Weg, dann wird wieder
+derjenige ausgewählt, der von diesen den kleinsten Identifier besitzt.
+D.h. derjenige Switch, der nicht als designierter Switch festgelegt
+wurde, deaktiviert seinen Port Richtung Wurzel.
+\item Ist der Prozess abgeschlossen, dann sendet nur mehr die Wurzel Konfigurationsnachrichten
+aus, die von allen Switches weitergeleitet werden. Enthält ein Switch
+innerhalb einer gewissen Zeitspanne keine Konfigurationsnachricht,
+wird angenommen, dass ein Switch ausgefallen ist und der Prozess beginnt
+wieder von vorne.
+\end{enumerate}
+In Abbildung \vref{fig:stp_ex} ist ein Beispiel eines Netzes als
+Graph zu sehen, in dem die deaktivierten Ports strichliert markiert
+sind. Als Wurzel wurde S1 bestimmt.
+
+%
+\begin{figure}[h]
+\centering
+
+\includegraphics[bb=0bp 0bp 80mm 60mm,clip]{ethernet/stp_ex}
+
+\caption{\label{fig:stp_ex}Beispiel eines Netzes mit durch STP deaktivierten
+Ports}
+
+\end{figure}
+

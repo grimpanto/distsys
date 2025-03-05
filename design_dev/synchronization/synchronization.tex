@@ -1,0 +1,1214 @@
+\selectlanguage{austrian}%
+
+\chapter{Synchronisation}
+
+
+\section{Problematik}
+
+Die grundsätzliche Problematik ist folgende:
+
+
+\begin{lstlisting}
+boolean withdraw(int amount) {
+    if (balance >= amount) {
+        balance -= amount;
+        return true;
+    }
+    else return false;
+}
+\end{lstlisting}
+
+
+Mit dieser Funktion kann es dazu kommen, dass folgende Situation auftritt,
+wenn zwei Threads diese Funktion ,,gleichzeitig'' verwenden:
+
+\noindent \begin{center}
+\begin{tabular}{|c|c|c|}
+\hline 
+Thread 1 & Thread 2 & balance\tabularnewline
+\hline
+\hline 
+15-10>=0 &  & 15\tabularnewline
+\hline 
+ & 15-6>=0 & 15\tabularnewline
+\hline 
+balance-=10 &  & 5\tabularnewline
+\hline 
+ & balance-=6 & -1\tabularnewline
+\hline
+\end{tabular}
+\par\end{center}
+
+Eine Java - Lösung sieht so aus, dass die Deklaration der Funktion
+folgendermaßen abgeändert wird:
+\begin{lstlisting}
+synchronized boolean withdraw(int amount)
+\end{lstlisting}
+
+
+Damit kann es nicht mehr zu diesem Effekt kommen. Das Schlüsselwort
+\texttt{synchronized} bewirkt, dass das Objekt, das zu der Methode
+gehört, ihren Lock an den ersten Thread ,,vergibt'', sodass der
+zweite Thread warten muss bis der erste Thread wieder die Methode
+verlassen hat und damit den Lock wieder freigibt.
+
+Man unterscheidet folgende \emph{Race Conditions} (Wettkampfbedingungen):
+\begin{itemize}
+\item \emph{Write/Write} Konflikte (wie im obigen Beispiel) 
+
+\begin{itemize}
+\item Mindestens zwei Threads schreiben 
+\item Ergebnis hängt davon ab, wer das Rennen (race) gewinnt 
+\end{itemize}
+Beispiel:
+
+
+\begin{lstlisting}
+double x;
+
+void mehr() {
+  x = x * 2;
+  System.out.println(x);
+}
+
+void weniger() {
+  x = x / 2; 
+  System.out.println(x);
+}
+\end{lstlisting}
+
+
+\item \emph{Read/Write} Konflikte 
+
+\begin{itemize}
+\item Ein Thread schreibt; mindestens ein Thread liest; 
+\end{itemize}
+Weiteres Beispiel:
+
+
+\begin{lstlisting}
+double a,b; // von einem rechtwinkeligen Dreieck
+
+// schreibt in die globalen Variablen
+void berechneSeiten(double r, double phi) {
+  a = r * Math.cos(phi); // hier könnte der Scheduler unterbrechen
+  b = r * Math.sin(phi);
+}
+
+void berechneFlaeche() { // liest die globalen Variablen
+  A = (a * b) / 2;
+}
+\end{lstlisting}
+
+
+\end{itemize}
+Die \emph{kritischen Abschnitte (critical sections)} sind diejenige
+Bereiche von denen aus auf gemeinsam genutzte Daten (allgemein Ressource,
+wie z.B. auch periphere Geräte) zugegriffen wird.
+
+D.h.~es wird ein gegenseitiger oder \emph{wechselseitiger Ausschluss
+(mutual exclusion)} benötigt: Ein Verfahren, das anderen Prozesse
+(oder Threads) den Zutritt in einen kritischen Abschnitt verwehrt,
+solange ein Prozess (oder Thread) sich in solch einem befindet. D.h.,
+die beiden Prozesse müssen synchronisiert werden. \emph{Synchronisation}
+ist also ein Mittel zur Erreichung des wechselseitigen Ausschlusses.
+
+Weiters muss oft auch der Zugriff auf die gemeinsame Ressource in
+einem weiterführenden Maße koordiniert werden. Betrachten wir dazu
+eine typische Producer/Consumer Situation:
+
+Ein Boss befüllt eine Queue (Warteschlange) mit Arbeitspaketen. Dazu
+gibt es eine Menge von Arbeitern, die die Arbeitspakete wieder aus
+der Queue entnehmen und diese Arbeitsaufträge durchführen. Natürlich
+muss sichergestellt werden, dass nur ein Akteur (entweder der Boss
+oder max.~ein Arbeiter) zur gleichen Zeit auf die Queue zugreifen
+kann. Außerdem muss noch gesteuert werden, dass der Boss kein Arbeitspaket
+in die Queue stellen kann, wenn diese voll ist (und daher warten muss,
+dass diese wieder zumindest teilweise entleert wird) bzw.~kein Arbeiter
+ein Paket aus der Queue entnehmen kann, wenn diese leer ist (und deshalb
+ebenfalls warten muss).
+
+Entsprechende Mechanismen werden wir unter dem Begriff \emph{Zustandsabhängige
+Steuerung} als spezielle Synchronisation auffassen.
+
+Nebenläufige Prozesse können daher entweder
+\begin{itemize}
+\item \emph{disjunkt} (von einander unabhängig) 
+
+\begin{itemize}
+\item benutzen keine gemeinsamen Daten (Ressource) 
+\item oder benutzen legiglich gemeinsame Daten, die sich nicht ändern 
+\end{itemize}
+\item oder anderenfalls \emph{überlappend} sein. 
+\end{itemize}
+
+\section{Synchronisation in nicht verteilten Systemen}
+
+Zuerst werden wir den etwas einfacheren Fall der Synchronisation von
+Prozessen oder Threads in nicht verteilten Systemen betrachten. D.h.,~dass
+wir einen Computer mit einem oder mehreren Prozessoren betrachten,
+der von einem entsprechenden Betriebssystem betrieben wird, das Mechanismen
+zur Synchronisation zur Verfügung stellt.
+
+Sind die Prozesse überlappend und es wird ein wechselseitiger Ausschluss
+benötigt, dann kann dies mittels Synchronisation erreicht werden.
+Dazu gibt es zumindest die folgenden Möglichkeiten:
+\begin{itemize}
+\item Steuerungsvariablen (handgestrickt) 
+\item Monitor (siehe das synchronized Keyword in Java) 
+\item Mutex (mutual exclusion lock) 
+\item Read-Write Locks 
+\item Semaphor 
+\end{itemize}
+Warten zwei (oder mehrere) Prozesse (oder Threads) wechselseitig auf
+die Freigabe einer oder mehreren Ressourcen, dann kann die Applikation
+nicht weiter fortgeführt werden und man spricht von einem \emph{Deadlock}.
+
+Um eine zustandsabhängige Steuerung zu implementieren, werden ebenfalls
+die Mechanismen benötigt, die auch zur Implementierung der Synchronisation
+Verwendung finden.
+
+
+\subsection{Steuerungsvariablen}
+
+Eine einfache Lösung sieht folgendermaßen aus:
+
+
+\begin{lstlisting}
+                       s = 1;
+void a() {                       void b() {
+  while (true) {                   while (true) {
+    while (s != 2) {                 while (s != 1) {
+      // critical section              // critical section
+      s = 2;                           s = 1; 
+      // uncritical section            // uncritical section
+    }                                }
+  }                                }
+}                                }
+\end{lstlisting}
+
+
+Nachteile dieser Lösung sind:
+\begin{itemize}
+\item Reihenfolge immer a,b,a,b,... 
+\item Stoppen von a behindert b 
+\end{itemize}
+Eine weitere Lösung ist:
+
+
+\begin{lstlisting}
+                  s1 = 1; s2 = 1;
+
+1  void a() {                    void b() {
+2    while (true) {                while (true) {
+3      s1 = 0;                       s2 = 0;
+4      if (s2 != 0) {                if (s1 != 0) {
+5        // critical section           // critical section
+6        s1 = 1;                       s2 = 1;
+7        // uncritical section         // uncritical section
+8      }                             }
+9    }                             }
+10 }                             } 
+\end{lstlisting}
+
+
+Nachteile dieser Lösung: 
+\begin{itemize}
+\item Stoppen von a behindert wieder b (allerdings nur, wenn a in critical
+section ist)
+\item Es kann ein Deadlock auftreten: 
+
+\begin{enumerate}
+\item Thread a arbeitet Zeile 3 ab und Scheduler gibt Thread b den Prozessor 
+\item Thread b arbeitet ebenfalls Zeile 3 ab und der Scheduler führt wieder
+einen Wechsel aus. 
+\item Damit haben beide Threads jeweils die Variablen s1 bzw.~s2 auf 0
+gesetzt und können beide nicht in den kritischen Abschnitt eintreten.
+Dadurch laufen sie in einer Endlosschleife ($\rightarrow$Deadlock). 
+\end{enumerate}
+\end{itemize}
+Eine weitere, interessante und dennoch einfache Lösung sieht folgendermaßen
+aus:
+
+
+\begin{lstlisting}
+static final int FALSE = 0;
+static final int TRUE = 1;
+
+int turn;
+int[2] interested = {0, 0};
+
+void enterRegion(int process) {   // Prozessnummer: 0 oder 1
+  int other;
+
+  other = 1 - process;
+  interested[process] = TRUE;     // zeigt, dass in critical section will
+  turn = process;                 // setze Flag!!
+  while (turn == process && interested[other] == TRUE) ; // nichts tun
+}
+
+void leaveRegion(int process) {
+  interested[process] = FALSE;
+}
+\end{lstlisting}
+
+
+Nachteile dieser Lösung: 
+\begin{itemize}
+\item Stoppen des einen Threads behindert den anderen (allerdings nur, wenn
+dieser sich im kritischen Abschnitt befindet). 
+\item Fehleranfällig, 
+
+\begin{itemize}
+\item da Parameter für enterRegion bzw. leaveRegion wahlfrei übergeben werden
+können. 
+\item da der Aufruf von enterRegion bzw. leaveRegion zur Gänze vergessen
+werden kann. 
+\end{itemize}
+\end{itemize}
+Ein weiterer offensichtlicher Nachteil von diesen Lösungen ist, dass
+sie alle auf dem aktiven Warten aufbauen!
+
+Allen diesen Lösungen ist weiters gemeinsam: die Zuweisung von ganzen
+Zahlen (int) muss eine \emph{atomare Aktion} sein!
+
+
+\subsection{Monitor}
+
+
+\minisec{Prinzip}
+
+Das Monitorkonzept ist sicher das wichtigste Konzept, es wird auch
+in Java eingesetzt und kann verwendet werden, um prinzipiell beliebige
+Synchronisationsaufgaben zu lösen.
+
+Unter einem Monitor versteht man klassischerweise eine Sammlung von
+Prozeduren und Datenstrukturen, die als Einheit gruppiert sind. Prozesse
+können diese Prozeduren eines Monitor aufrufen, können aber nicht
+auf die internen Datenstrukturen dieses Monitors zugreifen. Außerdem
+können nicht zwei Prozesse gleichzeitig in einem Monitor aktiv sein!
+
+Weiters sollen die Monitore bei dem oben erwähnten Producer/Consumer
+Problem weiterhelfen, bei dem nicht nur der wechselseitige Ausschluss
+sondern auch die zustandsabhängige Steuerung realisert werden soll.
+Z.B. soll also ein Arbeiter warten (d.h.~in den sleep Zustand versetzt
+werden), wenn die Queue leer ist und nicht permanent die Queue abfragen.
+
+Dazu wurden sogenannte Bedingungsvariablen (\emph{condition variables})
+zusammen mit zwei Operationen WAIT und NOTIFY (oder auch SIGNAL genannt)
+eingeführt. Wenn eine Monitorprozedur feststellt, dass sie nicht fortgesetzt
+werden kann (z.B. der Arbeiter findet eine leere Queue vor), dann
+tätigt sie den WAIT Aufruf einer Bedingungsvariablen. Diese Aktion
+blockiert den aufrufenden Prozess und versetzt ihn in einen `sleep'
+Zustand. Gleichzeitig kann ein anderer Prozess jetzt den Monitor betreten!
+
+
+\minisec{Monitore in Java}
+
+In Java ist es so, dass \emph{jedes} Objekt als Monitor agieren kann.
+Dazu besitzt es:
+\begin{itemize}
+\item einerseits einen Lock. Dieser Lock wird bei der Ausführung von `synchronized'
+(auf dieses Objekt) angefordert. Nur ein Thread kann den Lock bekommen,
+alle anderen sind blockiert. 
+\item andererseits ein `wait set', das alle durch wait() geblockten Threads
+enthält. 
+\end{itemize}
+In Java gibt es 2 äquivalente Möglichkeiten 'Prozeduren' im Sinne
+des Monitorkonzeptes zu definieren:
+\begin{itemize}
+\item synchronized boolean withdraw(int amount) \{ ... \} 
+\item boolean withdraw(int amount) \{ synchronized(this) \{ ... \} \} 
+\end{itemize}
+D.h. \texttt{synchronized} versucht einen Lock auf das 'this' Objekt
+zu erlangen und nur ein Thread kann in den kritischen Abschnitt eintreten.
+Da ein Objekt in Java genau einen Lock besitzt, ist dieser Lock für
+alle Methoden zuständig, bei denen das \texttt{synchronized} verwendet
+wird.
+
+Vorteile von \texttt{synchronized} bzw. des eingebauten Monitorkonzeptes
+in Java: 
+\begin{itemize}
+\item in Sprache eingebaut 
+\item Lock wird immer freigegeben (auch wenn eine Exception auftritt) 
+\end{itemize}
+\emph{Nachteile} der Verwendung von \texttt{synchronized} auf diese
+Art und Weise: 
+\begin{itemize}
+\item Es kann nicht festgestellt werden, ob ein Lock bereits vergeben ist. 
+\item Wenn ein Lock vergeben ist, dann blockiert jeder Versuch. Es gibt
+kein Time-out! Kein cancel! 
+\item Keine Differenzierung in lesende und schreibende Zugriffe. 
+\item Keine Zugriffskontrolle: jede Methode kann \texttt{synchronized()}
+für jedes Objekt ausführen. 
+\item Es geht nicht, dass eine Methode a einen Lock eines Objektes erwirbt
+und eine Methode b diesen Lock wieder freigibt. 
+\end{itemize}
+Das Monitorkonzept bietet allerdings die Möglichkeiten alle erwähnten
+Nachteile auszuräumen. In J2SE 5.0 sind Pakete enthalten, die umfangreiche
+Klassen für Concurrency - Probleme zur Verfügung stellen (siehe z.B.
+\ref{sec:mutex}).
+
+Anstatt der expliziten Bedingungsvariablen des Monitorkonzeptes verwendet
+die \emph{Java-Monitorimplementierung} zwei Methoden \texttt{wait()}
+und \texttt{notifyAll()}, die in der Klasse java.lang.Object definiert
+sind. Dadurch hat jedes Java-Objekt auch die Funktionalität eines
+Monitors:
+\begin{itemize}
+\item wait() muss immer innerhalb eines \texttt{synchronized} stehen und
+bewirkt, dass 
+
+\begin{enumerate}
+\item der aktueller Thread blockiert wird und in das wait set des Objektes
+eingetragen wird. 
+\item der Lock für das Objekt wird freigegeben (damit andere Threads in
+den Monitor eintreten können) 
+\end{enumerate}
+Außerdem wird eine InterruptedException geworfen, wenn der aktueller
+Thread unterbrochen wird (mittels \texttt{interrupt()} aus der Klasse
+java.lang.Thread).
+
+Weiters gibt es eine Methode \texttt{wait(long millsec)}, die die
+maximale Anzahl von Millisekunden warten und spätestens danach den
+Thread wieder von seiner Blockierung befreit (d.h.~in den runnable
+Zustand versetzt). 
+
+\item notifyAll() muss ebenfalls immer innerhalb eines `synchronized' stehen
+und bewirkt, dass 
+
+\begin{enumerate}
+\item alle Threads aus dem wait set wieder aufgeweckt werden (d.h.~in den
+runnable Zustand versetzt werden). 
+\item jeder Thread sich anstellen muss, um den Lock zu bekommen, damit der
+Thread in den Zustand run kommen kann. Die Auswahl in welcher Reihenfolge
+die Threads den Lock bekommen ist nicht definiert! Der Lock ist zum
+Zeitpunkt des Aufrufes der \texttt{notifyAll()} Methode jedoch sicher
+vergeben, da die \texttt{notifyAll()} Methode innerhalb eines 'synchronized'
+stehen muss. D.h.~erst wenn der Thread diese Methode verlässt wird
+der Lock freigegeben und einer der aufgeweckten Threads kann den Lock
+bekommen. 
+\end{enumerate}
+Außerdem gibt es noch eine notify() Methode, die ähnlich funktioniert,
+jedoch nur einen (beliebigen!) Thread aus dem wait set holt. 
+
+\end{itemize}
+
+\minisec{Deadlock mittels Java Monitore}
+
+
+\begin{lstlisting}
+nt f1; Object lock1 = new int[1];
+int f2; Object lock2 = new int[1];
+
+public void fred(int value) {
+  synchronized (lock1) {
+    synchronized (lock2) {
+      f1 = f2 = value;
+    }
+  }
+}
+
+public void barney(int value) {
+  synchronized (lock2) {
+    synchronized (lock1) {
+      f1 = f2 = value;
+    }
+  }
+}
+\end{lstlisting}
+
+
+
+\minisec{Producer/Consumer Problem}
+
+Wie eingangs erwähnt handelt es sich bei der zustandsabhängigen Steuerung,
+um eine spezielle Art der Synchronisation von mehreren Threads (oder
+Prozessen), die über das einfache Sicherstellen des wechselseitigen
+Ausschlusses hinausgeht.
+
+Während der gegenseitige Ausschluss lediglich sicherstellt, dass der
+kritische Abschnitt nicht unkontrolliert betreten wird, behandelt
+die zustandsabhängige Steuerung eine \emph{weiterführende Synchronisation}.
+
+Als spezielles Beispiel wird das Producer/Consumer Problem betrachtet: 
+\begin{itemize}
+\item Ein Producer und mehrere Consumer (d.h.~ein Boss und mehrere Worker).
+Prinzipiell kann das Problem natürlich leicht auch auf mehrere Producer
+erweitert werden. 
+\item Einwegkommunikation (d.h.~der Boss verteilt die Arbeitspakete an
+die Worker). 
+\item der Zwischenspeicher ist begrenzt (d.h.~die Queue in die der Boss
+die Arbeitspakete stellt ist begrenzt). 
+\end{itemize}
+
+\begin{lstlisting}
+class WorkQueue {
+  LinkedList queue = new LinkedList();
+
+  public synchronized void put(Object o) {
+    // was ist, wenn queue "voll" ist?
+    queue.addLast(o);
+    // wie werden die wartenden Worker benachrichtigt? 
+  }
+
+  public synchronized Object take() {
+   // was ist, wenn queue "leer" ist?
+   return queue.removeFirst();
+   // wie wird ein eventuell wartender Boss benachrichtigt?
+  }
+}
+\end{lstlisting}
+
+
+Die vorhergehende Lösung behandelt also keine der Fragestellungen,
+die in diesem Beispiel aufgeworfen worden sind (siehe Fragen in den
+Kommentaren). Das folgende Codestück zeigt die prinzipielle Vorgehensweise
+auf:
+
+
+\begin{lstlisting}
+public class WorkQueue {
+  private LinkedList queue = new LinkedList();
+
+  public synchronized void put(Object o) throws InterruptedException {
+    // was ist, wenn queue "voll" ist? 
+    // selber einsetzen... 
+    queue.addLast(o); 
+    // alle wartenden Worker (eigentlich alle) benachrichtigen! 
+    notifyAll(); 
+  }
+
+  public synchronized Object take() throws InterruptedException {
+    while (queue.size() == 0) {           // warum while?
+      wait();
+    }
+    Object o = queue.removeFirst();
+    // wartenden Boss (eigentlich alle) benachrichtigen!
+    notifyAll();
+    return o;
+  }
+}
+\end{lstlisting}
+
+
+
+\subsection{Mutex Lock\label{sec:mutex}}
+
+Wie vorhergehend besprochen gibt es in J2SE 5.0 nun weitere Möglichkeiten,
+um Synchronisationsaufgaben einfacher zu lösen.
+
+Es gibt hierzu Interfaces und Klassen, die im Paket \verb+java.util.concurrent.locks+
+zu finden sind.
+
+
+\begin{lstlisting}
+public interface Lock {
+  void lock(); // holt sich den Lock (und wartet)
+  // kann unterbrochen werden:
+  void lockInterruptibly() throws InterruptedException;
+  boolean tryLock(); // holt sich den Lock und wartet nicht!
+  boolean tryLock(long time, TimeUnit unit)
+    throws InterruptedException; // wartet geg. Zeit
+  void unlock(); // gibt den Lock wieder frei 
+  Condition newCondition() // siehe später!
+}
+\end{lstlisting}
+
+
+Eine dazugehörige Klasse ist die Klasse \texttt{ReentrantLock}. ,,Reeantrant''
+bedeutet in diesem Zusammenhang, dass ein Thread einen Lock mehrfach
+in Besitz nehmen kann.
+\begin{itemize}
+\item ReentrantLock() // ein einfacher Konstruktor 
+\item ReentrantLock(boolean fair) // Lock `fair' an den am längsten wartenden
+Thread vergeben 
+\item int getHoldCount() // liefert die Anzahl der `holds' zurück, die der
+aktuelle Thread auf das Lock-Objekt besitzt. 
+\item int getQueueLength() // liefert die Anzahl der Threads zurück, die
+auf den Lock warten 
+\item boolean isHeldByCurrentThread() // liefert true zurück, wenn der aktuelle
+Thread den Lock besitzt 
+\item boolean isLocked() // liefert true zurück, wenn irgendein Thread den
+Lock besitzt 
+\item Condition newCondition() // erzeugt eine neue 'Condition' 
+\end{itemize}
+Die folgende \emph{Vorgangsweise} ist einzuhalten:
+
+
+\begin{lstlisting}
+mutex.lock();
+try { /* body */ }
+finally { mutex.unlock(); }
+\end{lstlisting}
+
+
+D.h.~ein solcher Mutex-Lock sollte eingesetzt werden, wenn 
+\begin{itemize}
+\item ein Time-out bei der Anforderung benötigt wird. 
+\item ein Lock in einer Methode angefordert und in einer anderen Methode
+wieder freigegeben werden soll. 
+\end{itemize}
+Eine \texttt{Account} Klasse (wie am Anfang dieses Kapitels skizziert)
+kann mit Hilfe eines solchen Locks folgendermaßen aussehen:
+
+
+\begin{lstlisting}
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Account {
+  private int balance;
+  private final ReentrantLock lock = new ReentrantLock(true);
+
+  public Account(int initialBalance) {
+    balance = initialBalance; 
+  }
+ 
+  public boolean withdraw(int amount) {
+    lock.lock();
+    try {
+      if (balance >= 0) {
+        balance -= amount;
+        return true;
+      }
+      else return false;
+    } finally {
+      lock.unlock();
+    }
+  }
+}
+\end{lstlisting}
+
+
+Im Abschnitt über Monitore ist der Begriff der Bedingungsvariablen
+(condition variable) vorgekommen und in der WorkQueue haben wir auch
+implizit eine verwendet. Bei genauerer Betrachtung der WorkQueue sieht
+man jedoch, dass jedes Mal wenn ein Worker ein Paket aus der Queue
+entnimmt ein \texttt{notifyAll()} Aufruf stattfindet, der sowohl Bosse
+als auch Worker aufweckt! Das ist auch einer der Gründe warum die
+Abfrage bzgl.~der Queuegröße in einer while-Schleife steht. Es ist
+allerdings sicher nicht sinnvoll unnötig Threads aufzuwecken und damit
+die Performance des Gesamtsystems zu verschlechtern!
+
+Aus diesem Grund gibt es in J2SE 5.0 jetzt ein neues Interface \texttt{java.util.concurrent.locks.Condition}
+mit folgenden Methoden:
+\begin{itemize}
+\item void await() throws InterruptedException, 
+\item void awaitUninterruptibly(); 
+\item boolean await(long time, TimeUnit unit) throws InterruptedException; 
+\item boolean awaitUntil(Date deadline throws InterruptedException; 
+\item void signal(); 
+\item void signalAll(); 
+\end{itemize}
+Mittels der Methode \texttt{newCondition()} bekommt man eine Instanz,
+die eben dieses Interface implementiert. Damit gibt es nun eine konkrete
+Implementierung des Konzeptes Bedingungsvariable.
+
+Anwenden kann man dies folgendermaßen:
+
+
+\begin{lstlisting}
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.Condition;
+
+public class WorkQueue {
+  private final LinkedList queue = new LinkedList();
+  private final Lock lock = new ReentrantLock();
+  private final Condition notFull = lock.newCondition();
+  private final Condition notEmpty = lock.newCondition();
+  private final int count = 0;
+
+  public void put(Object o) throws InterruptedException {
+    lock.lock();
+    try {
+      while (count == maxSize) {
+        notFull.await(); 
+      }
+      queue.addLast(o);
+      // wartenden Worker benachrichtigen!
+      notEmpty.signalAll();
+    }
+    finally {
+      lock.unlock();
+    }
+
+  public Object take() throws InterruptedException {
+    lock.lock();
+    try {
+      while (queue.size() == 0) {
+        notEmpty.await();
+      }
+      Object packet = queue.removeFirst();
+      // wartenden Boss benachrichtigen!
+      notFull.signalAll();
+      return packet;
+    } finally {
+      lock.unlock();
+    }
+  }
+}
+\end{lstlisting}
+
+
+Damit ergibt sich der Vorteil, dass ein Worker nur wartenden Bosse
+weckt und ein Boss lediglich wartende Worker weckt. Achtung: Trotzdem
+kann eine Condition - Instanz nicht die Abfrage ersetzen. D.h.~das
+Konzept der Bedingungsvariablen ist jetzt einerseits durch eine Abfrage
+und andererseits durch eine Instanz der Klasse Condition realisiert.
+
+
+\subsection{Queue}
+
+Eine selbständige Programmierung einer Queue ist ab J2SE 5.0 nicht
+mehr notwendig, da jetzt auch Implementierungn dafür enthalten sind.
+Dazu gibt es das Interface Queue<E> bzw.~BlockingQueue<E> und etliche
+Implementierungen, wie z.B. die LinkedBlockingQueue<E> (alle im Paket
+java.util.concurrent).
+
+\verb+java.util.Queue<E>+
+\begin{itemize}
+\item boolean offer(E o) // einfügen eines Elementes in Queue; Rückgabewert
+\texttt{false} bedeutet: kein Einfügen möglich 
+\item E peek() // liefert das erste Element ohne es zu entfernen; liefert
+\texttt{null} zurück, wenn kein Element vorhanden 
+\item E poll() // liefert das erste Element und entfernt es; liefert \texttt{null}
+zurück, wenn kein Element vorhanden 
+\item E element() throws NoSuchElementException // wie peek liefert allerdings
+nicht \texttt{null} zurück, wenn kein Element vorhanden 
+\item E remove() throws NoSuchElementException // wie poll liefert allerding
+nicht \texttt{null} zurück, wenn kein Element vorhanden 
+\end{itemize}
+Für Implementierungen mit Nebenläufigkeit ist jedoch das Interface
+\texttt{BlockingQueue} wichtiger.
+
+\verb+java.util.concurrent.BlockingQueue<E> extends Queue<E>+
+\begin{itemize}
+\item boolean add(E o); // liefert true zurück, wenn erfolgreich, wenn voll
+dann wird eine IllegalStateException geworfen 
+\item boolean offer(E o, long timeout, TimeUnit unit) throws InterruptedException
+// hängt o in Queue; wartet max. timeout; liefert true, wenn das Einfügen
+möglich war 
+\item void put(E o) throws InterruptedException // hängt o in Queue und
+wartet 
+\item E poll(long timeout, TimeUnit unit) throws InterruptedException //
+wie poll von Queue, jedoch mit timeout 
+\item E take() throws InterruptedException // wartet! 
+\item int remainingCapacity() // Anzahl der freien Plätze bzw.~Integer.MAX\_VALUE,
+wenn Queue nicht begrenzt. 
+\end{itemize}
+Alle diese Methoden von Implementierungen der BlockingQueue sind thread-safe!
+Die wichtigste Implementierung dieses Interfaces ist (für uns) die
+Klasse LinkedBlockingQueue.
+
+
+\subsection{Read-Write Lock}
+
+Read-Write Locks sind im Prinzip zwei Mutexes, die es ermöglichen
+zwischen lesenden und schreibenden Threads zu differenzieren: 
+\begin{itemize}
+\item Mehrere dürfen lesen, aber nur einer darf schreiben. 
+\item Wenn einer schreibt, dann darf keiner lesen. 
+\end{itemize}
+D.h. Read-Write Locks sollten eingesetzt werden, wenn 
+\begin{itemize}
+\item Methoden in lesende und schreibende Zugriffe unterteilt werden können. 
+\item es mehr lesende als schreibende Zugriffe gibt. 
+\item der Overhead akzeptabel ist. 
+\end{itemize}
+Ein entsprechendes Interface ist \texttt{ReadWriteLock} im Paket \texttt{java.util.concurrent.locks}
+und eine entsprechende Implentierung ist z.B. \texttt{ReentrantWriteLock}
+im gleichen Paket.
+
+
+\subsection{Semaphor}
+
+\emph{Semaphore} waren eine der ersten Synchronisationshilfsmittel
+und können eingesetzt werden, wenn es um die Verwaltung einer begrenzten
+Anzahl von Ressourcen geht. Ein Semaphor verwaltet allerdings nicht
+die Ressourcen selbst, sondern nur die Anzahl der verfügbaren Ressourcen.
+Ein Semaphor ist also ein Zähler, dessen Wert stets größer oder gleich
+0 ist.
+
+Ein Semaphor hat zwei grundlegende Operartionen, die atomar ausgeführt
+werden: Der Wert des Zählers kann inkrementiert oder dekrementiert
+werden. Bezüglich Erhöhung existiert keine Grenze, allerdings kann
+der Zähler nur dekrementiert werden, wenn er größer als 0 ist. Ansonsten
+blockiert die Dekrement-Operation so lange, bis ein anderer Thread
+den Wert wieder inkrementiert hat. Traditionellerweise werden die
+Operationen mit P (increment) und V (decrement) bezeichnet. In der
+Implementierung des JDK heißen sie release (increment) und acquire
+(decrement).
+
+Im Unterschied zu Locks hat ein Semaphor keinen Besitzer. Es ist auch
+nicht erforderlich einen Lock zu besitzen, um acquire oder release
+aufzurufen!
+
+Die wichtigsten Konstruktoren und Methoden der \texttt{java.util.concurrent.Semaphore}
+Klasse:
+\begin{itemize}
+\item Semaphore(int permits) // Initialisierung 
+\item Semaphore(int permits, boolean fair) // Initialisierung und Angabe
+ob die Threads fair behandelt werden sollen 
+\item void acquire() throws InterruptedException 
+\item void acquireUninterruptibly() 
+\item void release() 
+\end{itemize}
+Mit Hilfe von Semaphoren können viele Basisprobleme der Synchronisation
+gelöst werden:
+
+
+\minisec{Serialisierung}
+
+Folgendermaßen können 2 Threads \emph{serialisiert} werden:
+
+
+\begin{lstlisting}
+          Semaphore sem = new Semaphore(0);
+
+void a() {                       void b() {
+  opa1();                          sem.acquire();
+  sem.release();                   opb1();
+}                                }
+\end{lstlisting}
+
+
+D.h., es ist sichergestellt, dass Operation a1 vor Operation b1 durchgeführt
+wird.
+
+
+\minisec{Rendevous}
+
+Ein \emph{Rendevous} ist eine Erweiterung der Serialisierung sodass
+sie in beide Richtungen funktioniert:
+
+
+\begin{lstlisting}
+void a() {                      void b() {
+  opa1();                         opb1();
+  opa2();                         opb2();
+}                               }
+\end{lstlisting}
+
+
+Operation a1 soll sicher vor Operation b2 und Operation b1 sicher
+vor Operation a2 ausgeführt werden.
+
+Eine Lösung dafür sieht folgendermaßen aus:
+
+
+\begin{lstlisting}
+          Semaphore aArrived = new Semaphore(0);
+          Semaphore bArrived = new Semaphore(0); 
+void a() {                       void b() {
+  opa1();                          opb1(); 
+  aArrived.release();              bArrived.release();
+  bArrived.acquire();              aArrived.acquire();
+  opa2();                          opb2();
+}                                }
+\end{lstlisting}
+
+
+Achtung: auch mit Semaphoren können Deadlocks produziert werden:
+
+
+\begin{lstlisting}
+          Semaphore aArrived = new Semaphore(0);
+          Semaphore bArrived = new Semaphore(0);
+void a() {                       void b() {
+  opa1();                          opb1();
+  bArrived.acquire();              aArrived.acquire(); 
+  aArrived.release();              bArrived.release();
+  opa2();                          opb2();
+}                                }
+\end{lstlisting}
+
+
+
+\minisec{Mutex}
+
+Eine \emph{Umsetzung} des Mutex - Konzeptes mit Hilfe von Semaphoren
+sieht folgendermaßen aus:
+
+
+\begin{lstlisting}
+           Semaphore sem = new Semaphore(1);
+           counter = 0;
+
+void a() {                          void b() {
+  sem.acquire();                      sem.acquire();
+  counter = counter + 1;              counter = counter + 1;
+  sem.release();                      sem.release();
+}                                   }
+\end{lstlisting}
+
+
+D.h.~es ist sichergestellt, dass max.~ein Thread in den kritischen
+Abschnitt eintreten kann.
+
+\emph{Max.~n Thread in kritischen Abschnitt}: Nehmen wir an, dass
+wir eine beliebige Anzahl von Threads haben und sicherstellen wollen,
+dass maximal n Threads (also z.B. 3) zur gleichen Zeit den kritischen
+Abschnitt betreten dürfen (also allgemein mehr als einer). Für diesen
+Fall ist es trivial dies mit Semaphoren zu implementieren, da lediglich
+der Semaphor mit n initialisiert werden muss!
+
+
+\minisec{Barrier}
+
+Nehmen wir das Konzept des Rendevous her und generalisieren wir es
+auf n Threads, so kommen wir zum Konzept \texttt{Barrier}:
+
+Nehmen wir dazu an, dass wir Operationen haben (\texttt{op\_before}
+und \texttt{op\_after}) und insgesamt n Threads. Die Anzahl der Threads
+ist in einer globalen Variable n gespeichert und es soll sichergestellt
+werden, dass in allen n Threads zuerst \texttt{op\_before} ausgeführt
+wird und erst danach \texttt{op\_after}.
+
+Global für alle Threads wird ausgeführt:
+
+
+\begin{lstlisting}
+mutex = new Semaphore(1);
+barrier = new Semaphore(0);
+counter = 0;
+\end{lstlisting}
+
+
+
+\begin{lstlisting}
+opbefore();
+
+mutex.acquire();
+count = count + 1;
+mutex.release();
+
+if (count == n) {
+  barrier.release(); 
+}
+
+barrier.acquire();
+barrier.release();
+
+opafter();
+\end{lstlisting}
+
+
+Das einzige Problem an dieser Lösung ist, dass der barrier nach dem
+letzten Thread `gesetzt' ist und daher nicht einfach wieder verwendet
+werden kann. Will man dieses kleine Problem lösen wird es allerdings
+komplizierter. Aus diesem Grund gibt es eine Klasse \texttt{java.util.concurrent.CyclicBarrier},
+die eine wiederverwendbare Barrier zur Verfügung stellt.
+
+
+\section{Synchronisation in verteilten Systemen}
+
+Über die Synchronisation in nicht verteilten Systemen hinausgehend,
+wird die Situation in verteilten Systemen wesentlich komplizierter!
+
+Es handelt sich dabei um sehr viele und komplexe Probleme. Diese werden
+in den kommenden Abschnitten lediglich angerissen.
+
+
+\subsection{Uhrsynchronisierung}
+
+In einem Netzwerk wird oft eine gemeinsame Zeit benötigt!
+
+Beispiel: Es arbeiten in einer Firma 100 Programmierer an der Entwicklung
+einer großen Anwendung. Auf Grund der Größe der Anwendung wird das
+Übersetzen verteilt über viele Maschinen durchgeführt. Das Übersetzen
+wird mittels `make' durchgeführt. Besteht keine globale Zeit, kann
+es vorkommen, dass einige Dateien nicht übersetzt werden, die alte
+Version gelinkt wird und das resultierende System nicht funktionieren
+wird.
+
+Weiteres Beispiel: Eine E-Mail, die beim Empfänger 5 Minuten vor dem
+Versendezeitpunkt ankommt! Stellen wir uns weiter vor, dass die Antwort,
+die der ursprüngliche Empfänger an den Sender zurücksendet noch immer
+2 Minuten vor dem ursprünglichen Sendezeitpunkt der ersten E-Mail
+ankommt!
+
+Möglichkeiten: 
+\begin{itemize}
+\item in der Beziehung der Atomzeit (z.B. Sender DCF-77 in Mainflingen hat
+ca.~eine Abweichung von der ,,echten'' Zeit von 1.5ns/Tag). 
+\item In der Synchronisierung mit einem Rechner, der die Atomzeit bezieht.
+Häufig verwendet wird das Network Time Protocol (NTP): Es handelt
+sich dabei um ein Internet Standardprotokoll, das von mehreren 100.000
+Rechnern im Internet betrieben wird, um ihre Zeit zu synchronisieren
+(weltweit Bereich 1--50ms Genauigkeit). 
+\item Oft wird jedoch gar nicht eine absolute Zeit benötigt, sondern lediglich,
+dass die Computer eine gemeinsame Zeit verfügen. Die Zeiten der Computer
+dürfen nicht auseinanderlaufen, sondern müssen innerhalb einer gewissen
+Schranke bleiben. Dazu gibt es Alogorithmen, die eine Uhr-Synchronisierung
+bewerkstelligen.
+
+
+In diesem Fall muss man lediglich die Situation im Auge behalten,
+die auftritt, wenn man ein derartig isoliertes Netzwerk mit einem
+anderen Netzwerk (z.B. das Internet) verbindet. 
+
+\end{itemize}
+Im Prinzip kann man die Verfahren in 2 Klassen einteilen: Entweder
+ist es notwendig von einem Server eine exakte Zeit zu beziehen oder
+es ist lediglich notwendig eine gemeinsame Zeit zu finden.
+
+
+\minisec{Der Algorithmus von Cristian}
+
+Will man eine Referenzzeit von einem Rechner beziehen kann man das
+\emph{Verfahren von Cristian} verwenden: Der Client sendet zu einem
+Zeitpunkt $t_{0}$ eine Anfrage an den Server ab. Der Server empfängt
+zeitversetzt diese Anfrage, verarbeitet diese (auch dafür benötigt
+er Zeit) und sendet die Antwort an den Client zurück (auch dafür wird
+eine gewisse Zeitspanne benötigt. Der Client erhält also zu einem
+Zeitpunkt $T_{1}$ die Antwort. Dies wird periodisch durchgeführt.
+
+Unter gewissen Annahmen kann daraus eine Zeit gefunden werden: 
+\begin{itemize}
+\item Die Antwort hin und zurück über das Netzwerk dauert ca.~gleich lange.
+Davon kann in der Regel in einem LAN ausgegangen werden. Prinzipiell
+könnte es natürlich sein, dass die Anfrage einen anderen Weg nimmt
+als die Antwort. In diesem Fall wäre z.B. diese Annahme nicht mehr
+gültig. 
+\item Der Server benötigt zur Verarbeitung der Anfrage die Zeitspanne $I$
+(Zeit für die Interruptverarbeitung) und trägt seine aktuelle Zeit
+$T_{S}$ zum spätmöglichsten Zeitpunkt in die Nachricht ein. 
+\end{itemize}
+Unter diesen Voraussetzungen kann die Zeit am Client leicht berechnet
+und gesetzt werden: $t=t_{S}+(t_{1}-t_{0}-I)/2$.
+
+Bei diesem Algorithmus muss beachtet werden: 
+\begin{itemize}
+\item Die Zeit könnte am Client zurückgestellt werden. Das darf nicht vorkommen
+und deshalb eine Änderung schrittweise eingeführt werden. 
+\item Die Zeit hängt von einem Server ab. Dieser könnte ausfallen. Hier
+hat man wieder prinzipiell die Möglichkeit mehrere Zeitserver zu etablieren.
+In solch einem Fall muss man jedoch auch darauf achten, dass es fehlerhafte
+Zeitserver geben kann. 
+\end{itemize}
+
+\minisec{Der Berkeley-Algorithmus}
+
+Will man sich auf eine gemeinsame Zeit einigen, dann kann man den
+\emph{Berkeley-Algorithmus} verwenden.
+
+Im Gegensatz zum Algorithmus von Cristian, der mit passiven Zeitservern
+operiert, sind die Zeitserver beim Berkeley-Algorithmus selbst aktiv.
+D.h.~ein dedizierter Rechner (Master) fragt jede Maschine (Slave)
+nach der aktuellen Zeit ab. Abhängig von den Antworten berechnet er
+eine durchschnittliche Zeit und weist allen Slaves an, ihre Uhren
+der neuen Zeit anzupassen (entweder durch Verlangsamung oder durch
+Beschleunigung) bis eine bestimmte Differenzreduzierung erreicht wurde.
+D.h.~der Master sendet nicht eine absolute Zeit sondern eine individuelle
+Differenz an jeden Client zurück (inklusive sich selbst). Ein Beispiel
+für einen derartigen Ablauf der Synchronisation ist in Abbildung \vref{fig:clock_berkeley}
+zu finden.
+
+Die Genauigkeit dieses Verfahrens hängt ebenfalls der maximalen Round-Trip-Zeit
+zwischen Master und Slave ab. Der Master eliminiert alle Ausreißerwerte,
+die größere Zeiten als dieses Maximum aufweisen. Dazu kann sich der
+Master eine Untermenge von Uhren auswählen, die sich nur um einen
+vorgegebenen Betrag voneinander unterscheiden, und der Durchschnitt
+wird nur für die von diesen Uhren abgelesenen Zeiten gebildet.
+
+Diese Methode ist geeignet, wenn keine Maschine eine Referenzzeit
+besitzt und lediglich eine gemeinsame Zeit benötigt wird.
+
+\selectlanguage{ngerman}%
+%
+\begin{figure}
+\centering
+
+\includegraphics[bb=0bp 0bp 19cm 14cm,clip,scale=0.7]{design_dev/synchronization/berkeley}
+
+\caption{\label{fig:clock_berkeley}Beispiel für Berkeley-Algorithmus}
+
+\end{figure}
+
+
+\selectlanguage{austrian}%
+
+\subsection{Globaler Status}
+
+Nachdem Einigkeit über eine gemeinsame Zeitbasis erzielt worden ist,
+ist es oft wichtig den \emph{globalen Zustand} einer verteilten Anwendung
+zu wissen.
+
+Der globale Status setzt sich aus dem lokalen Zustand aller Prozesse
+gemeinsam mit den Nachrichten zusammen, die gerade übertragen werden.
+
+Aus diesem globalen Status kann z.B. gefolgert werden, ob sich das
+System in einem Deadlock befindet.
+
+
+\subsection{Wechselseitiger Ausschluss}
+
+Es soll der verteilte Zugriff auf eine Ressource geregelt werden.
+Dazu gibt es zumindest drei Algorithmen:
+
+
+\minisec{Zentralisierter Algorithmus}
+
+Es wird die selbe Vorgehensweise herangezogen, die auch im nicht verteilten
+System gewählt wird. Dazu wird ein zentraler Koordinator bestimmt,
+der von allen Einheiten befragt wird und z.B. genau einer den Zugriff
+auf die Ressource gestattet. Verlässt derjenige Prozess wieder den
+kritischen Abschnitt meldet er dies ebenfalls dem Koordinator.
+
+Im speziellen funktioniert der \emph{zentralisierter Algorithmus}
+folgendermaßen:
+\begin{enumerate}
+\item Prozess 1 stellt eine Anforderung, um den Zugriff auf eine Ressource
+durchführen zu können. 
+\item Der Koordinator sendet eine OK-Antwort zurück (Erteilung) und somit
+kann Prozess 1 in den kritischen Abschnitt eintreten. 
+\item In der Zwischenzeit will auch Prozess 2 in den kritischen Abschnitt
+eintreten und sendet ebenfalls eine Anfrage an den Koordinator. Dieser
+stellt die Anfrage in eine Queue und sendet vorerst keine Antwort
+an Prozess 2. 
+\item Prozess 1 hat den kritischen Abschnitt verlassen und sendet eine Freigabenachricht
+an den Koordinator. 
+\item Darauf kann der Koordinator eine OK-Nachricht an Prozess 2 senden. 
+\end{enumerate}
+Zu sehen ist dieser Ablauf in Abbildung \vref{fig:sync_central}.
+
+Die Vorteile liegen
+\begin{itemize}
+\item in der einfachen Implementierung: es sind nur drei Nachrichten (Anforderung,
+Erteilung, Freigabe) notwendig. 
+\item im fairen Behandeln der Anfragen, die genau im Eintreffen der Anforderungen
+abgearbeitet werden. Jeder Prozess kommt einmal an die Reihe; es kommt
+nicht vor, dass einer endlos warten muss. 
+\end{itemize}
+Speziell bei dieser Möglichkeit, treten die Probleme auf, die auch
+bei zentralisierten Verfahren auftreten:
+\begin{itemize}
+\item Der Koordinator ist ein zentraler Ausfallpunkt: Wenn dieser ausfällt,
+dann fällt möglicherweise das gesamte System aus. 
+\item Ein ausgefallener Koordinator kann nicht erkannt werden, wenn dieser
+nach Annahme einer Anforderung ausfällt. Da das Nichtempfangen einer
+Freigabe nicht unterschieden werden kann von einem eventuellen Ausfall
+des Koordinators. 
+\item Der Koordinator kann sich als Leistungsengpass herausstellen und die
+Skalierbarkeit begrenzen. 
+\item Wenn es keinen dedizierten Koordinator gibt, muss einer gewählt werden
+(Wahlalgorithmen). 
+\end{itemize}
+\selectlanguage{ngerman}%
+%
+\begin{figure}
+\centering
+
+\includegraphics[bb=0bp 0bp 19cm 5cm,clip,scale=0.85]{design_dev/synchronization/sync_central}
+
+\caption{\label{fig:sync_central}Beispiel für zentralisierten Algorithmus}
+
+\end{figure}
+
+
+\selectlanguage{austrian}%
+
+\minisec{Verteilter Algorithmus}
+
+Der \emph{verteilte Algorithmus} funktioniert folgendermaßen:
+
+Ein Prozess, der in den kritischen Bereich eintreten will, erzeugt
+eine Anforderungsnachricht, die seine Prozessnummer und die aktuelle
+Zeit enthält. Diese Nachricht sendet er an alle Prozesse (auch an
+sich selbst).
+
+Dies kann entwender durch einzelnes Versenden an alle Prozesse oder
+durch Multicasting erfolgen. Wichtig ist, dass die Kommunikation zuverlässig
+ist, d.h., dass jede Nachricht bestätigt wird.
+
+Erhält ein Prozess eine Anforderungsnachricht, ist seine Reaktion
+von seinem Status bzgl. dem kritischen Abschnitt abhängig: 
+\begin{itemize}
+\item Befindet sich der Empfänger nicht im kritischen Bereich und will diesen
+auch nicht betreten, dann sendet er eine OK-Nachricht an den Sender
+zurück. 
+\item Befindet sich der Empfänger im kritischen Bereich, antwortet er nicht.
+Stattdessen stellt er die Anforderung in eine Queue. 
+\item Will der Empfänger in den kritischen Bereich eintreten, hat dies aber
+noch nicht gemacht, dann vergleicht er den Zeitstempel der eingehenden
+Nachricht mit dem der Nachricht, die er selbst versendet hat. Der
+niedrigere Zeitstempel gewinnt: Hat die eingehende Nachricht einen
+niedrigeren Zeitstempel, dann sendet er eine OK-Nachricht zurück.
+
+
+Hat seine eigene Nachricht einen kleineren Zeitstempel, stellt der
+Empfänger die eingehende Anforderung in die Warteschlange und sendet
+nichts. 
+
+\end{itemize}
+Hat ein Prozess OK-Nachrichten von allen Prozessen erhalten, dann
+kann er in den kritischen Bereich eintreten.
+
+Wird der kritische Bereich verlassen, dann sendet der Prozess OK-Nachrichten
+an alle Prozesse in seiner Warteschlange und löscht sie aus dieser.
+
+In Abbildung \vref{fig:sync_distributed} ist ein Beispiel für den
+Ablauf einer Synchronisation mittels verteilten Algorithmus zu sehen.
+
+\selectlanguage{ngerman}%
+%
+\begin{figure}
+\centering
+
+\includegraphics[bb=0bp 0bp 165mm 5cm,clip,scale=0.85]{design_dev/synchronization/sync_distributed}
+
+\caption{\label{fig:sync_distributed}Beispiel für verteilten Algorithmus}
+
+\end{figure}
+
+
+\selectlanguage{austrian}%
+Dieser Algorithmus hat jedoch einige gravierende Nachteile: 
+\begin{itemize}
+\item Anstatt einem Ausfallpunkt gibt es jetzt n Ausfallpunkte. 
+\item Bei Einzelversendungen der Anforderungsnachrichten muss jeder Prozess
+eine Liste der Gruppenmitglieder verwalten. 
+\item Die Skalierbarkeit hat sich auch nicht verbessert, da jetzt alle Prozesse
+beteiligt sind und jeder eine Funktion ähnlich dem eines Koordinators
+übernimmt. 
+\item Der Algorithmus ist aufwändiger und langsamer. 
+\end{itemize}
+
+\minisec{Token-Ring-Algorithmus}
+
+Beim \emph{Token-Ring-Algorithmus} werden alle Prozess sind in einem
+logischen Ring angeordnet. Jeder muss wissen welcher sein Nachfolger
+ist. Es kreist ein Token im Ring. Ist ein Prozess im Besitz des Tokens,
+dann kann er in den kritischen Abschnitt eintreten. Nach Verlassen
+des kritischen Abschnittes wird das Token weitergegeben. Will kein
+Prozess in den kritischen Abschnitt eintreten, kreist das Token mit
+hoher Geschwindigkeit im Kreis.
+
+Nachteile: 
+\begin{itemize}
+\item Es kann auch hier ein Prozess abstürzen. Dies kann jedoch erkannt
+werden, wenn jede Tokenübergabe bestätigt werden muss. Wird der Empfang
+nicht bestätigt, dann muss dieser Prozess aus dem Ring entfernt werden.
+D.h.~bei der Übergabe muss der Vorgänger den toten Prozess aus dem
+Ring herausnehmen und das Token an den übernächsten Prozess weitergeben.
+D.h.~aber, dass jeder Prozess den gesamten aktuellen Ring kennen
+muss! 
+\item Es kann ein Token verloren gehen. In diesem Fall muss es neu erzeugt
+werden, aber es ist nicht leicht zu erkennen, dass ein Token verloren
+gegangen ist. 
+\end{itemize}
+
+\minisec{Zusammenfassung}
+
+Es kann gesagt werden, dass der zentrale Algorithmus trotz dessen
+gravierenden Nachteile der effizienteste und einfachste Algorithmus
+ist.
+
+
+\subsection{Verteilte Transaktionen}
+
+Prinzipiell: Verteilte Transaktionen weisen ähnliche Charakteristiken
+wie ihre nicht verteilten Pendants auf, jedoch treten \emph{zusätzlich}
+die schon besprochenen Probleme auf, die man mit ähnlichen Mechanismen
+lösen kann.\selectlanguage{austrian}
+

@@ -1,0 +1,238 @@
+
+\chapter{Protokolle der Anwendungsschicht}
+
+Hier werden die wichtigsten Protokolle besprochen, die der Anwendungsschicht
+zuzurechnen sind und trotzdem für den Betrieb eines TCP/IP Netzes
+notwendig sind.
+
+
+\section{DHCP\label{sec:DHCP}}
+
+siehe Foliensatz!
+
+%% Um einem Host automatisch mit einer IP Adresse, einer Subnetzmaske,
+%% einen Default-Router, einen DNS-Server oder Proxy-Konfigurationen
+%% zu versorgen, kann DHCP (dynamic host configuration protocol, RFC
+%% 2131) herangezogen werden.
+
+%% Die prinzipielle Funktionsweise ist folgende:
+%% \begin{itemize}
+%% \item Es existiert zumindest ein DHCP Server, der die Parameter für das
+%% Netz gespeichert hat.
+%% \item Wird ein für DHCP konfigurierter Host hochgefahren, dann sendet er
+%% eine DHCPDISCOVER Nachricht mittels UDP an die IP Broadcast-Adresse
+%% (also 255.255.255.255) mit dem Zielport 67 und einem Absender 0.0.0.0
+%% vom Quellport 68. Diese Nachricht enthält natürlich außerdem die MAC
+%% Adresse des zu konfigurierenden Hosts.
+%% \item Ein in diesem Netz vorhandener DHCP Server wird diese Nachricht empfangen
+%% mit einer DHCPOFFER Broadcast-Nachricht vom UDP Quellport 68 zur Adresse
+%% 255.255.255.255 mit dem UDP Zielport 67 antworten. Diese Nachricht
+%% enthält einen Vorschlag für eine IP Adresse, u.U. weitere Parameter
+%% als auch eine Lease und einen Serveridentifier. Eine Lease bedeutet
+%% die Angabe einer Zeit, wie lange der Host diese IP Adressen samt den
+%% übermittelten Parametern verwenden darf. Der Host muss sich rechtzeitig
+%% vor Ablauf dieser Lease um eine Verlängerung beim DHCP Server bemühen.\\
+%% Der Vorschlag kann entweder auf Grund der MAC Adresse statisch
+%% konfiguriert sein oder aus einem Pool von IP Adressen vom DHCP Server
+%% dynamisch vergeben werden.
+%% \item Da es mehrere DHCP Server in einem Netz geben darf, kann der Host
+%% jetzt unter den Angeboten wählen (z.B. den Server, der die längste
+%% Lease anbietet). Er sendet eine Broadcast-Nachricht DHCPREQUEST mit
+%% dem Serveridentifier. Alle anderen DHCP Server werden dies als Absage
+%% werten und nicht weiter reagieren. Der vom Host ausgewählte DHCP Server
+%% wird mit einer DHCPACK Nachricht die Zuordnung bestätigen oder mit
+%% einer DHCPNAK Nachricht die Zuordnung verweigern.
+%% \item Der Client wird sich standardmäßig nach der Hälfte der Lease erneut
+%% mittels DHCPREQUEST (allerdings per Unicast) beim Server um eine Verlängerung
+%% ansuchen. Der Server wird in der Regel mit den identischen Daten bestätigen.
+%% Antwortet der Server jedoch nicht, kann der Client die Adresse weiterverwenden,
+%% muss allerdings nach 7/8 der Zeit erneut um eine Verlängerung ansuchen
+%% (per Broadcast).
+%% \end{itemize}
+%% Folgende Punkte sind interessant:
+%% \begin{itemize}
+%% \item Die Verwendung mehrerer DHCP Server kann durchaus sinnvoll sein, um
+%% eine Redundanz und damit eine Ausfallsicherheit zu erreichen.
+%% \item Es macht keinen Sinn in jedem Teilnetz einen DHCP Server zu betreiben.
+%% Um trotzdem DHCP betreiben zu können, ist es lediglich notwendig in
+%% jedem Teilnetz einen DHCP-Relay-Agenten zu konfigurieren. Dieser reagiert
+%% auf alle DHCP Nachrichten und leitet sie per Unicast an den eigentlichen
+%% DHCP Server weiter.
+%% \item Es gibt DHCP Server, die mit einem DNS Server zusammenarbeiten und
+%% diesen über die Vergabe einer Zuordnung von IP Adresse, Rechnernamen
+%% und Lease informieren. Dies wird als dynamisches DNS, abgekürzt DDNS
+%% (engl. dynamical DNS), bezeichnet.
+%% \end{itemize}
+
+\section{DNS\label{sec:DNS}}
+
+siehe Foliensatz!
+
+%% Das Domain Name System (DNS) ist ein verteiltes, hierarchisches System
+%% zur Auflösung von Namen in IP-Adressen und umgekehrt. Dieses System
+%% ermöglicht damit eine Positionstransparenz als auch eine Migrationstransparenz.
+%% Der große Vorteil liegt in der Flexibilität und der Wartbarkeit der
+%% Zuordnungen.
+
+%% Es existiert keine zentrale Datenbank. Der Namensraum ist baumartig
+%% in Zonen aufgeteilt für die jeweils unabhängige Administratoren zuständig
+%% sind. Diese Zonen werden von DNS Servern verwaltet. Die Wurzel dieses
+%% Baumes wird mit einem ,,.'' bezeichnet.
+
+
+%% \subsection{Teile des DNS}
+
+%% Das DNS besteht aus drei Komponenten:
+%% \begin{itemize}
+%% \item Der Domainname (fully qualified domain name, FQDN) besteht aus einer
+%% Folge von sogenannten ,,Labels'', die aus Zeichenketten (alphanummerisch
+%% und der Bindestrich), die durch Punkte von einander getrennt sind.
+%% Beispiel: ,,htlwrn.ac.at\underbar{.}''. Ein Domainname wird mit
+%% einem Punkt abgeschlossen, der normalerweise jedoch weggelassen wird.
+%% So ein Domainname ist case-insensitive und darf inklusive aller Punkte
+%% maximal 255 Zeichen lang sein. Jedes Label darf maximal 63 Zeichen
+%% lang sein.
+
+
+%% Die direkt unter der Wurzel befindlichen Domänen werden als Top Level
+%% Domains (TLD) bezeichnet. An TLD gibt es entweder Länderkürzel (als
+%% ISO 3666) wie ,,.at'' oder generische TLD wie ,,.com'', ,,.org'',
+%% ,,.net'', ,,.name'' oder ,,.info''. Die TLD ,,.eu'' liegt
+%% in gewisser Hinsicht in der Mitte.
+
+%% Um auch nicht ASCII Zeichen in Domain-Namen verwenden zu können, wurde
+%% das Konzept IDN (Internationalized Domain Name) eingeführt, das ein
+%% Verfahren angibt wie Domänennamen mit Unicode Zeichen in ASCII Zeichen
+%% umgesetzt werden. Diese Umsetzung wird direkt vom Client durchgeführt,
+%% sodass das neue System kompatibel zur bestehenden Infrastruktur ist.
+
+%% \item Die Nameserver (DNS Server) sind diejenigen Programme, die Anfragen
+%% zum Domain-Namen beantworten. Es wird zwischen autoritativen (diese
+%% sind für eine Zone verantwortlich) und nicht autoritativen Nameservern
+%% (sind nicht für eine Zone verantwortlich) unterschieden. Nicht autoritative
+%% Nameserver beziehen ihre Informationen über eine Zone von autoritativen
+%% oder auch nicht autoritativen Nameservern und halten schon beantwortete
+%% Anfragen in einem Cache.
+%% \item Ein Resolver (DNS Client) ist direkt in TCP integriert und steht dem
+%% Anwenderprozess als Funktion zur Verfügung.
+%% \end{itemize}
+
+%% \subsection{Zonen}
+
+%% Da es sich beim DNS vom Prinzip her um eine verteilte Datenbank mit
+%% einem hierarchischen Aufbau der Einträge handelt, wird die Verwaltung
+%% der Einträge in Zonen aufgeteilt. Eine Zone ist ein zusammenhängender
+%% Teil des Domänen-Baumes, für den diese Zone autoritative Informationen
+%% zur Verfügung stellt.
+
+%% Das bedeutet, dass eine Zone für einen gewissen Teil dieses Baumes
+%% verantwortlich ist. Damit ist eine Zone für die Domain und eventuell
+%% für die Subdomains verantwortlich, wenn die Subdomains nicht wiederum
+%% in eine Zone ausgelagert sind.
+
+%% Für jede Zone muss es mindestens 2 DNS Server geben, die für diese
+%% Zone Anfragen entgegeben nehmen. Dies wurde aus Gründen der Ausfallsicherheit
+%% so festgelegt.
+
+
+%% \subsection{Namensauflösung}
+
+%% Im Zuge der Namensauflösung wird zwischen rekursiver und iterativer
+%% Namensauflösung unterschieden:
+%% \begin{itemize}
+%% \item Die rekursive Namensauflösung funktioniert so, dass der Resolver den
+%% konfigurierten Nameserver kontaktiert. Kennt dieser die Antwort nicht,
+%% dann fragt dieser selbstständig bei weiteren Nameservern nach und
+%% liefert danach die Anwort an den Client zurück.
+%% \item Bei der iterativen Namensauflösung liefert der Nameserver lediglich
+%% die Adresse des nächsten abzufragenden Nameserver zurück, falls er
+%% die Antwort nicht kennt und der Resolver muss selber die weiteren
+%% Anfragen durchführen.
+%% \end{itemize}
+%% Die Unterscheidung welche der beiden Varianten bei einer Anfrage verwendet
+%% wird, hängt von einem Flag in der Anfrage ab. Ein Resolver wird in
+%% der Regel eine rekursive Namensauflösung verlangen. Ein Root-Server
+%% akzeptiert nur iterative Anfragen.
+
+%% Unter einer inversen Anfrage versteht man die Auflösung der IP Adresse
+%% in einen Domänennamen. Dazu gibt es eine eigene vordefinierte Domäne
+%% namens in-addr.arpa, die folgendermaßen verwendet wird: Angenommen
+%% es soll für die IP Adresse 193.170.149.127 der Domänenname gefunden
+%% werden, dann wird folgender Domänenname 127.149.170.193.in-addr.arpa
+%% beim DNS Server zur Auflösung www.htlwrn.ac.at führen.
+
+
+%% \subsection{Typen von DNS-Servern}
+
+
+%% \minisec{Master- und Slave-Server}
+
+%% Wie schon besprochen muss es für jede Zone mindestens 2 autoritative
+%% DNS Server geben. Genauer es muss genau einen primären Master-Server
+%% und einen oder mehrere Slave-Server geben. Änderungen werden nur am
+%% primären Master-Server vorgenommen. Die Slave-Server fordern eine
+%% Kopie der Zonen-Datei an und laden sie von diesem herunter.
+
+%% Master und Slave sind lediglich Rollen. Ein Slave-Server kann durchaus
+%% auch Master-Server sein, wenn ein anderer Slave-Server die Zonen-Datei
+%% anfordert. Es kann jedoch nur einen primären Master-Server geben.
+%% Alle anderen sind sekundäre Server für eine Zone.
+
+%% Änderungen an der Zonen-Datei werden von einem Slave-Server dadurch
+%% erkannt, dass jede Änderung der Zonen-Datei eine Inkrementierung der
+%% Seriennummer der Zonendatei um 1 bewirkt.
+
+
+%% \minisec{Caching-Server}
+
+%% Master-Server und Slave-Server geben autoritative Antworten. Von einem
+%% Caching-Server erhält man keine autoritative Antworten. Dies liegt
+%% darin begründet, dass ein Caching-Server keine Kopie der Zonen-Datei
+%% enthält. Er speichert lediglich schon einmal ermittelte Antworten
+%% in einem Cache. Die Einträge werden für eine gewisse Zeit in diesem
+%% Cache zwischengespeichert. Solange eine Antwort im Cache liegt, kann
+%% der Caching-Server diese Antwort im Zuge einer Anfrage zurückliefern
+%% und muss keine eigene Anfrage stellen.
+
+
+%% \minisec{Forwarder}
+
+%% Ein Forwarder leitet eine Anfrage immer weiter und zwar immer an den
+%% selben DNS-Server. Damit dient er lediglich als Zwischenstation.
+
+
+\section{Routingprotokolle\label{sec:routing_protocols}}
+
+In Abhängigkeit, ob ein Router ein Teil eines autonomen Systems (ein
+oder mehrere Netze, die von einer Organisation verwaltet werden) ist
+oder an der Grenze eines autonomen Systems eingesetzt wird, verwendet
+man verschiedene Arten von Routingprotokollen:
+\begin{labeling}{00.00.0000}
+\item [{Interior~Gateway~Protocol~(IGP)}] Es handelt sich um einen Typ
+von Routing-Protokollen, die ausschließlich innerhalb eine autonomen
+Systems zum Einsatz kommt. Beispiele sind: RIP und OSPF. RIP (routing
+information protocol) ist das am häufigsten eingesetzte Protokoll
+und verwendet den Distanzvektor-Algorithmus (siehe Abschnitt \vref{sec:distance-vector-algorithm}),
+während OSPF (open shortest path first) den Link-State-Algorithmus
+(siehe Abschnitt \vref{sec:link-state-algorithm}) verwendet.
+
+
+RIP wird nur in kleineren Organisationen eingesetzt. Dies liegt einerseits
+an den schon im Abschnitt \ref{sec:distance-vector-algorithm} erläuterten
+Nachteilen des eingesetzten Verfahrens, aber auch daran, dass z.B.
+immer nur die Hops als Gewichte herangezogen werden. Damit würde eine
+ISDN Verbindung, die über einen Hop geht einer hoch performanten Standleitung
+mit 2 Hops der Vorzug gegeben werden. Außerdem kann die Anzahl der
+Hops 15 ja nicht überschreiten.
+
+OSPF führt eine Wertigkeit der Links ein und kann damit einer Standleitung
+den Vorzug gegenüber einer ISDN Leitung geben. Allgemein findet es
+eine optimale Route auf Grund mehrerer Kriterien und unterteilt außerdem
+noch in sogenannte Areas, um effiziente eine Router-Tabellen-Übertragung
+zu erreichen. OSPF ist ein bedeutend komplexeres Protokoll.
+
+\item [{Exterior~Gateway~Protocol~(EGP)}] Diese werden zwischen Routern
+autonomer Systeme eingesetzt. Beispiele sind: BGP, EGP (nicht mehr
+in Verwendung).
+\end{labeling}
+

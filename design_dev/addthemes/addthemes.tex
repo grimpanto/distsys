@@ -1,0 +1,162 @@
+\selectlanguage{english}%
+
+\chapter{Weitere Themen}
+
+In diesem Kapitel werden weitere Themen kurz angerissen, die im Zusammenhang
+mit verteilten Systemen eine wichtige Rolle spielen.
+
+
+\section{Namen}
+
+Ein \emph{Name} in einem verteilten System ist eine Zeichenkette,
+die genutzt wird, um auf eine Ressource zu verweisen. Namen sind von
+Menschen interpretierbar.
+
+Um mit einer Ressource arbeiten zu können, wird ein Zugangspunkt benötigt.
+Der Name eines solchen Zugangspunktes wird als \emph{Adresse} bezeichnet.
+Jede Ressource kann über mehrere Zugangspunkte verfügen.
+
+Beispiel: Ein Telefon kann als Zugangspunkt zu einer Person betrachtet
+werden, wobei die Telefonnummer der Adresse entspricht. Jede Person
+kann mehrere Telefonnummern haben, wobei jeder dieser Nummern der
+Adresse eines Zugangspunktes entspricht.
+
+Eine Einheit kann im Laufe der Zeit ihren Zugangspunkt ändern.
+
+Beispiel: Zieht die Person um, werden sich in der Regel auch einige
+der Telefonnummern ändern.
+
+Eine Adresse ist also ein spezieller Name, der auf einen Zugangspunkt
+einer Einheit verweist. Da sich die Zugangspunkte ändern können (ein
+FTP Server kann unter einer anderen IP Adresse betrieben werden),
+ist es nicht sinnvoll den Namen des Zugangspunktes als Namen für die
+Einheit zu verwenden (besser ist es den FTP Dienst unter einem separaten
+Namen anzusprechen, der unabhängig von der Adresse des FTP Servers
+ist). Weiteres Beispiel: Load-Balancing von Web-Diensten.
+
+Ein weiterer spezieller Fall von Namen, der sehr wichtig ist, sind
+\emph{ID}s, die Einheiten eindeutig identifizieren. Dazu sollten die
+folgenden Eigenschaften erfüllt sein:
+\begin{enumerate}
+\item Eine ID verweist auf höchstens eine Einheit. 
+\item Jede Einheit wird durch höchstens eine ID angesprochen. 
+\item Eine ID verweist immer auf die selbe Einheit (d.h.~sie wird nie wiederverwendet). 
+\end{enumerate}
+
+\minisec{Nachschlagdienste}
+
+Meistens liegen Adressen und IDs nur in maschinenlesbarer Form vor.
+Deshalb werden \emph{benutzerfreundliche Namen}, die auf die Verwendung
+durch den Menschen zugeschnitten sind, als weiterer spezieller Namenstyp
+betrachtet.
+
+Prinzipiell kann von drei verschiedenen Arten von Nachschlagdiensten
+gesprochen werden:
+\begin{labeling}{00.00.0000}
+\item [{Namensdienste}] Namen werden in verteilten Systemen in so genannten
+Namensräumen angeordnet. Namensräume können flach oder hierarchisch
+organisiert sein. Unter einer Namensdomäne versteht man einen Namensraum
+für den es eine einzige übergreifende administrative Autorität gibt,
+die die Zuordnung von Namen im Namensraum regelt. Ein üblicher hierarchischer
+Namensraum ist z.B. das DNS. Das DNS ist gleichzeitig ein Namensdienst,
+der Namen in Adressen auflöst. Solche Dienste werden auch `white pages'
+genannt. 
+\item [{Verzeichnisdienste}] Oft werden Ressourcen oder allgemein Objekten
+Attribute zugeordnet. Der Vorteil ist, dass Objekte auf Grund genauer
+Attributspezifikationen ausgewählt werden können. Ein Schlüsselattribut
+eines Objektes ist dann seine Adresse. Ein Beispiel für einen Verzeichnisdienst
+(der also Objekte auf Grund von Attributspezifikationen findet) ist
+LDAP (Light Directory Access Protocol). Andere Verzeichnisdienst sind
+Active Directory (bietet ebenfalls eine LDAP Schnittstelle) oder X.500.
+Zu solchen Diensten sagt man auch `yellow pages'. 
+\item [{Erkennungsdienste}] In spontanen Netzwerken werden Ressourcen einfach
+zum Netzwerk hinzugefügt oder wieder entfernt. Als solches bieten
+sie eine Schnittstelle zur automatischen Registrierung bzw.~Deregistrierung
+von Diensten. Beispiele sind Bonjour oder Jini.
+\end{labeling}
+
+\section{Konsistenz und Replikation}
+
+Gründe für die Replizierung von Daten sind: 
+\begin{itemize}
+\item Erhöhung der Zuverlässigkeit 
+\item Verbesserung der Leistung 
+\end{itemize}
+Aus dem Prinzip der Replikation und den nicht verhinderbaren Abgleichzeiten,
+kann es zu dazu kommen, dass Unterschiede in den Datenbeständen auftreten.
+D.h.~die Konsistenz der Daten ist nicht mehr sichergestellt.
+
+Replikationsprotokolle und die zugrundeliegenden Überlegungen können
+relativ komplex werden. Andererseits kann man vom Standpunkt der Anwendungsentwicklung
+aus die entstehenden Probleme in die Replikationsmechanismen der untenliegenden
+DBMS verlagern, solange man mit der Abstraktion einer datenzentrierten
+Replikation auskommt.
+
+
+\section{Fehlertoleranz}
+
+Das Ziel ist es, \emph{verlässliche Systeme} zu entwickeln. Darunter
+versteht man Systeme, die die folgenden Anforderungen abdecken:
+\begin{itemize}
+\item Die \emph{Verfügbarkeit} drückt die Wahrscheinlichkeit aus, dass ein
+System zu einem gewissen (d.h.~jeden beliebigen) Zeitpunkt korrekt
+funktioniert. 
+\item Unter \emph{Zuverlässigkeit} versteht man die Eigenschaft, dass ein
+System fehlerfrei über ein gewisses Zeitintervall funktioniert.
+
+
+Der \emph{Unterschied zwischen Verfügbarkeit und Zuverlässigkeit}
+lässt sich leicht erklären: Wenn ein System jede Stunde für eine Millisekunde
+ausfällt hat es eine Verfügbarkeit von 0.999999, aber es ist jedoch
+höchst unzuverlässig. Analog dazu kann es sein, dass ein System niemals
+abstürzt, aber in jedem August zwei Wochen heruntergefahren wird,
+und damit zwar zuverlässig ist, aber nur 96 Prozent Verfügbarkeit
+aufweist. 
+
+\item Im Zusammenhang mit Fehlertoleranz versteht man unter Sicherheit,
+dass nichts Katastrophales passieren darf, wenn ein System vorübergehend
+nicht korrekt funktioniert. 
+\item Die Wartbarkeit bezieht sich darauf, wie einfach oder schwierig es
+ist, ein ausgefallenes System zu reparieren. 
+\end{itemize}
+Ein Fehler wird als Ursache eines (teilweisen) Ausfalls eines Systems
+betrachtet. Dazu wird die Fehlertoleranz als Eigenschaft betrachtet,
+dass das System seine Dienste trotz Vorliegen eines Fehlers einer
+Komponente bereitstellen kann (Fehlermaskierung).
+
+Folgende \emph{Fehlerarten} kommen vor: vorübergehender Fehler (tritt
+nur einmal auf und verschwinden), periodischer Fehler (tritt auf,
+verschwindet wieder, tritt auf...), permanenter Fehler (existiert
+bis der Fehler behoben ist).
+
+Die Möglichkeit zur Erreichung der Fehlermaskierung liegt in der \emph{Redundanz}: 
+\begin{itemize}
+\item physische Redundanz: mehrfache Ausführung der Komponenten oder der
+Prozesse. D.h.~physische Ausführung kann mithilfe von Software oder
+Hardware realisiert werden.
+
+
+Beispiele: mehrfache Ausführung der Netzgeräte, Lüfter, Netzwerksschnittstellen;
+gespiegelte Festplatten; Notstromversorgung; 2 Server, wobei einer
+im Standby läuft; Verwendung von n Servern, wobei eine Einigung erzielt
+werden muss.
+
+Wichtig ist, dass Fehler erkannt werden, damit die redundant ausgelegte
+Systemkomponente den Betrieb übernehmen kann. Dies kann entweder durch
+den Bediener oder automatisch passieren. In der Regel wird zusätzliche
+Hardware benötigt, die die Fehler erkennt und die Umschaltung durchführt.
+Diese Hardware muss besonders zuverlässig sein. 
+
+\item Informationsredundanz: es wird zusätzliche Information hinzugefügt,
+um die Wiederherstellung der Daten zu ermöglichen.
+
+
+Beispiele: Fehlerkorrekturcodes (z.B. Hamming Code) oder 3 Festplatten
+als RAID-5 betrieben. 
+
+\item zeitliche Redundanz: eventuelle Wiederholung einer Aktion. Ein Beispiel
+ist die Verwendung von Transaktionen. Wird eine Transaktion abgebrochen,
+kann sie problemlos wiederholt werden. \selectlanguage{english}
+
+\end{itemize}
+

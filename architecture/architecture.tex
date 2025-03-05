@@ -1,0 +1,1303 @@
+
+\chapter{Netzarchitektur\label{sec:network_architecture}}
+
+Der vorhergehende Abschnitt hat die Kommunikation zwischen zwei Kommunikationspartnern
+behandelt. Ein Netz besteht im allgemeinen jedoch aus mehreren Kommunikationspartnern,
+die miteinander verbunden sind und miteinander kommunizieren können.
+Damit wird aus einer Punkt-zu-Punkt Verbindung ein Datennetz.
+
+Ein Datennetz (engl. data network) überträgt digitale Signale zwischen
+Paaren oder Gruppen von Kommunikationspartnern. Dabei können Kommunikationsbeziehungen
+wahlfrei zwischen beliebigen Kommunikationspartnern hergestellt werden.
+
+Das Modell der Datenübertragung, wie es im Abschnitt \ref{sec:communication_model}
+besprochen wurde, wird zu einem Datennetz:
+
+%
+\begin{figure}[H]
+\centering
+
+\includegraphics[bb=0bp 0bp 126mm 18mm,clip]{architecture/data_network}
+
+\caption{Datennetz}
+
+\end{figure}
+
+
+Eine Punkt-zu-Punkt Verbindung wird von nun an als eine Spezialform
+eines Datennetzes verstanden. Handelt es sich bei den DEEs um autonome
+Rechner oder rechnerartige Geräte (wie z.B. Drucker, Speichersysteme,...)
+dann sprechen wir von nun an von einem Rechnernetz (engl. computer
+network). Datennetze, Rechnernetze oder eben nur Netze werden, wie
+im vorhergehenden Diagramm, mit einer ,,Wolke'' als Symbol gekennzeichnet.
+Die Kommunikationsteilnehmer in einem Rechnernetz werden als Host
+bezeichnet.
+
+Solch ein Netz kann entweder direkt mehrere Netzteilnehmer miteinander
+verbinden oder durch einen Zusammenschluss von zwei oder mehreren
+Netzen entstehen:
+
+%
+\begin{figure}[H]
+\centering
+
+\includegraphics[bb=0bp 0bp 126mm 19mm,clip]{architecture/composed_network}
+
+\caption{Verbundene Rechnernetze}
+
+\end{figure}
+
+
+In der vorhergehenden Abbildung wurden zum Zwecke der Übersichtlichkeit
+vorerst die Netzgeräte außer Acht gelassen, die man für den Zusammenschluss
+mehrerer Teilnetze zu einem Gesamtnetz benötigt. In Abschnitt \vref{sec:coupling_devices}
+werden diese erläutert. Fasst man zwei oder beliebig viele Netze zu
+einem Netz zusammen, dann bezeichnet man die einzelnen Netze des entstehenden
+Gesamtnetzes als Teilnetze eben dieses ganzen Netzes.
+
+In diesem Kapitel wird im folgenden der prinzipielle Aufbau und die
+Funktionsweise eines Netzes erklärt. 
+
+
+\section{Struktur und Komponenten eines Netzes}
+
+Ein Netz besteht aus einem oder mehreren Netzsegmenten. Mehrere Netzsegmente
+sind durch Kopplungsgeräte (siehe Abschnitt \ref{sec:coupling_devices})
+miteinander verbunden. Netzsegmente sind daher eine Strukturierung
+für Rechnernetze auf der phyischen Ebene.
+
+Die logische Struktur eines Netzwerkes ist durch die Netztopologie
+vorgegeben.
+
+
+\subsection{Netztopologie}
+
+Wir definieren, dass es sich bei einem Netz (engl. network) um eine
+Menge von Knoten (engl. node) handelt. Je zwei Knoten werden durch
+eine Teilstrecke oder Verbindung (engl. link) miteinander verbunden.
+Eine Art von Knoten sind die Hosts, eine andere Art sind die Kopplungselemente,
+die lediglich Netzsegmente miteinander verbinden. Jetzt betrachten
+wir, in welcher Art diese Knoten miteinander zu einem Netz verbunden
+werden können. Eine bestimmte Struktur des Verbindens bezeichnet man
+als Topologie. Allerdings sollte beachtet werden, dass die physikalische
+von der logischen Topologie abweichen kann ($\rightarrow$ Abstraktion).
+
+
+\subsubsection{Vermaschtes Netz}
+
+Das vermaschte Netz ist eine logische Weiterführung der Punkt-zu-Punkt
+Verbindung indem bestimmte (beliebige) Hosts direkt miteinander verbunden
+werden. Ein Beispiel für ein solches vermaschtes Netz ist in Abbildung
+\vref{fig:mashed_net} zu sehen.
+
+%
+\begin{figure}[h]
+\centering
+
+\includegraphics[bb=0bp 0bp 65mm 45mm,clip]{architecture/network_mash}
+
+\caption{\label{fig:mashed_net}Vermaschtes Netz}
+
+\end{figure}
+
+
+Wollen nur die Hosts miteinander kommunizieren, die direkt miteinander
+verbunden sind, ergibt sich eigentlich kein Unterschied zu mehreren
+Punkt-zu-Punkt Verbindungen. Sollen die anderen Hosts auch miteinander
+kommunizieren, dann muss ein Kommunikationspfad gefunden werden, der
+diese Hosts (indirekt) miteinander verbindet und die Hosts auf diesem
+Kommunikationspfad müssen die Nachrichten weiterreichen. Fällt ein
+Host oder eine Verbindungsleitung auf einem Kommunikationspfad aus,
+dann gibt es je nach Struktur des Netzes gegebenfalls alternative
+Pfade, die gewählt werden können.
+
+D.h. es gibt prinzipiell keine zugrundeliegende Struktur, die Verbindungen
+werden nach gewissen Gesichtspunkten wie z.B. Leistung oder Ausfallsicherheit
+gewählt.
+
+Als Vorteile dieser Struktur können die Ausfallsicherheit und die
+Leistung hervorgehoben werden, als Nachteile fallen die hohen Verkabelungskosten,
+Wartungskosten und ein vergleichsweises kompliziertes Finden der Kommunikationspfade
+an.
+
+
+\subsubsection{Sternnetz}
+
+Will man ein Netz einfach strukturieren, dann bietet sich eine Sternstruktur
+an. Dieses war entwicklungsgeschichtlich die erste Struktur. Es wird
+ein Knoten ausgezeichnet, der (hauptsächlich) eine Vermittlungsfunktion
+übernimmt und zu jedem Host im Netzwerk eine Verbindungsleitung führt.
+Dieser Knoten wird allgemein als Vermittlungsknoten bezeichnet (siehe
+Abbildung \vref{fig:star_net}).
+
+%
+\begin{figure}[h]
+\centering
+
+\includegraphics[bb=0bp 0bp 62mm 45mm,clip]{architecture/network_star}
+
+\caption{\label{fig:star_net}Sternnetz}
+
+\end{figure}
+
+
+Die Vorteile in einer derartigen Struktur liegen in der einfachen
+Verkabelung, der einfachen Wartbarkeit und der leichten Erweiterbarkeit.
+Ein Ausfall eines Hosts hat auf die Kommunikation der anderen Hosts
+keine Auswirkung. Nachteilig wirkt sich die zentrale Funktion des
+Vermittlungsknotens aus: Fällt dieser aus, dann kann keine weitere
+Kommunikation im Netzwerk stattfinden. Bezüglich Leistung und Erweiterbarkeit
+lässt sich sagen, dass diese lediglich von dem Vermittlungsknoten
+(und natürlich den Übertragungskanälen) abhängt. Nachteilig wirkt
+sich auch aus, dass die Verkabelung sehr teuer ist.
+
+
+\subsubsection{Baumnetz}
+
+Werden Sternnetze hierarchisch miteinander verbunden, dann entsteht
+ein Baumnetz (siehe Abbildung \vref{fig:tree_net}). Im englischen
+Sprachgebrauch werden diese auch als ,,extended star'' bezeichnet.
+Verbunden werden die einzelnen Vermittlungshosts mittels sogenannter
+Uplinks.
+
+%
+\begin{figure}[h]
+\centering
+
+\includegraphics[bb=0bp 0bp 55mm 55mm,clip]{architecture/network_tree}
+
+\caption{\label{fig:tree_net}Baumnetz}
+
+\end{figure}
+
+
+Die Vorteile dieser Topologie liegen in der leichten Erweiterbarkeit
+und der Administrierbarkeit (Teilung der Verantwortung).
+
+
+\subsubsection{Ringnetz}
+
+Es wird jeder Host mit genau zwei anderen Hosts so verbunden, sodass
+ein geschlossener Ring entsteht (siehe Abbildung \vref{fig:ring_net}).
+Der eine verbundene Host wird als Vorgänger definiert und der andere
+als Nachfolger. D.h. prinzipiell ist eine Richtung in diesem Ring
+vorgegeben. Der Sender sendet die Nachricht an seinen Nachfolger.
+Ist die Nachricht beim Empfänger angekommen, dann nimmt dieser die
+Nachricht vom Netz, andererseits wird die Nachricht wieder an den
+Nachfolger des aktuellen Knotens weitergereicht. Das wird solange
+durchgeführt bis der Empfänger erreicht ist.
+
+%
+\begin{figure}[h]
+\centering
+
+\includegraphics[bb=0bp 0bp 53mm 50mm,clip]{architecture/network_ring}
+
+\caption{\label{fig:ring_net}Ringnetz}
+
+\end{figure}
+
+
+Die Vorteile dieser Topologie liegen darin, dass jeder Knoten eine
+Signalauffrischung durchführt und dadurch eine große Netzausdehnungen
+möglich ist, dass kein Flaschenhals wie beim Sternnetz vorliegt und
+die eigentliche Datenübertragung sehr einfach ist, da die Übertragung
+nur in einer Richtung stattfindet. An Nachteilen sind zu nennen, dass
+ein Ausfall eines Knotens oder einer Verbindung den gesamten Ring
+beeinträchtigt und die Nachrichten alle Knoten am Pfad zum Empfänger
+durchlaufen müssen.
+
+
+\subsubsection{Busnetz}
+
+Ein Busnetz ist grundsätzlich anders: Hier gibt es einen Bus an den
+alle Knoten direkt angeschlossen sind (siehe Abbildung \vref{fig:bus_net}).
+D.h. es muss einen Mechanismus geben, der den Zugriff auf das gemeinsame
+Medium regelt, wenn mehrere Hosts gleichzeitig zugreifen wollen.
+
+%
+\begin{figure}[h]
+\centering
+
+\includegraphics[bb=0bp 0bp 70mm 34mm,clip]{architecture/network_bus}
+
+\caption{\label{fig:bus_net}Busnetz}
+
+\end{figure}
+
+
+Große Vorteile liegen in der Verkabelung, der Erweiterbarkeit und
+den Kosten. An Nachteilen sind zu nennen:
+\begin{itemize}
+\item Fehler finden ist schwieriger als bei den anderen Topologien.
+\item Ein Fehler in der Verkabelung bedeutet, dass das gesamte Netzwerk
+nicht mehr funktioniert.
+\item Die Leistung des Netzwerks sinkt bei mehreren gleichzeitigen Zugriffen.
+\item Jeder Host kann den gesamten Netzwerksverkehr lesen. Das kann unter
+Umständen ein Sicherheitsproblem darstellen.
+\end{itemize}
+
+\subsection{Netzgeräte}
+
+Ein Rechnernetz besteht also aus Knoten und Verbindungen:
+\begin{itemize}
+\item Knoten sind entweder Hosts (d.h. Endgeräte) oder Kopplungselemente
+(z.B. ein Router), die Teilnetze miteinander verbinden.
+\item Die eigentlichen Verbindungen werden mittels Kabel, Stecker und Netzzugangsgeräten
+(z.B. eine Schnittstellenkarte) realisiert.
+\end{itemize}
+Alle diese in einem Rechnernetz konkret vorkommenden Geräte werden
+als Netzgeräte bezeichnet.
+
+
+\subsubsection{Zugriffsverfahren\label{sec:access_method}}
+
+Ein Netzzugangssgerät speist die Signale in das Übertragungsmedium
+ein. Da mindestens 2 Kommunikationspartner auf das Übertragungsmedium
+zugreifen wollen, muss es ein Verfahren geben, das diesen Zugriff
+regelt. Man unterscheidet:
+\begin{description}
+\item [{Reservierungsverfahren}] Bei den Reservierungsverfahren wird zu
+Beginn eine Reservierung vereinbart. Die Multiplexverfahren sind solche
+Verfahren.
+\item [{Zuteilungsverfahren}] Der Zugriff auf das Übertragungsmedium wird
+zugeteilt, d.h. der Zugriff findet geregelt statt. Diese Erteilung
+des Zugriffes kann entweder zentral (z.B. mittels polling) oder dezentral
+(z.B. mittels token passing) erfolgen.
+\item [{Wettbewerbsverfahren}] Diese funktionieren im Prinzip so, dass
+jeder Sender versucht auf den Kanal zu senden, wenn dieser frei ist.
+Der Sender, der einen freien Kanal vorfindet, beginnt zu senden. Vertreter
+sind CSMA/CD (carrier sense multiple access/collision detection) oder
+CSMA/CA (carrier sense multiple access/collision avoidance).
+\end{description}
+Unter dem Begriff \emph{Kollisionsdomäne} (engl. collision domain)
+wird in einem Computernetz ein Bereich bezeichnet, in dem Kollisionen
+auftreten können. Sie entstehen, wenn zwei Stationen gleichzeitig
+versuchen, auf einem einzigen physikalischen Medium (Segment) etwas
+zu senden. Die Spannungsimpulse werden im Kabel vermischt und die
+Signale somit zerstört.
+
+Eine \emph{Broadcastdomäne} ist ein logischer Verbund von Computern
+in einem lokalen Netzwerk, der sich dadurch auszeichnet, dass ein
+Broadcast alle Domänenteilnehmer erreicht.
+
+
+\subsubsection{Netzzugangsgeräte}
+
+Im Prinzip kann man zwei Arten von Netzzugangsgeräten unterscheiden,
+je nachdem, ob es sich um einen Breitbandzugang oder einen Basisbandzugang
+handelt.
+\begin{description}
+\item [{Modem}] Ein Modem moduliert und demoduliert ein analoges Signal,
+um digitale Daten übertragen zu können. D.h. die digitalen Daten werden
+z.B. auf ein hochfrequentes Trägersignal aufmoduliert. Ursprünglich
+wurden Modems hauptsächlich verwendet, um Daten über normale Telefonleitungen
+übertragen zu können. Danach wurde ISDN eingeführt und mittels ISDN
+Modems (PCM, pulse code modulation) auf das ISDN Netzwerk zugegriffen.
+Heute gibt es auch Kabelmodems bzw. ADSL Modems.
+
+
+Der Zugriff von einem Host zu einem Modem kann über eine der verfügbaren
+Schnittstellen wie z.B. RS-232 oder USB erfolgen.
+
+\item [{Schnittstellenkarte}] Eine Schnittstellenkarte (engl. network card
+oder network interface card, kurz NIC) oder auch Netzwerkadapter (engl.
+network adapter) genannt, ist im Sinne der Datenübertragung eine Datenübertragungseinrichtung,
+die es dem Computer erlaubt über das Netz zu kommunizieren.
+
+
+Für jede NIC gibt es eine MAC Adresse und eine eigene Netzwerkadresse.
+
+\end{description}
+
+\subsubsection{Kopplungselemente\label{sec:coupling_devices}}
+
+Netze können auf der physikalischen Ebene mittels Kopplungselementen
+verbunden werden. Die mit solchen Kopplungselementen verbundenen Teilnetze
+werden als Netzsegmente bezeichnet. Der Anschluss eines Kopplungselementes
+für ein Netzwerksegment wird auch Port genannt.
+\begin{description}
+\item [{Repeater}] Ein Repeater (dt. Wiederholer) hat die Aufgabe Signale
+zu empfangen, diese zu regenerieren (verstärken, verbessern) und danach
+weiterzusenden. Repeater verbinden zwei (oder mehrere) Netzwerksegmente
+gleichen Typs zu einem größeren Netzsegment.
+
+
+Die primäre Aufgabe von Repeatern ist, die physikalische Ausdehnung
+des Netzwerkes zu erhöhen. Repeater arbeiten auf der ISO/OSI Schicht
+1.
+
+Ein Netzsegment, das auf diese Weise mittels Repeater aus mehreren
+Netzsegmenten entstanden ist, verhält sich als Kollisionsdomäne.
+
+\item [{Hub}] Ein Hub (dt. zentraler Knoten, Mittelpunkt, Drehscheibe)
+ist lediglich ein Repeater, der mehrere Netzsegmente miteinander verbindet
+(d.h. diese haben mehrere Ports). Hubs werden auch Multiport-Repeater
+genannt. Dieser Begriff wird häufig im Ethernet verwendet.
+\item [{Bridge}] Eine Bridge (dt. Brücke) verbindet zwei Netzwerkssegmente
+auf der ISO/OSI Schicht 2 zu einem größeren Netz. Anders gesehen teilt
+eine Brücke ein Netz in zwei Netzsegmente. Haben die Netzsegmente
+unterschiedliche Zugriffsverfahren, werden diese von der Bridge angepasst.
+
+
+Eine Bridge gibt nur Rahmen weiter, deren MAC Adresse in dem entsprechenden
+Netzsegment liegt. Bridges trennen Netzsegmente daher sowohl physisch
+als auch logisch. Damit endet eine Kollisionsdomäne an einer Bridge.
+
+\item [{Switch}] Ein Switch (dt. Schalter) verbindet mehrere Netzwerksegmente
+auf der ISO/OSI Schicht 2. Ein Switch arbeitet prinzipiell in einem
+von zwei Modi: Ein \emph{Store-and-Forward} Switch nimmt immer einen
+ganzen Frame auf, speichert diesen zwischen, analysiert diesen und
+gibt diesen am richtigen Zielport wieder aus. Ein \emph{Cut-Through}
+Switch nutzt die Tatsache, dass sich in einem Ethernet Frame die Zieladresse
+am Anfang befindet und leitet den Frame zum Zielport weiter, nachdem
+der lediglich der Frame bis inkl. der Zieladresse gelesen wurde. Der
+Vorteil eines Store-and-Forward Switch ist, dass dieser nur gültige
+Frames weiterreicht, während ein Cut-Through Switch eine höhere Performance
+aufweist dafür aber auch fehlerhafte Frames weiterleitet.
+
+
+Die Methode wie ein Switch den richtigen Zielport für einen Frame
+kennen lernt, wird als Backward-Learning bezeichnet: Jedes Mal, wenn
+ein Switch einen Frame an einem Port erhält, merkt sich der Switch
+die Quell-MAC (siehe Abschnitt \vref{sec:addresses}) gemeinsam mit
+dem Port an dem der Frame empfangen wurde. Kennt der Switch die die
+Ziel-MAC nicht, wird der Frame an allen anderen Ports weitergeleitet.
+Diesen Vorgang nennt man Fluten (port flooding). Auf diese Weise erreicht
+der Frame sein Ziel. Sendet der Empfänger einen Frame zurück an den
+ursprünglichen Sender, dann merken sich die Switches auch dessen MAC,
+wodurch bei wiederholten Senden zwischen diesen beiden Hosts kein
+Fluten mehr notwendig ist.
+
+\item [{Router}] Ein Router (dt. Vermittler) verbindet mehrere Netze miteinander
+und hat die Aufgabe eine empfangene Nachricht an das richtige Netz
+weiterzuleiten, sodass der eigentliche Empfänger letztendlich die
+Nachricht erhält. Router müssen dazu den Netzaufbau in gewisser Weise
+kennen.
+
+
+An einem Router endet sowohl eine Kollisionsdomäne als auch eine Broadcastdomäne.
+
+Ein Router arbeitet auf der ISO/OSI Schicht 3.
+
+\item [{Gateway}] Das Gateway verbindet ebenfalls mehrere Netze miteinander,
+unterscheidet sich von einem Router jedoch dadurch, dass ein Gateway
+Netze mit verschiedenen Anwendungsprotokollen verbindet. D.h. ein
+Gateway übersetzt ein Anwendungsprotokoll in ein anderes Anwendungsprotokoll.
+Ein einfaches Beispiel für ein Gateway ist ein http Proxy.
+
+
+Gateways arbeiten auf der ISO/OSI Schicht 7.
+
+\end{description}
+Die folgende Abbildung gibt einen Überblick über die verschiedenen
+Arten der Kopplungssysteme im Zusammenhang mit dem OSI Modell.
+
+%
+\begin{figure}[h]
+\centering
+
+\includegraphics[bb=0bp 0bp 12cm 5cm,clip]{architecture/coupling_devices}
+
+\caption{Übersicht über die Kopplungssysteme}
+
+\end{figure}
+
+
+
+\subsection{Netzstrukturen}
+
+Netze können -- unabhängig von ihren -- Topologien beliebig miteinander
+verbunden werden.
+
+
+\subsubsection{Netzhierarchie}
+
+Größere Netze werden hierarchisch in Schichten aufgebaut.
+\begin{itemize}
+\item Auf der untersten Ebene befinden sich die \emph{lokalen Netzwerke},
+die Netzgeräte innerhalb einer begrenzten Umgebung miteinander verbinden.
+Solche Netze können natürlich auch wieder miteinander verbunden sein.
+Ein typischer Vertreter einer solchen Netztechnologie ist Ethernet.
+\item Um einen Zugang zu weiter entfernten Hosts zu bekommen, werden die
+lokalen Netze mittels \emph{Zugangsnetze} (engl. access networks)
+an ein übergeordnetes Netzwerk verbunden. Beispielsweise kann ein
+Einzelcomputer mittels ADSL als Zugangsnetz an das Netz des Providers
+angeschlossen werden. Beispiele für weitere Technologien sind ISDN,
+DSL Varianten oder Richtfunkstrecken.\\
+Im Bereich der Zugangsnetze wird oft PPP (Point-to-Point Protocol)
+verwendet, das eine Punkt-zu-Punkt Verbindung herstellt und verschiedenste
+Netzprotokolle (wie z.B. IP, IPX, AppleTalk) transportieren kann.
+Für den Betrieb von PPP über Ethernet gibt es die modifizierte Variante
+PPPoE (Point-to-Point over Ethernet). Auch das PPTP (siehe Abschnitt
+\vref{sec:VPN}) wird oft für Zugangsnetze verwendet.
+\item Über das Zugangsnetz werden die Hosts an ein \emph{Verteilungsnetz}
+(engl. distribution network) angeschlossen. Dabei handelt es sich
+z.B. um ein Firmennetz, das mittels eines Backbones mehrere Firmenstandorte
+verbindet oder um das Netz eines Providers. Das Verteilungsnetz grenzt
+Zugangsnetze von einem Kern-Netzwerk ab (z.B. dem globalen Internet).
+In einem Verteilungsnetz werden auch noch Funktionen wie Adressumsetzung
+(engl. network address translation, NAT), Sicherheitsüberprüfungen
+oder VLAN Routing implementiert. Als Technologien kommen z.B. FDDI,
+ATM oder auch Gigabit-Ethernet zum Einsatz.
+\item Ein Kernnetz (engl. core network) dient der weltweiten Vernetzung.
+Als Technologien werden Standleitungen, ATM und auch Frame Relay eingesetzt.
+\end{itemize}
+Ein Beispiel für eine derartige Netzhierarchie ist in der Abbildung
+\vref{fig:net_hierarchy} zu finden.
+
+%
+\begin{figure}[h]
+\centering
+
+\includegraphics[bb=0bp 0bp 120mm 88mm,clip]{architecture/network_hierarchy}
+
+\caption{\label{fig:net_hierarchy}Beispiel einer Netzhierarchie}
+
+\end{figure}
+
+
+
+\subsubsection{Strukturierte Verkabelung\label{sec:structured_cabeling}}
+
+Eine konkrete Ausprägung einer Netzhierarchie ist die Verkabelung
+eines Standortes. Die europäische Norm EN 50173-1 ist unter dem Begriff
+\emph{strukturierte Verkabelung} bekannt. Meist wird hierfür als Topologie
+eine Baumtopologie verwendet.
+
+Dazu wird die Verkabelung in Primärbereich, Sekundärbereich und Tertiärbereich
+eingeteilt.
+
+Der Primärbereich deckt die Verbindung der einzelnen Gebäude untereinander
+ab. Dazu gibt es je Gebäude einen Hauptverteiler, die direkt mit den
+anderen Gebäuden verbunden sind. Der Sekundärbereich übernimmt die
+(vertikale) Stockwerksverkabelung und verbindet hiermit die einzelnen
+Etagenverteiler mittels Stichleitungen mit dem Hauptverteiler. Der
+Tertiärbereich stellt die horizontale Stockwerksverkabelung dar und
+verbindet die einzelnen Arbeitsstationen mittels Stichleitungen mit
+dem Etagenverteiler.
+
+Um flexibel zu sein, werden die Verteiler mittels Patchfelder (engl.
+patch panel) realisiert. Hierunter versteht man ein Schaltfeld, das
+alle Leitungen an Buchsen führt. Die Verbindungen werden mittels Patchkabel
+hergestellt.
+
+
+\subsubsection{VLAN}
+
+Ein VLAN (engl. virtual local area network) ist ein virtuelles lokales
+Netzwerk innerhalb eines LAN. Mit VLANs können mehrere logische Netze
+innerhalb eines physisches LAN betrieben werden. Sie dienen also dazu
+eine weitere Struktur in ein physisches Netz zu legen.
+
+VLANs will man im Prinzip aus folgenden Gründen einrichten:
+\begin{itemize}
+\item Flexibilität beim Aufbau der Netze, da die logischen Netze unabhängig
+zum physischen Aufbau des LAN ist.
+\item Einsparung von Routern und damit eine vereinfachte Verwaltung sowie
+eine Verringerung der Latenz.
+\item Verringerung der Broadcast-Last, denn jedes VLAN bildet eine eigene
+Broadcast-Domäne.
+\item Steigerung der Sicherheit, denn es kann nicht auf die Daten eines
+anderen Netzes zugegriffen werden.
+\end{itemize}
+Die standardisierte Grundlage für den Betrieb von VLANs liegt in IEEE
+802.1Q begründet (es gibt jedoch auch herstellerspezifische Implementierungen).
+Die Implementierung von VLANs basiert im Prinzip darauf, dass dem
+Ethernet-Frame 4 Bytes an zusätzlicher Headerinformation hinzugefügt
+wird. Von diesen 4 Bytes werden 12 Bit zur Aufnahme einer VLAN ID
+verwendet. Daraus resultiert eine maximale Anzahl von 4094 VLANs,
+da die IDs mit lauter Nullen bzw. lauter Einsen reserviert sind und
+nicht zur Verfügung stehen.
+
+
+\subsubsection{VPN\label{sec:VPN}}
+
+Ein VPN (engl. virtual private network) ist ein Netz von zwei oder
+mehreren Rechnern, die über Tunnels (Übertragen der Daten eines Protokolls
+eingebettet in ein anderes Protokolls) verbunden sind. Ein VPN wird
+(meist) öffentlich verwendet und ist in der Regel durch kryptographische
+Verfahren gesichert. VPNs transportieren im Normalfall ISO/OSI Schicht
+2 Frames oder Schicht 3 Pakete.
+
+Als Anwendung wird ein VPN oft verwendet, um Außenstellen oder externen
+Mitarbeitern den Zugriff auf das Unternehmensnetzwerk zu ermöglichen.
+Wichtig ist, dass der Client ebenfalls richtig konfiguriert ist, sodass
+die gesamte Kommunikation des Clients nach dem Öffnen des VPN-Zugangs
+über den VPN-Pfad läuft!
+
+Um ein vollständiges VPN zu bilden müssen drei Komponenten kombiniert
+werden: Tunnels, Verschlüsselung und Authentifizierung.
+
+Einige ,,wichtige'' Protokolle mit, denen ein VPN aufgebaut werden
+kann, sind:
+\begin{labeling}{00.00.0000}
+\item [{PPTP}] (point-to-point tunneling protocol) ermöglicht das Tunneling
+von PPP durch ein IP Netzwerk. Es wird oft als Zugangsnetz für die
+Anbindung von privaten Nutzern an die Internet Service Provider verwendet,
+obwohl es relativ unsicher ist. Eine Verschlüsselung ist im Prinzip
+in diesem Standard vorgesehen und muss durch höhere Protokolle realisiert
+werden (abgesehen von der Microsoft-spezifischen Erweiterung MPPE,
+die PPP Pakete verschlüsselt). Der ,,einzige'' Vorteil von PPTP
+ist, dass es in Windows vorinstallliert ist.
+\item [{L2TP}] (layer 2 tunneling protocol) ist in etwa von der Funktionalität
+dem PPTP ähnlich und ebenfalls relativ unsicher. Erst die Kombination
+mit IPSec ermöglicht auch eine Verschlüsselung.
+\item [{IPSec}] IPSec (siehe Abschnitt \vref{sec:IPSec}) ist eine Gruppe
+von Protokollen zur Verschlüsselung. Es befindet sich auf der Schicht
+3 und kann Protokolle ab (inklusive) Schicht 3 transportieren und
+sichern. Es wurde ursprünglich für IPv4 entwickelt und als Kernkomponente
+bzgl. Sicherheit in IPv6 eingegliedert. Es gilt als ausreichend sicher,
+wenn es richtig konfiguriert wird. Jedes Betriebssystem benötigt seine
+eigene Implementierung im TCP/IP Stack.
+\item [{TLS/SSL}] Mittels TLS/SSL (siehe Abschnitt \vref{sec:TLS}) kann
+ebenfalls ein VPN aufgebaut werden (siehe das Produkt OpenVPN im Abschnitt
+\vref{sec:OpenVPN}).
+
+
+Mit TLS kann auch ein einfacher Tunnel aufgebaut werden. Die Vor-
+und Nachteile sind analog zu der Technik mit SSH wie im nächsten Punkt
+beschrieben. Als Produkt gibt es z.B. Stunnel (siehe Abschnitt \vref{sec:Stunnel}),
+das es einfach erlaubt verschiedene Protokolle über TLS zu tunneln.
+
+\item [{SSH}] Auch mittels SSH (secure shell, siehe Abschnitt \vref{sec:SSH_protocol})
+kann ein Tunnel aufgebaut werden. Allerdings ist SSH nicht für eine
+permanente LAN-zu-LAN und Client-zu-LAN Verbindungen geeignet, da
+mittels SSH nur Socket-Tunnels möglich sind. Allerdings entsteht gerade
+dadurch ein Vorteil, da die Tunnels je Applikation spezifisch sind.
+Ein kompromittierter Tunneleingang einer SSH Verbindung betrifft nur
+die Applikation bzw. den Port am Tunnelende und nicht das gesamte
+Netz, das mit dem Tunnelende verbunden ist!
+\end{labeling}
+
+\subsection{Netzsoftware}
+
+In einem verteilten System kann man die Software prinzipiell in drei
+Klassen einteilen:
+\begin{itemize}
+\item Die verteilte Anwendung an sich. D.h. es handelt sich um die Software,
+die oberhalb der Schicht 7 angesiedelt ist.
+\item Meistens benötigt die Anwendung noch unterstützende Software, die
+bestimmte Dienste zur Kommunikation, Synchronisierung, Transaktionsverwaltung,\ldots{}
+zur Verfügung stellt. Diese Software ist meistens zwischen der Schicht
+7 und der eigentlichen Anwendung (also in der Mitte) angesiedelt.
+Diese Software wird aus diesem Grund auch Middleware genannt.
+\item Unbedingt erforderlich ist die eigentliche Netzsoftware, die die gesamte
+Kommunikation ermöglicht. Wie schon erläutert, handelt es sich meistens
+um eine Implementierung eines Protokollstacks (z.B. ISO/OSI oder am
+häufigsten TCP/IP).
+\end{itemize}
+
+\section{Vermittlung und Weiterleitung}
+
+In diesem Abschnitt wird zuerst die Adressierung der Knoten besprochen,
+dann die Prinzipien der Paketvermittlung behandelt und danach der
+grundlegende Ablauf des Weiterleitens angeführt als auch die Suche
+eines Weges zwischen je zwei Knoten behandelt. Alle diese Themen sind
+der Schicht 3 des OSI Modells zuzuordnen.
+
+
+\subsection{Adressierung\label{sec:addresses}}
+
+
+\minisec{Adressen}
+
+Jeder Knoten benötigt im Netz bzw. im Netzsegment eine eindeutige
+Adresse. Solch eine Adresse ist in der Regel ein nummerischer Wert.
+Adressen sind abhängig von der Schicht in der sie verwendet werden:
+\begin{itemize}
+\item In der Schicht 2 werden diese Adressen als MAC Adressen bezeichnet
+\item Im Internet sind die Adressen in der Schicht 3 die sogenannten IP
+Adressen.
+\item In der Schicht 4 wird im Internet als Adresse die Kombination aus
+IP Adresse, Port und Protokoll verwendet.
+\end{itemize}
+Eine Adresse in der Schicht 2 muss nicht unbedingt global eindeutig
+sein. Es reicht, dass so eine Adresse nur innerhalb eines Teilnetzes
+eindeutig ist. So eine Adresse nennt man auch lokale Adresse im Gegensatz
+zu einer globalen Adresse, die im gesamten Netz eindeutig sein muss
+(z.B. eine IP Adresse).
+
+Teilweise muss beim Übergang zwischen den Schichten auch zwischen
+den Adressen gewandelt werden, z.B. muss eine IP Adresse in eine MAC
+Adresse aufgelöst werden. Dieser Vorgang wird Adressauflösung (engl.
+address resolution) genannt.
+
+Es können verschiedene Typen von Adressen unterschieden werden:
+\begin{itemize}
+\item Die Individualadresse identifiziert genau einen Knoten.
+\item Eine Gruppenadresse identifiziert eine Gruppe von Knoten. Diese Knoten
+können sich auch in verschiedenen Netzen befinden. Es handelt sich
+um eine Multicast-Adresse.
+\item Eine Broadcast-Adresse ist eine spezielle Adresse, die alle Knoten
+in einem Netz identifiziert.
+\end{itemize}
+Adressen können entweder flach sein oder hierarchisch aufgebaut sein.
+Bei einer flachen Adresse gibt es keinen Zusammenhang zwischen der
+Adresse und der geographischen Lage des Knotens, dem diese Adresse
+zugewiesen wird. Bei hierarchischen Adressen gibt es solch einen Zusammenhang.
+Beispiel eines flachen Adressraumes sind die MAC Adressen der Ethernet-Technologie
+und ein Beispiel hierarchischer Adressen sind die IP-Adressen.
+
+In weiterer Folge betrachten wir die hierarchisch aufgebauten IP Adressen.
+Jede IP Adresse besteht aus zwei Teilen: einem Netzanteil und einem
+Hostanteil. Der Netzanteil gibt das Teilnetz an, in dem der Host zu
+finden ist und der Hostanteil ist die Adresse des Host in diesem Teilnetz.
+Die Teilnetzangabe ist einer geographischen Lage zugeordnet.
+
+
+\minisec{Namen}
+
+Im Gegensatz zu den Adressen sind die Namen symbolische Werte, die
+an der Stelle der (nummerischen) Adressen verwendet werden. Da für
+die eindeutige Adressierung jedoch die Adresse notwendig ist, werden
+Namensdienste bzw. Verzeichnisdienste benötigt, die einen Namen auf
+eine Adresse abbilden.
+
+Der Grund in der Verwendung von Namen liegt entweder in der leichteren
+Merkbarkeit oder in der gewünschten Einführung einer Indirektion.
+Eine Indirektion kann z.B. notwendig sein, um Ortstransparenz zu erreichen.
+Damit ist es möglich einen Server eines Dienstes in ein anderes Netz
+zu verlegen, d.h. die Adresse zu ändern.
+
+
+\minisec{Label}
+
+Bei verbindungsorientierten Netzen reicht es, wenn die Kopplungselemente
+für jede ihrer Verbindungen zu den nächsten Knoten jeweils einen eindeutigen
+lokalen Bezeichner vergeben. Solch ein Bezeichner wird Label genannt.
+Eine genauere Beschreibung ist in Abschnitt \vref{sec:connection-oriented_forwarding}
+zu finden.
+
+
+\subsection{Paketvermittlung \label{sec:packet_switching}}
+
+In diesem und den weiteren Abschnitten wird von nun an nur mehr die
+Paketvermittlung (engl. packet switching) behandelt. Dazu werden die
+Nutzdaten in Pakete (engl. packet) aufgeteilt und zusammen mit anderen
+Paketen im asynchronen Zeitmultiplexverfahren über Teilstrecken übertragen.
+Teilstrecken sind über Knoten miteinander verbunden, die als Router
+bezeichnet werden.
+
+Der grundlegende Ablauf in einem Router sieht so aus, dass ankommende
+Pakete zwischengespeichert werden (store), dann der nächste Router
+ermittelt wird und das Paket an die richtige Ausgabeschnittstelle
+weitergeleitet (engl. forwarding) wird.
+
+Da das Speichern des Paketes, das Analysieren des Headers (z.B. Berechnen
+einer Prüfsumme) und unter Umständen das Verändern des Headers (z.B.
+siehe TTL im Abschnitt \ref{sec:ip}) relativ lange dauert, hat man
+Spezialformen der Paketvermittlung geschaffen, die diese Nachteile
+vermeiden. Einerseits handelt es sich um das Konzept Frame Relay (Pakete
+mit variabler Länge) und Cell Relay (Paket mit fixer Länge).
+
+Im Prinzip gibt es 3 Möglichkeiten: verbindungsloses Weiterleiten,
+verbindungsorientiertes Weiterleiten und Source-Routing.
+
+
+\subsubsection{Verbindungsloses Weiterleiten}
+
+Das Prinzip ist, dass ein Paket genügend Informationen enthält, damit
+jedes Kopplungselement weiß wie das Paket zum Ziel weiterzuleiten
+ist. Dafür ist zumindest die Netzadresse des Ziels notwendig.
+
+Das verbindungslose Weiterleiten weist folgende Merkmale auf:
+\begin{itemize}
+\item Ein Knoten kann jederzeit ein Paket zu jedem beliebigen anderen Knoten
+schicken.
+\item Es besteht für den Knoten keine Möglichkeit zu eruieren, ob das Paket
+am Zielknoten ankommt bzw. ob der Zielknoten überhaupt erreichbar
+ist.
+\item Jede Nachricht wird unabhängig von den anderen Paketen gesendet. Obwohl
+zwei Pakete unter Umständen dasselbe Ziel haben, können die Pakete
+unterschiedliche Wege im Netz nehmen, nicht in der Reihenfolge des
+Sendens ankommen oder auch mehrfach das Ziel erreichen.
+\item Der Ausfall eines Kopplungselementes kann unter Umständen vom Netz
+kompensiert werden, indem ein Paket einen anderen Weg zum Ziel nimmt.
+\end{itemize}
+
+\subsubsection{Verbindungsorientiertes Weiterleiten\label{sec:connection-oriented_forwarding}}
+
+Beim verbindungsorientiertem Weiterleiten wird zuerst eine virtuelle
+Verbindung aufgebaut. Es wird deshalb auch von virtueller Leitungsvermittlung
+gesprochen. Virtuell deshalb, weil eben keine echte Leitungen geschalten
+werden.
+
+Im Prinzip gibt es zwei Möglichkeiten:
+\begin{enumerate}
+\item Das Konzept der Verbindung wird nur von den beiden Endsystemen umgesetzt.
+Die zwischenliegenden Knoten wissen von Verbindungen nichts und übertragen
+die Pakete mittels verbindungslosem Weiterleiten. Dies ist so in TCP
+umgesetzt (siehe Teil \ref{par:tcpip}). In diesem Sinne handelt es
+sich eigentlich gar nicht um eine virtuelle Leitungsvermittlung!
+\item Das Konzept der Verbindung wird von den beiden Endsystemen \emph{und}
+den Zwischensystemen umgesetzt. D.h. beim Verbindungsaufbau wird ein
+Weg zwischen den beiden Endsystemen gesucht und alle auf diesem Weg
+befindlichen Zwischensysteme tragen sich entsprechende Informationen
+in ihren Weiterleitungstabellen (siehe Abschnitt \vref{sec:forwarding})
+ein. Bei den Informationen, die eingetragen werden handelt es sich
+um sogenannte Labels (dt. Marken), die einen logischen Kanal zwischen
+zwei Knoten identifizieren. Pro Zwischenstation gibt es zwei Einträge.
+Ein Eintrag umfasst den Eingangsport und ein Label und ein Eintrag
+umfasst den Ausgangsport und ein Label. D.h. bei diesen Labels handelt
+es sich um lokal eindeutige Bezeichner, die zwischen zwei Knoten einen
+Teil der virtuellen Leitung identifiziert. Solch ein System wird z.B.
+bei X.25 verwendet. Beim Verbindungsabbau werden alle Einträge in
+den Zwischensystemen wieder entfernt. 
+\end{enumerate}
+Unter \emph{Signalisierung} versteht man in diesem Zusammenhang den
+Austausch der Nachrichten, die zum Aufbau, der Überwachung und dem
+Abbau einer Verbindung notwendig sind. Einerseits gibt es die ältere
+\emph{In-Band-Signalisierung} (engl. in-band signalling), die für
+diese Steuernachrichten den gleichen logischen Kanal verwendet wie
+die Nutzdaten und andererseits die modernere \emph{Außer-Band-Signalisierung}
+(engl. out-of-band signalling), die für die Steuernachrichten einen
+getrennten logischen Kanal benutzt.
+
+
+\subsubsection{Source-Routing}
+
+Beim Source-Routing wird in jeder Nachricht gespeichert, welchen Weg
+diese Nachricht durch das Netz nehmen soll. Es handelt sich hierbei
+natürlich um eine beliebig lange Information, die in den Header der
+Nachricht eingesetzt werden muss. Dieses Verfahren setzt allerdings
+voraus, dass der Sender genügend Information über die Netztopologie
+zur Verfügung hat, damit er diese Informationen in den Header einfügen
+kann.
+
+Verwendet wird dieses Verfahren selten, da es nicht gut skaliert.
+Eine Anwendung ist: der Empfänger will, dass die Nachrichten einen
+bestimmten Weg nehmen sollen. Auf Grund von Sicherheitsüberlegungen
+werden solche Pakete von Firewalls meistens blockiert.
+
+
+\subsection{Weiterleitung in IP\label{sec:forwarding}}
+
+Wir betrachten hier die Weiterleitung wie es im Prinzip in IP umgesetzt
+wird. Zum Weiterleiten enthält jeder Router eine Weiterleitungstabelle.
+Jeder Eintrag dieser Weiterleitungstabelle enthält einerseits eine
+Netznummer und andererseits eine Adresse eines Routers, der mit dieser
+Netznummer direkt oder indirekt verbunden ist. Der nächste Schritt
+in einem Weg zum Ziel wird auch als Hop bezeichnet.
+
+Wie es zum Aufbau solch einer Weiterleitungstabelle kommt, ist die
+Aufgabe des Routing (siehe Abschnitt \ref{sec:routing}).
+
+Die prinzipielle Vorgehensweise in einem Router beim Weiterleiten
+sieht folgendermaßen aus:
+\begin{enumerate}
+\item Paket zwischenspeichern.
+\item Header kontrollieren (Struktur und Prüfsummen).
+\item Zieladresse aus Header lesen.
+\item Wenn Netznummer der Zieladresse gleich mit der Netznummer eines lokalen
+Netzes,
+
+\begin{enumerate}
+\item dann: Paket an diesem Interface ausliefern, das zu diesem Netz führt.
+\item anderenfalls: Wenn Router für diese Netznummer der Zieladresse in
+Weiterleitungstabelle vorhanden,
+
+\begin{enumerate}
+\item dann: Paket an den zugehörigen Router senden.
+\item anderenfalls: Paket an den Default-Router senden.
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+
+\subsection{Routing\label{sec:routing}}
+
+Das Routing ist das Suchen von Wegen von einem Knoten des Netzwerks
+zu einem anderen Knoten. D.h. es ist ein Verfahren der Wegsuche und
+damit etwas ganz Anderes als das Weiterleiten, das davon ausgeht,
+dass ein Weg schon gefunden ist. Als Ergebnis des Routings ergibt
+sich eine Weiterleitungstabelle (auch Routingtabelle genannt), die
+direkt beim Weiterleiten verwendet wird. Achtung: Routing und Weiterleiten
+wird oft synomym verwendet.
+
+Wie werden nun diese Weiterleitungstabellen erstellt? Dazu wird das
+Netz als ein Graph betrachtet, dessen Kanten mit den Kosten bezeichnet
+werden, die dieser Verbindung zugeordnet sind. Diese Kosten geben
+Aufschluss inwieweit es wünschenswert ist, Verkehr über diese Verbindung
+zu senden. D.h. je kleiner die Kosten sind, desto besser ist es diese
+Verbindung zu verwenden. Was diese Kosten wirklich bedeuten, wie man
+zu diesen Kosten kommt und inweit sich diese Kosten im Laufe der Zeit
+ändern können, werden wir nicht im Detail betrachten. Beispielsweise
+könnte als Kosten die Übertragungsleistung (bzw. die inverse Übertragungsleistung)
+des Übertragungskanals herangezogen werden. 
+
+Wir gehen der Einfachheit halber davon aus, dass der Hin- und der
+Rückweg gleich gewichtet sind und verwenden daher nur eine ungerichtete
+Kante zwischen zwei Knoten anstatt zwei gerichteten Kanten.
+
+Das einfachste Maß für die Kosten ist, einfach die Anzahl der Hops
+zu zählen. Damit sind die Kanten auch gleich gewichtet und damit können
+ungerichtete Kanten verwendet werden. Diese Art der Kosten wird auch
+in den kommenden Beispielen verwendet!
+
+Für das eigentliche Erstellen dieser Weiterleitungstabellen gibt es
+mehrere Ansätze:
+\begin{description}
+\item [{Statisches~Verfahren}] Die Weiterleitungstabellen werden einmal
+erstellt. Damit ist dieses Verfahren aus der Sicht der Administration
+aufwändig und unflexibel. Problematischer sind außerdem zeitweilige
+Ausfälle von Verbindungen, da dafür kurzfristig Änderungen in allen
+Weiterleitungstabellen notwendig wären, die auf dieser Basis jedoch
+praktisch nicht durchgeführt werden können. Das statische Verfahren
+wird heutzutage nur noch für provisorische Zwecke sowie für kleine
+Netze angewendet, in denen sich die Topologie kaum ändert. 
+\item [{Isolierte~Verfahren}] Bei den isolierten Verfahren verwendet jeder
+Knoten nur die ihm verfügbare, lokale Information für die Routing-Entscheidungen.
+Dazu zählen so einfache Verfahren wie das Fluten (engl. flooding),
+das einfach ein Paket an alle Schnittstellen weiterreicht. Ein weiteres
+Verfahren ist ,,Hot Potato'' (dt. heiße Kartoffel), das ein Paket
+so schnell wie möglich weitergibt. Dazu wird das Paket an derjenigen
+Schnittstelle ausgegeben, die gerade die kürzeste Warteschlange hat.
+\item [{Zentrale~Verfahren}] Es gibt eine zentrale Stelle, die die Informationen
+der Weiterleitungstabellen an alle anderen Router verteilt. Diese
+zentrale Stelle muss die gesamte Netzstruktur kennen und muss entsprechend
+ausfallsicher sein. Unter Umständen kann sich diese zentrale Stelle
+als Flaschenhals erweisen.
+\item [{Verteilte~Verfahren}] Die verteilten Verfahren sind dadurch gekennzeichnet,
+dass jeder Router seine Routing-Entscheidungen selbstständig trifft.
+In TCP/IP haben sich zwei grundlegende Algorithmen für verteilte Verfahren
+etabliert: der Distanzvektor-Algorithmus und der Link-State-Algorithmus.
+\end{description}
+Zentrale und verteilte Verfahren werden im Gegensatz zu statischen
+Verfahren als adaptive Verfahren bezeichnet, da auf Änderungen der
+Netztopologie reagiert werden kann.
+
+Als Beispiel für die beiden Algorithmen wird der folgende Graph verwendet:
+
+%
+\begin{figure}[h]
+\centering
+
+\includegraphics[bb=0bp 0bp 43mm 42mm,clip]{architecture/routing_graph}
+
+\caption{Beispielgraph für ein Netzwerk}
+
+\end{figure}
+
+
+
+\subsubsection{Distanzvektor-Algorithmus\label{sec:distance-vector-algorithm}}
+
+Beim Distanzvektor-Algorithmus (engl. distance vector) handelt es
+sich um einen Routing Algorithmus der nach folgendem Prinzip funktioniert:
+,,Teile deinen Nachbarn mit, wie du die Welt siehst''.
+
+Dieser Algorithmus basiert darauf, dass jeder Knoten einen Vektor
+verwaltet, der die Entfernungen (engl. distance) oder allgemeiner
+die Gewichte zu allen übrigen Knoten enthält. Diese Entfernungen sind
+in Wirklichkeit die Kosten. Dieser Vektor wird an die unmittelbaren
+Nachbarn verteilt.
+
+Im Detail funktioniert der Algorithmus folgendermaßen:
+\begin{enumerate}
+\item Am Anfang wird in jedem Knoten der Vektor folgendermaßen initialisiert.
+
+\begin{itemize}
+\item es wird eine 1 eingetragen, wenn es eine direkte Verbindung gibt und
+diese nicht ausgefallen ist. Der Ausfall eines Nachbarn kann z.B.
+durch regelmäßige ,,Hello'' Pakete überprüft werden.
+\item es wird $\infty$ eingetragen, wenn es keine direkte Verbindung gibt.
+\item es wird eine 0 eingetragen, wenn es die Entfernung zu dem Router selbst
+angibt.
+\end{itemize}
+\item Jeder Knoten sendet seinen Vektor an seine direkten Nachbarn. Es gibt
+zwei verschiedene Ansätze des Zeitpunktes wann ein Knoten seinen Vektor
+an seine Nachbarn schickt:
+
+\begin{itemize}
+\item Der Knoten schickt periodisch seinen Vektor an seine Nachbarn. Die
+Größe dieser Zeitdauer liegt im Bereich mehrerer Sekunden bis zu mehreren
+Minuten.
+\item Der Knoten schickt genau dann seinen Vektor an seine Nachbarn, wenn
+es zu einer Änderung seines eigenen Vektors gekommen ist.
+\end{itemize}
+\item Empfängt ein Knoten einen Vektor von einem Nachbarn, dann heißt dies,
+dass der Knoten alle Knoten dieses Nachbarn über ihn erreichen kann.
+Deshalb wird zu jeder Distanz des erhaltenen Vektors eine 1 hinzugezählt.
+Ist der erhaltene Wert kleiner als der Wert des eigenen Vektors, dann
+wird der neue Wert an Stelle des alten in den eigenen Vektor eingetragen.
+Weiters wird in der Weiterleitungstabelle vermerkt, dass der Knoten
+über diesen Nachbarn erreicht werden kann.
+\end{enumerate}
+Wie sieht das bei unserem Beispiel aus? Die folgende Tabelle zeigt
+alle Vektoren aller Knoten im Anfangszustand:
+
+\begin{longtable}{|c||c|c|c|c|c|c|}
+\hline 
+Knoten & A & B & C & D & E & F\tabularnewline
+\hline
+\hline 
+A & 0 & 1 & $\infty$ & 1 & $\infty$ & 1\tabularnewline
+\hline 
+B & 1 & 0 & 1 & $\infty$ & $\infty$ & $\infty$\tabularnewline
+\hline 
+C & $\infty$ & 1 & 0 & $\infty$ & 1 & 1\tabularnewline
+\hline 
+D & 1 & $\infty$ & $\infty$ & 0 & $\infty$ & $\infty$\tabularnewline
+\hline 
+E & $\infty$ & $\infty$ & 1 & $\infty$ & 0 & 1\tabularnewline
+\hline 
+F & 1 & $\infty$ & 1 & $\infty$ & 1 & 0\tabularnewline
+\hline
+\end{longtable}
+
+Jetzt beginnt das eigentliche Routing. Jeder Knoten sendet seine Vektoren
+an seine direkten Nachbarn. Beispielsweise könnte dies so aussehen:
+\begin{enumerate}
+\item Knoten B erhält zum Beispiel einen Vektor von Knoten C. Er addiert
+eine 1 zu den Gewichten der Verbindung zu C und erhält den Vektor
+($\infty,2,1,\infty,2,2$). Dann vergleicht die Distanzen mit den
+eigenen Distanzen. Ist eine Distanz kleiner, wird diese in den eigenen
+Vektor übernommen, anderenfalls kommt es zu keiner Änderung. D.h.
+der Knoten B hat nach dieser Operation den Vektor (1, 0, 1, $\infty$,
+2, 2) gespeichert.
+\item Nehmen wir jetzt an, dass Knoten A den Vektor von Knoten B bekommt.
+A aktualisiert seinen eigenen Vektor zu (0, 1, 2, 1, 3, 1).
+\item Gehen wir weiter davon aus, dass Knoten A jetzt den Vektor von F bekommt.
+Daher aktualisiert A seinen Vektor zu (0, 1, 2, 1, 2, 1).
+\end{enumerate}
+Die endgültigen Vektoren werden so aussehen:
+
+\begin{longtable}{|c||c|c|c|c|c|c|}
+\hline 
+Knoten & A & B & C & D & E & F\tabularnewline
+\hline
+\hline 
+A & 0 & 1 & 2 & 1 & 2 & 1\tabularnewline
+\hline 
+B & 1 & 0 & 1 & 2 & 2 & 2\tabularnewline
+\hline 
+C & 2 & 1 & 0 & 3 & 1 & 1\tabularnewline
+\hline 
+D & 1 & 2 & 3 & 0 & 3 & 2\tabularnewline
+\hline 
+E & 2 & 2 & 1 & 3 & 0 & 1\tabularnewline
+\hline 
+F & 1 & 2 & 1 & 2 & 1 & 0\tabularnewline
+\hline
+\end{longtable}
+
+Selbstverständlich muss sich jeder Knoten auch merken über welchen
+Knoten er mittels der Distanz den Zielknoten erreichen kann. Je nach
+Abfolge der Nachrichten könnte die Weiterleitungstabelle von Knoten
+A im Prinzip so aussehen:
+
+\begin{longtable}{|c|c|}
+\hline 
+Ziel & nächster Hop\tabularnewline
+\hline
+\hline 
+C & B\tabularnewline
+\hline 
+E & F\tabularnewline
+\hline
+\end{longtable}
+
+Der Router muss natürlich auch die Schnittstellen kennen, über die
+er die nächsten Hops erreichen kann!
+
+Was passiert jetzt, wenn eine Verbindung ausfällt? Nehmen wir einmal
+an die Verbindung von B nach C fällt aus. Dann wird B an A mitteilen,
+dass die Entfernung von B nach C den Wert $\infty$ ausmachen. Daraufhin
+wird A seine Entfernung für den Weg nach C auf $\infty$ setzen, da
+A das Ziel C über B erreicht hätte. A würde diese Kosten auch an F
+übermitteln. Da F den Knoten C jedoch direkt erreichen kann, wird
+F seine Kosten für C nicht ändern. F würde im Gegenzug A mitteilen,
+dass C ein direkter Nachbar von F ist und A würde die Kosten für C
+auf 2 verändern und dies auch B mitteilen. B weiß dann, dass C über
+A in 3 Schritten zu erreichen ist.
+
+Allerdings gibt es ein kleines Problem, das als Count-to-Infinity
+Problem bezeichnet wird. Nehmen wir an, dass die Verbindung von A
+nach D ausfällt. A setzt daher in seinem Vektor den Wert $\infty$
+für die Verbindung nach D ein. Nehmen wir jetzt an, dass danach eine
+Aktualisierung von F kommt, die die Kosten von 2 für die Verbindung
+nach D beinhalten. A schlussfolgert daraus, dass es den Knoten D in
+3 Schritten erreichen kann und wird dies in einer weiteren Aktualisierungsmeldung
+wieder an F weitergeben. F wird daraufhin seinen Vektor bezüglich
+D auf 4 anpassen und diesen wieder aussenden. 
+
+Dieser Vorgang bricht erst ab, wenn im Algorithmus die Schranke erreicht
+wird, die für $\infty$ eingeführt wurde. Angenommen diese Schranke
+steht bei 16, dann wird dieser Vorgang bei 16 als ,,unendlich''
+abgebrochen werden. Wenn Aktualisierungen alle 20 Sekunden ausgetauscht
+werden, kann es 15{*}20 Sekunden, also ca. fünf Minuten dauern, bis
+der Ausfall eines Routers erkannt und die Verbindung zu ihm als unerreichbar
+markiert wird. Deshalb gibt es einige Varianten zu diesem Algorithmus.
+
+Eine dieser Verbesserungen nennt sich Split Horizon (soviel wie geteilter
+Horizont). Dabei sendet ein Knoten keine Aktualisierung an den Knoten
+zurück von dem er einen Wert erhalten hat. In dem obigen Beispiel
+würde F keine Änderungsmeldung bzgl. D an A schicken. Allerdings wird
+A eine Änderungsmeldung an F schicken und dieser dann seinen Vektor
+bzgl. D ebenfalls auf $\infty$ setzen.
+
+Betrachten wir jetzt was passiert, wenn die Verbindung von A nach
+D ausfällt. Wenn jetzt die Aktualisierungen in einer bestimmten Reihenfolge
+auftreten, kann folgendes passieren: B weiß, dass es D über A nicht
+mehr erreichen kann, weiß aber von C, dass es D über C in 4 Schritten
+erreichen kann und aktualisiert seinen Vektor. Gleichzeitig gibt er
+diese Änderungen an A weiter. A folgert, dass es D in 5 Schritten
+erreichen kann. A gibt diese Änderung wiederum an F weiter. F folgert,
+dass es D jetzt in 6 Schritten erreichen kann, usw. D.h. für eine
+Schleife, die mehr als 2 Knoten enthält funktioniert Split Horizon
+nicht.
+
+Eine Erweiterung zum Split-Horizon besteht darin, dass der Rechner
+bei dem die Verbindung ausfällt Meldungen mit negativen Kosten aussendet.
+Solche ,,negativen'' Meldungen werden weiter verbreitet. Allerdings
+werden damit keine größeren Schleifen als 3 vermieden.
+
+Die Zeit, die zum Verbreiten konsistenter Routinginformationen benötigt
+wird, wird als Konvergenzdauer oder kurz Konvergenz (engl. convergence)
+bezeichnet. Der Distanzvektor Algorithmus hat eine schlechte Konvergenz.
+Deshalb wurde der Link-State-Algorithmus entwickelt.
+
+
+\subsubsection{Link-State-Algorithmus\label{sec:link-state-algorithm}}
+
+Beim Link-State-Algorithmus handelt es sich um einen Routing Algorithmus
+der nach folgendem Prinzip funktioniert: ,,Teile der Welt mit, wer
+deine Nachbarn sind''.
+
+Dieser Algorithmus basiert darauf, dass zuerst die Topologie des Netzes
+ermittelt wird. Dann erst werden die kürzesten Wege bestimmt.
+
+Die Vorgehensweise von jedem Knoten ist folgende:
+\begin{enumerate}
+\item Jeder Knoten bildet ein LSP (link state packet, auch link state announcement,
+kurz LSA, genannt) mit den Namen seiner Nachbarn und den Gewichten
+der Verbindungen.
+\item Der Knoten verschickt das LSP per Broadcast über alle seine Verbindungen.
+Es werden jedoch nur die Änderungen übertragen.
+\item Der Knoten speichert alle LSP der anderen Knoten. Damit hat jeder
+Knoten eine vollständige Sicht des Netzes.
+\end{enumerate}
+Damit dies funktioniert werden zwei grundlegende Mechanismen benötigt:
+\begin{itemize}
+\item Die LSPs müssen zuverlässig alle anderen Knoten erreichen! Man nennt
+das zuverlässiges Fluten.
+\item Ein Algorithmus, der die kürzesten Wege in dem Graphen berechnet.
+Dazu wird der Dijkstra-Algorithmus verwendet.
+\end{itemize}
+
+\minisec{Zuverlässiges Fluten}
+
+Damit zuverlässiges Fluten ermöglicht wird, muss jedes LSP folgende
+Informationen beinhalten:
+\begin{itemize}
+\item Die Adresse des Knotens, der das LSP erzeugt hat.
+\item Die Liste der direkten Nachbarn gemeinsam mit den Kosten der Verbindung.
+\item Eine Sequenznummer für das LSP.
+\item Eine Lebensdauer oder auch TTL (time to live) genannt für das LSP
+\end{itemize}
+Das Fluten funktioniert folgendermaßen:
+\begin{itemize}
+\item Der Austausch der LSPs wird mittels Bestätigungen und Neuübertragungen
+zuverlässig gemacht.
+\item Jedes Mal wenn ein Knoten ein neues LSP erzeugt, wird die Sequenznummer
+erhöht. Solch eine Sequenznummer darf nicht überlaufen. Deshalb muss
+das Feld dafür relativ groß sein, z.B. 64 Bit. Fällt ein Knoten aus,
+dann beginnt die Sequenznummer wieder von vorne.
+\item Das Fluten wird mittels Broadcasts unter Ausnutzung der Sequenznummer
+und der Lebensdauer realisiert:
+
+\begin{itemize}
+\item Empfängt ein Knoten ein LSP und es ist noch kein LSP von diesem Knoten
+gespeichert, dann wird dieses gespeichert.
+\item Ist schon ein LSP von diesem Knoten gespeichert, dann wird die Sequenznummer
+betrachtet. Ist die neue Sequenznummer größer als die alte Sequenznummer,
+dann wird das neue LSP gespeichert, anderenfalls wird das neue LSP
+verworfen.
+\item Wurde ein LSP gespeichert, dann wird die Lebensdauer des LSP dekrementiert
+und dieses LSP an alle Nachbarn außer an den Knoten von dem das LSP
+empfangen wurde, weitergesendet.
+\item Die Lebensdauer wird auch dekrementiert, wenn das LSP im Knoten gespeichert
+ist.
+\item Hat die Lebensdauer den Wert 0 erreicht, wird das LSP auf jeden Fall
+gelöscht.
+\end{itemize}
+\end{itemize}
+
+\minisec{Dijkstra-Algorithmus}
+
+Jeder Knoten führt den Dijkstra-Algorithmus selbstständig durch. Die
+Grundlage ist ein Graph, der aus den LSPs konstruiert wurde.
+
+Wir definieren:
+\begin{itemize}
+\item V (engl. vertices) ist die Menge der Knoten, die durchnummeriert von
+1 bis size(V) bezeichnet sind.
+\item w(i,j) ist die Gewichtung der Verbindung vom Knoten i zum Knoten j.
+w(i,j) = $\infty$, wenn keine Verbindung zwischen dem Knoten i und
+dem Knoten j besteht.
+\item Mit s wird derjenige Knoten bezeichnet, der den Algorithmus ausführt.
+\item Mit N wird die Menge der Knoten bezeichnet, für die noch kein kürzester
+Weg zu s gefunden wurde.
+\item c(n) bezeichnet die Gesamtkosten vom Knoten n zum Knoten s.
+\end{itemize}
+Mit diesen Definitionen sieht die Grundstruktur des Dijkstra-Algorithmus
+folgendermaßen aus:
+\begin{lyxcode}
+N~=~V~-~\{s\}
+
+for~n~in~N:
+
+~~~~c(n)~=~w(s,n)~~~~~~~~\#~Kosten~für~alle~Knoten~zu~s~initialisieren
+
+while~not~empty(N):
+
+~~~~wähle~f~in~N,~sodass~c(f)~minimal~ist
+
+~~~~N~=~N~-~\{f\}~~~~~~~~~~\#~es~ist~ein~neuer~Knoten~gefunden~worden
+
+~~~~for~n~in~N:~~~~~~~~~~\#~Kosten~aktualisieren
+
+~~~~~~~~c(n)~=~min(c(n),~c(f)~+~w(f,n))
+\end{lyxcode}
+In dieser Form werden einerseits nur die minimalen Kosten ermittelt
+und außerdem fällt auf, dass die Wahl von f in N, sodass c(f) minimal
+wird, jeweils alle Knoten in N betrachten muss. Die Idee ist, die
+Menge der noch nicht behandelten Knoten weiter zu unterteilen. Es
+wird die Menge der Randknoten B (engl. border) eingeführt, die alle
+Knoten beinhaltet, die direkte Nachbarn der Knoten sind, für die schon
+ein kürzester Weg gefunden wurde:
+\begin{lyxcode}
+R~=~\{s\}~~~~~~~~~~~~~~~~~~\#~Menge~der~Ergebnisknoten~initialisieren
+
+for~v~in~V~-~\{s\}:~~~~~~~~\#~alle~anderen~Knoten
+
+~~~~c(v)~=~w(s,v)~~~~~~~~\#~Kosten~für~alle~Knoten~zu~s
+
+~~~~p(v)~=~None~~~~~~~~~~\#~Vorgänger~gibt~es~noch~keinen
+
+B~=~neighbours(s)~~~~~~~~\#~mit~Nachbarn~von~s~initialisieren
+
+for~b~in~B:~~~~~~~~~~~~~~\#~und~Vorgänger~von~b~setzen
+
+~~~~p(b)~=~s
+
+while~not~empty(B):
+
+~~~~wähle~f~in~B,~sodass~c(f)~minimal~ist
+
+~~~~B~=~B~-~\{f\}~~~~~~~~~~\#~aus~Rand~entfernen
+
+~~~~R~=~R~+~\{f\}~~~~~~~~~~\#~zu~den~Gefundenen~hinzufügen
+
+~~~~for~n~in~neighbours(f):
+
+~~~~~~~~if~n~not~in~R:
+
+~~~~~~~~~~~~B~=~B~+~\{n\}~~\#~mit~Nachbarn~zu~f~auffüllen
+
+~~~~~~~~~~~~if~c(f)~+~w(f,n)~<~c(n):~\#~wenn~kürzer
+
+~~~~~~~~~~~~~~~~c(n)~=~c(f)~+~w(f,n)
+
+~~~~~~~~~~~~~~~~p(n)~=~f
+\end{lyxcode}
+Praktische Implementierungen in Routern interessieren sich nicht für
+die genauen Wege sondern nur für die nächsten Router. Insoferne wird
+nicht der Vorgänger des Knotens bestimmt sondern gleich der nächste
+Router.
+
+Folgendes Beispiel soll das verdeutlichen:
+
+%
+\begin{figure}[h]
+\centering
+
+\includegraphics[bb=0bp 0bp 44mm 42mm,clip]{architecture/routing_graph2}
+
+\caption{Beispielgraph für ein Netzwerk mit Gewichten}
+
+\end{figure}
+
+
+Vorausgesetzt, dass der Knoten A der Knoten ist, der den Dijkstra-Algorithmus
+ausführt werden folgende Schritte abgearbeitet:
+\begin{enumerate}
+\item Die Menge der Ergebnisknoten mit A initialisieren.
+\item Randknoten bestimmen.
+\item Knoten mit kleinstem Gewicht innerhalb der Randknoten bestimmen, also
+B und diesen in die Menge der Ergebnisknoten überführen. Neue Menge
+der Randknoten bestimmen und Gewicht von C auf 10 korrigieren.
+\item Knoten mit kleinstem Gewicht innerhalb der Randknoten bestimmen, also
+F und diesen in die Menge der Ergebnisknoten überführen. Neue Menge
+der Randknoten bestimmen und Gewicht von C und E korrigieren. Gleichzeitig
+wird der Vorgänger von C der Knoten F.
+\item Knoten mit kleinstem Gewicht der Randknoten bestimmen, also D und
+diesen in die Menge der Ergebnisknoten überführen. Menge der Randknoten
+ist nicht größer geworden, da keine Knoten mehr vorhanden sind, die
+weder in der Menge der Ergebnisknoten noch in der Menge der Randknoten
+sind.
+\item Knoten mit kleinstem Gewicht der Randknoten bestimmen, also C und
+diesen in die Menge der Ergebnisknoten überführen. Gewicht von C auf
+10 korrigieren und als Vorgänger von E den Knoten C eintragen.
+\end{enumerate}
+Das folgende Abbildung zeigt diese einzelnen Schritte. Die Menge der
+Ergebnisknoten ist dunkelgrau und die Menge der Randknoten hellgrau
+gekennzeichnet:
+
+%
+\begin{figure}[h]
+\centering
+
+\includegraphics[bb=0bp 0bp 120mm 80mm,clip]{architecture/routing_graph2a}
+
+\caption{Abarbeitung des Dijkstra-Algorithmus}
+
+\end{figure}
+
+
+
+\section{Ende-zu-Ende Kommunikation}
+
+Ab der Schicht 4 im OSI Modell findet eine Ende-zu-Ende Kommunikation
+statt, während in den Schichten 1 bis 3 jeweils eine Punkt-zu-Punkt
+Kommunikation stattfindet.
+
+Zu den Aufgaben gehören:
+\begin{itemize}
+\item Bereitstellen der Verbindungslogik.
+\item Verwalten (mehrerer) Verbindungen.
+\item Flusskontrolle.
+\item Verwaltung von Sitzungen (engl. session).
+\item Kompression und Verschlüsselung.
+\item Darstellungsformatierung behandelt die Umwandlung der verschiedenen
+Datenformate, sodass der Informationsgehalt jedoch unverändert bleibt.
+Dafür gibt es:
+
+\begin{itemize}
+\item Spezifikationen der ISO: ASN.1 (abstract syntax notation one) mittels
+der Datentypen beschrieben werden können und BER (basic encoding rules),
+die eine konkrete Transfersyntax beschreibt.
+\item Standards des W3C (world wide web consortium): XML, XPath, XPointer,
+XLink, XSLT, XML Schema
+\end{itemize}
+\end{itemize}
+
+\section{Überlastkontrolle}
+
+Obwohl die Verbindungen auf der Transportebene eine Flusskontrolle
+bieten und damit den Empfänger vor Überlastung schützen, kann es vorkommen,
+dass die Router auf dem Weg überlastet werden. Zusätzlich gibt es
+noch die verbindungslosen Nachrichtenübertragungen, die ebenfalls
+eine Last für die Router darstellen.
+
+Folgende grundsätzliche Möglichkeiten zum Umgang mit Überlast gibt
+es:
+\begin{itemize}
+\item Überdimensionierung des Netzes.
+\item Überlast wird aus dem Netz entfernen. Dazu muss die Netzwerksoftware
+wissen welche Pakete entfernt werden sollen.
+\item Neue Kommunikationsbeziehungen werden nur zugelassen, wenn genügend
+Kapazitäten frei sind (analog zum Telefonnetz).
+\item Quelle wird gedrosselt (TCP hat ein Verfahren, dass darauf basiert)
+\end{itemize}
+

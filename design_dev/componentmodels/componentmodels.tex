@@ -1,0 +1,827 @@
+
+\chapter{Komponentemodelle}
+
+Es ist es das Ziel, Software industriemäßig zu entwickeln. Die Idee
+ist, (vorgefertigte) Komponenten miteinander zu verbinden, sodass
+die gewünschte Funktion erreicht wird. D.h.~es werden Komponenten
+entwickelt, die in weiterer Folge zusammengesetzt werden (z.B. wie
+Teile eines Fertigteilhauses). Software soll daher einerseits produktiver
+entwickelt werden und andererseits soll auch ein Handel mit Softwarekomponenten
+möglich sein. Ein Markt für Softwarekomponenten ist derzeit nicht
+im nennenswerten Umfang vorhanden.
+
+Begonnen hat die Idee der komponenten-basierten Entwicklung von Software
+allerdings schon im Jahr 1968 auf einem NATO Kongress mit dem Vortrag
+`Mass Produced Software Components'!
+
+Wir betrachten nur Komponentenmodelle, die sich auch für die Implementierung
+von verteilten Systemen eignen (also z.B. nicht JavaBeans). In diesem
+Sinne stellen, sind diese als Middleware zu klassifizieren.
+
+
+\minisec{Middlewareschicht}
+
+Diese kann als Spezialfall der Applikationsschicht aufgefasst werden,
+die zwischen der Darstellungsschicht und der Applikationsschicht liegt
+und Aufgaben wie z.B. die Authentifizierung, verteilte Transaktionen,
+verteilte Synchronisierung, Benachrichtigungsdienst,... übernimmt.
+
+Auch dafür gibt es keine Entsprechung im TCP/IP Protokoll und auch
+keine im OSI Modell! Beispiele sind .NET, CORBA, JEE. Eine detailierte
+Beschreibung ist im Abschnitt `Komponentenmodelle' zu finden.
+
+
+\section{Prinzipien}
+
+Komponentenmodelle definieren Standards für Implementierung, Benennung,
+Interoperabilität, Zusammenstellung, Entwicklung und Verteilung von
+Komponenten.
+
+Es gibt jedoch keine allgemein gültige Definition für den Begriff
+(Software-) Komponente!
+
+Eine gängige \emph{Definition} führt 5 Kriterien an, die erfüllt sein
+müssen, dass etwas eine Komponente ist: 
+\begin{itemize}
+\item Sie kann mehrfach verwendet werden. D.h.~sie kann ohne Änderung in
+verschiedener oder auch der gleichen Software mehrfach eingesetzt
+werden. 
+\item Sie ist nicht kontextabhängig. D.h.~sie kann in ,,beliebigen''
+Situationen eingesetzt werden. 
+\item Sie läßt sich mit anderen Komponenten verbinden. D.h.~die Schnittstellen
+müssen klar definiert sein. Dies betrifft nicht nur die Signaturen
+sondern auch die Semantik der Schnittstellen (voll spezifiziert). 
+\item Sie ist gekapselt. D.h.~von außen nicht einsehbar. 
+\item Sie kann unabhängig eingesetzt werden und unterliegt ihrer eigenen
+Versionierung. D.h.~eine Komponente stellt ein eigenständige Ressource
+(z.B.~eine .jar Datei) dar, die in einen Container (siehe Abschnitt
+\ref{sec:j2ee}) kopiert werden kann. 
+\end{itemize}
+Im UML 2 ist eine Komponente ein modularer Teil eines Systems, der
+zur Abstraktion und Kapselung einer beliebig komplexen Struktur dient,
+die nach außen wohl definierte Schnittstellen zur Verfügung stellt.
+Der Ansatz der komponentenbasierten Softwareentwicklung (component-based
+software development, CBS) stellt Komponenten schon beim Design der
+Software in den Mittelpunkt und die Implementierung erfolgt mit den
+jeweils zur Verfügung stehenden Mitteln!
+
+Pragmatisch kann man eine Komponente also einfach als ein Objekt (im
+allgemeinen Sinne) definieren, das nach einer Spezifikation entwickelt
+worden ist. Eine solche Spezifikation wird allgemein mit Hilfe eines
+Komponentenmodells verfasst.
+
+Oft sind also Komponenten einfach Objekte im Sinne der Objektorientierung,
+deren Schnittstelle durch eine Interface Definition Language (IDL)
+beschrieben ist. Das liegt aber einfach nur daran, dass Objekte ein
+zugrundeliegendes Sprachmittel von Programmiersprachen sind (und Komponenten
+nicht).
+
+Ein prinzipieller \emph{Unterschied} liegt aber eindeutig darin, dass
+eine Komponente physisch in einer Umgebung eingesetzt werden können
+muss. Z.B. indem eine JAR Datei in einem geeigneten Container (siehe
+EJB der JEE) kopiert wird und danach verwendet werden kann. Eine Klasse
+an sich ist lediglich ein logisches Konstrukt; die physische Komponente
+fehlt vollständig!
+
+In diesem Sinne definieren wir als eine Komponententechnologie eine
+Software, die es ermöglicht allgemein mit Komponenten zu entwickeln.
+Beispiele für Komponententechnologien sind z.B. Microsofts COM, Microsofts
+COM+, Microsofts .NET, Suns JavaBeans, Suns JEE/EJB, CORBA/CCM von
+der OMG.
+\begin{quote}
+The best thing about standards is that there are so many to choose
+from. (Andrew Tanenbaum) 
+\end{quote}
+In weiterer Folge betrachten wir lediglich Technologien, die sich
+zur Implementierung von verteilter Software eignet. In diesem Sinne
+folgt ein kurzer Überblick über CORBA 3.0, JEE und die Middleware
+Ice von ZeroC. Pragmatisch gesehen sind diese Technologien im weitesten
+Sinne also Kompoenententechnologien.
+
+
+\section{CORBA\label{sec:corba}}
+
+\emph{CORBA} (Common Object Request Broker Architecture) ist ein Standard
+der OMG (Object Management Group), der eigentlich eine Spezifikation
+für ein \emph{verteiltes Objektmodell} darstellt.
+
+Zusätzlich zu CORBA gibt es von der OMG eine Erweiterung CCM (CORBA
+Component Model), die eine Component Interface Definition Language
+(CIDL), ein Implementierungsframework, ein Programmiermodell liefert,
+als auch die Integration mit EJB und das Deployment spezifiziert.
+Dabei handelt es sich damit um eine echte Komponententechnologie.
+
+In weiterer Folge wird jedoch ,,nur'' CORBA vorgestellt.
+
+Im \emph{CORBA Objektmodell} verwenden jene Objekte, die miteinander
+in Verbindung stehen einen Vertrag (contract), der in der Interface
+Definition Language (IDL) spezifiziert ist. Sprachabbildungen (language
+mappings) sind im Standard für die Programmiersprachen C, \texttt{C++},
+Java, COBOL, Smalltalk, Ada, Lisp und Python vorhanden.
+
+Der Object Request Broker (ORB) ist ein Software-Bus, der es einem
+Client erlaubt, lokale Aufrufe in dem Kontext eines verteilten Systems
+durchzuführen. Diese Aufrufe werden in einem Standardformat zum Server
+übertragen. Serverseitig entpackt der ORB nun den Request des Clients
+und führt den lokalen Aufruf des Zielobjekts durch. Dafür werden Stubs
+und Skeletons generiert. D.h.~es handelt sich um eine Remote Method
+Invocation (RMI).
+
+Neben dem klassischen RMI unterstützt CORBA 3.0 auch noch `Objects
+by value', CORBA Messaging und den POA.
+
+Der POA definiert einerseits eine exakte Schnittstelle zwischen \emph{verschiedenen}
+Implementierungen von CORBA Systemen (verschiedener Herstellern),
+persistente und transiente Objekte, Aktivierung von Objekten und verschiedenen
+Policies für das Multi-threading bei Methodenaufrufen (alles in einem
+Thread, jedes Mal ein neuer Thread oder Threadpool).
+
+Das alleine ist jedoch zu wenig. Deshalb hat die OMG in der Object
+Management Architecture (OMA) eine Rahmenarchitektur für verteilte
+Anwendungen definiert, jedoch keine Spezifikation und auch keine Implementierung.
+
+Die OMA besteht aus folgenden Teilen: 
+\begin{description}
+\item [{ORB}] ist die Kommunikationsplattform für alle verteilte Objekte.
+Dieser ist für die Transparenz und Interoperabilität der verteilten
+Objekte zuständig. 
+\item [{CORBA-Dienste}] stehen für sämtlichen verteilten Anwendungen zur
+Verfügung: Naming-Services, Event-Services, Lifecycle-Services, Access-Control-Services,
+Persistency-Services, Transaction-Services. 
+\item [{Horizontale}] Funktionalität sind die horizontalen (anwendungsunabhängigen)
+Funktionen, z.B. Workflow-Management, Dokumentenmanagement, Druckdienste,
+Mailing-Dienste. 
+\item [{Vertikale}] Funktionalität sind die von der Anwendungsdomäne abhängigen
+Funktionen, die im Gesundheitswesen, im Finanzdienstleistungssektor,...
+verwendet werden. 
+\item [{Anwendungsobjekte}] sind die eigentlichen anwendungsspezifischen
+Objekte. 
+\end{description}
+Die OMG wird in weiterer Zukunft die OMA durch Model Driven Architecture
+(MDA) ablösen. Die Grundidee von MDA ist, durch den Einsatz eines
+Modells so viel Code wie möglich automatisiert für die Plattform zu
+generieren. Diese Vorgehensweise ermöglicht es, relativ einfach die
+Plattform zu wechseln (etwa von C++ nach Java oder von CORBA nach
+EJB), beziehungsweise sich an die Gegebenheiten einer bestimmten Plattform
+anzupassen. Beispielsweise kann man beim Übergang von EJB 2.0 auf
+die Version 3.0 die Methoden einfach neu generiert, ohne das Modell
+an die neue Version der Plattform anzupassen. In diesem Zusammenhang
+wird auch das CCM mehr Bedeutung gewinnen.
+
+CORBA hat ein umfassendes Funktionsspektrum, jedoch wird die volle
+Fülle dieser Funktionen von wenigen Produkten erfüllt. Eine lange
+Zeit wurde in CORBA \emph{der} Weg gesehen die Interoperabiltätsprobleme
+in verteilten Systemen zu lösen. Im Businessbereich wird heute vermehrt
+auf Webservices gesetzt, um die Interoperabilitätsprobleme zu lösen.
+
+CORBA Software ist am Markt in ausreichender Menge vorhanden: Orbix
+von IONA, VisiBroker von Borland, Weblogic Server von Bea oder auch
+frei verfügbare Implementierungen wie z.B. JacORB.
+
+
+\section{JEE\label{sec:j2ee}}
+
+
+\subsection{Systemarchitektur}
+
+Die \emph{JEE Plattform} verwendet eine verteilte Multi-Tier Systemarchitektur
+mit dem Ziel Unternehmensanwendungen entwickeln zu können.
+
+Üblicherweise ist eine JEE Applikation aus \emph{3 oder 4 Schichten
+(Tiers)} aufgebaut: 
+\begin{enumerate}
+\item Client Tier: Diese beinhaltet entweder eine Client-Anwendung oder
+einfach einen Web-Client. Diese Schicht ist natürlich auf der Client-Maschine. 
+\item Web Tier: Diese stellt die Web-Funktionalität zur Verfügung und ist
+natürlich nur dann vorhanden, wenn die Anwendung auch eine Web-Komponente
+aufweist. Technologien, die zum Einsatz kommen sind JSP, Servlets,
+Struts, JavaServer Faces. Diese Tier ist entweder auf einer dedizierten
+Web-Maschine oder allgemein auf einer Server-Maschine (auch mehrere)
+vorhanden. 
+\item Business Tier: Hier ist die eigentliche Business Logic beheimatet.
+Als Technologie kommen hier die Enterprise JavaBeans (EJB) zum Einsatz.
+Die Business Tier läuft auf einer oder mehrere Server-Maschinen. 
+\item Enterprise Information System Tier: Diese stellt in der Regel die
+Datenbank (oder eine beliebige Datenquelle) zur Verfügung und läuft
+auf einer oder mehrerer Datenbankmaschinen. 
+\end{enumerate}
+
+\subsection{JEE API}
+
+Bei JEE 5 handelt es sich eigentlich um eine Spezifikation und eine
+Referenzimplementierung in Form der Sun Java System Application Server
+Plattform Edition. Die Spezifikation und die Referenzimplementierung
+kann frei zur Entwicklung und zum Einsatz verwendet werden.
+
+Es gibt viele kommerzielle Implementierungen, wie z.B. WebSphere von
+IBM, WebLogic von BEA, Borland Enterprise Server oder Oracle Application
+Server 10g. Und auch viele frei verfügbare Implementierungen, wie
+z.B. JBoss, Geronimo von Apache oder der Gluecode Application Server
+von IBM oder Suns Java System Application Server.
+
+JEE hat einen mächtigen Funktionsumfang: 
+\begin{itemize}
+\item JavaServer Pages und Java Servlets. JavaServer Pages sind ähnlich
+zu ASP, PHP mit jedoch unterschiedlichen und zum Teil erweiterten
+Funktionsumfang. Ein JavaServlet ist eine Klasse, die in einem Webcontainer
+verwendet werden kann und diesen um eine Funktion erweitert. JavaServer
+Pages werden im Hintergrund von dem Webcontainer in JavaServlets übersetzt. 
+\item Enterprise JavaBeans (siehe Abschnitt \ref{sec:ejb}). 
+\item Java Database Connectivity (JDBC) Extensions. Zugriff auf Datenbanken. 
+\item Connector Architecture. Verwaltet Connections. 
+\item Java Transaction API (JTA) bietet erlaubt Transaktionen unabhängig
+von einem speziellen Transaktionsmanager zu programmieren. 
+\item Java Naming and Directory Interface (JNDI). Zugriff auf verschiedene
+Typen von Namens- und Verzeichnisdiensten, wie z.B. LDAP. 
+\item Management Model und Java Management Extensions (JMX). Dient zum Verwalten
+und Beobachten (monitoring) von Applikationen und Services. 
+\item Java API for XML-Based RPC (JAX-RPC). Hier wird die gesamte Kommunikation
+zu Webservices abgedeckt. Also Technologien wie SOAP und WSDL sind
+hier in einem API und einer Implementierung vorhanden. 
+\item Java API for XML Registries (JAXR). Um ein Webservice zu finden muss
+man es z.B. in einer Registry (im Internet) suchen. Dazu gibt es die
+Standards UDDI und ebXML. Beide werden von JAXR unterstützt. 
+\item Remote Method Invocation über IIOP (RMI-IIOP). Ein CORBA konformer
+ORB, der eine Schnittstelle zwischen RMI und CORBA darstellt. 
+\item Java Message Service (JMS). Nachrichten-orientierte Kommunikation. 
+\item JavaMail. Zum Entwickeln von E-Mail-Anwendungen. 
+\end{itemize}
+
+\subsection{EJB\label{sec:ejb}}
+
+Das primäre Ziel von EJB (Enterprise JavaBeans) ist es, komponenten-basierte
+Softwareentwicklung zu unterstützen und diesen Komponenten eine vollständige
+Infrastruktur zur Verfügung zu stellen. Diese Infrastruktur beinhaltet
+Funktionen wie Transaktionen, Zustand und Persistenz, Sicherheit,
+Multi-Threading und Ressource-Pooling. D.h.~der Entwickler soll sich
+`nur' mehr um die eigentliche Businesslogik kümmern müssen. D.h.~es
+handelt sich um nichtvisuelle Komponenten.
+
+Die grundlegende Idee ist, dass ein Entwickler eine Komponente schreibt
+(eine oder mehrere Enterprise Beans), die lediglich die Businesslogik
+beinhalten. Diese Bean wird in einen Container eines Application Servers
+eingepflanzt, der die gesamte Infrastruktur zur Verfügung stellt.
+Welche Funktionen der Infrastruktur benötigt werden, wird in XML Dateien
+bzw. in Java Annotations (EJB 3) angegeben. D.h.~es kann festgelegt
+werden, welche Benutzer es in dem System gibt, welcher Benutzer auf
+diese spezielle Bean zugreifen kann, welche Methoden in Transaktionen
+ablaufen sollen, wie die Daten persistent gehalten werden, was multi-threaded
+ablaufen soll und was nicht. Dies nennt man eine deklarative Spezifikation.
+Damit das funktioniert, muss sich der Entwickler bei der Programmierung
+lediglich an ein API und einige vorgegebene Regeln halten.
+
+Ein weiterer \emph{Vorteil} ist, neben der einfacheren Entwicklung,
+dass die Komponente in jedem JEE konformen Container eingesetzt werden
+kann und man nicht von einem Hersteller abhängig ist. Außerdem ist,
+bei Einhaltung gewisser Regeln, die Skalierbarkeit gegeben: Ein entsprechender
+Server kann auf mehreren Maschinen installiert werden und dieser verteilt
+die Komponenten automatisch auf die vorhandenen Ressourcen!
+
+
+\section{Ice\label{sec:ice}}
+
+Bei Ice (Internet Communications Engine) handelt es sich um eine objekt-orientierte
+Middleware Software, die einige Vorteile gegenüber anderen Middleware
+Systemen bietet:
+\begin{itemize}
+\item Die wichtigste Eigenschaft: Die Pragrammierung ist einfach. 
+\item Es wird für mehrere Plattformen angeboten, wie Windows und UNIX artige
+Betriebssysteme (Linux, AIX, Solarix, Mac OS X,...) und ist auch auf
+embedded devices einsetzbar. 
+\item Es werden viele Programmiersprachen unterstützt: \texttt{C++}, Java,
+C\#, VisualBasic, Python, PHP. 
+\item Ist ein effizientes System. 
+\item Es wird als GPL und als kommerzielle Version angeboten. 
+\end{itemize}
+
+\subsection{Beschreibung}
+
+Ein \emph{Ice Objekt} ist eine konzeptionelle Entität und 
+\begin{itemize}
+\item kann entweder im lokalen oder entfernten Adressraum sein und auf Anfragen
+reagieren. 
+\item kann entweder auf einem oder mehreren Servern instanziert sein (trotzdem
+das selbe Ice Objekt). 
+\item hat entweder ein oder mehrere Interfaces. Ein Interface ist das Haupt-Interface.
+Die anderen Interfaces werden als facets bezeichnet. Ein Client kann
+sich entscheiden mit welchen Interface er arbeiten will. 
+\item hat eine globale eindeutige ID. 
+\end{itemize}
+Ein \emph{Proxy} 
+\begin{itemize}
+\item ist ein Client-seitiges Objekt, das notwendig ist, um auf ein Ice
+Objekt entfernt zuzugreifen. Es entspricht also einem Stub. 
+\item kann ein direkter Proxy sein. Dieser enthält die Protokollart (tcp
+oder udp) und eine protokollspezifische Adresse (Hostname und Port).
+Die ID des Ice Objektes wird mit jedem Aufruf mitgesendet. Die Information,
+die in einem Proxy gespeichert ist, kann als String dargestellt werden,
+z.B. `SimpleCalculator:default -p 10000' 
+\item kann ein indirekter Proxy sein. Dieser enthält die ID und einen Adapternamen.
+Diese Informationen werden zu einem Namensdienst gesendet, der daraufhin
+die Adresse des Ice Objektes zurückliefert. Damit muss man die Adresse
+des Ice Objektes nicht kennen. 
+\item ist von der Basisklasse \emph{Ice.ObjectPrx} abgeleitet. 
+\end{itemize}
+Ein \emph{Servant} 
+\begin{itemize}
+\item ist ein Server-seitiges Objekt, das die Methoden des Interface implementiert. 
+\item ist registriert für ein oder mehrere Ice Objekte. Andererseits kann
+ein Ice Objekt auch mehrere Servants haben. In diesem Fall kann man
+z.B. einen Proxy mit zwei Adressen erzeugen, die jeweils auf einen
+Servant auf je einer Maschine zeigen. Ein Methodenaufruf zu solch
+einem Proxy versucht zuerst die Methode auf dem einen Server aufzurufen.
+Funktioniert dies nicht, z.B. weil der Server ausgefallen ist, dann
+wird der zweite Server kontaktiert. 
+\item ist (indirekt) von der Basisklasse \emph{Ice.ObjectPrx} abgeleitet. 
+\end{itemize}
+Ein \emph{Object Adapter} 
+\begin{itemize}
+\item verwaltet die Servants mit ihrer jeweiligen object identity. Einkommende
+Nachrichten werden in entsprechende Methodenaufrufe an den entsprechenden
+Servant umgesetzt. 
+\item lauscht an einem oder mehreren Endpunkten. Jeder Endpunkt besteht
+aus Protokoll und Port. Dadurch kann ein Servant auch über mehrere
+Protokolle (z.B. tcp oder udp) angesprochen werden. 
+\item erzeugt Proxy Objekte, die an den Client weitergereicht werden. Da
+ein Object Adapter den exakten Typ, die Identität und die Protokollinformationen
+kennt, kann auch ein entsprechendes Proxy Objekt erzeugt werden.
+\end{itemize}
+Diese Proxy-Struktur ist in Abbildung \vref{fig:ice_structure} zu
+sehen. Am Server ist die Struktur der Objekte zur Laufzeit durch das
+Objektdiagramm in Abbildung beschrieben.
+
+%
+\begin{figure}
+\centering
+
+\includegraphics[bb=0bp 0bp 17cm 65mm,clip,scale=0.7]{design_dev/componentmodels/structure}
+
+\caption{\label{fig:ice_structure}Proxystruktur}
+
+\end{figure}
+
+
+%
+\begin{figure}
+\centering
+
+\includegraphics[bb=0bp 0bp 165mm 6cm,clip,scale=0.7]{design_dev/componentmodels/runtime}
+
+\caption{\label{fig:ice_runtime}Objekte zur Laufzeit}
+
+\end{figure}
+
+
+Ice bietet mehrere verschiedene Arten von Methodenaufrufen an: 
+\begin{description}
+\item [{synchroner}] Methodenaufruf (synchronous method invocation) entspricht
+einem entfernten Funktionsaufruf (siehe Abschnitt \ref{sec:message_types}
+$\rightarrow$ remote-invocation send). 
+\item [{asynchroner}] Methodenaufruf (asynchronous method invocation) entspricht
+einem asynchronen Funktionsaufruf mit callback Modell. Für den Server
+ist der asynchrone Methodenaufruf transparent! ($\rightarrow$ no-wait
+send). 
+\item [{asynchrone}] Methodenverarbeitung (asychronous method dispatch)
+ist das entsprechende Gegenstück zum asynchronen Methodenaufruf am
+Server. Tätigt der Client einen Methodenaufruf, dann wird der Server
+davon benachrichtigt. Im Gegensatz zu einem synchronen Aufruf, der
+einen Thread am Server für die Abarbeitungszeit des Methodenaufrufes
+belegt, kann der Server entscheiden die Anfrage erst zu einem späteren
+Zeitpunkt zu bearbeiten. Dadurch wird dafür kein Serverthread belegt.
+
+
+Sinn macht das, wenn der Server selbst wieder auf das Ergebnis eines
+asynchronen Methodenaufrufes warten muss. 
+
+\item [{Einweg}] Methodenaufruf (oneway method invocation) entspricht dem
+asynchronen Funktionsaufruf. D.h.~der Methodenaufruf kommt zurück,
+wenn die Nachricht an das lokale Transportsystem übergeben worden
+ist. So eine Art von Methodenaufrufe sind demzufolge nicht zuverlässig.
+Da keinerlei Rückgabe erfolgt, kann diese Art auch keinen Rückgabewert
+besitzen. D.h.~es entspricht einem asynchronen Prozeduraufruf. Einweg
+Methodenaufrufe werden nur über ein Stream-orientiertes Protokoll
+versendet. D.h., dass auf dem Übertragungsweg keine Informationen
+verloren gehen können und auch keine Verfälschungen auftreten! 
+\item [{Serien-Einweg}] Methodenaufruf Wie der vorhergehende Punkt, jedoch
+lassen sich mehrere Einweg Methodenaufrufe zu einem Aufruf zusammenfassen,
+das eine verbesserte Performanz ergibt. Allerdings werden alle Methodenaufrufe
+eines Serien-Einweg Methodenaufrufes am Server in einem Thread abgearbeitet. 
+\item [{Datagram}] Methodenaufruf Dies entspricht einem Einweg Methodenaufruf
+jedoch mit UDP als Transportprotokoll. Damit sind zusätzlich zu den
+`Nachteilen' des Einweg Methodenaufruf auch noch die Nachteile von
+UDP vorhanden. D.h.~einzelne Pakete können verloren gehen oder doppelt
+beim Server ankommen. Daher ist der Haupteinsatz von Datagram Methodenaufrufen
+auf das LAN beschränkt, wo die Pakete mit hoher Wahrscheinlichkeit
+ankommen. 
+\item [{Serien-Datagram}] Methodenaufruf analog zum Serien-Einweg Methodenaufruf.
+Die Verarbeitung findet am Server wieder in einem Thread statt. 
+\end{description}
+Bei den synchronen und den asynchronen Methodenaufrufen ist sichergestellt,
+dass Ice entweder die Methode zustellt oder eine Fehlermeldung liefert!
+
+
+\subsection{Dienste}
+
+Ice bietet eine Reihe von Diensten an: 
+\begin{description}
+\item [{IceGrid}] ein Namensdienst, Serveraktivierung, Softwareverteilung
+(in Kombination mit IcePatch2), Replizierung und Load-Balancing, automatisches
+`failover', Administration. 
+\item [{Freeze}] mit Freeze können Objekt persistent gemacht werden. 
+\item [{IceStorm}] eine einfache Publish/Sucribe MOM 
+\item [{IcePatch2}] ein Dienst, um auf Dateien zu replizieren. 
+\item [{IceSSL}] Ice über SSL transparent verwenden. 
+\item [{Glacier2}] ein Firewall Dienst, um Ice durch eine Firewall und
+sicher (mittels IceSSL) zu betreiben. 
+\item [{IceBox}] ist an sich ein ,,super server'' für Ice, sodass server
+als Dienst betrieben werden können. 
+\end{description}
+
+\subsection{Slice}
+
+Slice (Specification Language for Ice) ist an sich eine IDL. Genauso
+wie CORBA sogenannte Sprachabbildungen (language mappings) definiert,
+definiert auch Ice language mappings. In diesem Fall für die Programmiersprachen
+\texttt{C++}, C\#, Java, Python, VisualBasic und PHP (nur Client).
+
+
+\subsubsection{Slice Sprache}
+
+Die Syntax sieht fast wie Java aus.
+\begin{itemize}
+\item Slice Dateien müssen mit \texttt{.ice} enden. 
+\item Identifier nur aus ASCII Zeichen. Alle Identifier, die mit ,,Ice''
+beginnen sind reserviert. Identifier, die mit Helper, Holder, Prx
+oder Ptr enden sind ebenfalls nicht erlaubt. Keine underscores! 
+\item Alle Identifier sind case-insensitive, müssen jedoch konsistent geschrieben
+werden. 
+\item Kommentare wie in \texttt{C++}. 
+\item Es muss immer ein Modul geben. In dieses Modul können alle Slice Konstrukte
+geschrieben werden. Module können sich über mehrere Dateien erstrecken
+und werden auf Java packages abgebildet. 
+\item An Basisdatentypen gibt es die integralen Datentypen: \texttt{bool}
+(false, true), \texttt{byte}, \texttt{short} (16 bits), \texttt{int}
+(32 bits), \texttt{long} (64bits) und weiters die nicht integralen
+Datentypen \texttt{float} (IEEE single precision, 32 bits), \texttt{double}
+(IEEE double precision 64 bits), \texttt{string} (Unicode ohne Nullzeichen).
+Alle Zahlen sind wie in Java vorzeichenbehaftet. 
+\item Konstanten: \texttt{const double PI = 3.1425926;}
+\item enum und struct in etwa wie in \texttt{C++}. Alle enum Konstanten
+sind im umschließenden Namensraum (ebenfalls wie in \texttt{C++}). 
+\item Sequenzen sehen in etwa folgendermaßen aus: \texttt{sequence<Book>
+BookLst} 
+\item Dictionaries: \texttt{dictionary<string, Book> BookDict} kann z.B.
+ein assoziatives Array darstellen, das eine ISBN Nummer mit einem
+Buch - Objekt verbindet. Als keys dürfen auf jeden Fall integrale
+Datentypen, Aufzählungstypen und string verwendet werden. 
+\item Exceptions müssen explizit deklariert werden und sind wie structs
+anzugeben: \texttt{exception ValveError \{ int valueId; int cause;
+\}}
+\item Interfaces, Klassen und Methoden werden in etwa wie in Java deklariert,
+allerdings ist kein overloading von Methoden erlaubt. 
+\item Typdefinitionen dürfen nicht verschachtelt werden (Ausnahme: Module). 
+\item Parameter und Returnwerte werden pass-per-value übergeben. 
+\item Wird ein Parameter mit einem \texttt{{*}} versehen, dann wird der
+Parameter als Proxy verstanden. D.h.~von der Semantik her, handelt
+es sich um pass-per-reference. 
+\item Methoden können als \texttt{nonmutating} deklariert werden. Im Falle
+eines Verbindungsabbruch kann einfach die Methode nochmals gesendet
+werden (in \texttt{C++} werden solche Methoden zusäzlich const deklariert). 
+\item Methoden können als \texttt{idempotent} deklariert werden. Dies bedeutet,
+dass die Methode mehrmals aufgerufen werden kann und immer das selbe
+bewirkt (\texttt{x = 1} ist idempotent). Eine Methode kann allerdings
+nicht idempotent und nonmutating gleichzeitig sein (nonmutating impliziert
+idempotent). 
+\item Forward Declarations sind möglich! 
+\item Der Operator \texttt{::} wird verwendet, um auf Typen in anderen Modulen
+zuzugreifen (a la \texttt{C++}). 
+\end{itemize}
+
+\subsubsection{Java Mapping}
+\begin{itemize}
+\item Konstanten werden als Interface mit einer Konstanten names \texttt{value}
+abgebildet: \texttt{interface PI \{ value = 3.1415926; \}} 
+\item enum und struct werden auf Klassen abgebildet. 
+\item Sequenzen werden auf Arrays abgebildet. Es kann jedoch eine alternative
+Implementierung folgendermaßen angegeben werden:\\
+\texttt{{[}\textquotedbl{}java:type:java.util.LinkedList\textquotedbl{}{]}sequence<Book>
+BookLst} 
+\item Dictionaries werden immer als eine Instanz vom Typ \texttt{java.util.Map}
+dargestellt (defaultmäßig \texttt{java.util.HashMap}). 
+\item Exceptions werden als Klasse von der Klasse \texttt{Ice.UserException}
+abgeleitet. Wird eine Exception geworfen, die nicht in einer Methode
+deklariert ist, dann erhält der Client eine Exception, die von \texttt{Ice.LocalException}
+abgeleitet ist. 
+\item Proxies, Sequenzen, Dictionaries und Strings können als Parameter
+als \texttt{null} übergeben werden. Allerdings werden immer ,,leere''
+Objekte übertragen. Ein ,,leerer'' Proxy entspricht einem \texttt{null}
+Pointer. 
+\end{itemize}
+
+\subsection{Programmiermodell}
+
+
+\minisec{Definition eines Slice Interfaces}
+
+
+\begin{lstlisting}[language=IDL]
+// calculator.ice
+module Calculator {
+  interface Power {
+    double pow(double x, double y);
+  };
+};
+\end{lstlisting}
+
+
+
+\minisec{Generieren der Stubs und Skeletons}
+
+
+\begin{lstlisting}[language=sh]
+mkdir generated
+slice2java --output-dir generated calculator.ice
+\end{lstlisting}
+
+
+Dabei werden die erzeugten Dateien im Verzeichnis \texttt{generated}
+abgelegt.
+
+
+\minisec{Implementierung der Servant - Klasse}
+
+
+\begin{lstlisting}
+public class SimpleCalculator extends Calculator.PowerDisp {
+  public double pow(double x, double y, Ice.Current current) {
+    return Math.pow(x,y);
+  }
+}
+\end{lstlisting}
+
+
+Dinge, die zu beachten sind: 
+\begin{itemize}
+\item Die Servant-Klasse muss immer von einer bestimmten Klasse abgeleitet
+werden. Diese wird von \texttt{slice2java} generiert und befindet
+sich in einem Paket, das so heißt wie der Modulname aus der \texttt{.ice}
+Datei. Der Klassenname beginnt mit einem underscore und es wird einfach
+`Disp' angehängt. 
+\item Als letzter Parameter jeder Methode muss ein zusätzlicher Parameter
+mit dem Typ \texttt{Ice.Current} angehängt werden, der jedoch vorerst
+nicht beachtet werden muss. 
+\item Der Name der Klasse sollte entweder durch Anhängen von ,,I'' (z.B.
+\texttt{CalculatorI}, wie Impelementierung) oder durch Angabe einer
+speziellen Funktion (wie z.B. \texttt{SimpleCalculator}, d.h. einfache
+Implementierung der Schnittstelle Calculator) vorgenommen werden. 
+\end{itemize}
+
+\begin{lstlisting}[language=sh]
+# oder permanent setzen
+export CLASSPATH=classes:CLASSPATH
+javac -d classes -source 1.4 generated/Calculator/*.java
+javac -d classes SimpleCalculator.java
+\end{lstlisting}
+
+
+Zu beachten ist, dass die Java-Sourcen für die Skeletons in Java 1.4
+übersetzt werden müssen (die eigenen nicht).
+
+
+\minisec{Implementierung des Server-Programmes}
+
+
+\begin{lstlisting}
+// von Ice.Application ableiten:
+// kümmert sich um initialisieren und beenden (Communicator Instanz)
+// Argumentenliste wird gelesen und Ice Optionen aus args entfernt
+// außerdem wird ein Exception Handler installiert (für java.lang.Exception)
+public class Server extends Ice.Application {
+  // run Methode implementieren
+  public int run(String[] args) {
+
+    // liefert eine Referenz auf den Communicator zurück
+    Ice.Communicator ic = communicator();
+    // Anlegen eines Object Adapters mit einem Endpunkt
+    Ice.ObjectAdapter adapter =
+      ic.createObjectAdapterWithEndpoints("SimpleCalculatorAdapter",
+                                          "default -p 10000");
+
+    Ice.Object object = new SimpleCalculator(); // Servant erzeugen
+
+    // Servant beim Adapter registrieren
+    adapter.add(object,Ice.Util.stringToIdentity("calculator"));
+
+    adapter.activate(); // aktiviert: dann werden Requests angenommen
+
+    ic.waitForShutdown(); // blockiert bis Server beendet wird
+
+    // wenn shutdown auf Communicator (z.B. Ctrl-C), dann... 
+    if (interrupted())
+      System.out.println(appName() + ": terminating");
+
+    return 0; // alles ok, beenden
+  }
+
+  public static void main(String[] args) {
+    // Application instanzieren
+    Server app = new Server();
+    // ruft die obige run Methode auf und kümmert sich, dass die
+    // Communicator Instanz erzeugt und *sicher* wieder entfernt wird.
+    // Application bekommt Name: Server
+    int status = app.main("Server", args);
+    System.exit(status);
+  }
+}
+\end{lstlisting}
+
+
+Danach kann man die serverseitigen Klassen kompilieren:
+
+
+\begin{lstlisting}[language=sh]
+javac -d classes Server.java
+\end{lstlisting}
+
+
+
+\minisec{Implementierung des Client-Programmes}
+
+
+\begin{lstlisting}
+// von Ice.Application ableiten
+public class Client extends Ice.Application {
+  public int run(String[] args) {
+    Ice.Communicator ic = communicator();
+
+    // mache Proxy aus String
+    // NAME:PROTOKOLL -p PORT
+    Ice.ObjectPrx obj = ic.stringToProxy("calculator:default -p 10000");
+
+    // nachfragen, ob wirklich ein PowerPrx: dazu wird eine Klasse
+    // PowerPrxHelper verwendet, die von slice2java erzeugt wird
+    // checkedCast ... Server wird nach dem Typ gefragt
+    // uncheckedCast ... Server wird nicht gefragt
+    Calculator.PowerPrx power = Calculator.PowerPrxHelper.checkedCast(obj);
+
+    if (power == null)
+      throw new Error("Invalid proxy");
+
+    System.out.println("2**3= " + power.pow(2,3));
+    return 0; // alles ok, beenden
+  }
+
+  public static void main(String[] args) {
+    Client app = new Client();
+    int status = app.main("Client", args);
+    System.exit(status);
+  }
+}
+\end{lstlisting}
+
+
+Danach kann man der Client kompiliert werden:
+
+
+\begin{lstlisting}[language=sh]
+javac -d classes Client.java
+\end{lstlisting}
+
+
+
+\minisec{Starten von Server und Client}
+
+
+\begin{lstlisting}
+java Server
+# und in einer anderen Shell:
+java Client
+\end{lstlisting}
+
+
+
+\subsection{Proxies und Klassen als Parameter und Returnwerte}
+
+
+\minisec{Proxies als Rückgabe}
+
+Oft müssen Proxies zurückgegeben werden. Dazu muss der Server einen
+Proxy anlegen.
+\begin{enumerate}
+\item Entsprechende Slice Definition anlegen, z.B.:\\
+
+\begin{lstlisting}
+interface CalcMgr {
+  Science* getScienceCalculator();
+}
+\end{lstlisting}
+
+\item Am Server muss zumindest ein Mal ein Proxy angelegt werden:\\
+
+\begin{lstlisting}
+// addWithUUID liefert Typ ObjectPrx deshalb uncheckedCast!
+// ist gleich zu `add(object, Ice.Util.generateUUID())'
+simpSciencePrx = SciencePrxHelper.
+  uncheckedCast(adapter.addWithUUID(new SimpleScience()));
+\end{lstlisting}
+Von Slice wird automatisch auch eine `Helper' Klasse generiert, die
+eine Proxy Instanz erzeugt. Die Methode \texttt{addWithUUID} registriert
+einen Servant beim Object Adapter mit einer eindeutigen ID. Da wir
+den Proxy zurückliefern ist eine allgemein bekannte ID nicht notwendig. 
+\end{enumerate}
+
+\minisec{Instanzen von Klassen}
+
+Will man Instanzen von Klassen zurückliefern, dann muss die Ice Runtime
+wissen, um welche Klasse es sich handelt und wie diese zu instanzieren
+ist (verschiedene Programmiersprachen!).
+
+Dafür wollen wir das vorhergehende Beispiel erweitern. Nehmen wir
+dazu an, dass die Berechnung aus Performancegründen jetzt am Client
+stattfinden soll. Dazu soll der Server einen Taschenrechner übertragen.
+\begin{enumerate}
+\item Ändern der Slice Datei: Klassen statt Interface bei den Returnwerten,
+also z.B. \texttt{Finance getFinanceCalculator()} wobei \texttt{Finance}
+jetzt eine Klasse in der Slice Datei sein soll.
+
+
+Prinzipiell kann der Rückgabewert formal auch ein Interface sein.
+Es muss lediglich auch eine Klassendeklaration geben, die dieses Interface
+auch implementiert, sodass Ice weiß welche Instanzvariablen zu übertragen
+sind. 
+
+\item Der Server ist insoferne anzupassen, dass dieser jetzt direkt Instanzen
+dieser Klassen zurückliefert anstatt Proxies auf Interfaces.
+
+
+Unabhängig davon macht es u.U. auch Sinn Proxies auf Klasseninstanzen
+zurückzuliefern. 
+
+\item Es ist eine ObjectFactory zu implementieren, die die Instanzen anlegt:\\
+
+\begin{lstlisting}
+class ObjectFactory
+  extends Ice.LocalObjectImpl // Achtung: *Local*
+  implements Ice.ObjectFactory {
+
+  public Ice.Object create(String type) {
+    // Typ von Klasse Science
+    // ::                         vom globalen Namensraum ausgehend 
+    //   Calculator               zum Calculator Modul
+    //             ::Finance      zur Finance Klasse
+    if (type.equals("::Calculator::Finance")) {
+      return new SimpleFinance();
+    } else {
+      assert(false);
+    }
+    return null; 
+
+  public void destroy() {}
+}
+\end{lstlisting}
+
+\item Jetzt ist nur noch mehr die Factory zu installieren:\\
+
+\begin{lstlisting}
+Ice.Communicator ic = communicator();
+ObjectFactory of = new ObjectFactory();
+ic.addObjectFactory(of, "::Calculator::Finance");
+\end{lstlisting}
+
+\end{enumerate}
+
+\subsection{Ice Properties und Konfiguration}
+
+Die Konfigurationsdateien sind einfach aufgebaut:
+
+
+\begin{lstlisting}[language=sh]
+application.category[.subcategory]=value
+\end{lstlisting}
+
+
+
+\begin{lstlisting}[language=sh]
+export ICECONFIG=config ./server
+\end{lstlisting}
+
+
+Die Konfigurationsdatei kann auch über die Kommandozeile wie jedes
+Property gesetzt werden:
+
+
+\begin{lstlisting}[language=sh]
+./server Ice.Config=config
+\end{lstlisting}
+
+
+Interessant ist das Property \texttt{Ice.Trace.Protocol}, das als
+Wert den Level für die Ausgabe der Netzwerksmeldungen bekommt. Höchster
+Wert ist 3. Sollen keine Meldungen ausgegeben werden, dann ist der
+Wert leer zu lassen.
+
+
+\begin{lstlisting}[language=sh]
+./server --Ice.Trace.Protocol=1 # oder ./server --Ice.Trace.Protocol
+\end{lstlisting}
+

@@ -1,0 +1,252 @@
+%% LyX 1.6.4.1 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[12pt,austrian,english,ngerman]{scrbook}
+\usepackage{mathpazo}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{listings}
+\lstset{basicstyle={\small\sffamily},
+frame=single,
+language=java,
+lineskip={-1pt}}
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=2cm,rmargin=2cm,headheight=4mm,headsep=7mm,footskip=13mm}
+\setlength{\parskip}{\medskipamount}
+\setlength{\parindent}{0pt}
+\usepackage{babel}
+
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{pifont}
+\usepackage{varioref}
+\usepackage{float}
+\usepackage{amstext}
+\usepackage{graphicx}
+\usepackage[unicode=true, 
+ bookmarks=true,bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
+ {hyperref}
+\hypersetup{pdftitle={Entwurf und Implementierung verteilter Systeme},
+ pdfauthor={Dr. Günter Kolousek}}
+ 
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+\newenvironment{lyxcode}
+{\par\begin{list}{}{
+\setlength{\rightmargin}{\leftmargin}
+\setlength{\listparindent}{0pt}% needed for AMS classes
+\raggedright
+\setlength{\itemsep}{0pt}
+\setlength{\parsep}{0pt}
+\normalfont\ttfamily}%
+ \item[]}
+{\end{list}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\sloppy
+
+\makeatother
+
+\begin{document}
+
+\subject{\textsf{\textbf{Entwurf und Implementierung verteilter Systeme}}}
+
+
+\title{Rechnernetze 2010/11}
+
+
+\date{\noindent 26.9.2010}
+
+
+\author{Dr. Günter Kolousek}
+
+
+\publishers{{\small \copyright Dr.Günter Kolousek}}
+
+\maketitle
+\tableofcontents{}
+
+
+\chapter*{Vorwort}
+
+Dieses Dokument behandelt die Grundlagen der Rechnernetze, die für
+einen Entwickler von verteilten Systemen von Relevanz sind. D.h. es
+werden die Grundlagen in einem Detailierungsgrad präsentiert und aus
+einem Blickwinkel betrachtet, der für Entwickler verteilter Systeme
+zum Zwecke des Verständnisses notwendig ist.
+
+Das Verständnis der Grundlagen ist deshalb wichtig, damit der Entwickler
+die nötigen Vorgaben zum Entwurf des Netzwerkes und der Wahl der Netztechnologie
+liefern kann oder auch, um die Wünsche und Anforderungen der Netzbetreiber
+zu berücksichtigen.
+
+Unbedingt notwendig sind diese Grundlagen natürlich auch direkt für
+den Entwurf und die Implementierung verteilter Systeme. Diese Kenntnisse
+sind unabdingbar bei 
+\begin{itemize}
+\item der Festlegung der Systemarchitektur,
+\item dem Entwurf einer Softwarearchitektur,
+\item der Implementierung.
+\end{itemize}
+Konkrete Beispiele für solche Tätigkeiten sind:
+\begin{itemize}
+\item Entwurf und Entwicklung von Protokollen. Solche Protokolle können
+z.B. nötig sein, um auf technische Geräte (Messgeräte, Boardcomputer
+in Autos oder Flugzeugen, Steuerungsrechner in Produktionsanlagen)
+oder bestehende Informationssysteme (engl. legacy systems) zuzugreifen.
+\item Implementierung von Clients für bestehende Protokolle und im speziellen
+Internetprotokolle, wie z.B. für das APP (atom publishing protocol,
+Protokoll zum Publizieren und Verwalten von Inhalten im Web).
+\item Erstellung serverseitiger Programme beispielsweise basierend auf einer
+Dämon-Struktur oder einer Super-Server-Struktur. Beispiele sind http
+Server, Server für betriebswirtschaftliche Anwendungen (z.B. SAP NetWeaver),
+Spieleserver.
+\item Erstellung einer Gefahrenanalyse bzw. Implementierung von Sicherheitsmaßnahmen
+in den Bereichen Erstellung von Sicherheitspolicies, Implementierung
+von Firewalls, Konzepten der Standortvernetzung...
+\item Entwurf, Implementierung und in Betriebnahme von Webapplikationen
+und Webservices z.B. im Bereich E-Commerce oder Webcontentmanagement.
+\item Entwurf, Implementierung und Inbetriebnahme von verteilten Anwendungen
+wie verteiltes Dokumentenmanagement, Workflowanwendungen mit RFID
+Integration, rechenintensive verteilte Anwendungen (Wettervorhersage,
+Simulationen bei der Entwicklung neuer Autotypen) oder zuverlässige
+Anwendungen mit vielen Geräten wie bei der Bargeldauszahlung in einem
+Netz von Bankomaten und den zugehörigen Servern.
+\end{itemize}
+Weitere Beispiele finden sich auf der Seite \pageref{pag:distributed_systems_examples}.
+
+
+\chapter*{Struktur dieses Dokumentes}
+
+Dieses Dokument gliedert sich in sechs große Teile:
+\begin{enumerate}
+\item Grundlagen
+\item Technologien
+\item TCP/IP
+\item Dienste und Anwendungen
+\item Sicherheit
+%\item Entwicklung verteilter Systeme
+\end{enumerate}
+Der erste Teil dieser Unterlage erläutert die Grundlagen der Kommunikation
+und der Rechnernetze, danach werden im zweiten Teil konkrete Netztechnologien
+--- wie die im LAN dominierende Ethernet-Technologie --- vorgestellt.
+Der dritte Teil beschäftigt sich mit der heute wichtigsten Netzsoftware
+TCP/IP. Im vierten Teil werden heute häufig benutzte Dienste und Anwendungen
+des Internets besprochen und anschließend werden die notwendigen Grundlagen
+und Anwendungen rund um das Thema Sicherheit behandelt. Der letzte
+Teil behandelt verschiedene Aspekte, die bei der Entwicklung verteilter
+Systeme von Relevanz sind.
+
+\setpartpreamble[uc][14cm]{\vspace{3cm}Dieser Teil beschreibt die
+grundlegenden Mechanismen der Kommunikation und der Rechnernetze.
+Es wird in der ,,Einleitung'' zuerst ein Überblick über die Themen
+Netzwerktechnik und Rechnernetze gegeben als auch der Begriff des
+verteilten Systemes eingeführt. Danach werden im Kapitel ,,Grundlagen
+und Basiskonzepte'' die grundlegenden Begriffe und Konzepte vorgestellt,
+die in weiterer Folge für das Verständnis absolut notwendig sind.
+Im anschließenden Kapitel ,,Nachrichtenübertragung'' werden die
+technischen Grundlagen für die Übertragung von Nachrichten in einer
+Punkt-zu-Punkt Verbindung behandelt. Abschließend werden die verschiedenen
+Arten und Aspekte der Netzarchitekturen präsentiert.}
+
+
+\part{Grundlagen}
+
+\include{introduction/introduction}
+
+\include{foundations/foundations}
+
+\include{transmission/transmission}
+
+\include{architecture/architecture}
+
+\setpartpreamble[uc][14cm]{\vspace{3cm}In diesem Teil werden die
+wichtigsten Technologien für LAN, WAN und Zugangsnetze vorgestellt
+und im Überblick beschrieben.}
+
+
+\part{Technologien}
+
+\include{ethernet/ethernet}
+
+\include{wlan/wlan}
+
+%\include{tokenring/tokenring}
+
+%\include{fddi/fddi}
+
+%\include{wan/wan}
+
+\setpartpreamble[uc][14cm]{\vspace{3cm}Dieser Teil beschreibt den
+,,defacto'' Standard TCP/IP in solch einem detailierten Niveau wie
+für das Verständnis von Rechnernetzen notwendig.}
+
+
+\part{TCP/IP\label{par:tcpip}}
+
+\include{tcpip_overview/tcpip_overview}
+
+\include{ip/ip}
+
+\include{tcpudp/tcpudp}
+
+\include{tcpip_appl/tcpip_appl}
+
+\include{nat/nat}
+
+\include{ipv6/ipv6}
+
+\setpartpreamble[uc][14cm]{\vspace{3cm}Der Teil beschreibt wichtige
+Dienste und Anwendungen für das Internet.}
+
+
+\part{Dienste und Anwendungen\label{par:services_apps}}
+
+\include{data_transfer/data_transfer}
+
+\include{email/email}
+
+%\include{internet/internet}
+
+\setpartpreamble[uc][14cm]{\vspace{3cm}Der Teil Sicherheit stellt
+die wichtigsten Konzepte, Mechanismen und Anwedungen vor.}
+
+
+%% \part{Sicherheit\label{par:security}}
+
+%% \include{security_foundations/security_foundations}
+
+%% \include{security_mechanisms/security_mechanisms}
+
+%% \include{security_practice/security_practice}
+
+\setpartpreamble[uc][14cm]{\vspace{3cm}Dieser Teil enthält die notwendigen
+Grundlagen und praxisrelevante Technologien, um verteilte System programmieren
+zu können.}
+
+
+%% \part{Entwicklung verteilter Systeme}
+
+%% \noindent \include{design_dev/overview/overview}
+
+%% \include{design_dev/processes/processes}
+
+%% \include{design_dev/synchronization/synchronization}
+
+%% \include{design_dev/communication/communication}
+
+%% \include{design_dev/serverprogramming/serverprogramming}
+
+%% \include{design_dev/addthemes/addthemes}
+
+%% \include{design_dev/componentmodels/componentmodels}
+
+%% \include{design_dev/systemarchitecture/systemarchitecture}
+
+%% \include{design_dev/webservices/webservices}
+\end{document}

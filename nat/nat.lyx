@@ -1,0 +1,169 @@
+#LyX 1.5.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass scrbook
+\language ngerman
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+NAT
+\begin_inset LatexCommand label
+name "sec:NAT"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+NAT (Network Address Translation) ist in Rechnernetzen der Sammelbegriff
+ für Verfahren, um automatisiert und transparent Adressen in IP Paketen
+ durch andere Adressen zu ersetzen.
+ Diese Adressumsetzung wird in der Regel zwischen einem öffentlichen und
+ einem internen Netz durchgeführt.
+\end_layout
+
+\begin_layout Standard
+Der Haupteinsatz von NAT besteht darin Netze mit privaten IP Adressen an
+ das öffentliche Internet anzubinden und damit auch öffentliche IP Adressen
+ zu sparen.
+ In gewisser Weise kann es auch als eine Sicherheitsmaßnahme eingesetzt
+ werden, auch wenn dies nicht die primäre treibende Absicht ist.
+\end_layout
+
+\begin_layout Standard
+Das Prinzip ist, dass am Router, der das interne vom öffentlichen Netz trennt
+ eine Umsetzungstabelle enthalten ist, die eine Abbildung der privaten IP
+ Adressen auf die öffentlichen IP Adressen enthält.
+ Unter Umständen enthält diese Umsetzungstabelle weitere Informationen,
+ um die Abbildung eindeutig zu machen.
+\end_layout
+
+\begin_layout Standard
+Um komplexere Protokolle (wie ftp oder VoIP) über einen NAT-Router betreiben
+ zu können, muss der NAT-Router allerdings als ein Gateway fungieren.
+\end_layout
+
+\begin_layout Standard
+NAT hat trotz des komplexeren Systemaufbaus sicher dazu beigetragen, dass
+ die Anzahl der freien IPv4 Adressen viel langsamer abgenommen hat.
+\end_layout
+
+\begin_layout Standard
+Es gibt zwei grundlegende Formen von NAT, die in den beiden folgenden Abschnitte
+n kurz besprochen werden.
+\end_layout
+
+\begin_layout Section
+Source-NAT
+\end_layout
+
+\begin_layout Standard
+Beim Source-NAT (SNAT) wird bei einer Anfrage eines Clients im lokalen Netz
+ an einen Server im Internet die private Client-Adresse auf eine verfügbare
+ externe Adresse geändert.
+ Es gibt prinzipiell drei Möglichkeiten:
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Statisches\InsetSpace ~
+SNAT Hierbei wird jeder privaten Adresse genau eine externe Adresse
+ zugeordnet.
+ D.h.
+ es gibt eine 1:1 Abbildung von lokalen zu extern verfügbaren Adressen.
+ Dies kann notwendig sein, wenn der interne Rechner als Server im Internet
+ verfügbar sein soll oder wenn man die Sicherheit erhöhen will (Struktur
+ des internen Netzes wird nicht preisgegeben).
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Dynamisches\InsetSpace ~
+SNAT Sind mehr lokale Rechner vorhanden als externe Adressen
+ zur Verfügung stehen, muss die Zuordnung von lokaler zu externer Adresse
+ dynamisch vorgenommen werden.
+ Die Zuordnungstabelle im NAT-Router kann noch mit zusätzlichen Informationen
+ wie z.B.
+ Portangaben versehen werden, sodass auch gleichzeitig mehr interne Rechner
+ mit Servern im Internet kommunizieren können als externe Adressen zur Verfügung
+ stehen.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Masquerading Es handelt sich um eine Sonderform bei der alle internen Adressen
+ auf 
+\emph on
+eine
+\emph default
+ externe Adresse abgebildet werden.
+\end_layout
+
+\begin_layout Section
+Destination-NAT
+\end_layout
+
+\begin_layout Standard
+Das Destination-NAT (DNAT) ist im Grunde die Umkehrung des SNAT: Es wird
+ die Ziel-Adresse abgebildet.
+ Ein externer Client sendet eine Anfrage an eine extern verfügbare Adresse
+ unseres Netzes (z.B.
+ an die Adresse des NAT-Routers).
+ Der NAT-Router bildet die Zieladresse z.B.
+ auf die interne Adresse des DMZ Servers ab und leitet daher diese Anfrage
+ an den DMZ Server weiter.
+ Hier gibt es prinzipiell zwei Möglichkeiten:
+\end_layout
+
+\begin_layout Itemize
+Der NAT-Router leitet alle Anfragen bzgl.
+ einer extern verfügbaren Adresse an den DMZ Server weiter.
+\end_layout
+
+\begin_layout Itemize
+Der NAT-Router leitet Anfragen bzgl.
+ einer extern verfügbaren Adresse an die externe Adresse weiter, wenn zusätzlich
+e Kriterien zutreffen.
+ Das wichtigste Kriterium ist die Portangabe.
+ D.h.
+ nur wenn die Portangabe z.B.
+ 80 ist wird an den internen DMZ Server weitergeleitet.
+\end_layout
+
+\end_body
+\end_document

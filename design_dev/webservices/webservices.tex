@@ -1,0 +1,594 @@
+
+\chapter{Webservices}
+
+
+\section{Überblick\label{sec:webservices_overview}}
+
+
+\minisec{Definition}
+
+Web Services ermöglichen Abwicklungen von Dienstleistungen und Geschäften
+über das Internet. Im engeren technischen Sinn (siehe auch http://www.w3.org/2002/ws)
+bedeutet das ein automatisierte Kommunikation zwischen Applikationen
+über das Internet. Es werden also nicht HTML-Seiten zu einem Webbrowser
+geschickt, die von einem Menschen betrachtet werden, sondern Programme
+tauschen Daten aus und starten auf entfernten Rechnern Funktionen
+(Remote Procedure Call).
+
+\emph{Webservices} sind Dienste, 
+\begin{itemize}
+\item die im Internet angeboten werden 
+\item die standardisierte XML Nachrichten verwenden 
+\item die plattformübergreifend und unabhängig von der Programmiersprache
+sind. 
+\end{itemize}
+Zusätzlich sind zwei weitere Eigenschaften wünschenswert: 
+\begin{itemize}
+\item Ein Webservice sollte \emph{selbstbeschreibend} sein, sodass andere
+Anwendungen wissen wie sie das Webservice aufrufen können. Auch eine
+für Menschen lesbare Beschreibung ist sinnvoll. D.h.~es gibt eine
+öffentliche Schnittstelle, die aus einer für Menschen lesbaren Dokumentation
+besteht und einer XML Schnittstelle, die die Funktionen, Argumente
+und Rückgabewerte beschreibt. 
+\item Ein Webservice sollte \emph{gefunden} werden können. Dazu muss es
+für den `Service Provider' eines Dienstes möglich sein, ein Web-Service
+in einer `Service Registry' zu registrieren. Weiters muss ein potentieller
+`Service Requestor' das Service finden und danach aufrufen können. 
+\end{itemize}
+Damit dieses Ziel erreicht wird, bauen Webservices auf einer Reihe
+von Standards und Spezifikation wie XML, SOAP, XML-RPC, WSDL und UDDI
+auf.
+
+SOAP, WSDL und UDDI wird intensiv von Microsoft in ihrer .NET Plattform
+eingesetzt bzw.~sind fester Bestandteil der J2EE von Sun.
+
+
+\minisec{Ablauf}
+
+Nehmen wir an, dass wir ein Reisebuchungssystem entwickeln wollen
+und dieses System dem Benutzer auch Wetterinformationen zu einem beliebigen
+Ort auf der Welt bereitstellen soll.
+\begin{enumerate}
+\item Der Benutzer dieses Reisebuchungssystem gibt einen Ort (z.B. Peking)
+ein. Das System kontaktiert daraufhin ein zentralisiertes Verzeichnis
+von Webservices: `Benötige Wetterinformation von Peking'. Das Verzeichnis
+antwortet mit Informationen über ein Webservice (von Peking) und liefert
+eine URL auf eine Servicebeschreibung zurück. 
+\item Jetzt kann die Servicebeschreibung geladen werden (via der angegebenen
+URL). 
+\item Danach weiß der Client wie er das Webservice aufrufen kann und führt
+den Aufruf durch. 
+\end{enumerate}
+
+\minisec{Rollen}
+
+Prinzipiell gibt es folgende Rollen: 
+\begin{description}
+\item [{Service}] provider stellt das Webservice zur Verfügung. 
+\item [{Service}] requestor ist der Konsument des Webservice. 
+\item [{Service}] registry ist das logisch zentralisierte Verzeichnis der
+Webservices. 
+\end{description}
+
+\minisec{Protokollstack}
+\begin{description}
+\item [{Discovery}] ist zuständig für das Publizieren und Finden von Webservices.
+Diese Funktion wird von UDDI übernommen. 
+\item [{Description}] ist zuständig für das Beschreiben eines Webservice.
+Dies wird von WSDL übernommen. 
+\item [{XML}] messaging ist für das Übertragen der XML Nachrichten zuständig.
+Dies wird durch SOAP bzw.~XML-RPC und XML übernommen. 
+\item [{Transport}] ist das Transportprotokoll. Meistens http, aber auch
+smtp, ftp oder beep wäre möglich. 
+\end{description}
+
+\minisec{Programmiermodell}
+
+Client-seitig sind folgende Schritte notwendig:
+\begin{enumerate}
+\item Finde das Service mittels UDDI 
+\item Lade WSDL Dokument (oder XML-RPC Anweisungen) 
+\item Erzeuge SOAP (oder XML-RPC) Client 
+\item Rufe Webservice auf 
+\end{enumerate}
+Server-seitig sind folgende Schritte notwendig:
+\begin{enumerate}
+\item Implementiere Funktionalität des Webservice 
+\item Implementiere SOAP (oder XML-RPC) Wrapper 
+\item Erzeuge WSDL Dokument 
+\item Installieren des Webservice 
+\item Registrieren mittels UDDI 
+\end{enumerate}
+
+\section{XML Programmierung}
+
+Das wahrscheinlich wichtigste Einsatzgebiet von XML liegt in der plattformübergreifenden
+Möglichkeit zur Kommunikation in einem verteilten System. XML wird
+auch sehr oft zur Konfiguration von Systemen eingesetzt oder es gibt
+auch vermehrte Anwendung in Datenbanksystemen.
+
+\emph{Gründe} liegen einerseits in der relativ einfachen Programmierung
+von XML Anwendungen, der Möglichkeit plattformübergreifend Daten auszutauschen
+und auch darin, dass das Format von einem Menschen gelesen und auch
+geändert werden kann.
+
+
+\subsection{Überblick}
+
+Es gibt an sich \emph{5 Programmierstile} zur Programmierung mit XML:
+\begin{description}
+\item [{Push-Stil}] Ein \emph{Push - Modell} ist ein Streaming-API: der
+Parser übernimmt die Kontrolle, liest das Dokument und teilt der Anwendung
+mit welche XML Teile erkannt werden. D.h., dass ein Start-Tag, ein
+Ende-Tag, Inhalt, Attribute,... im XML-Dokument vorhanden sind. Es
+wird auch als \emph{event-basierter} Stil bezeichnet, da Event-Handler
+Methoden registriert werden, die im Sinne eines Callback vom Parser
+beim Auftreten eines Starttags, eines Attributs,... aufgerufen werden.
+
+
+\emph{Vorteile} sind, dass solche Parser 
+\begin{itemize}
+\item relativ einfach zu implementieren sind 
+\item sehr schnell und effizient sind 
+\item nicht das ganze Dokument auf einmal lesen müssen und daher der Speicherplatzbedarf
+gering ist. 
+\end{itemize}
+Häufig eingesetzt werden diese Art von Parser in Netzwerkanwendungen,
+die einen Stream von XML Daten verarbeiten müssen.
+
+Ein \emph{Nachteil} ist, dass die Programmierung nur für bestimmte
+Arten von XML-Dokumenten wirklich einfach ist. Z.B. wenn das XML-Dokument
+eine Liste von tausenden Bestellungen beinhaltet, ist dieser Stil
+sehr gut geeignet, aber bei komplexen Dokumenten mit Einträgen, die
+sich u.U. noch aufeinander beziehen, nicht.
+
+Auf Grund der event-basierten Verarbeitung ergibt sich jedoch noch
+ein Nachteil, die diesen Ansatz nicht für alle Anwendungen geeignet
+machen: Das XML Dokukument kann nicht verändert werden. Ist dies gewünscht,
+dann muss z.B. auf einen Vertreter des Baum-basierten Stiles zurückgegriffen
+werden.
+
+Der wichtigster Vertreter dieses Stiles ist SAX (Simple API for XML,
+http://www.sax-project.org). 
+
+\item [{Pull-Stil}] Der \emph{Pull-Stil} ist ebenfalls ein Streaming -
+API, aber die Kontrolle liegt nicht mehr beim Parser sondern bei der
+XML Anwendung. D.h.~die XML Anwendung fordert beim Parser immer die
+nächste Information an. Derzeit sind Parser dieses Stiles nicht besonders
+weit vertreten.
+
+
+StAX (Streaming API for XML) ist ein Vertreter dieses Stiles. 
+
+\item [{Baum-basierter~Stil}] Das gesamte Dokument beim \emph{baum-basierten
+Stil} wird eingelesen und im Speicher als Baumstruktur von Objekten
+abgelegt. Die XML Anwendung kann danach durch den Baum navigieren
+und diesen verändern. Dieser Stil wird derzeit sehr oft verwendet.
+
+
+\emph{Vorteil} dieses Stiles ist hauptsächlich die einfache Handhabung
+und der größte \emph{Nachteil} liegt im Speicherbedarf großer XML
+Dokumente, da das gesamte Dokument im Hauptspeicher abgelegt wird.
+
+Vertreter dieses Stiles sind das DOM Model (XML Teil) des W3C, dom4j
+(http://dom4j.org) und JDOM (http://www.jdom.org) oder XOM (http://www.xom.nu). 
+
+\item [{Daten-basierter~Stil}] Der \emph{daten-basierte} Stil ist dem
+baum-basierten Stil ähnlich, jedoch gibt es anstatt den generischen
+Knoten spezielle Klassen für den jeweiligen Knotentyp. D.h.~anstatt
+einer Klasse \texttt{Element} wird bei dem Element \texttt{Buch} eine
+entsprechende Klasse \texttt{Buch} verwendet. Diese Zuordnung von
+XML-Element zu Klasse wird meistens mittels einer DTD oder eines XML
+Schemas vorgenommen.
+
+
+Neben dem offensichtlichen Vorteil ist der Hauptnachteil dieser Variante,
+dass eine Notwendigkeit für eine DTD oder ein XML Schema gegeben ist!
+
+Vertreter dieses Stiles ist JAXB (Java Architecture for XML Binding)
+von Sun. 
+
+\item [{Abfragestil}] Dazu wird das XML-Dokument meistens mit XPath abgefragt
+oder mittels XSLT transformiert. Dieser Stil ist nicht weit verbreitet. 
+\end{description}
+In weiterer Folge werden die wichtigsten APIs vorgestellt. Dies betrifft
+SAX und DOM. Da es sich bei SAX und DOM nur um Spezifikationen und
+nicht um Software handelt, gibt es auch verschiedene Implementierungen
+dafür. Jede Implementierung bedingt in der Regel auch verschiedene
+Klassennamen bzw.~Packagenamen für die Parserklasse und damit auch
+eine verschiedene Instanzierung. Um eine einheitliche und portable
+Instanzierung zu gewährleisten hat Sun ein eigenes API definiert,
+das es ermöglicht verschiedene Implementierungen portabel in das Programm
+einzubinden. Dieses API nennt sich Java API for XML Processing (JAXP).
+In den folgenden Beschreibungen und Beispielen wird JAXP verwendet.
+
+
+\section{XML-RPC\label{sec:XML-RPC}}
+
+\emph{XML-RPC} existiert ca.~seit 1998 und wird häufig im Internet
+verwendet. Es wird hauptsächlich eingesetzt, um Webservices zu betreiben
+(wie z.B. auch von Google). Es gibt ca.~80 Implementierungen dieses
+Protokolls, u.a.~auch für Java, C, \texttt{C++}, C\#, Perl, Python,
+Ruby. XML-RPC ist allerdings \emph{kein} offizieller Standard, sondern
+wurde von der Fa.~UserLand entworfen und und von dieser auch erstmalig
+implementiert. Die XML-RPC Homepage ist http://www.xmlrpc.com.
+
+Es geht dazu einen ganz anderen Ansatz als ONC-RPC: es kodiert die
+Funktionsaufrufe in XML und verschickt diese mittels http und der
+POST Methode. D.h.~die Daten werden nicht binär kodiert sondern als
+Zeichen (z.B. UTF-8 oder iso-8859-1) übertragen. Dadurch handelt es
+sich natürlich auch um ein plattformunabhängiges Protokoll.
+
+Wieso wird das so gelöst? Dazu gibt es zumindest zwei Gründe:
+\begin{itemize}
+\item http schafft keine Probleme beim Durchgang durch Firewalls. 
+\item XML ist ein Standard, der wirklich unabhängig von der Plattform ist. 
+\end{itemize}
+Eine Beispielanfrage kann so aussehen:
+
+
+\begin{lstlisting}[language=XML]
+<?xml version="1.0" encoding="iso-8859-1"?>
+<methodCall>
+  <methodName>weather.getTemperature</methodName>
+  <params>
+    <param><value>Wr. Neustadt</value></param>
+  </params>
+</methodCall>
+\end{lstlisting}
+
+
+Als Antwort könnte zurückkommen:
+
+
+\begin{lstlisting}[language=XML]
+<?xml version="1.0" encoding="iso-8859-1">
+<methodResponse>
+  <params>
+    <param><value><int>35<int></value></param>
+  </params>
+</methodResponse>
+\end{lstlisting}
+
+
+Man sieht, dass der Aufbau sehr einfach ist. XML-RPC lässt sich weiter
+so charakterisieren: 
+\begin{itemize}
+\item Nur primitive Datentypen, aber auch Arrays und Strukturen. An primitiven
+Datentypen gibt es lediglich int, double, Boolean, string, dateTime.iso8601
+und base64. Keine Objekte! 
+\item kein zustandsorientiertes Protokoll. Es ist natürlich möglich, Zustandsinformationen
+als Parameter mitzugeben, wie dies im Prinzip bei der klassischen
+Webentwicklung z.B. durch Cookies realisiert wird. 
+\item Kein Konzept von Exceptions; jedoch kann ein Webservice einen Fehlercode
+und eine Fehlerbeschreibung zurückliefern. 
+\end{itemize}
+Der Hauptgrund in der Verwendung von XML-RPC liegt in der Einfachheit.
+Damit lassen sich schnell und unkompliziert Webservices entwickeln.
+Ohne den Overhead von UDDI und WSDL, aber auch ohne deren Vorteile!
+
+
+\minisec{Beispiel: Berechnung der Potenz in Python}
+
+Der Server sieht in Python folgendermaßen aus:
+
+
+\begin{lstlisting}[language=Python]
+import SimpleXMLRPCServer
+
+server = SimpleXMLRPCServer.SimpleXMLRPCServer(("localhost",8000))
+server.registerfunction(pow)
+
+print "Ab jetzt werden Anfragen entgegengenommen"
+print "Programm mittels Ctrl-C stoppen"
+
+server.serveforever()
+\end{lstlisting}
+
+
+Und dazu der dazugehörige Client:
+
+
+\begin{lstlisting}
+import xmlrpclib
+
+server = xmlrpclib.ServerProxy("localhost:8000")
+print "2 ** 3 =", server.pow(20,2)
+\end{lstlisting}
+
+
+
+\minisec{Beispiel: Berechnung der Potenz in Java}
+
+Der Server in Java sieht folgendermaßen aus:
+
+
+\begin{lstlisting}
+// in einer Datei PowerHandler.java
+// das ist die eigentliche Serverfunktion
+public class PowerHandler {
+  public double pow(double x, double y) {
+    return Math.pow(x, y);
+  }
+}
+
+// in einer Datei PowerServer.java
+import java.io.IOException;
+import org.apache.xmlrpc.WebServer;
+import org.apache.xmlrpc.XmlRpc;
+
+public class PowerServer {
+  public static void main(String[] args) {
+    // verwende internen http Server; Port 8000
+    WebServer server = new WebServer(8000);
+
+    server.start(); // starten in eigenem Thread
+    server.addHandler("power", new PowerHandler());
+
+    System.out.println("Ab jetzt werden Anfragen entgegengenommen");
+    System.out.println("Programm mittels Ctrl-C stoppen");
+  }
+}
+\end{lstlisting}
+
+
+Und jetzt der Client:
+
+
+\begin{lstlisting}
+mport java.io.IOException;
+import java.util.Vector;
+import org.apache.xmlrpc.XmlRpcClient;
+import org.apache.xmlrpc.XmlRpcException;
+
+public class PowerClient {
+  public static void main(String[] args) 
+    throws IOException, XmlRpcException {
+
+    try {
+      XmlRpcClient client = new XmlRpcClient("http://localhost:8000");
+
+      Vector params = new Vector();
+      params.addElement(new Double(2));
+      params.addElement(new Double(3));
+
+      Object result = client.execute("power.pow", params);
+
+      String resultStr = result.toString();
+      double res = Double.parseDouble(resultStr);
+
+      System.out.println("2 ** 3 = " + res);
+    } catch (XmlRpcException e) {
+      e.printStackTrace(); // reicht zum Testen
+    } catch (IOException e) {
+      e.printStackTrace(); // reicht zum Testen
+    }
+  }
+}
+\end{lstlisting}
+
+
+
+\section{SOAP\label{sec:SOAP}}
+
+\emph{SOAP} (früher Simple Object Access Protocol) basiert wie XML-RPC
+ebenfalls auf XML, ist ebenfalls ein purer RPC (d.h.~keine entfernte
+Objektaufrufe), hat jedoch andere Perspektiven und geht weit über
+die Möglichkeiten von XML-RPC hinaus:
+\begin{itemize}
+\item Es wurde primär entwickelt, um Web-Services im großen Umfeld einzusetzen.
+Dazu wurde die Verwendung von XML Namespaces eingesetzt (Namensgleichheit!).
+Die Nachrichten sind (hiermit) komplizierter als bei XML-RPC. 
+\item Es gibt viel mehr primitive Datentypen als in XML-RPC, wie z.B. unsigned-Varianten
+der ganzen Zahlen, positive und nicht positive Zahlen, mehrdimensionale
+Arrays,... 
+\item SOAP wurde von Anfang mit dem Gedanken entworfen auch andere Transportprotokolle
+zu nutzen, wie z.B. FTP, E-Mail,... auch wenn diese de facto nicht
+genutzt werden. 
+\end{itemize}
+Der Weg eines Service Requesters folgendermaßen aus:
+\begin{enumerate}
+\item Service via UDDI finden. 
+\item WSDL Datensatz oder XML-RPC Instruktionen herunterladen. 
+\item XML-RPC oder SOAP Client erzeugen. 
+\item Service aufrufen. 
+\end{enumerate}
+Ein Service Provider muss so vorgehen:
+\begin{enumerate}
+\item Funktionalität z.B. mittels EJB oder COM oder .NET entwickeln. 
+\item Wrapper entwickeln, z.B. SOAP oder XML-RPC. 
+\item WSDL Datensatz oder XML Instruktionen schreiben. 
+\item Service installieren. 
+\item Service via UDDI registrieren: 'UDDI cloud services' werden von Microsoft
+und IBM zur Verfügung gestellt. Das ist ein logisch zentralisiertes,
+aber physikalisch per Replikation dezentralisiertes Verzeichnis (http://www.uddi.org/register). 
+\end{enumerate}
+SOAP Nachrichten sind komplex und die Generierung von Stubs und Skeletons
+wird in der Regel mit Tools durchgeführt.
+
+Eine Beispielanfrage kann folgendermaßen aussehen:
+
+
+\begin{lstlisting}
+<?xml version="1.0" encoding="UTF-8"?>
+<env:Envelope
+  xmlns:env="http://www.w3.org/2003/05/soap/envelope/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <env:Body>
+    <ns1:getTemperature
+      xmlns:ns1="urn:xmethods-Temperature"
+      env:encodingStyle="http://www.w3c.org/2003/05/soap/encoding/">
+      <zipcode xsi:type="xsd:string">2700</zipcode>
+    </ns1:getTemperature>
+  </env:Body>
+</env>
+\end{lstlisting}
+
+
+und die entsprechende Antwort so:
+
+
+\begin{lstlisting}
+<?xml version="1.0" encoding="UTF-8"?>
+<env:Envelope
+  xmlns:env="http://www.w3.org/2003/05/soap/envelope/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <env:Body>
+    <ns1:getTemperatureResponse xmlns:ns1="urn:xmethods-Temperature"
+      env:encodingStyle="http://www.w3c.org/2003/05/soap/encoding/">
+      <return xsi:type="xsd:float">35</return>
+    </ns1:getTemperatureResponse>
+  </env:Body>
+</env>
+\end{lstlisting}
+
+
+Die Implementierung von SOAP Aufrufen hängt stark von der verwendeten
+Technologie ab. Im Prinzip folgt sie natürlich der Art wie sie auch
+bei XML-RPC verwendet wird. Meistens gibt es Tools, die Stubs und
+Skeletons generieren und die Programmierung unterstützen. In der Regel
+werden SOAP Webservices in einem Application Server gehostet.
+
+
+\section{WSDL\label{sec:wsdl}}
+
+Um die gewünschte unabhängige Beschreibung zu erreichen, besteht eine
+WSDL Beschreibung eines Web-Services aus: 
+\begin{itemize}
+\item einer Schnittstellenbeschreibung aller verfügbaren Funktionen samt
+der Parameter- und Rückgabewertbeschreibungen. 
+\item Angaben über das verwendete Transportprotokoll (z.B. SOAP über http). 
+\item Adresse, unter der das Service aufzurufen ist. 
+\end{itemize}
+WSDL wird hauptsächlich (aber nicht ausschließlich) verwendet um SOAP
+Dienste zu beschreiben.
+
+WSDL Nachrichten sind folgendermaßen aufgebaut:
+\begin{itemize}
+\item Das Wurzelelement ist \texttt{definitions}, das alle anderen Elemente
+beinhaltet und auch die Namespaces definiert. 
+\item Das \texttt{types} Element wird zum Definieren der Datentypen, die
+zwischen Client und Server benötigt werden herangezogen. Prinzipiell
+werden die Datentypen mit XML Schema spezifiziert. Werden nur die
+XML Schema eingebauten einfachen Typen benötigt, dann wird das \texttt{types}
+Element nicht benötigt. 
+\item Es können mehrere \texttt{message} Elemente vorkommen, die jeweils
+eine one-way Nachricht angeben (entweder eine Anfrage oder eine Antwort).
+So ein \texttt{message} Element definiert den Namen der Nachricht
+und kann mehrere \texttt{part} Elemente beinhalten, die entweder die
+Parameter der Nachricht oder die Return Werte spezifizieren. 
+\item Das \texttt{portType} Element kombiniert ein oder zwei \texttt{message}
+Elemente zu einer vollständigen one-way oder request-response Operation.
+Dazu wird das \texttt{operation} Element verwendet.
+
+
+Weitere Arten von Operationen sind die Gegenteile der obigen: solicit-response:
+Service sendet eine Nachricht und empfängt eine Antwort und notification:
+Service sendet eine Nachricht. 
+
+\item \texttt{binding} beschreibt wie eine oder mehrere Operationen versendet
+werden. Es handelt sich hierbei in der Regel um die konkreten Daten
+für die SOAP Dienste (aber auch HTTP GET oder HTTP POST ist gebräuchlich).
+Für einen portType kann es mehrere bindings geben. 
+\item Das \texttt{service} Element definiert die Adresse unter der das Service
+erreichbar ist. 
+\end{itemize}
+Zusätzlich gibt es noch ein \texttt{documentation} und \texttt{import}
+Element.
+
+
+\begin{lstlisting}[language=XML]
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Dokument muss nicht unter www.htlwrn.ac.at/wsdl... zu finden sein -->
+<definitions name="HelloService"
+  targetNamespace="http://www.htlwrn.ac.at/wsdl/HelloService.wsdl"
+  xmlns="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:tns="http://www.htlwrn.ac.at/wsdl/HelloService.wsdl"
+  xmlns:xsd="htp://www.w3.org/2001/XMLSchema">
+
+  <!-- Funktionsaufruf besteht aus 2 Nachrichten: -->
+  <message name="HelloRequest">    <!-- hin -->
+    <part name="firstName" type="xsd:string"/>
+  </message>
+
+  <message name="HelloResponse"> <!-- und retour -->
+    <part name="greeting" type="xsd:string"/>
+  </message>
+
+  <!-- Funktion besteht aus Nachricht hin und wieder zurück -->
+  <portType name="HelloPortType">
+    <operation name="Hello">
+      <input message="tns:HelloRequest"/>
+      <output message="tns:HelloResponse"/>
+    </operation>
+  </portType>
+
+  <!-- wir verwenden 'natürlich' SOAP -->
+  <binding name="HelloBinding" type="tns:HelloPortType">
+    <soap:binding style="rpc"
+                  transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="Hello">
+    <soap:operation soapAction="Hello"/>
+      <input>
+        <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:examples:helloservice" use="encoded"/>
+      </input>
+      <output>
+        <soap:body
+          encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+          namespace="urn:examples:helloservice" use="encoded"/>
+      </output>
+    </operation>
+  </binding>
+
+  <service name="HelloService">
+    <documentation>WSDL File for HelloService</documentation>
+    <port binding="tns:HelloBinding" name="HelloPort">
+      <soap:address
+        location="http://localhost:8080/soap/servlet/rpcrouter"/>
+    </port>
+  </service>
+</definitions>
+\end{lstlisting}
+
+
+
+\section{UDDI\label{sec:uddi}}
+
+UDDI kann Informationen über die Firmen (allg.~Organisation) und
+die angebotenen Dienste verwalten und besteht aus zwei Teilen: Der
+Spezifikation, um ein verteiltes Verzeichnis für Organisationen und
+Dienste zu erstellen und einer UDDI Business Registry (UDDI `cloud
+service'), die diese Spezifikation umsetzt.
+
+Daten, die verwaltet werden sind: 
+\begin{description}
+\item [{White}] pages Allgemeines über eine Organisation: Name, Beschreibung,
+Kontaktinformationen,... 
+\item [{Yellow}] pages Klassifikation der Organisationen bzw.~der Dienste.
+Z.B. Einteilung nach Industrie, Produkt oder geographischem Standort. 
+\item [{Green}] pages Technische Informationen über ein Webservice. Also
+zum Beispiel die Spezifikation eines Webservice und seine Adresse. 
+\end{description}
+Der prinzipielle Ablauf der Verwendung von UDDI ist schon in Abschnitt
+\ref{sec:webservices_overview} beschrieben.
+
+Technisch gesehen besteht UDDI aus 3 Teilen: 
+\begin{description}
+\item [{UDDI}] data model Das ist ein XML Schema, um Organisationen und
+Dienste zu beschreiben. D.h.~es werden die Informationen hauptsächlich
+in businessEntity und businessService eingeteilt. Zusätzlich gibt
+es noch Daten, die angeben wo und wie auf ein Webservice zugegriffen
+werden kann 
+\item [{UDDI}] API Dabei handelt es sich um ein API, das mittels SOAP beschrieben
+ist und zum Suchen und Veröffentlichen von UDDI Daten dient. Zusäzlich
+können diese Operationen meistens auch über ein Webinterface genutzt
+werden. 
+\item [{UDDI}] cloud services Die eigentliche `Implementierung' von UDDI
+wie oben beschrieben. 
+\end{description}
+

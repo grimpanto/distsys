@@ -1,0 +1,3328 @@
+#LyX 1.6.4.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass scrbook
+\use_default_options false
+\language ngerman
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\float_placement H
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\bullet 0 2 5 -1
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Nachrichtenübertragung
+\end_layout
+
+\begin_layout Standard
+Dieser Abschnitt erläutert die Grundlagen zur Nachrichtenübertragung zwischen
+ 
+\emph on
+zwei
+\emph default
+ Kommunikationspartnern, die 
+\emph on
+direkt
+\emph default
+ physikalisch über ein Medium oder logisch über einen Kanal miteinander
+ verbunden sind (Punkt-zu-Punkt Verbindung).
+\end_layout
+
+\begin_layout Standard
+In diesem Kapitel werden einerseits die allgemeinen Aspekte einer Nachrichtenübe
+rtragung bei einer Punkt-zu-Punkt Verbindung behandelt, aber auch die spezielle
+ Kommunikation über eine physikalische Übertragungsstrecke.
+\end_layout
+
+\begin_layout Section
+Kommunikationsmodell
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:communication_model"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ein allgemeines Kommunikationsmodell, das dann natürlich auch für eine physikali
+sche Punkt-zu-Punkt Verbindung gilt sieht folgendermaßen aus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename communication_model.pdf
+	BoundingBox 0bp 0bp 128mm 19mm
+	clip
+	rotateOrigin center
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Kommunikationsmodell
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+Quelle (engl.
+ source) Die (Informations-)Quelle erzeugt die zu übertragenden Nachrichten.
+\end_layout
+
+\begin_layout Description
+Sender (engl.
+ transmitter) Der Sender nimmt von der Quelle die Nachrichten entgegen,
+ kodiert diese und wandelt sie in Signale um.
+ Danach werden diese gemäß den Zugriffsregeln dem Übertragungssystem zum
+ Transport übergeben.
+\end_layout
+
+\begin_layout Description
+Übertragungssystem (engl.
+ transmission System) Im eigentlichen Übertragungssystem (oder auch Übertragungs
+strecke genannt) werden die Signale übertragen.
+ Im einfachsten Fall handelt es sich beim Übertragungssystem um eine elektrische
+ Leitung über die elektrische Signale übertragen werden, im allgemeinen
+ Fall jedoch um ein komplettes Netzwerk (siehe Kapitel 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:network_architecture"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Description
+Empfänger (engl.
+ receiver) Am anderen Ende wandelt der Empfänger die Signale wieder in Nachricht
+en um, die entsprechend dekodiert an die Senke weitergegeben werden.
+ Im Prinzip besteht ein Empfänger aus einem Signalumsetzer und einer Fehlersiche
+rungseinrichtung.
+\end_layout
+
+\begin_layout Description
+Senke (engl.
+ destination) Die (Informations-)Senke empfängt die Nachrichen und verarbeitet
+ diese.
+\end_layout
+
+\begin_layout Standard
+Sowohl Quelle als auch Senke werden aus der Sicht eines verteilten Systems
+ als Netzprozess oder kurz Prozess betrachtet.
+ Unter einem Prozess versteht man die Ausführung von einem Progamm.
+ Zwei solcher Prozesse sind logisch über einen (Kommunikations-) Kanal miteinand
+er verbunden.
+ Die Rollen der Quelle und der Senke können natürlich dynamisch tauschen.
+\end_layout
+
+\begin_layout Standard
+Technisch gesehen lässt sich das Kommunikationsmodell für eine physikalische
+ Verbindung folgendermaßen abbilden:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename data_transmission.pdf
+	BoundingBox 0bp 0bp 126mm 22mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Datenübertragung
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Unter der Datenendeinrichtung (DEE oder engl.
+ Data Terminal Equipment, DTE) wird sowohl die Quelle der Information als
+ auch die Senke verstanden.
+ Im Falle der Rechnernetze handelt es sich dabei um die Rechner, die auch
+ als Hosts bezeichnert werden.
+ Unter einer Datenübertragungseinrichtung (DÜE oder engl.
+ Data Communications Equipment, DCE) werden die Geräte verstanden, die die
+ Transmitter bzw.
+ die Receiver darstellen.
+ Beispiele für solche DÜE sind z.B.
+ Modems (MODulator/DEModulator) oder die Netzwerksschnittstellenkarten (Network
+ Interface Card - NIC).
+\end_layout
+
+\begin_layout Section
+Übertragungsmedien
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:transmission_media"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dieser Abschnitt betrachtet jetzt speziell die verschiedenen Arten von Übertragu
+ngsmedien, die in Rechnernetzen eingesetzt werden.
+ Prinzipiell erfolgt die Übertragung in einer von zwei Formen:
+\end_layout
+
+\begin_layout Itemize
+leitungsgebunden d.h.
+ entweder über metallische Leiter wie z.B.
+ bei den Ethernet Technologien oder optische Fasern wie z.B.
+ bei FDDI.
+\end_layout
+
+\begin_layout Itemize
+leitungsungebunden d.h.
+ mittels elektromagnetischer Wellen wobei als Übertragungsmedium die Luft
+ dient.
+ Hier haben sich folgende Spezialformen etabliert:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+ungerichtete Übertragung wie z.B.
+ beim Einsatz von Technologien im terrestrischen Funk wie Wireless LAN,
+ Bluetooth, GSM, UMTS.
+\end_layout
+
+\begin_layout Itemize
+gerichtete Übertragung wie z.B.
+ beim Richtfunk, der Satellitenkommunikation oder auf Basis optischer Signale
+ wie z.B.
+ Infrarotübertragung.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Je nach Übertragungsmedium werden zusätzlich entweder Steckverbindungen,
+ Antennen oder andere Übertragungsglieder benötigt, um den Übergang des
+ Signals auf das Übertragungsmedium durchzuführen.
+\end_layout
+
+\begin_layout Subsection
+Metallische Leiter
+\end_layout
+
+\begin_layout Standard
+Es werden entweder symmetrische Kupferkabel oder Koaxialkabel eingesetzt.
+ Bei Verwendung metallischer Leiter kommen heute nur mehr symmetrische Kupferkab
+el zum Einsatz.
+\end_layout
+
+\begin_layout Subsubsection
+Symmetrische Kupferkabel
+\end_layout
+
+\begin_layout Standard
+Diese Form der Kupferkabel verwendet ein oder mehrere verdrillte Paare von
+ Kupferadern.
+ Aus diesem Grund werden diese Kabel auch als Twisted Pair (TP) bezeichnet.
+ Der Aufbau der Kabelbezeichnungen ist nach ISO/IEC-11801:2002 folgendermaßen
+ XX/YZZ wobei XX die Angabe der Kabelabschirmung darstellt und entweder
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+U unshielded, d.h.
+ ohne Abschirmung des gesamten Kabels,
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+S screened, d.h.
+ Abschirmung des gesamten Kabels mittels Drahtgeflecht,
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+F foiled, d.h.
+ Abschirmung des gesamten Kabels mittels Folie,
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+SF screened, foiled, d.h.
+ Abschirmung des gesamten Kabels mittels Drahtgeflecht und Folie
+\end_layout
+
+\begin_layout Standard
+annehmen kann.
+ Y steht für die Abschirmung der einzelnen Aderpaare und kann die Werte
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+U unshielded, d.h.
+ keine Abschirmung der einzelnen Aderpaare,
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+S shielded, d.h.
+ Abschirmung der einzelnen Aderpaare mittels Drahtgeflecht,
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+F foiled, d.h.
+ Abschirmung der einzelnen Aderpaare mittels Folie
+\end_layout
+
+\begin_layout Standard
+annehmen.
+ ZZ ist immer TP (also Twisted Pair).
+ In der Abbildung 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:twisted_pair_cable"
+
+\end_inset
+
+ ist ein 4 adriges TP Kupferkabel schematisch dargestellt.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename cable.pdf
+	BoundingBox 0bp 0bp 8cm 5cm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:twisted_pair_cable"
+
+\end_inset
+
+TP Kupferkabel mit 4 Adern
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In der ISO/IEC Spezifikation 11801 werden außerdem sogenannte Linkklassen
+ definiert, die die Qualität einer gesamten Übertragungsstrecke inkl.
+ Kabel und Steckverbindungen angeben.
+ Es gibt die Linkklassen A bis F, in denen die notwendigen elektrischen
+ Parameter definiert sind, die für den Einsatz von bestimmten Anwendungen
+ -- wie z.B.
+ 100MBit Ethernet oder Gigabit-Ethernet -- benötigt werden.
+\end_layout
+
+\begin_layout Standard
+Je Linkklasse können verschiedene Kabeltypen eingesetzt werden.
+ Die Kabeltypen werden in sogenannte Kategorien eingeteilt, wobei die Kategorien
+ von 1 bis 7 durchnummeriert werden.
+ Für jeden Kabeltyp sind wieder verschiedene elektrische Parameter festgelegt.
+\end_layout
+
+\begin_layout Standard
+Aus der Kombination von Linkklasse und Kabeltyp ergeben sich überbrückbare
+ Distanzen.
+ Im LAN werden derzeit hauptsächlich Kategorie 5 (Cat-5) Kabel eingesetzt,
+ die eine 100MBit Ethernet Verbindung über 100m erlauben.
+ Mit einem Cat-5 Kabel bestehend aus 4 Doppeladern kann auch eine Gigabit
+ Ethernet Verbindung in beide Richtungen aufgebaut werden.
+ Für 10 Gigabit Ethernet muss allerdings ein Kabeltyp höherer Kategorie
+ verwendet werden.
+\end_layout
+
+\begin_layout Standard
+Zu dem Kabel passend müssen auch die Steckverbindungen ausgeführt sein.
+ Als Steckverbindungen werden heute meist die 8 poligen RJ-45 Stecker verwendet.
+\end_layout
+
+\begin_layout Standard
+Die Vorteile der Twisted-Pair Kabel liegen darin, dass die Verlegung relativ
+ einfach ist, die Kosten gering sind, eine weite Anwendbarkeit besteht und
+ die Verbreitung sehr hoch ist.
+\end_layout
+
+\begin_layout Subsubsection
+Koaxialkabel
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:coaxial_cable"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Koaxialkabel bestehen gewöhnlich aus einem isolierten Innenleiter (auch
+ Seele genannt), der vom Außenleiter umgeben ist.
+ Dieser Außenleiter ist in einem konstanten Abstand um den Innenleiter angebrach
+t und von diesem durch einen Isolator getrennt.
+ Im Regelfall ist diese Ummantelung ebenfalls nach außen isoliert.
+ Solch ein in Rechnernetzen eingesetztes Koaxialkabel ähnelt dem Fernsehkabel.
+\end_layout
+
+\begin_layout Standard
+Das Koaxialkabel wurde früher in Ethernet Rechnernetzen verwendet.
+ Dazu wurden hauptsächlich 2 Kabeltypen eingesetzt: Eines für die Ethernet
+ Spezifikation 10Base5 und eines für die Ethernet Spezifikation 10Base2.
+\end_layout
+
+\begin_layout Standard
+10Base5 (Thicknet oder Yellow Cable genannt) verwendete ein 10mm dickes
+ Koaxialkabel.
+ Die Verbindungen wurden mittels Anbohren des Kabels (im Abstand von min.
+ 2.5m) und Anklemmen eines Transceivers, der über eine AUI (engl.
+ access unit interface) Schnittstelle die Verbindung zum Ethernet-Controller
+ herstellte.
+\end_layout
+
+\begin_layout Standard
+10Base2 (Thinnet genannt) verwendete ein ca.
+ 6mm dickes Koaxialkabel.
+ Zur Verbindung wurden allerdings BNC (engl.
+ bayonet Neill-Concelman) Stecker verwendet.
+\end_layout
+
+\begin_layout Standard
+Koaxialkabel werden heutzutage nicht mehr oft verwendet.
+\end_layout
+
+\begin_layout Subsection
+Optische Leiter
+\end_layout
+
+\begin_layout Standard
+Die optischen Leiter (engl.
+ optical fiber) bestehen aus einem Kern (engl.
+ core) und einem Mantel (engl.
+ cladding).
+ Das Lichtsignal wird in den Kern über eine Photodiode oder eine Laserdiode
+ eingespeist.
+ Da der Brechungsindex des Mantels niedriger ist als der des Kerns kommt
+ es zu einer Reflexion am Übergang von Kern zu Mantel, wodurch sich das
+ Lichtsignal im Kern zickzackförmig ausbreitet.
+\end_layout
+
+\begin_layout Standard
+Es werden im Wesentlichen zwei Typen von Glasfasern unterschieden: dies
+ sind die Multimodefasern und die Single- bzw.
+ Monomodefasern.
+ Multimodefaser haben einen Durchmesser des Kernes von 50
+\begin_inset Formula $\mu m$
+\end_inset
+
+ oder 62.5
+\begin_inset Formula $\mu m$
+\end_inset
+
+, während Singlemodefasern einen Kerndurchmesser von ca.
+ 3 bis 9
+\begin_inset Formula $\mu m$
+\end_inset
+
+ haben.
+\end_layout
+
+\begin_layout Standard
+Auf Grund des relativ hohen Durchmessers der Multimodefasern wird das Licht
+ in mehreren Wellen (Moden) übertragen.
+ Dadurch kann es bei der Multimodeübertragung allerdings zu Signalbeeinflussunge
+n kommen.
+ Daher sind Multimodefasern für sehr lange Übertragungsstrecken bei hoher
+ Bandbreite nicht geeignet.
+ Bei der Singlemodefaser kann sich das Licht auf Grund des kleinen Kerndurchmess
+ers nahezu geradlinig in einer Mode ausbreiten.
+ D.h.
+ es kommt zu keinen Signalbeeinflussungen und zu einer geringeren Dämpfung.
+ Unter Dämpfung versteht man die Umwandlung von Schwingungsenergie in eine
+ andere Energieform, d.h.
+ es kommt zu einer Verminderung der übertragenen Energie im Verlauf einer
+ Übertragungsstrecke.
+ Dadurch lassen sich höhere Entfernungen bei größerer Bandbreite als bei
+ den Multimodefasern überbrücken.
+\end_layout
+
+\begin_layout Standard
+Optische Leiter zeichnen sich -- abgesehen von der höheren Bandbreite bei
+ größerer Entfernung -- durch geringere Störempfindlichkeit und höhere Abhörsich
+erheit aus.
+ Allerdings ist die Verlegung schwieriger und die Kosten sind höher.
+\end_layout
+
+\begin_layout Subsection
+Funk
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:wireless_transmission"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die Übertragung basiert darauf, dass hochfrequente Wellen (800MHz bis mehrere
+ GHz) über das Übertragungsmedium Luft gesendet werden.
+ Besonders in LANs oder auch in PANs (siehe Seite 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "min:net_dimensions"
+
+\end_inset
+
+) werden häufig Netzwerke mittels Funktechnologie aufgebaut, aber auch die
+ Abdeckung über immer größere geographische Gebiete wie ganze Städte wird
+ aktuell.
+ Der große Vorteil liegt in der Einfachheit und Flexibilität sowie in der
+ leichten Wartbarkeit der Netze.
+ Ebenfalls ein großer Vorteil liegt in der Mobilität.
+ Ein drahtloser Übertragungskanal besitzt die Broadcast-Eigenschaft.
+\end_layout
+
+\begin_layout Standard
+Funkübertragung hat mit vielen Problemen zu kämpfen:
+\end_layout
+
+\begin_layout Itemize
+Es treten Störungen und Interferenzen auf.
+ Die Qualität des Übertragungskanals ändert sich mit der Zeit.
+\end_layout
+
+\begin_layout Itemize
+Das Übertragungsmedium muss mit anderen Kommunikationsteilnehmern geteilt
+ werden.
+ Unter Umständen handelt es sich um 
+\begin_inset Quotes pld
+\end_inset
+
+ungewünschte
+\begin_inset Quotes prd
+\end_inset
+
+ Sender.
+\end_layout
+
+\begin_layout Itemize
+Es gibt viele Regulierungen (speziell bei der Frequenzvergabe) seitens nationale
+r Anforderungen.
+ Daher ist die Übertragungskapazität beschränkt, da freie Frequenzbereiche
+ nicht einfach zu finden sind.
+\end_layout
+
+\begin_layout Itemize
+Auf Grund des einfachen Zugriffes auf das Medium Luft treten Sicherheitsprobleme
+ auf.
+\end_layout
+
+\begin_layout Standard
+Gegenüber der leitungsgebundenen Übertragung ergeben sich niedrigere Übertragung
+sraten im Bereich von 1 bis 54MBit/s.
+ Neuere Entwicklungen gehen bis 540MBit/s.
+\end_layout
+
+\begin_layout Section
+Übertragungsverfahren
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:transmission_methods"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In diesem Abschnitt wird zuerst etwas näher auf Signale eingegangen, danach
+ wird besprochen wie die Kodierung der Signale durchgeführt werden kann
+ und zum Schluss wie mehrere Signale über eine Übertragungsstrecke mittels
+ Multiplexen übertragen werden können.
+\end_layout
+
+\begin_layout Subsection
+Signal
+\end_layout
+
+\begin_layout Standard
+Wie schon in Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:communication"
+
+\end_inset
+
+ angesprochen, werden Nachrichten auf pyhsikalischer Ebene in Form von Signalen
+ (elektrisch, optisch, Funk) über ein Übertragungsmedium versendet.
+ Ein Signal ist die physikalische Darstellungsform einer Nachricht und besteht
+ aus einer diskreten oder kontinuierlichen Folge von Werten eines Signalparamete
+rs (z.B.
+ ein Spannungswert, Stromwert oder Feldstärke) über die Zeit.
+\end_layout
+
+\begin_layout Minisec
+Signalarten
+\end_layout
+
+\begin_layout Standard
+Signale können bezüglich Wertevorrat oder Zeit entweder kontinuierlich oder
+ diskret sein.
+\end_layout
+
+\begin_layout Description
+zeitkontinuierlich Werte eines Signals können zu jedem beliebigen Zeitwert
+ innerhalb eines Zeitintervalls auftreten.
+\end_layout
+
+\begin_layout Description
+zeitdiskret Werte eines Signals können nur zu bestimmten Zeitwerten eines
+ Zeitintervalls auftreten.
+ Diese Zeitwerte sind oft innerhalb des Zeitintervalls äquidistant.
+\end_layout
+
+\begin_layout Description
+wertkontinuierlich Werte des Signals können jeden beliebigen Wert innerhalb
+ des Werte\SpecialChar \-
+intervalls annehmen.
+\end_layout
+
+\begin_layout Description
+wertdiskret Werte des Signals können nur bestimmte Werte des Werteintervalls
+ annehmen.
+ 
+\end_layout
+
+\begin_layout Standard
+Daraus ergeben sich 4 Möglichkeiten:
+\end_layout
+
+\begin_layout Itemize
+zeitdiskret und wertdiskret: Man spricht von digitalen Signalen.
+ Kommen genau zwei diskrete Werte im Wertebereich des digitalen Signales
+ vor, dann spricht man von einem binären Signal.
+ Oft werden die Begriffe digital und binär synonym verwendet.
+\end_layout
+
+\begin_layout Itemize
+zeitdiskret und wertkontinuierlich.
+\end_layout
+
+\begin_layout Itemize
+zeitkontinuierlich und wertdiskret.
+\end_layout
+
+\begin_layout Itemize
+zeitkontinuierlich und wertkontinuierlich: analoge Signale.
+\end_layout
+
+\begin_layout Minisec
+Signalverarbeitung und Signalübertragung
+\end_layout
+
+\begin_layout Standard
+Analoge Signale treten auf, wenn z.B.
+ ein Audio- oder Videosignal vorliegt.
+ Analoge Signale müssen in digitale Signale transformiert werden, damit
+ sie in einem Rechner verarbeitet werden können.
+ Dazu dienen Analog/Digital Wandler.
+ Diese tasten das analoge Signal zu diskreten Zeitpunkten ab und ermitteln
+ zu diesem Zeitpunkt einen diskreten Wert des Signalparameters.
+\end_layout
+
+\begin_layout Standard
+Danach wird das Signal kodiert und kann entweder verarbeitet oder übertragen
+ werden.
+ Eine Übertragung findet entweder im Basisbandbereich oder im Breitbandbereich
+ statt.
+\end_layout
+
+\begin_layout Standard
+Unter dem Begriff Basisband (engl.
+ baseband) versteht man denjenigen Frequenzbereich, in dem sich das zu übertrage
+nde Nutzsignal befindet.
+ In der Regel hat ein Basisbandsignal daher einen Frequenzbereich von 0
+ bis f
+\begin_inset Formula $_{\text{max}}$
+\end_inset
+
+Hz.
+ Bei der analogen Telefonie beispielsweise ist das Frequenzband der Bereich
+ von 300 bis 3400 Hz.
+\end_layout
+
+\begin_layout Standard
+Unter Breitband (engl.
+ broadband) wird speziell bei der Datenübertragung ein Verfahren verstanden,
+ bei dem die digitalen Signale -- im Unterschied zum Basisbandverfahren
+ -- nicht direkt übertragen werden, sondern auf ein oder mehrere hochfrequente
+ Trägersignale aufmoduliert werden (Modulation).
+ Damit gibt es bei einem Breitbandsignal einen Frequenzbereich von f
+\begin_inset Formula $_{\text{min}}$
+\end_inset
+
+ bis f
+\begin_inset Formula $_{\text{max}}$
+\end_inset
+
+.
+ Breitband wird jedoch oft auch mit einer hohen Bandbreite gleichgesetzt
+ oder in der Bedeutung verwendet, dass es sich um eine schnelle Datenübertragung
+ handelt.
+\end_layout
+
+\begin_layout Standard
+Allgemein ist die Modulation die Änderung von Signalparametern (Amplitude,
+ Frequenz, Phase,\SpecialChar \ldots{}
+) eines Trägersignals durch ein modulierendes/aufgeprägtes
+ Signal.
+ Bei der Demodulation wird das ursprüngliche Signal wieder zurückgewonnen.
+ Gründe dafür liegen z.B.
+ in der Mehrfachbenutzung des Übertragungssystems (z.B.
+ Frequenzmultiplex, siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:synchronous_multiplex"
+
+\end_inset
+
+) oder einer besseren Übertragung und Filterung hochfrequenter Signale (Basisban
+dübertragung nur über elektrische Leitungen).
+\end_layout
+
+\begin_layout Standard
+Nachdem das Signal übertragen worden ist, wird es unter Umständen wieder
+ dekodiert, in ein analoges Signal gewandelt und ausgegeben (z.B.
+ Fernseher, Lautsprecher).
+\end_layout
+
+\begin_layout Standard
+Das gesamte Modell der Signalverarbeitung und Signalübertragung lässt sich
+ folgendermaßen darstellen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename signal_model.pdf
+	BoundingBox 0bp 0bp 105mm 40mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Signalverarbeitung und Signalübertragung
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Kodierung
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:coding"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Es gibt 3 Arten der Kodierung:
+\end_layout
+
+\begin_layout Description
+Quellenkodierung hat die Aufgabe die Signale der Quelle einer Redundanzreduktion
+ zu unterwerfen.
+ Dies liegt darin begründet, dass im ursprünglichen Signal oft redundante
+ Anteile enthalten sind, die nicht weiter benötigt werden.
+ Dies kann entweder so geschehen, dass das ursprüngliche Signal verlustlos
+ oder nur verlustbehaftet hergestellt werden kann.
+ Im Zuge der Betrachtung der Rechnernetze ist die Bedeutung relativ gering.
+ Deshalb wird darauf nicht näher eingegangen.
+\end_layout
+
+\begin_layout Description
+Kanalkodierung ist zuständig für die Erkennung und Korrektur von Fehlern
+ und wird nach der Quellenkodierung vorgenommen (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:channel_code"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Description
+Leitungskodierung wandelt die digitalen Signale so um, dass sie am Übertragungsk
+anal übertragen werden können.
+ Dazu werden einem oder mehreren Bits ein Symbol zugeordnet, das auf der
+ Leitung übertragen wird (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:line_code"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Subsubsection
+Kanalkodierung
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:channel_code"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Der Zweck der Kanalkodierung (engl.
+ channel code) liegt in der Erkennung und Korrektur von Fehlern.
+ Eine genauere Beschreibung ist im Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:error_detection"
+
+\end_inset
+
+ zu finden.
+\end_layout
+
+\begin_layout Subsubsection
+Leitungskodierung
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:line_code"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die Leitungskodierung (engl.
+ line code) hat die Aufgabe, die Aufbereitung des digitalen Signales zwecks
+ Übertragung durchzuführen.
+ Hauptsächlich findet die Leitungskodierung ihre Anwendung in der Basisbandübert
+ragung.
+ D.h.
+ es geht darum, binäre Signale auf einem Übertragungskanal zu übertragen.
+\end_layout
+
+\begin_layout Standard
+Solche binären Signale werden im einfachsten Fall durch 2 Pegeln dargestellt.
+ D.h.
+ z.B.
+\end_layout
+
+\begin_layout Itemize
+ein positives Potential U+ (z.B.
+ 5V) für eine digitale 1 und ein Nullpotential für eine digitale 0 oder
+\end_layout
+
+\begin_layout Itemize
+ein positives Potential U+ für eine digitale 1 und ein negatives Potential
+ U
+\begin_inset Formula $-$
+\end_inset
+
+ für eine digitale 0
+\end_layout
+
+\begin_layout Standard
+Auch ist die Verwendung von mehreren Potentialpegeln möglich.
+\end_layout
+
+\begin_layout Standard
+Die Leitungskodierung soll drei Kriterien möglichst gut erfüllen:
+\end_layout
+
+\begin_layout Itemize
+Gute Ausnutzung der verfügbaren Bandbreite.
+\end_layout
+
+\begin_layout Itemize
+Gute Regenerierung des Sendetaktes auf der Empfängerseite: lange Folgen
+ von 0 oder 1 Symbolfolgen können je nach Leitungskodierung dazu führen,
+ dass es zu keiner Änderung des Potentials auf der Übertragungsstrecke kommt.
+ Wenn keine zusätzliche Leitung zur Verfügung steht, um einen Takt zu übertragen
+, dann muss der Takt mit dem der Sender die Signale auf die Leitung schickt
+ vom Empfänger aus dem Signal rückgewonnen werden können.
+ Im Falle, dass keine Änderung am Signalparameter stattfindet, kann es dazu
+ kommen, dass Sender und Empfänger bezüglich des Taktes auseindertriften!
+\end_layout
+
+\begin_layout Itemize
+Möglichst geringer Gleichspannungsanteil, da bei einer Übertragung über
+ eine Übertragungsstrecke, die eine untere Grenzfrequenz größer als 0Hz
+ hat, im Signal keine Frequenzen unterhalb der unteren Grenzfrequenz --
+ also auch 0Hz -- vorkommen dürfen.
+ Ansonst ist es schwierig das Signal korrekt zu erkennen.
+\end_layout
+
+\begin_layout Standard
+Hier folgt eine Übersicht über die wichtigsten Kodierungen (siehe Abbildung
+ 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:line_codes"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Itemize
+Der NRZ (engl.
+ Non-Return to Zero) ist eigentlich keine richtige Kodierung, da es das
+ ursprünglich binäre Signal darstellt.
+\end_layout
+
+\begin_layout Itemize
+Die RZ (engl.
+ Return to Zero) Kodierung ist ähnlich der NRZ Kodierung, nur wird bei jedem
+ 1-Signal bei der Signalhälfte auf den 0 Pegel zurückgesprungen.
+ Damit werden bei langen Folgen von 1-Symbolen keine langen Perioden von
+ U+ Pegeln erzeugt, die einerseits den Gleichspannungsanteil heben und andererse
+its eine Taktrückgewinnung erschweren.
+ Allerdings verdoppelt sich die Frequenz!
+\end_layout
+
+\begin_layout Itemize
+Eine Variante der NRZ Kodierung ist der NRZ-I (engl.
+ Non-Return to Zero Inverse) Code.
+ Bei diesem wird bei jedem 1 Symbol ein Pegelwechsel (von U+ zu 0 oder von
+ 0 zu U+) durchgeführt.
+ Bei einem 0 Symbol wird keine Änderung des Pegels vorgenommen.
+ Bei dieser Kodierung wird zwar das Problem aufeinanderfolgender Einsen
+ gelöst, jedoch nicht das Problem aufeinanderfolgender Nullen.
+\end_layout
+
+\begin_layout Itemize
+Der AMI (engl.
+ Alternate Mark Inversion) ist eine Kodierung mit 3 Pegeln.
+ Ein 1 Symbol wird abwechselnd mit U+ und U
+\begin_inset Formula $-$
+\end_inset
+
+ dargestellt und ein 0 Symbol wird durch den Pegel 0 repräsentiert.
+ Der Vorteil liegt darin, dass es keinen Gleichspannungsanteil gibt und
+ dass ebenfalls keine langen 1 U+ bzw.
+ U
+\begin_inset Formula $-$
+\end_inset
+
+ möglich sind.
+ Lange 0 Perioden erschweren die Taktrückgewinnung.
+\end_layout
+
+\begin_layout Itemize
+Eine weitere Variante mit 3 Potentialpegeln ist MLT-3 (engl.
+ Multilevel Transmission Encoding - 3 levels).
+ Jedes 1 Symbol ändert das Potential um einen Schritt in der Folge ...,0,U+,0,U
+\begin_inset Formula $-$
+\end_inset
+
+,0,U+,...
+ Ein 0 Symbol bewirkt keine Änderung.
+ Vor- und Nachteile wie bei AMI.
+\end_layout
+
+\begin_layout Itemize
+Beim Manchester Code werden bipolare Potentiale verwendet, also U+ und U
+\begin_inset Formula $-$
+\end_inset
+
+.
+ Ein 1 Symbol wird durch einen Übergang von U+ zu U
+\begin_inset Formula $-$
+\end_inset
+
+ (eine negative oder abfallende Flanke) kodiert und ein 0 Symbol durch einen
+ Übergang von U
+\begin_inset Formula $-$
+\end_inset
+
+ zu U+ (also eine positive oder aufsteigende Flanke).
+ Die Vorteile liegen darin, dass es defacto keinen Gleichspannungsanteil
+ gibt und eine gute Taktrückgewinnung möglich ist, da jedes Symbol eine
+ Potentialänderung bewirkt.
+ Allerdings gibt es wieder den Nachteil, dass sich das Frequenzband verdoppelt.
+ Zusätzlich gibt es beim Manchestercode die Möglichkeit Codeverletzungen
+ zu erkennen bzw.
+ absichtlich einzubauen, sodass z.B.
+ der Anfang oder das Ende eines Rahmens (engl.
+ Frame, siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:frames"
+
+\end_inset
+
+) erkannt werden kann.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename line_codes.pdf
+	scale 50
+	BoundingBox 0bp 0bp 185mm 91mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:line_codes"
+
+\end_inset
+
+Leitungscodes
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Minisec
+Blockkodierung
+\end_layout
+
+\begin_layout Standard
+Einerseits will man lange Folgen von 0 und 1 Symbolen vermeiden, andererseits
+ -- wie beim Manchester Code -- Zusatzinformationen mitübertragen oder mehrere
+ Bits in einem Schritt übertragen.
+ Dafür gibt es die Blockkodierungen, die folgendermaßen bezeichnet werden:
+ 
+\begin_inset Quotes pld
+\end_inset
+
+mBnx
+\begin_inset Quotes prd
+\end_inset
+
+.
+ 
+\begin_inset Quotes pld
+\end_inset
+
+m
+\begin_inset Quotes prd
+\end_inset
+
+ steht für die Anzahl der Bits, die zusammengefasst werden.
+ 
+\begin_inset Quotes pld
+\end_inset
+
+B
+\begin_inset Quotes prd
+\end_inset
+
+ steht eben für Bits und 
+\begin_inset Quotes pld
+\end_inset
+
+n
+\begin_inset Quotes prd
+\end_inset
+
+ steht für die Länge des Blocks zu denen sie zusammengefasst werden.
+ 
+\begin_inset Quotes pld
+\end_inset
+
+x
+\begin_inset Quotes prd
+\end_inset
+
+ gibt die Darstellungsart an, wobei 
+\begin_inset Quotes pld
+\end_inset
+
+x
+\begin_inset Quotes prd
+\end_inset
+
+ für folgende Werte stehen kann: 
+\begin_inset Quotes pld
+\end_inset
+
+B
+\begin_inset Quotes prd
+\end_inset
+
+ für binär, 
+\begin_inset Quotes pld
+\end_inset
+
+T
+\begin_inset Quotes prd
+\end_inset
+
+ für ternär (also dreiwertig) und 
+\begin_inset Quotes pld
+\end_inset
+
+Q
+\begin_inset Quotes prd
+\end_inset
+
+ für quarternär (also vierwertig).
+\end_layout
+
+\begin_layout Standard
+Folgende Blockkodierungen werden häufig verwendet:
+\end_layout
+
+\begin_layout Itemize
+Bei 4B5B werden 4 Bits zu 5 Bits umkodiert.
+ D.h.
+ es werden 16 verschiedene Bitkombinationen auf 32 Codewörter abgebildet.
+ Die Hälfte der 32 Codewörter können daher zusätzlich verwendet werden.
+ Im Speziellen werden diese so verwendet, dass nie mehr als 2 Nullen aufeinander
+folgen.
+ D.h.
+ kombiniert man diese Blockkodierung z.B.
+ mit NRZ-I, dann wird dessen Schwachstelle vermieden.
+ Damit erhält man eine gute Taktregenerierung bei einer nur 25% höheren
+ Bandbreite!
+\end_layout
+
+\begin_layout Itemize
+Der 4B3T bildet 4 Bits auf 3 ternäre Signalparameter ab.
+ D.h.
+ es werden 16 verschiedene Bitkombinationen auf 27 (
+\begin_inset Formula $=3^{3}$
+\end_inset
+
+) Codewörter abgebildet.
+ Die redundanten Signalgruppen werden dazu benutzt, um den Gleichspannungsanteil
+ auszugleichen.
+ Dazu werden die bisherigen Gleichspannungsanteile summiert, und entsprechend
+ dieser Summe einer von zwei möglichen ternären Codes gewählt.
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Subsection
+Multiplexverfahren
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:multiplex"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Unter Multiplexen (wörtlich: mehrfach) versteht man das Konzept der gemeinsamen
+ Nutzung einer Systemressource durch mehrere Nutzer.
+ Der Grund für Multiplexen liegt einerseits in der wirtschaftlichen Nutzung
+ einer Ressource und andererseits in der Anforderung eine gewisse Form der
+ Nebenläufigkeit zu erzeugen.
+ Das bedeutet, dass mehrere Nutzer die Systemressource gewissermaßen gleichzeiti
+g nutzen.
+ Ein bekanntes Beispiel sind die Betriebssystemprozesse, die vom Scheduler
+ des Betriebssystems in einem Multiplexverfahren dem Prozessor (die Systemressou
+rce) zugeteilt werden.
+\end_layout
+
+\begin_layout Standard
+Betrachtet man den Begriff Ressource, der im Sinne der Rechnernetze und
+ der Übertragung von Nachrichten eine Rolle spielt, dann handelt es sich
+ bei der Ressource um konkrete Übertragungskanäle.
+\end_layout
+
+\begin_layout Standard
+Im Kontext der Übertragungstechnik kann folgende Unterteilung der Multiplexverfa
+hren getroffen werden.
+\end_layout
+
+\begin_layout Subsubsection
+Raummultiplex
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:space_division_multiplex"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Das Raummultiplex (engl.
+ space division multiplexing) wird auch Space Division Multiple Access (SDMA)
+ genannt.
+ Die Signale werden dabei über räumlich verschiedene -- also mehrfache (
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ multiplex) -- Übertragungswege übertragen.
+ Sollen n Signale übertragen werden, dann werden n Leitungen verwendet.
+ Das analoge Telefonnetz mit der Leitungsvermittlung kann in diese Kategorie
+ eingeordnet werden.
+\end_layout
+
+\begin_layout Subsubsection
+Synchrones Multiplex
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:synchronous_multiplex"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die hier angeführten Multiplexverfahren werden deshalb als 
+\begin_inset Quotes pld
+\end_inset
+
+synchron
+\begin_inset Quotes prd
+\end_inset
+
+ bezeichnet, da die einzelnen Signale jeweils die gleichen (oder zumindest
+ konstante) Anteile der Übertragungskapazität zur Verfügung gestellt bekommen.
+\end_layout
+
+\begin_layout Description
+Frequenzmultiplex Es werden beim Frequenzmultiplexverfahren (engl.
+ frequency division multiplexing, FDM) die einzelnen Signale auf Träger
+ unterschiedlicher Frequenz aufmoduliert.
+ Die (lineare) Summe dieser modulierten Signale wird übertragen.
+\end_layout
+
+\begin_layout Description
+Codemultiplex Beim Codemultiplex (engl.
+ code division multiplexing, CDM) wird jedes Bit mit einer Symbolfolge,
+ die Code genannt wird, multipliziert.
+ Die Codes sind zu einander orthogonal und jeder Sender erhält einen solchen
+ Code.
+ Die, sich so ergebenen Signale werden gleichzeitig auf dem Übertragungskanal
+ im gleichen Frequenzband übertragen.
+ Solange Empfänger mit dem Sender zeitlich synchronisiert sind, kann der
+ Empfänger das empfangene Signal wieder mit einem einzelnen Code multiplizieren
+ und erhält das einzelne Bit wieder zurück.
+ Es ist ein aufwändiges Verfahren, das z.B.
+ bei UMTS verwendet wird.
+\end_layout
+
+\begin_layout Description
+Synchrones
+\begin_inset space ~
+\end_inset
+
+Zeitmultiplex (engl.
+ synchronous time division multiplexing, STDM oder STM) Es wird ein Rahmen
+ (engl.
+ frame) mit einer festgelegten Dauer definiert.
+ Dieser Frame wird in Zeitschlitze (engl.
+ time slots) unterteilt, die den einzelnen Signalen zugeordnet werden.
+ Solche Frames werden nacheinander über den Übertragungskanal übertragen.
+\end_layout
+
+\begin_layout Subsubsection
+Asynchrones Zeitmultiplex
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:asynchronous_multiplex"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Das asynchrone Zeitmultiplexverfahren (engl.
+ asynchronous time division multiplexing, ATDM oder ATM) wird auch als statistis
+ches Multiplexen bezeichnet.
+ Im Prinzip funktioniert es wie STM, jedoch erhalten nur diejenigen Signale
+ einen Zeitschlitz, die auch etwas zu übertragen haben.
+ Dieses Verfahren heißt deshalb auch statistisches Multiplexen, weil die
+ verfügbare Übertragungskapazität im statistischen Mittel besser ausgenutzt
+ wird.
+ Damit allerdings ein Zeitschlitz einem Signal zugeordnet werden kann, muss
+ eine Zuordnung im Zeitschlitz mitübertragen werden.
+ Diese Zuordnung wird in der Regel mit einem Header durchgeführt, der am
+ Anfang eines Zeitschlitzes übertragen wird.
+ Dadurch entsteht ein gewisser Overhead.
+\end_layout
+
+\begin_layout Standard
+Das asynchrone Zeitmultiplexverfahren wird außer in der Übertragungstechnik
+ bei der Entwicklung von Kommunikationsprotokollen eingesetzt! Damit ist
+ es das wichtigste Multiplexverfahren, das für den Entwickler von verteilten
+ Systemen eine Rolle spielt.
+\end_layout
+
+\begin_layout Section
+Sicherungsverfahren
+\end_layout
+
+\begin_layout Standard
+In diesem Abschnitt werden wir uns zuerst mit der Rahmenbildung beschäftigen,
+ dann mit dem Thema Fehlererkennung und Fehlerkorrektur und anschließend
+ Methoden zur zuverlässigen Übertragung zwischen Punkt-zu-Punkt Verbindungen
+ beschreiben.
+\end_layout
+
+\begin_layout Subsection
+Rahmen
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:frames"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die Bildung von Rahmen (engl.
+ frames) behandelt das Erkennen von Anfang und Ende von Informationseinheiten.
+ Auf der Ebene der physikalischen Übertragung von Bits geht es darum den
+ Anfang und das Ende von Bitfolgen bzw.
+ von Bytefolgen zu erkennen.
+ So eine zusammenhängende Folge von Bits oder Bytes wird als Frame bezeichnet.
+\end_layout
+
+\begin_layout Standard
+Protokolle, die auf einer Folge von Bytes basieren werden Byte-orientierte
+ Protokolle genannt.
+ Analog dazu gibt es die Bit-orientierten Protokolle.
+ Der Unterschied zwischen einem Byte-orientierten Protokoll und einem Bit-orient
+ierten Protokoll liegt darin, dass sich ein Bit-orientiertes Protokoll nicht
+ um Byte-Grenzen kümmern muss.
+\end_layout
+
+\begin_layout Standard
+Folgende zwei grundlegende Methoden werden wir behandeln: die Sentinel-Methode
+ und die Zählmethode.
+\end_layout
+
+\begin_layout Subsubsection
+Sentinel-Methode
+\end_layout
+
+\begin_layout Standard
+Die Sentinel-Methode (sentinel zu Deutsch: Wächter) geht davon aus, dass
+ ein Frame mit je einem speziellen Startzeichen und einem Endezeichen --
+ eben den Sentinel-Zeichen -- markiert wird.
+\end_layout
+
+\begin_layout Standard
+Das Protokoll BSC (engl.
+ binary synchronous communication) von IBM ist ein Beispiel für ein solches
+ Byte-orientiertes Protokoll.
+ D.h.
+ der Rahmen besteht aus einer Folge von Bytes, die durch je ein Startbyte
+ (STX, start of text) und ein Endebyte (ETX, end of text) markiert werden.
+ Was passiert allerdings, wenn ein ETX im Datenanteil des Frames enthalten
+ ist? Dann wird diesem ETX Zeichen ein spezielles Zeichen (DLE, data link
+ escape) vorangestellt.
+ Sollte ein DLE Zeichen im Datenanteil vorkommen, dann wird diesem ebenfalls
+ ein DLE Zeichen vorangestellt.
+ Dieses Verfahren nennt man das character stuffing (Zeichen auffüllen).
+ Beim BSC Protokoll gibt es zusätzlich zum Datenanteil noch einen Header,
+ Synchronisationsbytes und eine Prüfsumme (2 Bytes).
+\end_layout
+
+\begin_layout Standard
+Ein weiteres Beispiel für ein Byte-orientiertes Protokoll, das auf der Sentinel-
+Methode basiert ist PPP (point-to-point Protokoll).
+\end_layout
+
+\begin_layout Standard
+Das bitorientierte Protokoll HDLC (high-level data link control) verwendet
+ ebenfalls die Sentinel-Methode.
+ Es wird als Anfangs- und Endesequenz jeweils die Bitfolge 01111110 verwendet.
+ Auch hier stellt sich die Frage wie zu verfahren ist, wenn eine längere
+ Folge von Einsen im Frame vorkommen.
+ Der Sender fügt nach fünf aufeinanderfolgenden Einsen im Datenanteil eine
+ Null in den Datenstrom ein.
+ Der Empfänger verfährt folgendermaßen, wenn er eine Folge von fünf Einsen
+ erhält: ist das nächste Bit eine 0, dann wird es vom Empfänger entfernt,
+ ist es eine Eins, dann wird das darauffolgende Bit auch noch angesehen.
+ Ist dieses eine Null, dann handelt es sich um die Endesequenz, ist es eine
+ Eins, dann liegt ein Fehler vor.
+ Im Fehlerfall wird der Frame verworfen und auf den Beginn des nächsten
+ Rahmens gewartet.
+\end_layout
+
+\begin_layout Subsubsection
+Zählmethode
+\end_layout
+
+\begin_layout Standard
+Die Zählmethode basiert darauf, dass die Bits bzw.
+ Bytes des Datenanteils gezählt werden und diese Länge vor dem Datenanteil
+ übertragen wird.
+ Damit weiß der Empfänger genau wie lange der zu empfangene Datenanteil
+ ist und muss nicht den Datenanteil auf ein Endezeichen untersuchen.
+ Ein Nachteil dieser Methode ist, dass die Anzahl der übertragenen Bits
+ bzw.
+ Bytes beschränkt ist, da das Längenfeld eine feste Größe haben muss und
+ dieses nicht zu groß gewählt werden sollte, damit der Overhead bei kurzen
+ Frames nicht zu groß ist.
+\end_layout
+
+\begin_layout Standard
+Ein Beispiel für ein Bit-orientiertes Rahmenformat, das auf der Zählmethode
+ basiert ist das Ethernet Protokoll (siehe Kapitel 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:ethernet"
+
+\end_inset
+
+).
+ Als Beispiel für ein Byte-orientiertes Protokoll kann UDP (siehe Kapitel
+ 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:udp"
+
+\end_inset
+
+) dienen.
+\end_layout
+
+\begin_layout Subsection
+Fehlererkennung und Fehlerkorrektur
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:error_detection"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In Frames kann es z.B.
+ auf Grund von elektromagnetischen Störungen oder thermischen Rauschen zu
+ Fehlern kommen.
+ Diese Fehler will man erkennen und, wenn möglich, korrigieren.
+ Ist eine Korrektur nicht möglich, soll in der Regel zumindest eine Neuübertragu
+ng stattfinden.
+\end_layout
+
+\begin_layout Standard
+Als Methode werden Fehlererkennungs- bzw.
+ Fehlerkorrekturcodes verwendet.
+ Dazu wird entweder ein Codewert berechnet, der zusätzlich übertragen wird
+ oder es werden Kodierungen verwendet, die auch nicht gültige Codewörter
+ enthalten.
+ Beiden Verfahren gemein ist, dass zusätzlich Prüfbits (redundante Information)
+ übertragen werden, damit Fehler erkannt werden können.
+ Bestimmte Kodierungen erlauben außerdem auch eine Korrektur von Fehlern.
+ Dazu wird noch mehr Redundanz benötigt.
+\end_layout
+
+\begin_layout Standard
+Eine Kodierung mit Fehlerkorrektur wird allerdings nur in Netzwerken eingesetzt,
+ die eine hohe Fehlerwahrscheinlichkeit haben, wie in Funknetzwerken (z.B.
+ GSM) oder in Netzen, die eine hohe Latenz aufweisen und damit eine Neuübertragu
+ng zu lange dauern würde.
+ Der Grund liegt darin, dass durch die große Menge an redundanter Information
+ die Bandbreite des Übertragungskanals nur schlecht ausgenutzt wird.
+\end_layout
+
+\begin_layout Standard
+Um zu bestimmen inwieweit eine Fehlererkennung möglich ist, gibt es den
+ Begriff der Hamming-Distanz.
+ Die Distanz zweier Codewörter ist die Anzahl der Bitpositionen an denen
+ sich diese Codewörter unterscheiden.
+ Der minimale Wert aller Distanzen wird als Hamming-Distanz d bezeichnet.
+ Allgemein gilt, dass man mit einem Code der Hamming-Distanz d genau d
+\begin_inset Formula $-$
+\end_inset
+
+1 Fehler erkennen kann.
+\end_layout
+
+\begin_layout Standard
+Im folgenden werden wir drei Arten von Fehlererkennungskodierungen beschreiben.
+\end_layout
+
+\begin_layout Subsubsection
+Fehlererkennung durch Paritätsbits
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:error_detection_paritybits"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Unter der Parität einer Zahl wird die Eigenschaft verstanden, ob diese gerade
+ oder ungerade ist.
+ Das Prinzip der Parität in Fehlererkennungskodierungen ist, dass zusätzlich
+ Bits -- nämlich die Paritätsbits -- hinzugefügt werden, die die Parität
+ der Anzahl der Einsen im Datenblock angeben.
+ Eine Eins zeigt an, dass es eine ungerade Anzahl von Einsen gibt und eine
+ Null zeigt an, dass die Anzahl der Einsen gerade ist.
+ Es handelt es sich bei den Paritätsbits also ebenfalls um Prüfbits.
+\end_layout
+
+\begin_layout Standard
+Ein Beispiel wäre die Erweiterung des 7-Bit ASCII Codes um ein Paritätsbit
+ zu einem 8-Bitcode oder das Hinzufügen eines Paritätsbits zu einem Oktett.
+ Im Zuge der Datenübermittlung wird jedoch häufiger eine zweidimensionale
+ Parität verwendet.
+ Dazu wird z.B.
+ zu jedem Byte ein Paritätsbit hinzugefügt und weiters wird für alle ersten
+ Bits der Bytes ein Paritätsbit bestimmt, für alle zweiten Bits usw.
+ Für 4 Bytes könnte aussehen wie in Tabelle 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "tab:exa_two_dim_parity"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="9">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row endhead="true">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:exa_two_dim_parity"
+
+\end_inset
+
+Beispiel mit zweidimensionaler Parität
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die zweidimensionale Parität erkennt alle 1-, 2- und 3-Bit Fehler sowie
+ die meisten 4-Bit Fehler.
+\end_layout
+
+\begin_layout Subsubsection
+Fehlererkennung durch Prüfsummen
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:error_detection_checksums"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Eine weitere Variante, die auf der Berechnung von Information und zusätzlicher
+ Übertragung basiert ist das Verfahren der Berechnung von Prüfsummen.
+ Es geht darum, dass durch mathematische Operationen eine Prüfsumme gebildet
+ und zusätzlich mitübertragen wird.
+ Der Empfänger führt diese mathematischen Operationen ebenfalls aus und
+ überprüft die erhaltene Prüfsumme mit der übertragenen Prüfsumme.
+ Sind die beiden Werte nicht gleich, dann 
+\emph on
+ist
+\emph default
+ ein Fehler aufgetreten.
+ Sind die beiden Werte gleich, dann ist es 
+\emph on
+wahrscheinlich
+\emph default
+, dass kein Fehler aufgetreten ist.
+ Die Prüfsumme stellt also ebenfalls mehrere Prüfbits dar.
+\end_layout
+
+\begin_layout Standard
+Im Internet-Protokoll (IP, siehe Kapitel 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:ip"
+
+\end_inset
+
+) wird folgendes Verfahren verwendet: Die Daten werden als 16-Bit Wörter
+ betrachtet.
+ Alle Wörter werden gemäß der Einerkomplementarithmetik aufsummiert (normale
+ binäre Addition, jedoch wird eine 1 zur Summe addiert, wenn ein Übertrag
+ entstanden ist).
+ Von der Summe wird das Einerkomplement gebildet und das Ergebnis wird als
+ Prüfsumme mitübertragen.
+ Der Empfänger nimmt alle erhaltenen 16-Bitwerte her und addiert diese wiederum
+ gemäß der Einerkomplementärarithmetik und zählt zusätzlich die Prüfsumme
+ hinzu.
+ Kommt ein Wert ungleich 0xFFFF heraus, dann ist ein Fehler aufgetreten.
+ Dies liegt darin begründet, dass es in der Einerkomplementarithmetik zwei
+ Symbole für die Zahl 0 gibt, nämlich den Wert 0x0 und den Wert 0xFFFF!
+\end_layout
+
+\begin_layout Subsubsection
+Fehlererkennung durch CRC
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:error_detection_crc"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ebenfalls auf der Berechnung einer Prüfsumme basierend, jedoch mittels eines
+ Polynoms ist die Basis des CRC (Cyclic Redundancy Check, zyklische Redundanzprü
+fung).
+ Es werden ebenfalls Prüfbits an das Ende der Nachricht angehängt.
+\end_layout
+
+\begin_layout Standard
+Die Nachricht der Länge m wird als Polynom mit dem Grad m
+\begin_inset Formula $-$
+\end_inset
+
+1 aufgefasst.
+ Dieses Polynom wird durch ein gewähltes Polynom mit dem Grad k (Generatorpolyno
+m) dividiert.
+ Der entstehende Rest wird zur Bildung der Prüfziffern herangezogen.
+ Alle in diesem Abschnitt beschriebenen mathematischen Operationen sind
+ entweder im Sinne der Polynomarithmetik oder der Binärarithmetik zu verstehen.
+\end_layout
+
+\begin_layout Standard
+Betrachten wir ein Generatorpolynom mit k = 1, nämlich 
+\begin_inset Formula $g=x\oplus1$
+\end_inset
+
+ und alle Nachrichten der Länge 3 (also m = 3).
+ Jede Nachricht lässt sich durch ein Polynom darstellen.
+ Weiters multiplizieren wir das Nachrichtenpolynom mit dem Generatorpolynom
+ wie in Abbildung 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "tab:exa_crc"
+
+\end_inset
+
+ zu sehen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="3">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row endhead="true">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Nachricht
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Nachricht multipliziert mit Generator
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Codewort
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row endhead="true">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+000
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0\odot(x\oplus1)=0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0000
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+001
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1\odot(x\oplus1)=x\oplus1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0011
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+010
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x\odot(x\oplus1)=x^{2}\oplus x$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0110
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+011
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $(x\oplus1)\odot(x\oplus1)=x^{2}\oplus1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0101
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x^{2}\odot(x\oplus1)=x^{3}\oplus x^{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1100
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+101
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $(x^{2}\oplus1)\odot(x\oplus1)=x^{3}\oplus x^{2}\oplus x\oplus1$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1111
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+110
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $(x^{2}\oplus x)\odot(x\oplus1)=x^{3}\oplus x$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1010
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+111
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $(x^{2}\oplus x\oplus1)\odot(x\oplus1)=x^{3}\oplus1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1001
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:exa_crc"
+
+\end_inset
+
+Beispiel mit zweidimensionaler Parität
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Man kann erkennen, dass in diesem Fall die erzeugten Codewörter einen 3-Bit-Binä
+rcode mit angehängtem Paritätsbit bilden.
+ Mit diesem einfachen Generatorpolynom erhält man keinen Vorteil gegenüber
+ dem Verfahren mit Paritätsbits, aber durch Verwendung eines geeigneten
+ Generatorpolynoms können mehr Fehler erkannt werden!
+\end_layout
+
+\begin_layout Standard
+Das Prinzip ist jetzt folgendes: Alle Wörter, die sich nicht ohne Rest durch
+ das Generatorpolynom teilen lassen werden als Fehlerwörter betrachtet.
+ Der Algorithmus funktioniert folgendermaßen:
+\end_layout
+
+\begin_layout Enumerate
+Multipliziere Nachricht p mit 
+\begin_inset Formula $x^{k}$
+\end_inset
+
+.
+ D.h.
+ es werden k Nullbits am rechten Ende der Nachricht angehängt.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Sei p = 10001001 und als Generatorpolynom wählen wir CRC-4, d.h.
+ 
+\begin_inset Formula $x^{4}\oplus x\oplus1$
+\end_inset
+
+.
+ Die Nachricht lässt sich demzufolge als Polynom folgendermaßen aufschreiben:
+ 
+\begin_inset Formula $x^{7}\oplus x^{3}\oplus1$
+\end_inset
+
+.
+ Dieses Polynom wird jetzt mit 
+\begin_inset Formula $x^{k}$
+\end_inset
+
+ also in diesem Fall 
+\begin_inset Formula $x^{4}$
+\end_inset
+
+ multipliziert: 
+\begin_inset Formula $(x^{7}\oplus x^{3}\oplus1)\odot x^{4}=x^{11}\oplus x^{7}\oplus x^{4}$
+\end_inset
+
+.
+ D.h.
+ als Bitmuster angeschrieben ergibt sich: 100010010000! 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Teile das erhaltene Ergebnis mittels der Modulo-2 Arithmetik durch das Generator
+polynom und bilde das Restpolynom.
+ Dieses muss einen Grad haben, der kleiner als der Grad des Generatorpolynoms
+ ist!
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+100010010000
+\end_layout
+
+\begin_layout LyX-Code
+
+\bar under
+10011
+\end_layout
+
+\begin_layout LyX-Code
+00010001
+\end_layout
+
+\begin_layout LyX-Code
+   
+\bar under
+10011
+\end_layout
+
+\begin_layout LyX-Code
+   00010000
+\end_layout
+
+\begin_layout LyX-Code
+      
+\bar under
+10011
+\end_layout
+
+\begin_layout LyX-Code
+      000110
+\end_layout
+
+\begin_layout Standard
+Die Division wird durch sukzessives Abziehen des Generatorpolynoms gebildet.
+ Als Differenzoperator wird 
+\begin_inset Formula $\ominus$
+\end_inset
+
+ herangezogen, die leicht durch eine XOR Operation gebildet werden kann.
+ D.h.
+ der Rest ist in diesem Beispiel 110.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Addiere das Restpolynom zum Ergebnis von Punkt 1 hinzu.
+ Da das Restpolynom einen kleineren Grad als das Generatorpolynom aufweist,
+ werden lediglich die Stellen verändert, die durch das Hinzfügen der Nullbits
+ entstanden sind!
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+D.h., dass das entstandene Codewort durch das Generatorpolynom teilbar ist
+ und -- im Gegensatz zum vorhergehenden Beispiel -- die ursprüngliche Nachricht
+ durch Entfernen der k letzten Bits erhalten werden kann.
+\end_layout
+
+\begin_layout Standard
+In unserem Beispiel: 
+\begin_inset Formula $(x^{11}\oplus x^{7}\oplus x^{4})\oplus(x^{2}\oplus x)$
+\end_inset
+
+.
+ D.h.
+ es ergibt sich der Bitstring 100010010110.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Dann wird diese gesamte Nachricht übertragen.
+\end_layout
+
+\begin_layout Enumerate
+Der Empfänger dividiert das empfangene Nachrichtenpolynom durch das Generatorpol
+ynom.
+ Ergibt sich bei dieser Division ein Rest, dann ist ein Fehler aufgetreten!
+\end_layout
+
+\begin_layout Standard
+Was sind die Vorteile des CRC?
+\end_layout
+
+\begin_layout Itemize
+Er kann leicht in Hardware realisiert werden (in Form von Schieberegistern
+ und XOR-Gattern)!
+\end_layout
+
+\begin_layout Itemize
+Ist der Term 
+\begin_inset Formula $x+1$
+\end_inset
+
+ im Generatorpolynom enthalten, dann wird jede ungerade Anzahl an Fehlern
+ erkannt!
+\end_layout
+
+\begin_layout Itemize
+Es wird jedes Fehlerbündel bis zu einer Länge k erkannt.
+\end_layout
+
+\begin_layout Subsection
+Zuverlässige Übertragung
+\end_layout
+
+\begin_layout Standard
+Hinausgehend über eine einfache Fehlererkennung (unter Umständen mit Fehlerbeheb
+ung in einzelnen Nachrichten) ist es notwendig, eine zuverlässige Übertragung
+ sicherzustellen.
+ Die wichtigsten Aufgaben, die im Zuge der zuverlässigen Übertragung von
+ Nachrichten anfallen sind:
+\end_layout
+
+\begin_layout Itemize
+Zuverlässige Zustellung von Nachrichten.
+ Dafür gibt es zwei grundlegende Mechanismen: Bestätigungen (engl.
+ acknowledgements) und Zeitablauf (engl.
+ timeout).
+ Eine Bestätigung oder kurz ACK ist eine kurze Nachricht vom Empfänger an
+ den Sender, die die ursprüngliche Nachricht bestätigt.
+ Ein ACK kann außerdem auch im Huckepackverfahren (engl.
+ piggyback) an eine normale Nachricht, die der Empfänger an den Sender senden
+ will, angeschlossen werden.
+ Dadurch wird das Senden einer Nachricht eingespart.
+ Durch den Empfang eines ACK weiß der Sender, dass der Empfänger die Nachricht
+ erhalten hat.
+ Erhält der Sender kein ACK innerhalb einer bestimmten Zeitspanne -- eben
+ dem timeout --, dann sendet der Sender die Nachricht noch einmal an den
+ Empfänger.
+\end_layout
+
+\begin_layout Itemize
+Einhaltung der Reihenfolge von Nachrichten.
+ Die Reihenfolge der Nachrichten wird durch Sequenznummern realisiert.
+\end_layout
+
+\begin_layout Itemize
+Flusskontrolle.
+ Darunter versteht man einen Mechanismus mit dem der Empfänger den Sender
+ drosseln kann, sodass der Sender Nachrichten nicht schneller sendet als
+ der Empfänger diese verarbeiten kann.
+ Im Prinzip funktioniert das so, dass der Sender nur senden darf, wenn nicht
+ mehr als eine bestimmte Anzahl von ACKs ausständig sind (siehe Abschnitt
+ 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:stop-and-go"
+
+\end_inset
+
+ und Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:sliding-window"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+In diesem Abschnitt werden die beiden wichtigsten Verfahren beschrieben,
+ die jedoch auch in anderen Abschnitten erwähnt werden.
+\end_layout
+
+\begin_layout Subsubsection
+Stop-And-Go Algorithmus
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:stop-and-go"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Der Stop-And-Go Algorithmus basiert darauf, dass der Sender auf das ACK
+ wartet bevor der Sender die nächste Nachricht absendet.
+ Falls das ACK nicht innerhalb einer bestimmten Zeit (timeout) eintrifft,
+ wird die ursprüngliche Nachricht noch einmal abgesendet.
+\end_layout
+
+\begin_layout Standard
+Dadurch ergeben sich genau 4 Fälle:
+\end_layout
+
+\begin_layout Enumerate
+Das ACK kommt innerhalb der timeout Zeitspanne an.
+\end_layout
+
+\begin_layout Enumerate
+Die ursprüngliche Nachricht geht am Weg zum Empfänger verloren und der Sender
+ sendet nach Ablauf der Zeitspanne die Nachricht erneut.
+\end_layout
+
+\begin_layout Enumerate
+Das ACK geht am Weg vom Empfänger zum Sender verloren und der Sender sendet
+ nach Ablauf der Zeitspanne die Nachricht erneut.
+\end_layout
+
+\begin_layout Enumerate
+Das ACK trifft nach Ablauf der Zeitspanne ein und der Sender hat die ursprünglic
+he Nachricht noch einmal gesendet.
+\end_layout
+
+\begin_layout Standard
+Die Fälle 3 und 4 sind insoferne interessant als das der Empfänger die Nachricht
+ zwei Mal bekommt! Da der Empfänger nicht wissen kann, dass es sich beim
+ zweiten Mal um eine Kopie der ersten Nachricht bekommt, muss es einen Mechanism
+us geben, der es ihm ermöglicht dies zu erkennen.
+ Die Lösung sieht so aus, dass jede Nachricht noch einen Header aufweist,
+ die eine 1 Bit lange Sequenznummer bekommt.
+ Erhält der Empfänger mehrmals hintereinander die gleiche Sequenznummer
+ weiß dieser, dass es sich um die gleiche Nachricht handelt.
+\end_layout
+
+\begin_layout Standard
+Der Nachteil dieses Verfahrens ist, dass der Übertragungskanal nicht ausgelastet
+ wird.
+\end_layout
+
+\begin_layout Subsubsection
+Sliding-Window Algorithmus
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:sliding-window"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Bei dem Sliding-Window Algorithmus handelt es sich um eine Erweiterung des
+ Stop-And-Go Algorithmus.
+\end_layout
+
+\begin_layout Minisec
+Sender
+\end_layout
+
+\begin_layout Standard
+Der Sender weist jeder Nachricht eine Sequenznummer (engl.
+ sequence number, abgekürzt mit SEQ) zu und verwaltet zwei Variablen:
+\end_layout
+
+\begin_layout Itemize
+Die maximale Anzahl der noch nicht bestätigten Nachrichten, die der Sender
+ senden kann, wird als Größe des Sendefensters (engl.
+ send window size, SWS) bezeichnet.
+\end_layout
+
+\begin_layout Itemize
+Die Sequenznummer des zuletzt empfangenen ACK (engl.
+ last ack received, LAR).
+\end_layout
+
+\begin_layout Standard
+Die Abbildung 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:sliding_window_sender"
+
+\end_inset
+
+ zeigt das.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename sliding_window_sender.pdf
+	BoundingBox 0bp 0bp 95mm 23mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:sliding_window_sender"
+
+\end_inset
+
+Sliding-Window des Senders
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Minisec
+Empfänger
+\end_layout
+
+\begin_layout Standard
+Der Empfänger verwaltet drei Variablen:
+\end_layout
+
+\begin_layout Itemize
+Die maximale Anzahl der Nachrichten, die der Empfänger annimmt ohne eine
+ Bestätigung für diese gesendet zu haben, wird als Größe des Empfangsfensters
+ (engl.
+ receive window size, RWS) bezeichnet.
+\end_layout
+
+\begin_layout Itemize
+Die Sequenznummer der zuletzt akzeptierten Nachricht (engl.
+ last ack sent, LAS).
+ D.h.
+ das ist die größte Sequenznummer, für die eine Bestätigung geschickt wurde.
+\end_layout
+
+\begin_layout Itemize
+Die kleinste Sequenznummer, die empfangen wurde und für die noch keine Bestätigu
+ng gesendet wurde (engl.
+ first message not acknowledged, FMN).
+\end_layout
+
+\begin_layout Standard
+Die Abbildung 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:sliding_window_receiver"
+
+\end_inset
+
+ illustriert dies:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename sliding_window_receiver.pdf
+	BoundingBox 0bp 0bp 93mm 27mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:sliding_window_receiver"
+
+\end_inset
+
+Sliding-Window des Empfängers
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Minisec
+Algorithmus
+\end_layout
+
+\begin_layout Standard
+Der Sender schickt eine Nachricht mit der Sequenznummer SEQ ab, wenn die
+ Bedingung SEQ 
+\begin_inset Formula $\leq$
+\end_inset
+
+ LAR + SWS eingehalten ist.
+ Das sagt aus, dass der Sender nicht mehr Nachrichten im voraus absendet
+ als er Bestätigungen erhalten hat.
+ Der Sender verhält sich folgendermaßen:
+\end_layout
+
+\begin_layout Enumerate
+Für jede Nachricht, die der Sender abschickt startet er einen Timer und
+ legt diese Nachricht in einem Zwischenspeicher ab.
+ Wird für diese Nachricht eine Bestätigung empfangen, dann wird der Timer
+ gestoppt.
+ Kommt es zu einem Zeitablauf, dann wird die Nachricht, die zu diesem Timer
+ gehört nochmals abgesendet.
+\end_layout
+
+\begin_layout Enumerate
+Erhält der Sender eine Bestätigungsnachricht für die Sequenznummer SEQ,
+ dann setzt der Sender LAR auf SEQ (wenn SEQ größer als LAR).
+\end_layout
+
+\begin_layout Standard
+Der Empfänger verhält sich folgendermaßen:
+\end_layout
+
+\begin_layout Enumerate
+Erhält der Empfänger eine Nachricht mit der Sequenznummer SEQ und befindet
+ sich diese innerhalb des Empfangsfensters, d.h.
+ LAS 
+\begin_inset Formula $<$
+\end_inset
+
+ SEQ 
+\begin_inset Formula $\leq$
+\end_inset
+
+ LAS 
+\begin_inset Formula $+$
+\end_inset
+
+ RWS, dann wird diese Nachricht akzeptiert und zwischengespeichert, wenn
+ eine Nachricht mit dieser SEQ noch nicht empfangen wurde.
+ Anderenfalls wird diese Nachricht verworfen.
+\end_layout
+
+\begin_layout Enumerate
+Ist die Sequenznummer der gerade zwischengespeicherten Nachricht kleiner
+ als FMN, dann wird FMN zu SEQ gesetzt.
+\end_layout
+
+\begin_layout Enumerate
+Ist die Bedingung FMN = LAS + 1 erfüllt, dann wird die größte Sequenznummer
+ NMA (next message to acknowledge) der empfangenen Nachrichten innerhalb
+ des Sliding-Window gesucht, sodass sich keine nicht empfangenen Nachrichten
+ zwischen NMA und FMN befinden.
+ Es wird LAS auf NMA gesetzt und es wird eine Bestätigungsnachricht mit
+ NMA an den Sender gesendet.
+ Damit bestätigt der Empfänger alle Nachrichten inkl.
+ derjenigen mit der Sequenznummer NMA.
+ Danach wird noch FMN neu gesetzt.
+\end_layout
+
+\begin_layout Minisec
+Varianten
+\end_layout
+
+\begin_layout Standard
+Es gibt Varianten zu dem gerade beschriebenen Algorithmus:
+\end_layout
+
+\begin_layout Itemize
+Es besteht die Möglichkeit jede empfangene Nachricht, die sich innerhalb
+ des Empfangsfensters befindet sofort zu bestätigen.
+ Diese Möglichkeit nennt man 
+\emph on
+selektives
+\emph default
+ Bestätigen im Gegensatz zur gerade beschriebenen Methode der 
+\emph on
+kumulativen
+\emph default
+ Bestätigung.
+ 
+\end_layout
+
+\begin_layout Itemize
+Im Gegensatz zu den positiven Bestätigungen kann der Empfänger auch negative
+ Bestätigungen (engl.
+ negative acknowledgments, NAK) senden, die anzeigen, dass eine Nachricht
+ nicht erhalten wurde.
+\end_layout
+
+\begin_layout Standard
+Beiden Varianten ist gemein, dass sie die Komplexität der Software vergrößern
+ und in gewissen Maße auch zu einem erhöhten Nachrichtenverkehr führen.
+ Allerdings kann der Sender schneller auf Fehler reagieren und unter Umständen
+ den verfügbaren Übertragungskanal besser ausnutzen.
+\end_layout
+
+\begin_layout Minisec
+Endliche Sequenznummern
+\end_layout
+
+\begin_layout Standard
+Nicht betrachtet wurde bei dem beschriebenen Algorithmus allerdings, dass
+ die Sequenznummern eine maximale Größe haben, die durch die Implementierung
+ festgelegt ist.
+ D.h.
+ die Sequenznummern können nicht unendlich wachsen: sie sind endlich.
+\end_layout
+
+\begin_layout Standard
+Betrachten wir zuerst den Stop-And-Go-Algorithmus mit einer 1 Bit langen
+ Sequenznummer.
+ Damit gibt es 2 verschiedene Sequenznummern, aber nur eine Nachricht darf
+ ausständig sein.
+\end_layout
+
+\begin_layout Standard
+Vergrößert man den Speicherplatz für die Sequenznummern auf 3 Bit, ergibt
+ sich ein Bereich für die Sequenznummern von 0 bis 7 (= SEQ
+\begin_inset Formula $_{\text{max}}$
+\end_inset
+
+).
+ Nehmen wir an, dass SWS = RWS = 7 ist und der Sender Nachrichten mit den
+ Sequenznummern 0 bis 6 sendet.
+ Der Empfänger empfängt diese und sendet ACKs, die jedoch verloren gehen.
+ D.h.
+ aus der Sicht des Empfängers sieht es so aus, dass als nächstes die Nachricht
+ mit der Sequenznummer 7 kommen muss und danach wieder Sequenznummern mit
+ 0 beginnend.
+ Beim Sender laufen jedoch die Timer ab, sodass dieser die alten Nachrichten
+ mit den Sequenznummern 0 bis 6 nochmals sendet, die vom Empfänger jedoch
+ als neue Nachrichten interpretiert werden würden.
+\end_layout
+
+\begin_layout Standard
+Die Anzahl der möglichen Sequenznummern muss größer sein als die der maximalen
+ Anzahl der ausstehenden Frames.
+ Es muss gelten, dass: SWS 
+\begin_inset Formula $+$
+\end_inset
+
+ RWS 
+\begin_inset Formula $<$
+\end_inset
+
+ SEQ
+\begin_inset Formula $_{\text{max}}$
+\end_inset
+
+ 
+\begin_inset Formula $+$
+\end_inset
+
+ 1.
+ Bei SWS = RWS folgt damit, dass SWS 
+\begin_inset Formula $<$
+\end_inset
+
+ (SEQ
+\begin_inset Formula $_{\text{max}}$
+\end_inset
+
+ 
+\begin_inset Formula $+$
+\end_inset
+
+ 1) / 2 sein muss.
+ D.h.
+ analog zum Stop-And-Go Algorithmus, der jeweils zwischen den Sequenznummern
+ 0 und 1 wechselt, wird hier -- allerdings kontinuierlich -- zwischen den
+ beiden Hälften der Sequenznummern hin- und herbewegt.
+\end_layout
+
+\end_body
+\end_document

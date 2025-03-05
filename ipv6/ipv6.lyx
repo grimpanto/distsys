@@ -1,0 +1,256 @@
+#LyX 1.6.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass scrbook
+\use_default_options false
+\language ngerman
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+IPv6
+\end_layout
+
+\begin_layout Standard
+Es existieren im wesentlichen drei Hauptprobleme mit IPv4:
+\end_layout
+
+\begin_layout Itemize
+Knappheit der Adressen.
+\end_layout
+
+\begin_layout Itemize
+Fragmentierung der Adressbereiche sodass Weiterleitungstabellen (trotz CIDR)
+ lang werden.
+\end_layout
+
+\begin_layout Itemize
+Performanceprobleme bei Routern, da diese korrekterweise auch den IP Header
+ jedes Paketes verändern müssten (TTL, Checksum).
+\end_layout
+
+\begin_layout Standard
+Die wesentlichen funktionellen Unterschiede zu IPv4 sind:
+\end_layout
+
+\begin_layout Itemize
+Adressraum: Einer der Beweggründe IPv6 zu entwickeln, war die geringe Anzahl
+ an freien Adressbereichen.
+ IPv6 hat 128 Bit lange Adressen und damit stehen um den Faktor 
+\begin_inset Formula $2^{96}$
+\end_inset
+
+ mehr Adresen zur Verfügung.
+ D.h.
+ es gibt ca.
+ 
+\begin_inset Formula $3.4\cdot10^{38}$
+\end_inset
+
+ mögliche Adressen.
+\end_layout
+
+\begin_layout Itemize
+Durch die hohe Anzahl an verschiedenen Adressen besteht die Möglichkeit
+ diese geographisch-hierarchisch zu vergeben.
+ Dadurch können die Anzahl der Routereinträge weiter gesendet werden.
+\end_layout
+
+\begin_layout Itemize
+Es wurde eine lokale Adressvergabe eingeführt, sodass Adressen automatisch
+ vergeben werden.
+ Dazu kann sich ein Host eine IPv6 Adresse direkt aus einer MAC Adresse
+ geben und mit angrenzenden Hosts und Routern diesbezüglich abstimmen.
+\end_layout
+
+\begin_layout Itemize
+Es gibt im IP Header keine Checksumme mehr.
+ D.h.
+ alle Überprüfungen müssen durch höhere Protokolle erledigt werden.
+ Das liegt daran, dass viele Router die Checksum überhaupt nicht überprüft
+ haben, sondern einfach um eins erhöht (wg.
+ dem Header TTL) haben.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Der Basisheader wurde generell kürzer gestaltet.
+ Er enthält nur mehr 7 anstatt 13 Felder.
+ Es kann allerdings auch mehrere Header geben.
+ Diese Änderungen ermöglichen Routern Pakete schneller zu verarbeiten.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Sicherheitsfunktionen wurden direkt eingebaut und basieren auf IPSec.
+ IPSec kann zwar auch mit IPv4 verwendet werden, ist aber in IPv6 direkt
+ integriert.
+\end_layout
+
+\begin_layout Itemize
+Die Fragmentierung der Datenpakete in 
+\emph on
+Routern
+\emph default
+ wurde entfernt.
+ Müsste ein Paket fragmentiert werden, dann wird eine Fehlermeldung an den
+ Sender zurückgeschickt, der daraufhin die MSS anpassen muss und erneut
+ sendet.
+ Die Information über diese Art der Fragmentierung wird in einen Erweiterungshea
+der gepackt.
+ Das hat auch den Vorteil, dass der normale Header schlanker ist.
+\end_layout
+
+\begin_layout Itemize
+QoS wurde ebenfalls integriert.
+ Ziel ist die verbesserte Übertragung von Audio und Videodaten sowie die
+ Übertragung von Daten in Echtzeit.
+\end_layout
+
+\begin_layout Itemize
+Weiters gibt es auch Anycast-Adressen sowie eigene Multicast-Adressen.
+\end_layout
+
+\begin_layout Section
+Adressierung
+\end_layout
+
+\begin_layout Standard
+Die Notation wird nicht mehr byteweise in Dezimalschreibweise durch Punkte
+ getrennt, sondern wortweise (16 Bit) in Hexadezimalschreibweise durch Doppelpun
+kte getrennt angegeben.
+ Z.B.: 2002:89d0:e02e::89d0:e02e (leere Inhalte zwischen Doppelpunkte: Nullen,
+ nur ein Mal!).
+\begin_inset Newline newline
+\end_inset
+
+Warum gerade 128 Bit? Vgl.
+ Länge des Headers vs.
+ Anzahl der möglichen Adressen!
+\begin_inset Newline newline
+\end_inset
+
+In URLs: 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://[2002:89d0:e02e::89d0:e02e]:8080/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+IPv6 hat drei Typen von Adressen:
+\end_layout
+
+\begin_layout Description
+Unicast Jede Unicast-Adresse hat einen von 3 scopes: link-local, site-local,
+ global.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+link-local Die Adressen fe80::/10 (also fe80...
+ bis febf...) als link-local bezeichnet.
+ Solche Adressen werden von den Routern nicht weitergeleitet und sind daher
+ im entsprechenden Teilnetz eindeutig.
+ Bei der Kommunikation muss daher immer das Interface mitgegeben werden,
+ da ein Host mit mehreren Interfaces in mehreren Teilnetzen hängen kann.
+ Solche link-local Adressen entsprechen hiermit den privaten Adressbereichen
+ von IPv4.
+ Diese Adressen werden im Zuge der Autokonfiguration verwendet.
+\end_layout
+
+\begin_layout Description
+site-local Adressen fec0::/10 waren als standortspezifische Adressen gedacht.
+ D.h.
+ diese sollten nur innerhalb einer Organisation weitergeleitet werden.
+ Hiermit waren sie als direkter Nachfolger der privaten Adressen gedacht.
+ Allerdings gelten diese mittlerweile als 
+\emph on
+deprecated
+\emph default
+.
+ Damit werden diese Adressen mittlerweile abgelehnt und werden aus dem zukünftig
+en Versionen aus IPv6 verschwinden.
+\end_layout
+
+\begin_layout Description
+global Alle anderen Adressen werden prinzipiell als global betrachtet, soferne
+ diese nicht als Multicast Adressen gelten.
+\end_layout
+
+\begin_layout Standard
+Es gibt zwei spezielle Unicast-Adressen
+\end_layout
+
+\begin_layout Itemize
+Unspezifizierte Adresse: ::/128 (wie 0.0.0.0 in IPv4)
+\end_layout
+
+\begin_layout Itemize
+Loopback-Adresse: ::1/128 (wie 127.0.0.1 in IPv4)
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Multicast Jede Multicast-Adresse hat einen der 4 scopes: node-local, link-local,
+ site-local, organization-local.
+ Jede Multicast-Adresse hat den Präfix ff::/8.
+\end_layout
+
+\begin_layout Description
+Anycast Eine Anycast-Adresse kann von einer Unicast-Adresse nicht unterschieden
+ werden.
+ Eine Unicast-Adresse wird zu einer Anycast-Adresse, wenn mehr als ein Interface
+ mit der selben Unicast-Adresse konfiguriert wird.
+\end_layout
+
+\begin_layout Standard
+Es gibt in IPv6 keine Broadcast-Adressen mehr.
+ Diese Funktionalität wird von den Multicast-Adressen erbracht.
+\end_layout
+
+\end_body
+\end_document

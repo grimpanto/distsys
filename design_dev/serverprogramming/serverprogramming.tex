@@ -1,0 +1,377 @@
+
+\chapter{Serverseitiges Programmieren}
+
+Nachdem wir jetzt die Grundlagen der Prozessbehandlung, der Synchronisation
+und der Kommunikation kennengelernt haben, können wir uns die Techniken
+der serverseitigen Programmierung genauer ansehen.
+
+Darunter versteht man alle Mechanismen und Methoden, die notwendig
+sind, um robuste, performante und skalierbare Server zu \emph{programmieren}.
+
+Es ist extrem schwierig diese Ziele im Kontext von großen verteilten
+Anwendungen zu erreichen!
+
+Wie können robuste Server entwickelt werden? 
+\begin{itemize}
+\item Auswahl einer entsprechenden Technologie 
+
+\begin{itemize}
+\item Betriebssystem, z.B. WinXP Server vs. Win98 
+\item Middlewaretechnologie 
+\item Programmiersprache, z.B.: Java vs. C 
+\item Entwurfswerkzeug 
+\end{itemize}
+\item Entwicklungsprozess (Qualitätssicherung, Peer reviews, Codegenerierung,...) 
+\item Entwurf und Programmierstil 
+
+\begin{itemize}
+\item Programmierstil: Verwendung von Exceptions, Fehlerüberprüfungen und
+Fehlerbehandlung, Dokumentation, Verwendung von Invarianten,... 
+\item Verwendung von funktionierenden Lösungsansätzen (u.a. Design patterns,
+Idioms,...) 
+\item Programmiermodell 
+
+\begin{itemize}
+\item Wie wird der Server strukturiert? 
+\item Wie werden Ressourcen verwaltet? 
+\item Werden Threads eingesetzt oder Prozesse? 
+\item Oder gibt es event-gesteuerte, kooperative Tasks? 
+\item Wird Protokollierung (audit trail) eingesetzt? 
+\end{itemize}
+\end{itemize}
+\end{itemize}
+Beispiele von Fragestellungen bzgl. der Performanz und der Skalierbarkeit: 
+\begin{itemize}
+\item Skaliert die Technologie mit (triviales Beispiel: Benutzerdaten in
+Datei vs. in Datenbank)?
+\item Werden die Synchronisationsmaßnahmen zu einem großen Overhead? 
+\item Können die Threads auf andere Prozesse oder gar auf verschiedene Computer
+verschoben werden? 
+\item Wird ein Connection-Pooling zu einer Datenbank eingesetzt? 
+\end{itemize}
+
+\section{Allgemeine Serveraspekte}
+
+
+\subsection{Iterative vs. Nebenläufige Server}
+
+Es kann zwischen zwei Arten von Servern unterschieden werden: 
+\begin{itemize}
+\item \emph{iterativer oder sequentieller Server}: Das Kennzeichen ist,
+dass der Server die Anfragen selbst verarbeitet und ggf.~die Antwort
+an den Client sendet.
+
+
+Es ist verständlich, dass solch ein Server nicht lange für die Behandlung
+einer einzelnen Nachricht benötigen darf, da sonst das Antwortzeitverhalten
+für weitere Anforderungen nicht befriedigend sein wird.
+
+Ein iterativer Server tritt in der Regel entweder auf als: 
+\begin{itemize}
+\item \emph{blocking Server}: Es werden blockierende Funktionsaufrufe verwendet
+(z.B. für accept, read, write). In diesem Fall kann er nicht mehr
+als eine Verbindung zu einem Client betreiben. 
+\item \emph{nonblocking Server}: Es werden keine blockierenden Funktionsaufrufe
+verwendet. Dazu gibt es zwei Möglichkeiten: 
+
+\begin{itemize}
+\item Es wird polling betrieben. Z.B. wird in Java mittels der \texttt{available()}
+Methode der Klasse InputStream in einer Schleife abgefragt, ob Daten
+vorhanden sind.
+
+
+Dies ist natürlich keine performante Variante, da aktiv Prozessorzeit
+vernichtet wird.
+
+Eine leicht verbesserte Version könnte Wartezeiten einfügen (z.B.
+mittes \texttt{Thread.sleep} oder mittels \texttt{setSoTimeout} der
+Klasse \texttt{Socket} und Verwendung der blocking \texttt{read} Methode
+von Socket).
+
+In Java waren dies bis zur Version 1.4 des JDK die einzigen Möglichkeiten
+einen iterativen Server als nonblocking Server zu implementieren. 
+
+\item Die bessere Variante liegt in der Verwendung des select API, das ursprünglich
+im BSD Unix definiert wurde. Das Prinzip ist, dass eine Menge von
+Ereignissen registriert werden kann und ein einzelner blockierende
+Aufruf (nämlich select) durchgeführt wird, der solange blockiert bis
+eines dieses Ereignisse eingetreten ist.
+
+
+Ein Beispiel ist im Abschnitt \vref{sec:select-based-server} zu finden. 
+
+\end{itemize}
+\end{itemize}
+\item \emph{nebenläufigen Server} (concurrent): Dieser verarbeitet die Anforderungen
+nicht selbst, sondern gibt sie an einen separaten Prozess oder Thread
+weiter und wartet auf die nächste Anforderung.
+
+
+Ein Beispiel ist im Abschnitt \vref{sec:multi-threaded-server} zu
+finden. 
+
+\end{itemize}
+
+\subsection{Daemon-Server vs. Super-Server}
+
+Ein weiterer Aspekt ist, wie Clients einen Server kontaktieren. Clients
+senden Anforderungen an einen Endpunkt (Port) und jeder Server lauscht
+an einem Port. Wie erfahren die Clients mit welchen Port sie sich
+verbinden sollen, um einen bestimmten Dienst in Anspruch nehmen zu
+können?
+
+Es gibt einerseits die Möglichkeit, dass einem Dienst ein Port zugewiesen
+ist, andererseits ist es für viele Dienste nicht notwendig, dass sie
+dauerhaft einen zugewiesenen Endpunkt haben. Es ist durchaus möglich,
+dass sie dynamisch einen Port zugewiesen bekommen. Es stellt sich
+allerdings dann die Frage, wie der Client wissen kann welcher Port
+kontaktiert werden soll. Weiters ist es nicht immer notwendig, dass
+ein Server permanent läuft. Oft ist es ausreichend, wenn dieser bei
+Bedarf gestartet wird:
+\begin{itemize}
+\item \emph{Daemon Struktur}: Ein Server wird gestartet und registriert
+sich bei einem (schon laufenden) Daemon (engl. disk and execution
+monitor, oft auch im Deutschen Dämon genannt). Bei dieser Registrierung
+weist ihm der Daemon einen freien Port zu, unter dem der Server seine
+Dienste anbieten kann. D.h.~dieser Daemon verwaltet eine Liste alle
+gestarteten Server samt den besetzten Ports. Zusätzlich muss dieser
+Dämon an einem bekannten Port lauschen und auf diesem bei Anfragen
+bzgl. eines Dienstes dem Client die entsprechende Portnummer mitteilen.
+Damit kann der Client danach direkt mit dem Server kommunizieren.
+
+
+Der Vorteil dieser Methode liegt darin, dass ein Client nicht den
+speziellen Port kennen muss, unter dem er einen Server erreicht.
+
+Ein Beispiel für eine derartige Struktur ist der portmapper Mechanismus. 
+
+\item \emph{Super-Server Struktur}: Es läuft wiederum permanent ein Server,
+der als Super-Server bezeichnet wird. Dieser Super-Server lauscht
+an allen Ports, die den angebotenen Dienste zugeordnet sind und startet
+bei Bedarf (d.h.~wenn ein Client sich mit dem Port verbinden will)
+den entsprechenden Server. Dananch kann der Client seine Kommunikation
+direkt mit dem gestarteten Server fortsetzen.
+
+
+Der Vorteil dieser Methode liegt darin, dass nicht permanent Prozesse
+laufen, die vielleicht nur selten benötigt werden.
+
+Ein Beispiel für eine derartige Struktur liegt im inetd Modell von
+Unix. 
+
+\end{itemize}
+
+\subsection{Statusloser vs. statusbehafteter Server}
+
+Eine weitere Unterscheidung: 
+\begin{itemize}
+\item \emph{statusloser Server}: Dieser speichert keine Informationen über
+den Status seiner Clients und kann seinen eigenen Status ändern ohne
+seine Clients informieren zu müssen. Ein Webserver ist ein typischer
+statusloser Server. Nach Bearbeitung der Anforderung vergisst der
+Server den Client vollständig. Eng damit verbunden ist, dass http
+ein zustandsloses Protokoll ist.
+
+
+Der Vorteil eines statuslosen Servers liegt darin, dass dieser sehr
+robust gegenüber Abstürzen ist.
+
+Als Nachteil ist zu nennen, das Statusinformationen soferne sie benötigt
+werden, der Client jedes Mal mitschicken muss. 
+
+\item statusbehafteter Server: Es werden Informationen über die Clients
+verwaltet.
+
+
+Der Vorteil ist, das komplexere Operationen möglich sind.
+
+Das Recovery nach einem Absturz kann sehr problematisch sein, da bereits
+neu eintreffende Nachrichten von schon gesendeten Nachrichten abhängen
+können. Allerdings können auch schon gesendete Nachrichten nicht einfach
+vom Client nochmals gesendet werden (,,überweise 100 Euro'')! 
+
+\end{itemize}
+
+\subsection{Objektserver}
+
+Ein \emph{Objektserver} ist ein Server, der auf die Unterstützung
+verteilter Objekte zugeschnitten ist. Der wichtigste Unterschied zwischen
+einem allgemeinen Objektserver und anderen Servern ist, dass ein Objektserver
+als solcher keinen speziellen Dienst zur Verfügung stellt. Im Wesentlichen
+stellt er nur die Mittel bereit, lokale Objekte abhängig von Anforderungen
+durch entfernte Objekte aufzurufen. Ein Beispiel dazu ist RMI von
+Java.
+
+Eigentlich ist ein Objektserver keine neue Art von Server, sondern
+lediglich ein Server wie vorhergehend besprochen, der auf die Bereitstellung
+von Objekten zugeschnitten ist.
+
+D.h.~im Sinne eines multi-threaded Servers (siehe Abschnitt \vref{sec:multi-threaded-server})
+gibt es die folgenden Möglichkeiten: 
+\begin{itemize}
+\item Thread-pro-Anforderung 
+\item Thread-pro-Verbindung 
+\item Thread-pro-Objekt 
+\end{itemize}
+Besonders bei Objektservern tritt die Problematik des Versionsmanagement
+auf, da die Klassen im Laufe der Zeit weiterentwickelt werden und
+neue Instanzen mit der neuen Version angelegt werden.
+
+
+\section{Multi-threaded Server\label{sec:multi-threaded-server}}
+
+Bei einem \emph{multi-threaded Server} (also nebenläufig) wird je
+Client ein (oder mehrere) Threads gestartet:
+\begin{itemize}
+\item Main-Thread wartet auf Verbindungen 
+\item Client-Threads warten meistens (geblockt) auf die Anfragen der Clients.
+Aus diesem Grund ist kein pollen notwendig und trotzdem ist der gesamte
+Server nicht blockierend. 
+\end{itemize}
+Es wird also das Warten auf Verbindungen und das Bearbeiten der Verbindungen
+getrennt. Der Vorteil, der sich aus diesem Ansatz ergibt ist:
+\begin{itemize}
+\item Auf einfache Art und Weise kann ein nebenläufiger Server entwickelt
+werden. 
+\end{itemize}
+An Nachteilen sind zu nennen: 
+\begin{itemize}
+\item Das Erzeugen und Löschen von Threads ist (noch immer) eine kostspiele
+Operation. Deshalb sollte dieser Ansatz in Kommbination mit einem
+Thread-Pool verwendet werden, wenn es die Performance notwendig macht. 
+\item Die Skalierbarkeit kann mit diesem Vorgehen leiden, wenn sehr viele
+Threads erzeugt werden müssen (unabhängig davon, ob Thread-pooling
+verwendet wird oder nicht). 
+\item Weiters kann der Overhead, der auf Grund der Synchronisationsmechanismen
+entsteht ein weiterer Grund für mangelnde Performance sein. 
+\item Die Wahrscheinlichkeit, dass Programmierfehler im Synchronistionscode
+sind wird größer, je komplexer die Abhängigkeiten zwischen den Threads
+sind. 
+\end{itemize}
+
+\minisec{Beispiel: EchoServerMT mit TCP}
+
+Das folgende Programm demonstriert die prinzipielle Struktur eines
+multithreaded Servers (wobei aber das Thema Thread-Pooling nicht betrachtet
+wird):
+
+
+\begin{lstlisting}
+import java.net.*;
+import java.io.*;
+
+// nicht blockender, multi-threaded EchoServer
+public class EchoServerMT extends Thread {
+  static int port = 9999;
+  Socket socket;
+
+  public EchoServerMT(Socket socket) {
+    this.socket = socket;
+  }
+
+  public static void main(String[] args) throws IOException {
+    ServerSocket server = new ServerSocket(port);
+    
+    while(true) {
+      Socket client = server.accept();
+      EchoServerMT s = new EchoServerMT(client);
+      s.start();
+    }
+  }
+
+  public void run() {
+    try {
+      InputStream in = socket.getInputStream();
+      OutputStream out = socket.getOutputStream();
+      byte[] buffer = new byte[1024];
+      int read;
+
+      while ((read = in.read(buffer)) >= 0) {
+        out.write(buffer, 0, read);
+      }
+    } catch (IOException e) {
+      e.printStackTrace(); // zu Testzwecken
+    } finally {
+      try {
+        socket.close();
+      } catch (IOException e) {}
+    }
+  }
+}
+\end{lstlisting}
+
+
+
+\section{select-basierte Server\label{sec:select-based-server}}
+
+Bei einem \emph{select-basierten Server} handelt es sich um einen
+iterativen, nonblocking Server. Diese werden für hoch performante
+Server verwendet (z.B. Videoserver).
+
+Gründe liegen darin, dass 
+\begin{itemize}
+\item z.B. es nicht sinnvoll ist darauf zu warten bis genügend Daten über
+das Netzwerk übertragen ist (blockierende Aufrufe), sondern die Daten
+zu verarbeiten, die schon vorhanden sind. 
+\item Eine hohe Anzahl von Threads ab einer gewissen Schranke immer zu Performanceproblemen
+führt. 
+\item Die Synchronisierungsmechanismen zu Performanceeinbußen führen. 
+\end{itemize}
+Aus diesen Gründen wurden ab JDK 1.4 in Java die java.nio.{*} (new
+input/output) Pakete eingeführt, die es ermöglichen, diese Performanceanforderungen
+prinzipiell zu erfüllen.
+
+Auf Grund der besseren Verständlichkeit folgt zuerst ein Beispiel
+mit dem Python select API und danach ein Beispiel mit dem nio Modell
+eines Echo-Clients und eines Echo-Servers.
+
+
+\minisec{Beispiel: TimeServerSB}
+
+Das folgende Python Programm demonstriert das select - API in einer
+übersichtlichen Form. Außerdem sieht die Python Implementierung ähnlich
+wie das originale C - API von select aus:
+
+
+\begin{lstlisting}[language=Python]
+import select, socket, struct, time
+PORT = 8037
+
+# Referenzzeit
+TIME1970 = 2208988800L # wie gehabt
+
+serversock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+serversock.bind(("", PORT))
+serversock.listen(1)
+
+print "lausche an Port", PORT
+
+isreadable = [serversock]
+iswriteable = []
+iserror = [serversock]
+
+while 1:
+    # es wird ein time-out von 1 Sekunde angegeben (wird nichts angegeben,
+    # dann wartet select bis eine IO Operation stattgefunden hat.
+    r,w,e = select.select(isreadable, iswriteable, iserror, 1)
+
+    if r:
+        client, info = serversock.accept()
+        print "Verbindung von", info
+        t = int(time.time()) + TIME1970
+        t = struct.pack("!I", t)
+
+        # 4 Bytes werden sicher nicht blocken!
+        client.send(t)
+        client.close()
+    else:
+        print "weiter warten!" 
+\end{lstlisting}
+
+
+Sollen größere Mengen von Daten gesendet werden (wo die potentielle
+Gefahr des Blockens nicht mehr ignoriert werden kann), dann ist 'is\_writeable'
+zu verwenden und der Socket mit setblocking() auf nicht blocken zu
+setzen!
+
+

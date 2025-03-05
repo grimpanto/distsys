@@ -1,0 +1,3740 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass scrbook
+\begin_preamble
+\usepackage{listings}
+
+\lstset{%
+  language=Java,
+  basicstyle=\small\sffamily,
+  lineskip=-1pt,
+  frame=single
+}
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language austrian
+\language_package default
+\inputencoding latin1
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 0
+\use_esint 0
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 0
+\index Stichwortverzeichnis
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Synchronisation
+\end_layout
+
+\begin_layout Section
+Problematik
+\end_layout
+
+\begin_layout Standard
+Die grundsätzliche Problematik ist folgende:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+boolean withdraw(int amount) {
+\end_layout
+
+\begin_layout Plain Layout
+
+    if (balance >= amount) {
+\end_layout
+
+\begin_layout Plain Layout
+
+        balance -= amount;
+\end_layout
+
+\begin_layout Plain Layout
+
+        return true;
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    else return false;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Mit dieser Funktion kann es dazu kommen, dass folgende Situation auftritt,
+ wenn zwei Threads diese Funktion 
+\begin_inset Quotes pld
+\end_inset
+
+gleichzeitig
+\begin_inset Quotes prd
+\end_inset
+
+ verwenden:
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Thread 1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Thread 2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+balance
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+15-10>=0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+15
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+15-6>=0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+15
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+balance-=10
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+balance-=6
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+-1
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Eine Java - Lösung sieht so aus, dass die Deklaration der Funktion folgendermaße
+n abgeändert wird:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+synchronized boolean withdraw(int amount)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Damit kann es nicht mehr zu diesem Effekt kommen.
+ Das Schlüsselwort 
+\family typewriter
+synchronized
+\family default
+ bewirkt, dass das Objekt, das zu der Methode gehört, ihren Lock an den
+ ersten Thread 
+\begin_inset Quotes pld
+\end_inset
+
+vergibt
+\begin_inset Quotes prd
+\end_inset
+
+, sodass der zweite Thread warten muss bis der erste Thread wieder die Methode
+ verlassen hat und damit den Lock wieder freigibt.
+\end_layout
+
+\begin_layout Standard
+Man unterscheidet folgende 
+\emph on
+Race Conditions
+\emph default
+ (Wettkampfbedingungen):
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Write/Write
+\emph default
+ Konflikte (wie im obigen Beispiel) 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Mindestens zwei Threads schreiben 
+\end_layout
+
+\begin_layout Itemize
+Ergebnis hängt davon ab, wer das Rennen (race) gewinnt 
+\end_layout
+
+\begin_layout Standard
+Beispiel:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+double x;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+void mehr() {
+\end_layout
+
+\begin_layout Plain Layout
+
+  x = x * 2;
+\end_layout
+
+\begin_layout Plain Layout
+
+  System.out.println(x);
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+void weniger() {
+\end_layout
+
+\begin_layout Plain Layout
+
+  x = x / 2; 
+\end_layout
+
+\begin_layout Plain Layout
+
+  System.out.println(x);
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\emph on
+Read/Write
+\emph default
+ Konflikte 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Ein Thread schreibt; mindestens ein Thread liest; 
+\end_layout
+
+\begin_layout Standard
+Weiteres Beispiel:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+double a,b; // von einem rechtwinkeligen Dreieck
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+// schreibt in die globalen Variablen
+\end_layout
+
+\begin_layout Plain Layout
+
+void berechneSeiten(double r, double phi) {
+\end_layout
+
+\begin_layout Plain Layout
+
+  a = r * Math.cos(phi); // hier könnte der Scheduler unterbrechen
+\end_layout
+
+\begin_layout Plain Layout
+
+  b = r * Math.sin(phi);
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+void berechneFlaeche() { // liest die globalen Variablen
+\end_layout
+
+\begin_layout Plain Layout
+
+  A = (a * b) / 2;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Die 
+\emph on
+kritischen Abschnitte (critical sections)
+\emph default
+ sind diejenige Bereiche von denen aus auf gemeinsam genutzte Daten (allgemein
+ Ressource, wie z.B.
+ auch periphere Geräte) zugegriffen wird.
+\end_layout
+
+\begin_layout Standard
+D.h.
+\begin_inset space ~
+\end_inset
+
+es wird ein gegenseitiger oder 
+\emph on
+wechselseitiger Ausschluss (mutual exclusion)
+\emph default
+ benötigt: Ein Verfahren, das anderen Prozesse (oder Threads) den Zutritt
+ in einen kritischen Abschnitt verwehrt, solange ein Prozess (oder Thread)
+ sich in solch einem befindet.
+ D.h., die beiden Prozesse müssen synchronisiert werden.
+ 
+\emph on
+Synchronisation
+\emph default
+ ist also ein Mittel zur Erreichung des wechselseitigen Ausschlusses.
+\end_layout
+
+\begin_layout Standard
+Weiters muss oft auch der Zugriff auf die gemeinsame Ressource in einem
+ weiterführenden Maße koordiniert werden.
+ Betrachten wir dazu eine typische Producer/Consumer Situation:
+\end_layout
+
+\begin_layout Standard
+Ein Boss befüllt eine Queue (Warteschlange) mit Arbeitspaketen.
+ Dazu gibt es eine Menge von Arbeitern, die die Arbeitspakete wieder aus
+ der Queue entnehmen und diese Arbeitsaufträge durchführen.
+ Natürlich muss sichergestellt werden, dass nur ein Akteur (entweder der
+ Boss oder max.
+\begin_inset space ~
+\end_inset
+
+ein Arbeiter) zur gleichen Zeit auf die Queue zugreifen kann.
+ Außerdem muss noch gesteuert werden, dass der Boss kein Arbeitspaket in
+ die Queue stellen kann, wenn diese voll ist (und daher warten muss, dass
+ diese wieder zumindest teilweise entleert wird) bzw.
+\begin_inset space ~
+\end_inset
+
+kein Arbeiter ein Paket aus der Queue entnehmen kann, wenn diese leer ist
+ (und deshalb ebenfalls warten muss).
+\end_layout
+
+\begin_layout Standard
+Entsprechende Mechanismen werden wir unter dem Begriff 
+\emph on
+Zustandsabhängige Steuerung
+\emph default
+ als spezielle Synchronisation auffassen.
+\end_layout
+
+\begin_layout Standard
+Nebenläufige Prozesse können daher entweder
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+disjunkt
+\emph default
+ (von einander unabhängig) 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+benutzen keine gemeinsamen Daten (Ressource) 
+\end_layout
+
+\begin_layout Itemize
+oder benutzen legiglich gemeinsame Daten, die sich nicht ändern 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+oder anderenfalls 
+\emph on
+überlappend
+\emph default
+ sein.
+ 
+\end_layout
+
+\begin_layout Section
+Synchronisation in nicht verteilten Systemen
+\end_layout
+
+\begin_layout Standard
+Zuerst werden wir den etwas einfacheren Fall der Synchronisation von Prozessen
+ oder Threads in nicht verteilten Systemen betrachten.
+ D.h.,
+\begin_inset space ~
+\end_inset
+
+dass wir einen Computer mit einem oder mehreren Prozessoren betrachten,
+ der von einem entsprechenden Betriebssystem betrieben wird, das Mechanismen
+ zur Synchronisation zur Verfügung stellt.
+\end_layout
+
+\begin_layout Standard
+Sind die Prozesse überlappend und es wird ein wechselseitiger Ausschluss
+ benötigt, dann kann dies mittels Synchronisation erreicht werden.
+ Dazu gibt es zumindest die folgenden Möglichkeiten:
+\end_layout
+
+\begin_layout Itemize
+Steuerungsvariablen (handgestrickt) 
+\end_layout
+
+\begin_layout Itemize
+Monitor (siehe das synchronized Keyword in Java) 
+\end_layout
+
+\begin_layout Itemize
+Mutex (mutual exclusion lock) 
+\end_layout
+
+\begin_layout Itemize
+Read-Write Locks 
+\end_layout
+
+\begin_layout Itemize
+Semaphor 
+\end_layout
+
+\begin_layout Standard
+Warten zwei (oder mehrere) Prozesse (oder Threads) wechselseitig auf die
+ Freigabe einer oder mehreren Ressourcen, dann kann die Applikation nicht
+ weiter fortgeführt werden und man spricht von einem 
+\emph on
+Deadlock
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+Um eine zustandsabhängige Steuerung zu implementieren, werden ebenfalls
+ die Mechanismen benötigt, die auch zur Implementierung der Synchronisation
+ Verwendung finden.
+\end_layout
+
+\begin_layout Subsection
+Steuerungsvariablen
+\end_layout
+
+\begin_layout Standard
+Eine einfache Lösung sieht folgendermaßen aus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+                       s = 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+void a() {                       void b() {
+\end_layout
+
+\begin_layout Plain Layout
+
+  while (true) {                   while (true) {
+\end_layout
+
+\begin_layout Plain Layout
+
+    while (s != 2) {                 while (s != 1) {
+\end_layout
+
+\begin_layout Plain Layout
+
+      // critical section              // critical section
+\end_layout
+
+\begin_layout Plain Layout
+
+      s = 2;                           s = 1; 
+\end_layout
+
+\begin_layout Plain Layout
+
+      // uncritical section            // uncritical section
+\end_layout
+
+\begin_layout Plain Layout
+
+    }                                }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }                                }
+\end_layout
+
+\begin_layout Plain Layout
+
+}                                }
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Nachteile dieser Lösung sind:
+\end_layout
+
+\begin_layout Itemize
+Reihenfolge immer a,b,a,b,...
+ 
+\end_layout
+
+\begin_layout Itemize
+Stoppen von a behindert b 
+\end_layout
+
+\begin_layout Standard
+Eine weitere Lösung ist:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+                  s1 = 1; s2 = 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+1  void a() {                    void b() {
+\end_layout
+
+\begin_layout Plain Layout
+
+2    while (true) {                while (true) {
+\end_layout
+
+\begin_layout Plain Layout
+
+3      s1 = 0;                       s2 = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+4      if (s2 != 0) {                if (s1 != 0) {
+\end_layout
+
+\begin_layout Plain Layout
+
+5        // critical section           // critical section
+\end_layout
+
+\begin_layout Plain Layout
+
+6        s1 = 1;                       s2 = 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+7        // uncritical section         // uncritical section
+\end_layout
+
+\begin_layout Plain Layout
+
+8      }                             }
+\end_layout
+
+\begin_layout Plain Layout
+
+9    }                             }
+\end_layout
+
+\begin_layout Plain Layout
+
+10 }                             } 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Nachteile dieser Lösung: 
+\end_layout
+
+\begin_layout Itemize
+Stoppen von a behindert wieder b (allerdings nur, wenn a in critical section
+ ist)
+\end_layout
+
+\begin_layout Itemize
+Es kann ein Deadlock auftreten: 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Thread a arbeitet Zeile 3 ab und Scheduler gibt Thread b den Prozessor 
+\end_layout
+
+\begin_layout Enumerate
+Thread b arbeitet ebenfalls Zeile 3 ab und der Scheduler führt wieder einen
+ Wechsel aus.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Damit haben beide Threads jeweils die Variablen s1 bzw.
+\begin_inset space ~
+\end_inset
+
+s2 auf 0 gesetzt und können beide nicht in den kritischen Abschnitt eintreten.
+ Dadurch laufen sie in einer Endlosschleife (
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+Deadlock).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Eine weitere, interessante und dennoch einfache Lösung sieht folgendermaßen
+ aus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+static final int FALSE = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+static final int TRUE = 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+int turn;
+\end_layout
+
+\begin_layout Plain Layout
+
+int[2] interested = {0, 0};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+void enterRegion(int process) {   // Prozessnummer: 0 oder 1
+\end_layout
+
+\begin_layout Plain Layout
+
+  int other;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  other = 1 - process;
+\end_layout
+
+\begin_layout Plain Layout
+
+  interested[process] = TRUE;     // zeigt, dass in critical section will
+\end_layout
+
+\begin_layout Plain Layout
+
+  turn = process;                 // setze Flag!!
+\end_layout
+
+\begin_layout Plain Layout
+
+  while (turn == process && interested[other] == TRUE) ; // nichts tun
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+void leaveRegion(int process) {
+\end_layout
+
+\begin_layout Plain Layout
+
+  interested[process] = FALSE;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Nachteile dieser Lösung: 
+\end_layout
+
+\begin_layout Itemize
+Stoppen des einen Threads behindert den anderen (allerdings nur, wenn dieser
+ sich im kritischen Abschnitt befindet).
+ 
+\end_layout
+
+\begin_layout Itemize
+Fehleranfällig, 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+da Parameter für enterRegion bzw.
+ leaveRegion wahlfrei übergeben werden können.
+ 
+\end_layout
+
+\begin_layout Itemize
+da der Aufruf von enterRegion bzw.
+ leaveRegion zur Gänze vergessen werden kann.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Ein weiterer offensichtlicher Nachteil von diesen Lösungen ist, dass sie
+ alle auf dem aktiven Warten aufbauen!
+\end_layout
+
+\begin_layout Standard
+Allen diesen Lösungen ist weiters gemeinsam: die Zuweisung von ganzen Zahlen
+ (int) muss eine 
+\emph on
+atomare Aktion
+\emph default
+ sein!
+\end_layout
+
+\begin_layout Subsection
+Monitor
+\end_layout
+
+\begin_layout Minisec
+Prinzip
+\end_layout
+
+\begin_layout Standard
+Das Monitorkonzept ist sicher das wichtigste Konzept, es wird auch in Java
+ eingesetzt und kann verwendet werden, um prinzipiell beliebige Synchronisations
+aufgaben zu lösen.
+\end_layout
+
+\begin_layout Standard
+Unter einem Monitor versteht man klassischerweise eine Sammlung von Prozeduren
+ und Datenstrukturen, die als Einheit gruppiert sind.
+ Prozesse können diese Prozeduren eines Monitor aufrufen, können aber nicht
+ auf die internen Datenstrukturen dieses Monitors zugreifen.
+ Außerdem können nicht zwei Prozesse gleichzeitig in einem Monitor aktiv
+ sein!
+\end_layout
+
+\begin_layout Standard
+Weiters sollen die Monitore bei dem oben erwähnten Producer/Consumer Problem
+ weiterhelfen, bei dem nicht nur der wechselseitige Ausschluss sondern auch
+ die zustandsabhängige Steuerung realisert werden soll.
+ Z.B.
+ soll also ein Arbeiter warten (d.h.
+\begin_inset space ~
+\end_inset
+
+in den sleep Zustand versetzt werden), wenn die Queue leer ist und nicht
+ permanent die Queue abfragen.
+\end_layout
+
+\begin_layout Standard
+Dazu wurden sogenannte Bedingungsvariablen (
+\emph on
+condition variables
+\emph default
+) zusammen mit zwei Operationen WAIT und NOTIFY (oder auch SIGNAL genannt)
+ eingeführt.
+ Wenn eine Monitorprozedur feststellt, dass sie nicht fortgesetzt werden
+ kann (z.B.
+ der Arbeiter findet eine leere Queue vor), dann tätigt sie den WAIT Aufruf
+ einer Bedingungsvariablen.
+ Diese Aktion blockiert den aufrufenden Prozess und versetzt ihn in einen
+ `sleep' Zustand.
+ Gleichzeitig kann ein anderer Prozess jetzt den Monitor betreten!
+\end_layout
+
+\begin_layout Minisec
+Monitore in Java
+\end_layout
+
+\begin_layout Standard
+In Java ist es so, dass 
+\emph on
+jedes
+\emph default
+ Objekt als Monitor agieren kann.
+ Dazu besitzt es:
+\end_layout
+
+\begin_layout Itemize
+einerseits einen Lock.
+ Dieser Lock wird bei der Ausführung von `synchronized' (auf dieses Objekt)
+ angefordert.
+ Nur ein Thread kann den Lock bekommen, alle anderen sind blockiert.
+ 
+\end_layout
+
+\begin_layout Itemize
+andererseits ein `wait set', das alle durch wait() geblockten Threads enthält.
+ 
+\end_layout
+
+\begin_layout Standard
+In Java gibt es 2 äquivalente Möglichkeiten 'Prozeduren' im Sinne des Monitorkon
+zeptes zu definieren:
+\end_layout
+
+\begin_layout Itemize
+synchronized boolean withdraw(int amount) { ...
+ } 
+\end_layout
+
+\begin_layout Itemize
+boolean withdraw(int amount) { synchronized(this) { ...
+ } } 
+\end_layout
+
+\begin_layout Standard
+D.h.
+ 
+\family typewriter
+synchronized
+\family default
+ versucht einen Lock auf das 'this' Objekt zu erlangen und nur ein Thread
+ kann in den kritischen Abschnitt eintreten.
+ Da ein Objekt in Java genau einen Lock besitzt, ist dieser Lock für alle
+ Methoden zuständig, bei denen das 
+\family typewriter
+synchronized
+\family default
+ verwendet wird.
+\end_layout
+
+\begin_layout Standard
+Vorteile von 
+\family typewriter
+synchronized
+\family default
+ bzw.
+ des eingebauten Monitorkonzeptes in Java: 
+\end_layout
+
+\begin_layout Itemize
+in Sprache eingebaut 
+\end_layout
+
+\begin_layout Itemize
+Lock wird immer freigegeben (auch wenn eine Exception auftritt) 
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Nachteile
+\emph default
+ der Verwendung von 
+\family typewriter
+synchronized
+\family default
+ auf diese Art und Weise: 
+\end_layout
+
+\begin_layout Itemize
+Es kann nicht festgestellt werden, ob ein Lock bereits vergeben ist.
+ 
+\end_layout
+
+\begin_layout Itemize
+Wenn ein Lock vergeben ist, dann blockiert jeder Versuch.
+ Es gibt kein Time-out! Kein cancel! 
+\end_layout
+
+\begin_layout Itemize
+Keine Differenzierung in lesende und schreibende Zugriffe.
+ 
+\end_layout
+
+\begin_layout Itemize
+Keine Zugriffskontrolle: jede Methode kann 
+\family typewriter
+synchronized()
+\family default
+ für jedes Objekt ausführen.
+ 
+\end_layout
+
+\begin_layout Itemize
+Es geht nicht, dass eine Methode a einen Lock eines Objektes erwirbt und
+ eine Methode b diesen Lock wieder freigibt.
+ 
+\end_layout
+
+\begin_layout Standard
+Das Monitorkonzept bietet allerdings die Möglichkeiten alle erwähnten Nachteile
+ auszuräumen.
+ In J2SE 5.0 sind Pakete enthalten, die umfangreiche Klassen für Concurrency
+ - Probleme zur Verfügung stellen (siehe z.B.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:mutex"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Anstatt der expliziten Bedingungsvariablen des Monitorkonzeptes verwendet
+ die 
+\emph on
+Java-Monitorimplementierung
+\emph default
+ zwei Methoden 
+\family typewriter
+wait()
+\family default
+ und 
+\family typewriter
+notifyAll()
+\family default
+, die in der Klasse java.lang.Object definiert sind.
+ Dadurch hat jedes Java-Objekt auch die Funktionalität eines Monitors:
+\end_layout
+
+\begin_layout Itemize
+wait() muss immer innerhalb eines 
+\family typewriter
+synchronized
+\family default
+ stehen und bewirkt, dass 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+der aktueller Thread blockiert wird und in das wait set des Objektes eingetragen
+ wird.
+ 
+\end_layout
+
+\begin_layout Enumerate
+der Lock für das Objekt wird freigegeben (damit andere Threads in den Monitor
+ eintreten können) 
+\end_layout
+
+\begin_layout Standard
+Außerdem wird eine InterruptedException geworfen, wenn der aktueller Thread
+ unterbrochen wird (mittels 
+\family typewriter
+interrupt()
+\family default
+ aus der Klasse java.lang.Thread).
+\end_layout
+
+\begin_layout Standard
+Weiters gibt es eine Methode 
+\family typewriter
+wait(long millsec)
+\family default
+, die die maximale Anzahl von Millisekunden warten und spätestens danach
+ den Thread wieder von seiner Blockierung befreit (d.h.
+\begin_inset space ~
+\end_inset
+
+in den runnable Zustand versetzt).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+notifyAll() muss ebenfalls immer innerhalb eines `synchronized' stehen und
+ bewirkt, dass 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+alle Threads aus dem wait set wieder aufgeweckt werden (d.h.
+\begin_inset space ~
+\end_inset
+
+in den runnable Zustand versetzt werden).
+ 
+\end_layout
+
+\begin_layout Enumerate
+jeder Thread sich anstellen muss, um den Lock zu bekommen, damit der Thread
+ in den Zustand run kommen kann.
+ Die Auswahl in welcher Reihenfolge die Threads den Lock bekommen ist nicht
+ definiert! Der Lock ist zum Zeitpunkt des Aufrufes der 
+\family typewriter
+notifyAll()
+\family default
+ Methode jedoch sicher vergeben, da die 
+\family typewriter
+notifyAll()
+\family default
+ Methode innerhalb eines 'synchronized' stehen muss.
+ D.h.
+\begin_inset space ~
+\end_inset
+
+erst wenn der Thread diese Methode verlässt wird der Lock freigegeben und
+ einer der aufgeweckten Threads kann den Lock bekommen.
+ 
+\end_layout
+
+\begin_layout Standard
+Außerdem gibt es noch eine notify() Methode, die ähnlich funktioniert, jedoch
+ nur einen (beliebigen!) Thread aus dem wait set holt.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Minisec
+Deadlock mittels Java Monitore
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+nt f1; Object lock1 = new int[1];
+\end_layout
+
+\begin_layout Plain Layout
+
+int f2; Object lock2 = new int[1];
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+public void fred(int value) {
+\end_layout
+
+\begin_layout Plain Layout
+
+  synchronized (lock1) {
+\end_layout
+
+\begin_layout Plain Layout
+
+    synchronized (lock2) {
+\end_layout
+
+\begin_layout Plain Layout
+
+      f1 = f2 = value;
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+public void barney(int value) {
+\end_layout
+
+\begin_layout Plain Layout
+
+  synchronized (lock2) {
+\end_layout
+
+\begin_layout Plain Layout
+
+    synchronized (lock1) {
+\end_layout
+
+\begin_layout Plain Layout
+
+      f1 = f2 = value;
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Minisec
+Producer/Consumer Problem
+\end_layout
+
+\begin_layout Standard
+Wie eingangs erwähnt handelt es sich bei der zustandsabhängigen Steuerung,
+ um eine spezielle Art der Synchronisation von mehreren Threads (oder Prozessen)
+, die über das einfache Sicherstellen des wechselseitigen Ausschlusses hinausgeh
+t.
+\end_layout
+
+\begin_layout Standard
+Während der gegenseitige Ausschluss lediglich sicherstellt, dass der kritische
+ Abschnitt nicht unkontrolliert betreten wird, behandelt die zustandsabhängige
+ Steuerung eine 
+\emph on
+weiterführende Synchronisation
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+Als spezielles Beispiel wird das Producer/Consumer Problem betrachtet: 
+\end_layout
+
+\begin_layout Itemize
+Ein Producer und mehrere Consumer (d.h.
+\begin_inset space ~
+\end_inset
+
+ein Boss und mehrere Worker).
+ Prinzipiell kann das Problem natürlich leicht auch auf mehrere Producer
+ erweitert werden.
+ 
+\end_layout
+
+\begin_layout Itemize
+Einwegkommunikation (d.h.
+\begin_inset space ~
+\end_inset
+
+der Boss verteilt die Arbeitspakete an die Worker).
+ 
+\end_layout
+
+\begin_layout Itemize
+der Zwischenspeicher ist begrenzt (d.h.
+\begin_inset space ~
+\end_inset
+
+die Queue in die der Boss die Arbeitspakete stellt ist begrenzt).
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+class WorkQueue {
+\end_layout
+
+\begin_layout Plain Layout
+
+  LinkedList queue = new LinkedList();
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  public synchronized void put(Object o) {
+\end_layout
+
+\begin_layout Plain Layout
+
+    // was ist, wenn queue "voll" ist?
+\end_layout
+
+\begin_layout Plain Layout
+
+    queue.addLast(o);
+\end_layout
+
+\begin_layout Plain Layout
+
+    // wie werden die wartenden Worker benachrichtigt? 
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  public synchronized Object take() {
+\end_layout
+
+\begin_layout Plain Layout
+
+   // was ist, wenn queue "leer" ist?
+\end_layout
+
+\begin_layout Plain Layout
+
+   return queue.removeFirst();
+\end_layout
+
+\begin_layout Plain Layout
+
+   // wie wird ein eventuell wartender Boss benachrichtigt?
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die vorhergehende Lösung behandelt also keine der Fragestellungen, die in
+ diesem Beispiel aufgeworfen worden sind (siehe Fragen in den Kommentaren).
+ Das folgende Codestück zeigt die prinzipielle Vorgehensweise auf:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+public class WorkQueue {
+\end_layout
+
+\begin_layout Plain Layout
+
+  private LinkedList queue = new LinkedList();
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  public synchronized void put(Object o) throws InterruptedException {
+\end_layout
+
+\begin_layout Plain Layout
+
+    // was ist, wenn queue "voll" ist? 
+\end_layout
+
+\begin_layout Plain Layout
+
+    // selber einsetzen...
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+    queue.addLast(o); 
+\end_layout
+
+\begin_layout Plain Layout
+
+    // alle wartenden Worker (eigentlich alle) benachrichtigen! 
+\end_layout
+
+\begin_layout Plain Layout
+
+    notifyAll(); 
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  public synchronized Object take() throws InterruptedException {
+\end_layout
+
+\begin_layout Plain Layout
+
+    while (queue.size() == 0) {           // warum while?
+\end_layout
+
+\begin_layout Plain Layout
+
+      wait();
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    Object o = queue.removeFirst();
+\end_layout
+
+\begin_layout Plain Layout
+
+    // wartenden Boss (eigentlich alle) benachrichtigen!
+\end_layout
+
+\begin_layout Plain Layout
+
+    notifyAll();
+\end_layout
+
+\begin_layout Plain Layout
+
+    return o;
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Mutex Lock
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:mutex"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Wie vorhergehend besprochen gibt es in J2SE 5.0 nun weitere Möglichkeiten,
+ um Synchronisationsaufgaben einfacher zu lösen.
+\end_layout
+
+\begin_layout Standard
+Es gibt hierzu Interfaces und Klassen, die im Paket 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+verb+java.util.concurrent.locks+
+\end_layout
+
+\end_inset
+
+ zu finden sind.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+public interface Lock {
+\end_layout
+
+\begin_layout Plain Layout
+
+  void lock(); // holt sich den Lock (und wartet)
+\end_layout
+
+\begin_layout Plain Layout
+
+  // kann unterbrochen werden:
+\end_layout
+
+\begin_layout Plain Layout
+
+  void lockInterruptibly() throws InterruptedException;
+\end_layout
+
+\begin_layout Plain Layout
+
+  boolean tryLock(); // holt sich den Lock und wartet nicht!
+\end_layout
+
+\begin_layout Plain Layout
+
+  boolean tryLock(long time, TimeUnit unit)
+\end_layout
+
+\begin_layout Plain Layout
+
+    throws InterruptedException; // wartet geg.
+ Zeit
+\end_layout
+
+\begin_layout Plain Layout
+
+  void unlock(); // gibt den Lock wieder frei 
+\end_layout
+
+\begin_layout Plain Layout
+
+  Condition newCondition() // siehe später!
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Eine dazugehörige Klasse ist die Klasse 
+\family typewriter
+ReentrantLock
+\family default
+.
+ 
+\begin_inset Quotes pld
+\end_inset
+
+Reentrant
+\begin_inset Quotes prd
+\end_inset
+
+ bedeutet in diesem Zusammenhang, dass ein Thread einen Lock mehrfach in
+ Besitz nehmen kann.
+\end_layout
+
+\begin_layout Itemize
+ReentrantLock() // ein einfacher Konstruktor 
+\end_layout
+
+\begin_layout Itemize
+ReentrantLock(boolean fair) // Lock `fair' an den am längsten wartenden
+ Thread vergeben 
+\end_layout
+
+\begin_layout Itemize
+int getHoldCount() // liefert die Anzahl der `holds' zurück, die der aktuelle
+ Thread auf das Lock-Objekt besitzt.
+ 
+\end_layout
+
+\begin_layout Itemize
+int getQueueLength() // liefert die Anzahl der Threads zurück, die auf den
+ Lock warten 
+\end_layout
+
+\begin_layout Itemize
+boolean isHeldByCurrentThread() // liefert true zurück, wenn der aktuelle
+ Thread den Lock besitzt 
+\end_layout
+
+\begin_layout Itemize
+boolean isLocked() // liefert true zurück, wenn irgendein Thread den Lock
+ besitzt 
+\end_layout
+
+\begin_layout Itemize
+Condition newCondition() // erzeugt eine neue 'Condition' 
+\end_layout
+
+\begin_layout Standard
+Die folgende 
+\emph on
+Vorgangsweise
+\emph default
+ ist einzuhalten:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+mutex.lock();
+\end_layout
+
+\begin_layout Plain Layout
+
+try { /* body */ }
+\end_layout
+
+\begin_layout Plain Layout
+
+finally { mutex.unlock(); }
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+D.h.
+\begin_inset space ~
+\end_inset
+
+ein solcher Mutex-Lock sollte eingesetzt werden, wenn 
+\end_layout
+
+\begin_layout Itemize
+ein Time-out bei der Anforderung benötigt wird.
+ 
+\end_layout
+
+\begin_layout Itemize
+ein Lock in einer Methode angefordert und in einer anderen Methode wieder
+ freigegeben werden soll.
+ 
+\end_layout
+
+\begin_layout Standard
+Eine 
+\family typewriter
+Account
+\family default
+ Klasse (wie am Anfang dieses Kapitels skizziert) kann mit Hilfe eines solchen
+ Locks folgendermaßen aussehen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+import java.util.concurrent.locks.ReentrantLock;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+public class Account {
+\end_layout
+
+\begin_layout Plain Layout
+
+  private int balance;
+\end_layout
+
+\begin_layout Plain Layout
+
+  private final ReentrantLock lock = new ReentrantLock(true);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  public Account(int initialBalance) {
+\end_layout
+
+\begin_layout Plain Layout
+
+    balance = initialBalance; 
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+  public boolean withdraw(int amount) {
+\end_layout
+
+\begin_layout Plain Layout
+
+    lock.lock();
+\end_layout
+
+\begin_layout Plain Layout
+
+    try {
+\end_layout
+
+\begin_layout Plain Layout
+
+      if (balance >= amount) {
+\end_layout
+
+\begin_layout Plain Layout
+
+        balance -= amount;
+\end_layout
+
+\begin_layout Plain Layout
+
+        return true;
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      else return false;
+\end_layout
+
+\begin_layout Plain Layout
+
+    } finally {
+\end_layout
+
+\begin_layout Plain Layout
+
+      lock.unlock();
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Im Abschnitt über Monitore ist der Begriff der Bedingungsvariablen (condition
+ variable) vorgekommen und in der WorkQueue haben wir auch implizit eine
+ verwendet.
+ Bei genauerer Betrachtung der WorkQueue sieht man jedoch, dass jedes Mal
+ wenn ein Worker ein Paket aus der Queue entnimmt ein 
+\family typewriter
+notifyAll()
+\family default
+ Aufruf stattfindet, der sowohl Bosse als auch Worker aufweckt! Das ist
+ auch einer der Gründe warum die Abfrage bzgl.
+\begin_inset space ~
+\end_inset
+
+der Queuegröße in einer while-Schleife steht.
+ Es ist allerdings sicher nicht sinnvoll unnötig Threads aufzuwecken und
+ damit die Performance des Gesamtsystems zu verschlechtern!
+\end_layout
+
+\begin_layout Standard
+Aus diesem Grund gibt es in J2SE 5.0 jetzt ein neues Interface 
+\family typewriter
+java.util.concurrent.locks.Condition
+\family default
+ mit folgenden Methoden:
+\end_layout
+
+\begin_layout Itemize
+void await() throws InterruptedException, 
+\end_layout
+
+\begin_layout Itemize
+void awaitUninterruptibly(); 
+\end_layout
+
+\begin_layout Itemize
+boolean await(long time, TimeUnit unit) throws InterruptedException; 
+\end_layout
+
+\begin_layout Itemize
+boolean awaitUntil(Date deadline) throws InterruptedException; 
+\end_layout
+
+\begin_layout Itemize
+void signal(); 
+\end_layout
+
+\begin_layout Itemize
+void signalAll(); 
+\end_layout
+
+\begin_layout Standard
+Mittels der Methode 
+\family typewriter
+newCondition()
+\family default
+ bekommt man eine Instanz, die eben dieses Interface implementiert.
+ Damit gibt es nun eine konkrete Implementierung des Konzeptes Bedingungsvariabl
+e.
+\end_layout
+
+\begin_layout Standard
+Anwenden kann man dies folgendermaßen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+import java.util.concurrent.locks.Lock;
+\end_layout
+
+\begin_layout Plain Layout
+
+import java.util.concurrent.locks.ReentrantLock;
+\end_layout
+
+\begin_layout Plain Layout
+
+import java.util.concurrent.locks.Condition;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+public class WorkQueue {
+\end_layout
+
+\begin_layout Plain Layout
+
+  private final LinkedList queue = new LinkedList();
+\end_layout
+
+\begin_layout Plain Layout
+
+  private final Lock lock = new ReentrantLock();
+\end_layout
+
+\begin_layout Plain Layout
+
+  private final Condition notFull = lock.newCondition();
+\end_layout
+
+\begin_layout Plain Layout
+
+  private final Condition notEmpty = lock.newCondition();
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  public void put(Object o) throws InterruptedException {
+\end_layout
+
+\begin_layout Plain Layout
+
+    lock.lock();
+\end_layout
+
+\begin_layout Plain Layout
+
+    try {
+\end_layout
+
+\begin_layout Plain Layout
+
+      while (queue.size() == maxSize) {
+\end_layout
+
+\begin_layout Plain Layout
+
+        notFull.await(); 
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      queue.addLast(o);
+\end_layout
+
+\begin_layout Plain Layout
+
+      // wartenden Worker benachrichtigen!
+\end_layout
+
+\begin_layout Plain Layout
+
+      notEmpty.signalAll();
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+    finally {
+\end_layout
+
+\begin_layout Plain Layout
+
+      lock.unlock();
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  public Object take() throws InterruptedException {
+\end_layout
+
+\begin_layout Plain Layout
+
+    lock.lock();
+\end_layout
+
+\begin_layout Plain Layout
+
+    try {
+\end_layout
+
+\begin_layout Plain Layout
+
+      while (queue.size() == 0) {
+\end_layout
+
+\begin_layout Plain Layout
+
+        notEmpty.await();
+\end_layout
+
+\begin_layout Plain Layout
+
+      }
+\end_layout
+
+\begin_layout Plain Layout
+
+      Object packet = queue.removeFirst();
+\end_layout
+
+\begin_layout Plain Layout
+
+      // wartenden Boss benachrichtigen!
+\end_layout
+
+\begin_layout Plain Layout
+
+      notFull.signalAll();
+\end_layout
+
+\begin_layout Plain Layout
+
+      return packet;
+\end_layout
+
+\begin_layout Plain Layout
+
+    } finally {
+\end_layout
+
+\begin_layout Plain Layout
+
+      lock.unlock();
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Damit ergibt sich der Vorteil, dass ein Worker nur wartenden Bosse weckt
+ und ein Boss lediglich wartende Worker weckt.
+ Achtung: Trotzdem kann eine Condition - Instanz nicht die Abfrage ersetzen.
+ D.h.
+\begin_inset space ~
+\end_inset
+
+das Konzept der Bedingungsvariablen ist jetzt einerseits durch eine Abfrage
+ und andererseits durch eine Instanz der Klasse Condition realisiert.
+\end_layout
+
+\begin_layout Subsection
+Queue
+\end_layout
+
+\begin_layout Standard
+Eine selbständige Programmierung einer Queue ist ab J2SE 5.0 nicht mehr notwendig
+, da jetzt auch Implementierungn dafür enthalten sind.
+ Dazu gibt es das Interface Queue<E> bzw.
+\begin_inset space ~
+\end_inset
+
+BlockingQueue<E> und etliche Implementierungen, wie z.B.
+ die LinkedBlockingQueue<E> (alle im Paket java.util.concurrent).
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+verb+java.util.Queue<E>+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+boolean offer(E o) // einfügen eines Elementes in Queue; Rückgabewert 
+\family typewriter
+false
+\family default
+ bedeutet: kein Einfügen möglich 
+\end_layout
+
+\begin_layout Itemize
+E peek() // liefert das erste Element ohne es zu entfernen; liefert 
+\family typewriter
+null
+\family default
+ zurück, wenn kein Element vorhanden 
+\end_layout
+
+\begin_layout Itemize
+E poll() // liefert das erste Element und entfernt es; liefert 
+\family typewriter
+null
+\family default
+ zurück, wenn kein Element vorhanden 
+\end_layout
+
+\begin_layout Itemize
+E element() throws NoSuchElementException // wie peek liefert allerdings
+ nicht 
+\family typewriter
+null
+\family default
+ zurück, wenn kein Element vorhanden 
+\end_layout
+
+\begin_layout Itemize
+E remove() throws NoSuchElementException // wie poll liefert allerding nicht
+ 
+\family typewriter
+null
+\family default
+ zurück, wenn kein Element vorhanden 
+\end_layout
+
+\begin_layout Standard
+Für Implementierungen mit Nebenläufigkeit ist jedoch das Interface 
+\family typewriter
+BlockingQueue
+\family default
+ wichtiger.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+verb+java.util.concurrent.BlockingQueue<E> extends Queue<E>+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+boolean add(E o); // liefert true zurück, wenn erfolgreich, wenn voll dann
+ wird eine IllegalStateException geworfen 
+\end_layout
+
+\begin_layout Itemize
+boolean offer(E o, long timeout, TimeUnit unit) throws InterruptedException
+ // hängt o in Queue; wartet max.
+ timeout; liefert true, wenn das Einfügen möglich war 
+\end_layout
+
+\begin_layout Itemize
+void put(E o) throws InterruptedException // hängt o in Queue und wartet
+ 
+\end_layout
+
+\begin_layout Itemize
+E poll(long timeout, TimeUnit unit) throws InterruptedException // wie poll
+ von Queue, jedoch mit timeout 
+\end_layout
+
+\begin_layout Itemize
+E take() throws InterruptedException // wartet! 
+\end_layout
+
+\begin_layout Itemize
+int remainingCapacity() // Anzahl der freien Plätze bzw.
+\begin_inset space ~
+\end_inset
+
+Integer.MAX_VALUE, wenn Queue nicht begrenzt.
+ 
+\end_layout
+
+\begin_layout Standard
+Alle diese Methoden von Implementierungen der BlockingQueue sind thread-safe!
+ Die wichtigste Implementierung dieses Interfaces ist (für uns) die Klasse
+ LinkedBlockingQueue.
+\end_layout
+
+\begin_layout Subsection
+Read-Write Lock
+\end_layout
+
+\begin_layout Standard
+Read-Write Locks sind im Prinzip zwei Mutexes, die es ermöglichen zwischen
+ lesenden und schreibenden Threads zu differenzieren: 
+\end_layout
+
+\begin_layout Itemize
+Mehrere dürfen lesen, aber nur einer darf schreiben.
+ 
+\end_layout
+
+\begin_layout Itemize
+Wenn einer schreibt, dann darf keiner lesen.
+ 
+\end_layout
+
+\begin_layout Standard
+D.h.
+ Read-Write Locks sollten eingesetzt werden, wenn 
+\end_layout
+
+\begin_layout Itemize
+Methoden in lesende und schreibende Zugriffe unterteilt werden können.
+ 
+\end_layout
+
+\begin_layout Itemize
+es mehr lesende als schreibende Zugriffe gibt.
+ 
+\end_layout
+
+\begin_layout Itemize
+der Overhead akzeptabel ist.
+ 
+\end_layout
+
+\begin_layout Standard
+Ein entsprechendes Interface ist 
+\family typewriter
+ReadWriteLock
+\family default
+ im Paket 
+\family typewriter
+java.util.concurrent.locks
+\family default
+ und eine entsprechende Implentierung ist z.B.
+ 
+\family typewriter
+ReentrantWriteLock
+\family default
+ im gleichen Paket.
+\end_layout
+
+\begin_layout Subsection
+Semaphor
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Semaphore
+\emph default
+ waren eine der ersten Synchronisationshilfsmittel und können eingesetzt
+ werden, wenn es um die Verwaltung einer begrenzten Anzahl von Ressourcen
+ geht.
+ Ein Semaphor verwaltet allerdings nicht die Ressourcen selbst, sondern
+ nur die Anzahl der verfügbaren Ressourcen.
+ Ein Semaphor ist also ein Zähler, dessen Wert stets größer oder gleich
+ 0 ist.
+\end_layout
+
+\begin_layout Standard
+Ein Semaphor hat zwei grundlegende Operationen, die atomar ausgeführt werden:
+ Der Wert des Zählers kann inkrementiert oder dekrementiert werden.
+ Bezüglich Erhöhung existiert keine Grenze, allerdings kann der Zähler nur
+ dekrementiert werden, wenn er größer als 0 ist.
+ Ansonsten blockiert die Dekrement-Operation so lange, bis ein anderer Thread
+ den Wert wieder inkrementiert hat.
+ Traditionellerweise werden die Operationen mit P (increment) und V (decrement)
+ bezeichnet.
+ In der Implementierung des JDK heißen sie release (increment) und acquire
+ (decrement).
+\end_layout
+
+\begin_layout Standard
+Im Unterschied zu Locks hat ein Semaphor keinen Besitzer.
+ Es ist auch nicht erforderlich einen Lock zu besitzen, um acquire oder
+ release aufzurufen!
+\end_layout
+
+\begin_layout Standard
+Die wichtigsten Konstruktoren und Methoden der 
+\family typewriter
+java.util.concurrent.Semaphore
+\family default
+ Klasse:
+\end_layout
+
+\begin_layout Itemize
+Semaphore(int permits) // Initialisierung 
+\end_layout
+
+\begin_layout Itemize
+Semaphore(int permits, boolean fair) // Initialisierung und Angabe ob die
+ Threads fair behandelt werden sollen 
+\end_layout
+
+\begin_layout Itemize
+void acquire() throws InterruptedException 
+\end_layout
+
+\begin_layout Itemize
+void acquireUninterruptibly() 
+\end_layout
+
+\begin_layout Itemize
+void release() 
+\end_layout
+
+\begin_layout Standard
+Mit Hilfe von Semaphoren können viele Basisprobleme der Synchronisation
+ gelöst werden:
+\end_layout
+
+\begin_layout Minisec
+Serialisierung
+\end_layout
+
+\begin_layout Standard
+Folgendermaßen können 2 Threads 
+\emph on
+serialisiert
+\emph default
+ werden:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+          Semaphore sem = new Semaphore(0);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+void a() {                       void b() {
+\end_layout
+
+\begin_layout Plain Layout
+
+  opa1();                          sem.acquire();
+\end_layout
+
+\begin_layout Plain Layout
+
+  sem.release();                   opb1();
+\end_layout
+
+\begin_layout Plain Layout
+
+}                                }
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+D.h., es ist sichergestellt, dass Operation a1 vor Operation b1 durchgeführt
+ wird.
+\end_layout
+
+\begin_layout Minisec
+Rendevous
+\end_layout
+
+\begin_layout Standard
+Ein 
+\emph on
+Rendevous
+\emph default
+ ist eine Erweiterung der Serialisierung sodass sie in beide Richtungen
+ funktioniert:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+void a() {                      void b() {
+\end_layout
+
+\begin_layout Plain Layout
+
+  opa1();                         opb1();
+\end_layout
+
+\begin_layout Plain Layout
+
+  opa2();                         opb2();
+\end_layout
+
+\begin_layout Plain Layout
+
+}                               }
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Operation a1 soll sicher vor Operation b2 und Operation b1 sicher vor Operation
+ a2 ausgeführt werden.
+\end_layout
+
+\begin_layout Standard
+Eine Lösung dafür sieht folgendermaßen aus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+          Semaphore aArrived = new Semaphore(0);
+\end_layout
+
+\begin_layout Plain Layout
+
+          Semaphore bArrived = new Semaphore(0); 
+\end_layout
+
+\begin_layout Plain Layout
+
+void a() {                       void b() {
+\end_layout
+
+\begin_layout Plain Layout
+
+  opa1();                          opb1(); 
+\end_layout
+
+\begin_layout Plain Layout
+
+  aArrived.release();              bArrived.release();
+\end_layout
+
+\begin_layout Plain Layout
+
+  bArrived.acquire();              aArrived.acquire();
+\end_layout
+
+\begin_layout Plain Layout
+
+  opa2();                          opb2();
+\end_layout
+
+\begin_layout Plain Layout
+
+}                                }
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Achtung: auch mit Semaphoren können Deadlocks produziert werden:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+          Semaphore aArrived = new Semaphore(0);
+\end_layout
+
+\begin_layout Plain Layout
+
+          Semaphore bArrived = new Semaphore(0);
+\end_layout
+
+\begin_layout Plain Layout
+
+void a() {                       void b() {
+\end_layout
+
+\begin_layout Plain Layout
+
+  opa1();                          opb1();
+\end_layout
+
+\begin_layout Plain Layout
+
+  bArrived.acquire();              aArrived.acquire(); 
+\end_layout
+
+\begin_layout Plain Layout
+
+  aArrived.release();              bArrived.release();
+\end_layout
+
+\begin_layout Plain Layout
+
+  opa2();                          opb2();
+\end_layout
+
+\begin_layout Plain Layout
+
+}                                }
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Minisec
+Mutex
+\end_layout
+
+\begin_layout Standard
+Eine 
+\emph on
+Umsetzung
+\emph default
+ des Mutex - Konzeptes mit Hilfe von Semaphoren sieht folgendermaßen aus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+           Semaphore sem = new Semaphore(1);
+\end_layout
+
+\begin_layout Plain Layout
+
+           counter = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+void a() {                          void b() {
+\end_layout
+
+\begin_layout Plain Layout
+
+  sem.acquire();                      sem.acquire();
+\end_layout
+
+\begin_layout Plain Layout
+
+  counter = counter + 1;              counter = counter + 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+  sem.release();                      sem.release();
+\end_layout
+
+\begin_layout Plain Layout
+
+}                                   }
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+D.h.
+\begin_inset space ~
+\end_inset
+
+es ist sichergestellt, dass max.
+\begin_inset space ~
+\end_inset
+
+ein Thread in den kritischen Abschnitt eintreten kann.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Max.
+\begin_inset space ~
+\end_inset
+
+n Thread in kritischen Abschnitt
+\emph default
+: Nehmen wir an, dass wir eine beliebige Anzahl von Threads haben und sicherstel
+len wollen, dass maximal n Threads (also z.B.
+ 3) zur gleichen Zeit den kritischen Abschnitt betreten dürfen (also allgemein
+ mehr als einer).
+ Für diesen Fall ist es trivial dies mit Semaphoren zu implementieren, da
+ lediglich der Semaphor mit n initialisiert werden muss!
+\end_layout
+
+\begin_layout Minisec
+Barrier
+\end_layout
+
+\begin_layout Standard
+Nehmen wir das Konzept des Rendevous her und generalisieren wir es auf n
+ Threads, so kommen wir zum Konzept 
+\family typewriter
+Barrier
+\family default
+:
+\end_layout
+
+\begin_layout Standard
+Nehmen wir dazu an, dass wir Operationen haben (
+\family typewriter
+op_before
+\family default
+ und 
+\family typewriter
+op_after
+\family default
+) und insgesamt n Threads.
+ Die Anzahl der Threads ist in einer globalen Variable n gespeichert und
+ es soll sichergestellt werden, dass in allen n Threads zuerst 
+\family typewriter
+op_before
+\family default
+ ausgeführt wird und erst danach 
+\family typewriter
+op_after
+\family default
+.
+\end_layout
+
+\begin_layout Standard
+Global für alle Threads wird ausgeführt:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+mutex = new Semaphore(1);
+\end_layout
+
+\begin_layout Plain Layout
+
+barrier = new Semaphore(0);
+\end_layout
+
+\begin_layout Plain Layout
+
+counter = 0;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+opbefore();
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+mutex.acquire();
+\end_layout
+
+\begin_layout Plain Layout
+
+count = count + 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+mutex.release();
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+if (count == n) {
+\end_layout
+
+\begin_layout Plain Layout
+
+  barrier.release(); 
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+barrier.acquire();
+\end_layout
+
+\begin_layout Plain Layout
+
+barrier.release();
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+opafter();
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Das einzige Problem an dieser Lösung ist, dass der barrier nach dem letzten
+ Thread `gesetzt' ist und daher nicht einfach wieder verwendet werden kann.
+ Will man dieses kleine Problem lösen wird es allerdings komplizierter.
+ Aus diesem Grund gibt es eine Klasse 
+\family typewriter
+java.util.concurrent.CyclicBarrier
+\family default
+, die eine wiederverwendbare Barrier zur Verfügung stellt.
+\end_layout
+
+\begin_layout Section
+Synchronisation in verteilten Systemen
+\end_layout
+
+\begin_layout Standard
+Über die Synchronisation in nicht verteilten Systemen hinausgehend, wird
+ die Situation in verteilten Systemen wesentlich komplizierter!
+\end_layout
+
+\begin_layout Standard
+Es handelt sich dabei um sehr viele und komplexe Probleme.
+ Diese werden in den kommenden Abschnitten lediglich angerissen.
+\end_layout
+
+\begin_layout Subsection
+Uhrsynchronisierung
+\end_layout
+
+\begin_layout Standard
+In einem Netzwerk wird oft eine gemeinsame Zeit benötigt!
+\end_layout
+
+\begin_layout Standard
+Beispiel: Es arbeiten in einer Firma 100 Programmierer an der Entwicklung
+ einer großen Anwendung.
+ Auf Grund der Größe der Anwendung wird das Übersetzen verteilt über viele
+ Maschinen durchgeführt.
+ Das Übersetzen wird mittels `make' durchgeführt.
+ Besteht keine globale Zeit, kann es vorkommen, dass einige Dateien nicht
+ übersetzt werden, die alte Version gelinkt wird und das resultierende System
+ nicht funktionieren wird.
+\end_layout
+
+\begin_layout Standard
+Weiteres Beispiel: Eine E-Mail, die beim Empfänger 5 Minuten vor dem Versendezei
+tpunkt ankommt! Stellen wir uns weiter vor, dass die Antwort, die der ursprüngli
+che Empfänger an den Sender zurücksendet noch immer 2 Minuten vor dem ursprüngli
+chen Sendezeitpunkt der ersten E-Mail ankommt!
+\end_layout
+
+\begin_layout Standard
+Möglichkeiten: 
+\end_layout
+
+\begin_layout Itemize
+in der Beziehung der Atomzeit (z.B.
+ Sender DCF-77 in Mainflingen hat ca.
+\begin_inset space ~
+\end_inset
+
+eine Abweichung von der 
+\begin_inset Quotes pld
+\end_inset
+
+echten
+\begin_inset Quotes prd
+\end_inset
+
+ Zeit von 1.5ns/Tag).
+ 
+\end_layout
+
+\begin_layout Itemize
+In der Synchronisierung mit einem Rechner, der die Atomzeit bezieht.
+ Häufig verwendet wird das Network Time Protocol (NTP): Es handelt sich
+ dabei um ein Internet Standardprotokoll, das von mehreren 100.000 Rechnern
+ im Internet betrieben wird, um ihre Zeit zu synchronisieren (weltweit Bereich
+ 1--50ms Genauigkeit).
+ 
+\end_layout
+
+\begin_layout Itemize
+Oft wird jedoch gar nicht eine absolute Zeit benötigt, sondern lediglich,
+ dass die Computer eine gemeinsame Zeit verfügen.
+ Die Zeiten der Computer dürfen nicht auseinanderlaufen, sondern müssen
+ innerhalb einer gewissen Schranke bleiben.
+ Dazu gibt es Alogorithmen, die eine Uhr-Synchronisierung bewerkstelligen.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+In diesem Fall muss man lediglich die Situation im Auge behalten, die auftritt,
+ wenn man ein derartig isoliertes Netzwerk mit einem anderen Netzwerk (z.B.
+ das Internet) verbindet.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Im Prinzip kann man die Verfahren in 2 Klassen einteilen: Entweder ist es
+ notwendig von einem Server eine exakte Zeit zu beziehen oder es ist lediglich
+ notwendig eine gemeinsame Zeit zu finden.
+\end_layout
+
+\begin_layout Minisec
+Der Algorithmus von Cristian
+\end_layout
+
+\begin_layout Standard
+Will man eine Referenzzeit von einem Rechner beziehen kann man das 
+\emph on
+Verfahren von Cristian
+\emph default
+ verwenden: Der Client sendet zu einem Zeitpunkt 
+\begin_inset Formula $t_{0}$
+\end_inset
+
+ eine Anfrage an den Server ab.
+ Der Server empfängt zeitversetzt diese Anfrage, verarbeitet diese (auch
+ dafür benötigt er Zeit) und sendet die Antwort an den Client zurück (auch
+ dafür wird eine gewisse Zeitspanne benötigt.
+ Der Client erhält also zu einem Zeitpunkt 
+\begin_inset Formula $T_{1}$
+\end_inset
+
+ die Antwort.
+ Dies wird periodisch durchgeführt.
+\end_layout
+
+\begin_layout Standard
+Unter gewissen Annahmen kann daraus eine Zeit gefunden werden: 
+\end_layout
+
+\begin_layout Itemize
+Die Antwort hin und zurück über das Netzwerk dauert ca.
+\begin_inset space ~
+\end_inset
+
+gleich lange.
+ Davon kann in der Regel in einem LAN ausgegangen werden.
+ Prinzipiell könnte es natürlich sein, dass die Anfrage einen anderen Weg
+ nimmt als die Antwort.
+ In diesem Fall wäre z.B.
+ diese Annahme nicht mehr gültig.
+ 
+\end_layout
+
+\begin_layout Itemize
+Der Server benötigt zur Verarbeitung der Anfrage die Zeitspanne 
+\begin_inset Formula $I$
+\end_inset
+
+ (Zeit für die Interruptverarbeitung) und trägt seine aktuelle Zeit 
+\begin_inset Formula $T_{S}$
+\end_inset
+
+ zum spätmöglichsten Zeitpunkt in die Nachricht ein.
+ 
+\end_layout
+
+\begin_layout Standard
+Unter diesen Voraussetzungen kann die Zeit am Client leicht berechnet und
+ gesetzt werden: 
+\begin_inset Formula $t=t_{S}+(t_{1}-t_{0}-I)/2$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Bei diesem Algorithmus muss beachtet werden: 
+\end_layout
+
+\begin_layout Itemize
+Die Zeit könnte am Client zurückgestellt werden.
+ Das darf nicht vorkommen und deshalb eine Änderung schrittweise eingeführt
+ werden.
+ 
+\end_layout
+
+\begin_layout Itemize
+Die Zeit hängt von einem Server ab.
+ Dieser könnte ausfallen.
+ Hier hat man wieder prinzipiell die Möglichkeit mehrere Zeitserver zu etabliere
+n.
+ In solch einem Fall muss man jedoch auch darauf achten, dass es fehlerhafte
+ Zeitserver geben kann.
+ 
+\end_layout
+
+\begin_layout Minisec
+Der Berkeley-Algorithmus
+\end_layout
+
+\begin_layout Standard
+Will man sich auf eine gemeinsame Zeit einigen, dann kann man den 
+\emph on
+Berkeley-Algorithmus
+\emph default
+ verwenden.
+\end_layout
+
+\begin_layout Standard
+Im Gegensatz zum Algorithmus von Cristian, der mit passiven Zeitservern
+ operiert, sind die Zeitserver beim Berkeley-Algorithmus selbst aktiv.
+ D.h.
+\begin_inset space ~
+\end_inset
+
+ein dedizierter Rechner (Master) fragt jede Maschine (Slave) nach der aktuellen
+ Zeit ab.
+ Abhängig von den Antworten berechnet er eine durchschnittliche Zeit und
+ weist allen Slaves an, ihre Uhren der neuen Zeit anzupassen (entweder durch
+ Verlangsamung oder durch Beschleunigung) bis eine bestimmte Differenzreduzierun
+g erreicht wurde.
+ D.h.
+\begin_inset space ~
+\end_inset
+
+der Master sendet nicht eine absolute Zeit sondern eine individuelle Differenz
+ an jeden Client zurück (inklusive sich selbst).
+ Ein Beispiel für einen derartigen Ablauf der Synchronisation ist in Abbildung
+ 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:clock_berkeley"
+
+\end_inset
+
+ zu finden.
+\end_layout
+
+\begin_layout Standard
+Die Genauigkeit dieses Verfahrens hängt ebenfalls der maximalen Round-Trip-Zeit
+ zwischen Master und Slave ab.
+ Der Master eliminiert alle Ausreißerwerte, die größere Zeiten als dieses
+ Maximum aufweisen.
+ Dazu kann sich der Master eine Untermenge von Uhren auswählen, die sich
+ nur um einen vorgegebenen Betrag voneinander unterscheiden, und der Durchschnit
+t wird nur für die von diesen Uhren abgelesenen Zeiten gebildet.
+\end_layout
+
+\begin_layout Standard
+Diese Methode ist geeignet, wenn keine Maschine eine Referenzzeit besitzt
+ und lediglich eine gemeinsame Zeit benötigt wird.
+\end_layout
+
+\begin_layout Standard
+
+\lang ngerman
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\lang ngerman
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang ngerman
+\begin_inset Graphics
+	filename berkeley.pdf
+	scale 70
+	BoundingBox 0bp 0bp 19cm 14cm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang ngerman
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\lang ngerman
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:clock_berkeley"
+
+\end_inset
+
+Beispiel für Berkeley-Algorithmus
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Globaler Status
+\end_layout
+
+\begin_layout Standard
+Nachdem Einigkeit über eine gemeinsame Zeitbasis erzielt worden ist, ist
+ es oft wichtig den 
+\emph on
+globalen Zustand
+\emph default
+ einer verteilten Anwendung zu wissen.
+\end_layout
+
+\begin_layout Standard
+Der globale Status setzt sich aus dem lokalen Zustand aller Prozesse gemeinsam
+ mit den Nachrichten zusammen, die gerade übertragen werden.
+\end_layout
+
+\begin_layout Standard
+Aus diesem globalen Status kann z.B.
+ gefolgert werden, ob sich das System in einem Deadlock befindet.
+\end_layout
+
+\begin_layout Subsection
+Wechselseitiger Ausschluss
+\end_layout
+
+\begin_layout Standard
+Es soll der verteilte Zugriff auf eine Ressource geregelt werden.
+ Dazu gibt es zumindest drei Algorithmen:
+\end_layout
+
+\begin_layout Minisec
+Zentralisierter Algorithmus
+\end_layout
+
+\begin_layout Standard
+Es wird die selbe Vorgehensweise herangezogen, die auch im nicht verteilten
+ System gewählt wird.
+ Dazu wird ein zentraler Koordinator bestimmt, der von allen Einheiten befragt
+ wird und z.B.
+ genau einer den Zugriff auf die Ressource gestattet.
+ Verlässt derjenige Prozess wieder den kritischen Abschnitt meldet er dies
+ ebenfalls dem Koordinator.
+\end_layout
+
+\begin_layout Standard
+Im speziellen funktioniert der 
+\emph on
+zentralisierter Algorithmus
+\emph default
+ folgendermaßen:
+\end_layout
+
+\begin_layout Enumerate
+Prozess 1 stellt eine Anforderung, um den Zugriff auf eine Ressource durchführen
+ zu können.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Der Koordinator sendet eine OK-Antwort zurück (Erteilung) und somit kann
+ Prozess 1 in den kritischen Abschnitt eintreten.
+ 
+\end_layout
+
+\begin_layout Enumerate
+In der Zwischenzeit will auch Prozess 2 in den kritischen Abschnitt eintreten
+ und sendet ebenfalls eine Anfrage an den Koordinator.
+ Dieser stellt die Anfrage in eine Queue und sendet vorerst keine Antwort
+ an Prozess 2.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Prozess 1 hat den kritischen Abschnitt verlassen und sendet eine Freigabenachric
+ht an den Koordinator.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Darauf kann der Koordinator eine OK-Nachricht an Prozess 2 senden.
+ 
+\end_layout
+
+\begin_layout Standard
+Zu sehen ist dieser Ablauf in Abbildung 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:sync_central"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Die Vorteile liegen
+\end_layout
+
+\begin_layout Itemize
+in der einfachen Implementierung: es sind nur drei Nachrichten (Anforderung,
+ Erteilung, Freigabe) notwendig.
+ 
+\end_layout
+
+\begin_layout Itemize
+im fairen Behandeln der Anfragen, die genau im Eintreffen der Anforderungen
+ abgearbeitet werden.
+ Jeder Prozess kommt einmal an die Reihe; es kommt nicht vor, dass einer
+ endlos warten muss.
+ 
+\end_layout
+
+\begin_layout Standard
+Speziell bei dieser Möglichkeit, treten die Probleme auf, die auch bei zentralis
+ierten Verfahren auftreten:
+\end_layout
+
+\begin_layout Itemize
+Der Koordinator ist ein zentraler Ausfallpunkt: Wenn dieser ausfällt, dann
+ fällt möglicherweise das gesamte System aus.
+ 
+\end_layout
+
+\begin_layout Itemize
+Ein ausgefallener Koordinator kann nicht erkannt werden, wenn dieser nach
+ Annahme einer Anforderung ausfällt.
+ Da das Nichtempfangen einer Freigabe nicht unterschieden werden kann von
+ einem eventuellen Ausfall des Koordinators.
+ 
+\end_layout
+
+\begin_layout Itemize
+Der Koordinator kann sich als Leistungsengpass herausstellen und die Skalierbark
+eit begrenzen.
+ 
+\end_layout
+
+\begin_layout Itemize
+Wenn es keinen dedizierten Koordinator gibt, muss einer gewählt werden (Wahlalgo
+rithmen).
+ 
+\end_layout
+
+\begin_layout Standard
+
+\lang ngerman
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\lang ngerman
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang ngerman
+\begin_inset Graphics
+	filename sync_central.pdf
+	scale 85
+	BoundingBox 0bp 0bp 19cm 5cm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang ngerman
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\lang ngerman
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:sync_central"
+
+\end_inset
+
+Beispiel für zentralisierten Algorithmus
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Minisec
+Verteilter Algorithmus
+\end_layout
+
+\begin_layout Standard
+Der 
+\emph on
+verteilte Algorithmus
+\emph default
+ funktioniert folgendermaßen:
+\end_layout
+
+\begin_layout Standard
+Ein Prozess, der in den kritischen Bereich eintreten will, erzeugt eine
+ Anforderungsnachricht, die seine Prozessnummer und die aktuelle Zeit enthält.
+ Diese Nachricht sendet er an alle Prozesse (auch an sich selbst).
+\end_layout
+
+\begin_layout Standard
+Dies kann entwender durch einzelnes Versenden an alle Prozesse oder durch
+ Multicasting erfolgen.
+ Wichtig ist, dass die Kommunikation zuverlässig ist, d.h., dass jede Nachricht
+ bestätigt wird.
+\end_layout
+
+\begin_layout Standard
+Erhält ein Prozess eine Anforderungsnachricht, ist seine Reaktion von seinem
+ Status bzgl.
+ dem kritischen Abschnitt abhängig: 
+\end_layout
+
+\begin_layout Itemize
+Befindet sich der Empfänger nicht im kritischen Bereich und will diesen
+ auch nicht betreten, dann sendet er eine OK-Nachricht an den Sender zurück.
+ 
+\end_layout
+
+\begin_layout Itemize
+Befindet sich der Empfänger im kritischen Bereich, antwortet er nicht.
+ Stattdessen stellt er die Anforderung in eine Queue.
+ 
+\end_layout
+
+\begin_layout Itemize
+Will der Empfänger in den kritischen Bereich eintreten, hat dies aber noch
+ nicht gemacht, dann vergleicht er den Zeitstempel der eingehenden Nachricht
+ mit dem der Nachricht, die er selbst versendet hat.
+ Der niedrigere Zeitstempel gewinnt: Hat die eingehende Nachricht einen
+ niedrigeren Zeitstempel, dann sendet er eine OK-Nachricht zurück.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Hat seine eigene Nachricht einen kleineren Zeitstempel, stellt der Empfänger
+ die eingehende Anforderung in die Warteschlange und sendet nichts.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Hat ein Prozess OK-Nachrichten von allen Prozessen erhalten, dann kann er
+ in den kritischen Bereich eintreten.
+\end_layout
+
+\begin_layout Standard
+Wird der kritische Bereich verlassen, dann sendet der Prozess OK-Nachrichten
+ an alle Prozesse in seiner Warteschlange und löscht sie aus dieser.
+\end_layout
+
+\begin_layout Standard
+In Abbildung 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:sync_distributed"
+
+\end_inset
+
+ ist ein Beispiel für den Ablauf einer Synchronisation mittels verteilten
+ Algorithmus zu sehen.
+\end_layout
+
+\begin_layout Standard
+
+\lang ngerman
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\lang ngerman
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang ngerman
+\begin_inset Graphics
+	filename sync_distributed.pdf
+	scale 85
+	BoundingBox 0bp 0bp 165mm 5cm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\lang ngerman
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\lang ngerman
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:sync_distributed"
+
+\end_inset
+
+Beispiel für verteilten Algorithmus
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dieser Algorithmus hat jedoch einige gravierende Nachteile: 
+\end_layout
+
+\begin_layout Itemize
+Anstatt einem Ausfallpunkt gibt es jetzt n Ausfallpunkte.
+ 
+\end_layout
+
+\begin_layout Itemize
+Bei Einzelversendungen der Anforderungsnachrichten muss jeder Prozess eine
+ Liste der Gruppenmitglieder verwalten.
+ 
+\end_layout
+
+\begin_layout Itemize
+Die Skalierbarkeit hat sich auch nicht verbessert, da jetzt alle Prozesse
+ beteiligt sind und jeder eine Funktion ähnlich dem eines Koordinators übernimmt.
+ 
+\end_layout
+
+\begin_layout Itemize
+Der Algorithmus ist aufwändiger und langsamer.
+ 
+\end_layout
+
+\begin_layout Minisec
+Token-Ring-Algorithmus
+\end_layout
+
+\begin_layout Standard
+Beim 
+\emph on
+Token-Ring-Algorithmus
+\emph default
+ werden alle Prozess sind in einem logischen Ring angeordnet.
+ Jeder muss wissen welcher sein Nachfolger ist.
+ Es kreist ein Token im Ring.
+ Ist ein Prozess im Besitz des Tokens, dann kann er in den kritischen Abschnitt
+ eintreten.
+ Nach Verlassen des kritischen Abschnittes wird das Token weitergegeben.
+ Will kein Prozess in den kritischen Abschnitt eintreten, kreist das Token
+ mit hoher Geschwindigkeit im Kreis.
+\end_layout
+
+\begin_layout Standard
+Nachteile: 
+\end_layout
+
+\begin_layout Itemize
+Es kann auch hier ein Prozess abstürzen.
+ Dies kann jedoch erkannt werden, wenn jede Tokenübergabe bestätigt werden
+ muss.
+ Wird der Empfang nicht bestätigt, dann muss dieser Prozess aus dem Ring
+ entfernt werden.
+ D.h.
+\begin_inset space ~
+\end_inset
+
+bei der Übergabe muss der Vorgänger den toten Prozess aus dem Ring herausnehmen
+ und das Token an den übernächsten Prozess weitergeben.
+ D.h.
+\begin_inset space ~
+\end_inset
+
+aber, dass jeder Prozess den gesamten aktuellen Ring kennen muss! 
+\end_layout
+
+\begin_layout Itemize
+Es kann ein Token verloren gehen.
+ In diesem Fall muss es neu erzeugt werden, aber es ist nicht leicht zu
+ erkennen, dass ein Token verloren gegangen ist.
+ 
+\end_layout
+
+\begin_layout Minisec
+Zusammenfassung
+\end_layout
+
+\begin_layout Standard
+Es kann gesagt werden, dass der zentrale Algorithmus trotz dessen gravierenden
+ Nachteile der effizienteste und einfachste Algorithmus ist.
+\end_layout
+
+\begin_layout Subsection
+Verteilte Transaktionen
+\end_layout
+
+\begin_layout Standard
+Prinzipiell: Verteilte Transaktionen weisen ähnliche Charakteristiken wie
+ ihre nicht verteilten Pendants auf, jedoch treten 
+\emph on
+zusätzlich
+\emph default
+ die schon besprochenen Probleme auf, die man mit ähnlichen Mechanismen
+ lösen kann.
+\end_layout
+
+\end_body
+\end_document

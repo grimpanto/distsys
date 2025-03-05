@@ -1,0 +1,115 @@
+#LyX 1.5.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass scrbook
+\language ngerman
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+FDDI
+\end_layout
+
+\begin_layout Standard
+FDDI (Fiber Distributed Data Interface) weist große Ähnlichkeiten mit dem
+ Tokenring auf.
+ Die Datenrate ist 100MBit/s.
+ Es gibt auch eine Variante mit einer Datenrate von 1000MBit/s.
+ Ringlängen sind bis zu 100 oder 200km möglich.
+\end_layout
+
+\begin_layout Section
+Prinzip
+\end_layout
+
+\begin_layout Standard
+In Abweichung zum Tokenring werden optische Fasern in einem Doppelring verwendet.
+ Bei FDDI kreist ebenfalls ein Token im Kreis, im Unterschied zum Tokenring
+ können jedoch auch mehrere Tokens gleichzeitig kreisen.
+ Dazu gibt der Sender das Token sofort nach dem Senden des letzten Frames
+ wieder frei.
+ Das Entfernen der Rahmen wird ebenfalls nur vom Absender durchgeführt.
+\end_layout
+
+\begin_layout Section
+Netzaufbau
+\end_layout
+
+\begin_layout Standard
+Der Doppelring besteht aus zwei Ringen, die gegeläufig betrieben werden
+ und als Haupt- und Ersatzring ausgelegt sind.
+ Bei einer Unterbrechung beider Ringe (an der selben Stelle) können die
+ benachbarten Stationen den Ring wieder schließen.
+ Damit wirkt sich die Unterbrechung, abgesehen von einer doppelt langen
+ Ringlänge nicht aus.
+\end_layout
+
+\begin_layout Standard
+Ähnlich den MSAUs im Tokenring definiert der FDDI Standard ebenfalls Anschlussmö
+glichkeiten für die einzelnen Stationen.
+ Allerdings werden verschiedene Arten von Stationen definiert:
+\end_layout
+
+\begin_layout Itemize
+Eine DAS (dual attachment station) verfügt über zwei getrennte Anschlüsse,
+ sodass die Station unabhängig über beide Ringe kommunizieren kann.
+ Ebenfalls wie bei Tokenring wird bei Ausfall der Station der Ring nicht
+ unterbrochen.
+\end_layout
+
+\begin_layout Itemize
+Ein DAC (dual attachment concentrator) wird wie eine DAS an den Ring angeschloss
+en.
+ Das Besondere ist, dass an einen DAC mehrere DAS bzw.
+ SAS (siehe nächsten Punkt) angeschlossen werden können.
+\end_layout
+
+\begin_layout Itemize
+Eine SAS (single attachment station) wird immer über eine DAS oder DAC an
+ den Ring angeschlossen.
+\end_layout
+
+\begin_layout Standard
+DAC bzw.
+ DAS sind direkt im Doppelring einhängbar.
+ Eine SAS kann nicht direkt in den Doppelring eingehängt werden.
+ Eine DAS kann auch an zwei verschiedene DAC angeschlossen werden.
+ Diese als Dual Homing bezeichnete Konfiguration und erhöht nochmals die
+ Verfügbarkeit der Station am Netz.
+\end_layout
+
+\end_body
+\end_document

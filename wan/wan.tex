@@ -1,0 +1,83 @@
+
+\chapter{WAN Technologien}
+
+In diesem Kapitel werden die wichtigsten WAN Technologien kurz vorgestellt.
+
+
+\section{X.25}
+
+Bei X.25 handelt es sich um ein öffentliches, paketvermittelndes Netzwerk,
+das im Jahr 1976 standardisiert wurde. Eigentlich beschreibt X.25
+die Schnittstelle zwischen Endgerät und Netz. X.25 Netze stellen permanente
+virtuelle Verbindungen oder geschaltete virtuelle Verbindungen zur
+Verfügung. An Datenraten sind 300Bit/s bis 64KBit/s definiert und
+seit 1992 gibt es auch 2MBit/s. Die Datenraten entsprechen nicht mehr
+den heutigen Anforderungen an ein WAN. Der Grund für die niedrigen
+Datenraten liegt einerseits darin, dass die Technologie relativ alt
+ist und X.25 für die Verwendung über schlechte analoge Übertragungsstrecken
+ausgelegt wurde. Der große Vorteil dieser Technologie ist, dass sie
+weltweit verfügbar ist.
+
+
+\section{ISDN}
+
+ISDN steht für Integrated Services Digital Network und hat das Ziel,
+verschiedene Dienste wie Sprach-, Daten- und Bildkommunikation in
+einem Netz zur Verfügung zu stellen. Es wurde im Jahr 1984 standardisiert
+und ist ebenfalls ein öffentliches, aber leitungsvermitteltes Netz.
+Prinzipiell gibt es zwei Arten von Anschlüssen:
+\begin{itemize}
+\item Der Basisanschluss (Basic Rate Interface, BRI) fasst zwei B Kanäle
+und einen D-Kanal zusammen. Ein B-Kanal hat eine Datenrate von 64KBit/s
+und ein D-Kanal eine Datenrate von 16KBit/s. B-Kanäle sind Datenkanäle
+und der D-Kanal ist als Signalisierungskanal vorgesehen (Steuerung).
+\item Der Primärmultiplexanschluss (Primary Rate Interface, PRI) fasst 30
+B-Kanäle und einen D-Kanal zusammen.
+\end{itemize}
+
+\section{Frame Relay}
+
+Bei Frame Relay handelt es sich um eine Weiterentwicklung von X.25.
+Dazu kann es einerseits als abgemagerte Variante von X.25 betrachtet
+werden, die höhere Datenraten unterstützt (bis zu 45MBit/s sind machbar).
+Das ist deshalb möglich, da X.25 für Übertragungsstrecken mit hohen
+Fehlerraten ausgelegt war und deshalb aufwändige Protokolle für die
+sichere Übertragung beinhaltet. Durch die wesentlich geringeren Fehlerraten
+auf neueren digitalen Übertragungssystemen können einfachere Protokolle
+verwendet werden. Charakteristisch ist, dass Pakete im Vergleich zu
+ATM eine variable Länge aufweisen.
+
+
+\section{ATM}
+
+ATM (asynchronous transfer mode) ist eine verbindungsorientierte,
+die eine eine Bereitstellung von Dienstgüten zur Verfügung stellt.
+ATM wurde 1986 standardisiert und wird hauptsächlich von Netzbetreibern
+im WAN Bereich eingesetzt. Im LAN hat es sich nicht durchgesetzt und
+mit der Einführung von 10-Gigabit-Ethernet wird vermutet, dass ATM
+auch im WAN (teilweise) abgelöst wird, da die Hardware relativ aufwändig
+ist und auch eine umfassende Administration des Netzes notwendig ist.
+
+Auch bei ATM können entweder permanente virtuelle Verbindungen (in
+etwa wie Standleitungen) oder transiente virtuelle Verbindungen (in
+etwa wie Wählleitungen) aufgebaut werden. Eine Verbindung wird bei
+ATM nur aufgebaut, wenn die geforderten Güteklassen erfüllt werden.
+Bei ATM handelt es sich um eine zellenbasierte Technologie. Unter
+einer Zelle versteht man ein kleines Paket mit fester Größe. Die Daten
+werden dazu in Paket je 48 Bytes unterteilt und mit 5 Bytes Header
+versehen. Der Vorteil solcher Pakete liegt darin, dass der Jitter
+klein ist. ATM unterstützt derzeit Datenraten bis zu 625MBit/s.
+
+
+\section{Zugangsnetze}
+
+Als leitungsgebundene Zugangsnetze bzw. Zugangsverfahren sind in Verwendung:
+Modemverbindung über Telefonleitung, ISDN Anschluss, xDSL (digital
+subscriber line), Modem über Kabelnetz sowie die Mitverwendung der
+Stromversorgungsleitungen.
+
+Für den leitungsungebundenen Zugang werden Mobilfunk über GSM, Mobilfunk
+über UMTS, Richtfunk und Satellitenfunk eingesetzt. In der Zukunft
+werden weitere Funktechnologien folgen, z.B.: Wimax (worldwide interoperability
+for microwave access), ein Funkstandard für Breitbandanbindungen bis
+zu 70MBit/s und bis zu 50km.

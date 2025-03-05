@@ -1,0 +1,852 @@
+#LyX 1.5.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass scrbook
+\begin_preamble
+
+\end_preamble
+\language ngerman
+\inputencoding latin1
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 0
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Überblick
+\end_layout
+
+\begin_layout Section
+Defintion eines verteilten Systems
+\begin_inset LatexCommand label
+name "sec:defintion_distsys"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quote
+Ein verteiltes System ist eine Menge von einander unabhängiger Computer,
+ die dem Benutzer wie ein einzelnes System erscheinen.
+ (Andrew S.
+ Tanenbaum)
+\end_layout
+
+\begin_layout Standard
+D.h.
+ ein verteiltes System kann laut dieser Definition als Rechnernetz gesehen
+ werden, das jedoch den Eindruck vermittelt nur ein einziger Rechner zu
+ sein.
+ Der Schwerpunkt bei verteilten Systemen liegt darin, dass eine bestimmte
+ Anwendung im Vordergrund steht, die über mehrere Rechnern verteilt ist
+ und diese gemeinsam eine Aufgabe erledigen.
+ Das Rechnernetz bleibt jedoch transparent.
+\end_layout
+
+\begin_layout Standard
+Um ein System für einen Benutzer als einzelnes, zusammenhängendes System
+ erscheinen zu lassen, ist natürlich Software notwendig, die diese zusätzliche
+ Abstraktionsebene zur Verfügung stellt.
+ Im Falle mehrerer heterogener Computer mit z.T.
+ unterschiedlichen Betriebssystemen wird häufig ein verteiltes System mittels
+ einer Middleware-Komponente betrieben.
+ Diese Middleware-Schicht erstreckt sich über mehrere Maschinen und sitzt
+ zwischen dem lokalen Betriebssystem und der verteilten Applikation (siehe
+ Protokollstack).
+\end_layout
+
+\begin_layout Standard
+Und wie erkennt man nun wirklich, dass es sich um ein verteiltes System
+ handelt? Eine 
+\begin_inset Quotes pld
+\end_inset
+
+Definition
+\begin_inset Quotes prd
+\end_inset
+
+ mit humoristischem Einschlag gibt es von Laslie Lamport:
+\end_layout
+
+\begin_layout Quote
+A distributed system is one in which I cannot get something done because
+ a machine I've never heard of is down.
+ (Laslie Lamport)
+\end_layout
+
+\begin_layout Standard
+Aus der Sicht des Systementwicklers ist ein verteiltes System ein logisch
+ verteiltes Anwendungssystem samt dem verwendeten Trägersystem (Rechnernetz,
+ Hardware).
+\end_layout
+
+\begin_layout Section
+Ziele eines verteilten Systems
+\end_layout
+
+\begin_layout Standard
+Es ist nicht immer sinnvoll jedes System als verteiltes System zu entwerfen.
+ Die folgenden 
+\emph on
+4 Ziele
+\emph default
+ sollten vorhanden sein, damit der Aufbau eines verteilten Systems sinnvoll
+ ist: 
+\end_layout
+
+\begin_layout Description
+Benutzer\InsetSpace ~
+und\InsetSpace ~
+Ressourcen\InsetSpace ~
+verbinden Das wichtigste Ziel ist es, den Benutzern
+ so einfach wie möglich, auf entfernte Ressourcen 
+\emph on
+zugreifen
+\emph default
+ zu lassen und diese Ressourcen mit anderen Benutzern in kontrollierter
+ Weise gemeinsam zu nutzen.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Beispiele: 
+\end_layout
+
+\begin_layout Itemize
+Drucker, Speichergeräte 
+\end_layout
+
+\begin_layout Itemize
+Prozessorleistung, Netzwerke 
+\end_layout
+
+\begin_layout Itemize
+Dateien, Webseiten 
+\end_layout
+
+\begin_layout Itemize
+Dienste 
+\end_layout
+
+\begin_layout Standard
+Gründe: 
+\end_layout
+
+\begin_layout Itemize
+Kosten der Hardware, Software (Lizenzen) 
+\end_layout
+
+\begin_layout Itemize
+Informationsaustausch (z.B.
+ Austausch von Dateien, E-Mails,...) 
+\end_layout
+
+\begin_layout Itemize
+Vereinfachung der Zusammenarbeit (z.B.
+ Workflow-Lösungen) 
+\end_layout
+
+\begin_layout Itemize
+Sicherheit (Zugriffskontrolle, Protokollierung) 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Gefahrenquellen und Sicherheitsgefährdungen.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Transparenz Ein weiteres wichtiges Ziel ist es, die Tatsache zu 
+\emph on
+verbergen
+\emph default
+, dass Prozesse und Ressourcen physisch über mehrere Computer verteilt sind.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Ein verteiltes System, das in der Lage ist, sich Benutzern und Applikationen
+ so zu präsentieren, als wäre es ein einziges Computersystem, wird als transpare
+nt bezeichnet.
+\end_layout
+
+\begin_layout Standard
+Achtung: Der deutsche Begriff 
+\begin_inset Quotes pld
+\end_inset
+
+trasparent
+\begin_inset Quotes prd
+\end_inset
+
+ bedeutet eigentlich durchscheinend und gibt daher eigentlich nicht den
+ Sinn wider, den dieser Begriff in der Informatik hat.
+ Im Englischen dafür wird `opaque' verwendet, das dem deutschen `undurchsichtig'
+ entspricht, während das englische `transparent' sehr wohl mit dem deutschen
+ 
+\begin_inset Quotes pld
+\end_inset
+
+transparent
+\begin_inset Quotes prd
+\end_inset
+
+ zu übersetzen ist.
+\end_layout
+
+\begin_layout Standard
+Zusammenfassend: Der Informatiker sagt 
+\begin_inset Quotes pld
+\end_inset
+
+transparent
+\begin_inset Quotes prd
+\end_inset
+
+, wenn er 
+\emph on
+nicht sichtbar
+\emph default
+, 
+\emph on
+nicht merklich
+\emph default
+ meint! `Opaque' als Anglizismus hat sich nicht etabliert.
+\end_layout
+
+\begin_layout Standard
+Verschiedene Arten der Transparenz: 
+\end_layout
+
+\begin_layout Itemize
+Zugriffstransparenz: Unterschiede in der Datendarstellung und wie der Zugriff
+ des Benutzers erfolgt sind transparent.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Bsp.: Wie werden Zahlen repräsentiert? Welcher Zeichensatz wird verwendet?
+ Mit welchem Protokoll erfolgt der Zugriff? 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Positionstransparenz: Der physische Ort einer Ressource bleibt vor dem Benutzer
+ verborgen.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Bsp.: Wo befindet sich die Ressource physisch im System? Wie werden die Namen
+ der Ressourcen vergeben? 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Migrationstransparenz: Ressourcen können verschoben werden.
+ Bsp.: Eine Datei wird von einem Server auf einen anderen Server verschoben.
+ 
+\end_layout
+
+\begin_layout Itemize
+Relokationstransparenz: Ressource kann verschoben werden 
+\emph on
+während
+\emph default
+ der Zugriff erfolgt (
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Positionstransparenz).
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Bsp.: Ein mobiler Benutzer mit Funk-Laptop bewegt sich bei bestehender Datenverbi
+ndung von einer GSM Zelle in eine andere.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Replikationstransparenz: Es existieren mehrere Kopien einer Ressource.
+ Benutzer muss nicht wissen auf welche Replik er zugreift (
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Positionstransparenz).
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Bsp.: Der Zugriff erfolgt auf eine lokal verfügbare Datenbank, die mittels
+ der Mechanismen des verwendeten DBMS repliziert wird.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Nebenläufigkeitstransparenz: Benutzer erkennt nicht, dass ein anderer Benutzer
+ dieselbe Ressource simultan benutzt.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Bsp.: Benutzer greift auf Daten in einer Tabelle zu, ohne Rücksicht darauf
+ nehmen zu müssen, dass eventuell andere Benutzer ebenfalls auf diese Daten
+ zugreifen.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Fehlertransparenz: Ein Fehler in einer Ressource ist für den Benutzer nicht
+ sichtbar, d.h.
+ wird vom System aufgelöst.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Bsp.: Welche Festplatte einen Fehler in einer RAID-5 Konfiguration aufweist
+ bleibt dem Benutzer verborgen und außerdem wird der Fehler korrigiert.
+\end_layout
+
+\begin_layout Standard
+Dazu muss natürlich folgendes passieren: 
+\end_layout
+
+\begin_layout Enumerate
+Fehler erkennen 
+\end_layout
+
+\begin_layout Enumerate
+Fehler maskieren oder Fehler tolerieren 
+\end_layout
+
+\begin_layout Enumerate
+Wiederherstellen nach Fehlern 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Persistenztransparenz: Ressource befindet sich entweder im flüchtigen Speicher
+ oder z.B.
+ auf einer Festplatte.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Bsp.: Bei der Verwendung von objektorientierten Datenbanken wird auf ein
+ Objekt in der Datenbank genauso zugegriffen wie auf ein Objekt im Hauptspeicher.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Allerdings ist es 
+\emph on
+nicht immer sinnvoll
+\emph default
+ einen hohen Transparenzgrad erreichen zu wollen.
+ Gründe dafür liegen z.B.
+ in: 
+\end_layout
+
+\begin_layout Itemize
+Systemleistung: jede Art von Transparenz benötigt Ressourcen.
+ Es ist deshalb eine Abwägung zu treffen zwischen Transparenzgrad und Systemleis
+tung.
+ 
+\end_layout
+
+\begin_layout Itemize
+Physische Gegebenheiten können teilweise nicht verborgen werden (Prozess
+ in Wr.
+ Neustadt soll Verbindung zu Prozess in New York aufnehmen!).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Offenheit Ein offenes verteiltes System ist ein System, das Dienste Standardrege
+ln entsprechend anbietet (diese beschreiben die Syntax und die Semantik
+ dieser Dienste).
+ In Computernetzwerken kontrollieren diese Standardregeln das Format, den
+ Inhalt und die Bedeutung gesendeter und empfangener Nachrichten.
+ Solche Regeln werden in 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Protokollen formalisiert.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+In verteilten Systemen werden Dienste im Allgemeinen durch Schnittstellen
+ spezifiziert, die häufig in einer IDL (Interface Definition Language) beschrieb
+en sind.
+ Derartige Schnittstellendefinitionen erfassen meistens nur die Syntax von
+ Diensten.
+ D.h.\InsetSpace ~
+sie spezifizieren exakt die Namen der Funktionen sowie die Typen der
+ Parameter, Rückgabewerte, mögliche Ausnahmen, die geworfen werden, usw.
+ Die Semantik wird meist in informeller Weise (sprich als verbale Dokumentation)
+ angegeben.
+\end_layout
+
+\begin_layout Standard
+Derartige Schnittstellen müssen natürlich veröffentlicht werden, damit ein
+ offenes System entsteht.
+ Wichtige Organisationen, die Standards veröffentlichen: 
+\end_layout
+
+\begin_layout Description
+IETF (Internet Engineering Task Force) RFC (Requests for Comment): http,
+ smtp,...
+ 
+\end_layout
+
+\begin_layout Description
+W3C (World Wide Web Consortium) Recommendations: HTML, XML, SOAP,...
+ 
+\end_layout
+
+\begin_layout Description
+OMG (Object Management Group) Specifications: CORBA, OMA, UML 
+\end_layout
+
+\begin_layout Itemize
+Interoperabilität beschreibt das Ausmaß, in dem zwei Implementierungen von
+ Systemen nebeneinander existieren und zusammenarbeiten können, indem sie
+ sich auf die Dienste des anderen verlassen, die nach einer gemeinsamen
+ Definition spezifiziert sind.
+ 
+\end_layout
+
+\begin_layout Itemize
+Portabilität beschreibt, in welchem Ausmaß eine Anwendung, die für ein System
+ A entwickelt wurde, ohne Veränderung auf einem System B ausgeführt werden
+ kann, das dieselbe Schnittstelle wie A implementiert.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Skalierbarkeit 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Skalierbarkeit bezüglich der Größe des Systems: Hinzufügen weiterer Benutzer
+ und Ressourcen.
+ 
+\end_layout
+
+\begin_layout Itemize
+Geographische Skalierbarkeit: Benutzer und Ressourcen können sehr weit auseinand
+erliegen.
+ 
+\end_layout
+
+\begin_layout Itemize
+Administrative Skalierbarkeit: Verwaltbarkeit, wenn sich das System über
+ viele unabhängige administrative Organisationen erstreckt.
+ 
+\end_layout
+
+\begin_layout Standard
+Oft wird Skalierbarkeit durch die Verwendung eines zentralen Dienstes (also
+ ein Server stellt alle Dienste zur Verfügung), durch die zentrale Speicherung
+ der Daten (alle Daten werden an einem Ort gespeichert) bzw.
+ durch die Verwendung von zentralen Algorithmen (anstatt von parallen Algorithme
+n) eingeschränkt.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Skalierungstechniken
+\emph default
+ 
+\end_layout
+
+\begin_layout Itemize
+Daraus lässt sich leicht erkennen, dass eine Möglichkeit zur Steigerung
+ der Skalierbarkeit in der Verteilung liegt (Beispiel: der DNS-Namensraum
+ ist hierarchisch als Domänenbaum aufgebaut und die DNS-Server sind ebenfalls
+ hierarchisch vernetzt).
+ 
+\end_layout
+
+\begin_layout Itemize
+Eine weitere Form der Verteilung ist die Replikation, die einerseits für
+ verbesserte Antwortzeiten herangezogen werden kann (da z.B.
+ die Daten lokal bezogen werden können) und andererseits auch die Verfügbarkeit
+ der Daten erhöht werden kann.
+ 
+\end_layout
+
+\begin_layout Itemize
+Weiters kann Caching als eine Spezialform der Replikation angesehen werden.
+ Im Gegensatz zur Replikation werden Änderungen immer an einer Master-Datenquell
+e durchgeführt.
+ 
+\end_layout
+
+\begin_layout Itemize
+Außerdem können die Antwortzeiten verbessert werden, indem eine asynchrone
+ Kommunikation anstatt einer synchroner Kommunikation eingesetzt wird: D.h.\InsetSpace ~
+es
+ wird so weit als möglich vermieden auf die Antworten von entfernten Dienstanfor
+derungen zu warten (
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Nachrichtenorientierte Kommunikation).
+ 
+\end_layout
+
+\begin_layout Standard
+Andererseits ist es aus verschiedenen Gründen (z.B.
+ der Sicherheit) oft notwendig bzw.\InsetSpace ~
+viel einfacher eine zentralisierte Struktur
+ (d.h.\InsetSpace ~
+einen einzigen Server) zu verwenden.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Hardware- und Softwarekonzepte
+\end_layout
+
+\begin_layout Standard
+Im folgenden werden verschiedene Möglichkeiten betrachtet, wie ein verteiltes
+ System bezüglich Hardware und Software strukturiert werden kann:
+\end_layout
+
+\begin_layout Itemize
+Hardware 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Multiprozessor: ein Computer mit mehreren Prozessoren, d.h.
+ diese Prozessoren verwenden einen gemeinsamen Speicher, der in einem einzigen
+ physischen Adressraum für alle Prozessoren zugänglich ist (Bus-basierter
+ oder Schalter-basierter Zugriff).
+ 
+\end_layout
+
+\begin_layout Itemize
+Multicomputer: mehrere Computer, die keinen gemeinsamen Speicher verwenden,
+ d.h.
+ jeder Computer hat seinen eigenen Speicher (meistens Bus-basierter Zugriff).
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+homogene Multicomputer: Hardware und Software sind gleich (meist in einem
+ Schrank).
+ 
+\end_layout
+
+\begin_layout Itemize
+heterogene Multicomputer: unterschiedliche Hardware, unterschiedliches Betriebss
+ystem,...).
+ 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+Software 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Verteilte Betriebssysteme: stellen eine Abstraktionsschicht zur Verfügung,
+ die dem Benutzer den Eindruck eines einzigen Computers vermittelt.
+ D.h.\InsetSpace ~
+es werden die vorhandenen Hardware-Ressourcen transparent zur Verfügung
+ gestellt.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Einprozessor-Betriebssysteme: DOS, Win98, Mac OS 
+\end_layout
+
+\begin_layout Itemize
+Mehrprozessor-Betriebssysteme: WinXP Server, *nix, Mac OS X, VM 
+\end_layout
+
+\begin_layout Itemize
+Multicomputer-Betriebssysteme (homogene Hardware): MOSIX, MC/OS 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Netzwerkbetriebssysteme (Network Operating System - NOS): Novell, WinXP,
+ *nix, Mac OS X, VMS
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Zugrundeliegende Hardware wird nicht als homogen vorausgesetzt und jeder
+ Knoten hat deshalb seinen eigenen Betriebssystemkern, der in Kooperation
+ mit den anderen Computern Ressourcen und Dienste verteilt zur Verfügung
+ stellt.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Middleware: CORBA, .NET, J2EE, ICE
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Über die Möglichkeiten der Netzwerksbetriebssysteme hinausgehend werden
+ Dienste benötigt, wie z.B.
+ Kommunikationsfunktionen, der Namensgebung, Persistenz oder verteilte Transakti
+onen, die von eigenen Middleware-Systemen bereitgestellt werden (
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Protokollstack).
+ 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Section
+Client / Server Konzept
+\end_layout
+
+\begin_layout Standard
+Das 
+\emph on
+Client/Server Konzept
+\emph default
+ ist ein unabhängiges Konzept, das in verschiedener Ausprägung sich in jeder
+ Art von Kommunikation wiedererkennen läßt (und ist nicht auf das zur Verfügungs
+tellen von Dateidiensten in einer Server-zentrierten LAN Umgebung beschränkt).
+\end_layout
+
+\begin_layout Standard
+Unterscheidung Client/Server: 
+\end_layout
+
+\begin_layout Itemize
+Client: Prozess (
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Prozesse), der Dienste von Server anfordert 
+\end_layout
+
+\begin_layout Itemize
+Server: Prozess, der Dienste für Client erbringt 
+\end_layout
+
+\begin_layout Standard
+D.h.\InsetSpace ~
+ein Client ist ein Service Requester, der über ein Protokoll einen Dienst
+ von einem Service Provider (Server) anfordert.
+\end_layout
+
+\begin_layout Standard
+Beispiele für Dienste, die ein Server zur Verfügung stellen kann: 
+\end_layout
+
+\begin_layout Itemize
+Dateisystemdienst 
+\end_layout
+
+\begin_layout Itemize
+Datenbankdienst 
+\end_layout
+
+\begin_layout Itemize
+http Server 
+\end_layout
+
+\begin_layout Itemize
+e-Banking - Dienst (überweise 100 Euro auf mein Konto) 
+\end_layout
+
+\begin_layout Itemize
+Rechenzeit,...
+ 
+\end_layout
+
+\begin_layout Standard
+Ein Client benötigt die Adresse des Servers, Angaben über den Dienst und
+ Angaben über das Protokoll, um auf den Server zugreifen zu können.
+\end_layout
+
+\begin_layout Standard
+Ein Prozess kann Server und/oder Client (zur gleichen Zeit) sein bzw.
+ kann diese Rollen auch dynamisch wechseln.
+\end_layout
+
+\begin_layout Section
+Themen verteilter Systeme
+\end_layout
+
+\begin_layout Standard
+Das gesamte Gebiet des Entwurfes und der Programmierung verteilter Systeme
+ lässt sich in verschiedene Themen aufgliedern, die einerseits die wichtigen
+ Konzepte repräsentieren und andererseits Anwendungen dieser Konzepte sind:
+\end_layout
+
+\begin_layout Itemize
+Prozesse 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Welche Rollen spielen Prozesse in verteilten Systemen? 
+\end_layout
+
+\begin_layout Itemize
+Was ist der Unterschied zwischen Thread und Prozess? Wann ist es sinnvoll
+ Threads zu verwenden, wann Prozesse? 
+\end_layout
+
+\begin_layout Itemize
+Wie programmiert man mit Threads und ThreadPools? Wie mit Prozessen?
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Synchronisierung 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Wieso ist die Synchronisierung von Prozessen notwendig? Welche Probleme
+ treten auf? 
+\end_layout
+
+\begin_layout Itemize
+Wie kann Synchronisation prinzipiell erreicht werden? 
+\end_layout
+
+\begin_layout Itemize
+Wie programmiert man Synchronisationsmechanismen? 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Kommunikation 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Was sind Protokolle? Beispiele für Protokolle? 
+\end_layout
+
+\begin_layout Itemize
+Welche unterschiedliche Kommunikationsarten gibt es? 
+\end_layout
+
+\begin_layout Itemize
+Wie programmiert man einfache Protokolle? 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Programmieren von verteilten Systemen 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Welche Softwarearchitekturen gibt es? 
+\end_layout
+
+\begin_layout Itemize
+Welche Muster zur Implementierung verteilter Software gibt es? 
+\end_layout
+
+\begin_layout Itemize
+Wie werden Serverprogramme aufgebaut? Was ist zu beachten? 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Namen 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Wie werden Einheiten eindeutig benannt? 
+\end_layout
+
+\begin_layout Itemize
+Wie findet man einen Dienst oder eine Ressource? 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Konsistenz und Replikation
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Warum wird Replikation benötigt und welche Welche Auswirkungen gibt es?
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Fehlertoleranz 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Welche Arten und Typen von Fehlern gibt es? 
+\end_layout
+
+\begin_layout Itemize
+Wie können Systeme (Software, Hardware) fehlertolerant aufgebaut werden?
+ 
+\end_layout
+
+\end_body
+\end_document

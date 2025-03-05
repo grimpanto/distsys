@@ -1,0 +1,77 @@
+#LyX 1.4.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 245
+\begin_document
+\begin_header
+\textclass scrbook
+\language ngerman
+\inputencoding auto
+\fontscheme default
+\graphics default
+\float_placement H
+\paperfontsize default
+\spacing single
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\bullet 0 2 5 -1
+\tracking_changes false
+\output_changes false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Sicherheit
+\end_layout
+
+\begin_layout Section
+IPSec
+\end_layout
+
+\begin_layout Section
+TLS
+\end_layout
+
+\begin_layout Section
+PGP
+\end_layout
+
+\begin_layout Section
+OpenVPN
+\end_layout
+
+\begin_layout Standard
+OpenVPN ist eine vergleichsweise neue VPN Technik, mit der man ebenso einzelne
+ Rechner übers Internet miteinander verbinden wie komplette Netze koppeln
+ oder Heimarbeitern sicheren Zugang zum Firmennetz gewähren kann.
+ Auch bei der Zugangskontrolle und Verschlüsselung in Funknetzen oder für
+ die Fernwartung leistet es gute Dienste.
+ Der große Vorteil von OpenVPN ist, dass es viel einfacher aufzusetzen ist
+ als IPSec.
+\end_layout
+
+\begin_layout Standard
+Für Verschlüsselung und Authentifizierung setzt OpenVPN auf Secure Socket
+ Layer (SSL) beziehungsweise dessen Nachfolger Transport Layer Security
+ (TLS).
+ Diese werden seit vielen Jahren unter anderem für die Verschlüsselung von
+ https-Web-Seiten und die Absicherung von Diensten wie E-Mail per IMAP eingesetz
+t.
+ Damit nutzt es für diese grundlegenden, sicherheitsrelevanten Funktionen
+ bewährte Protokolle und Bibliotheken wie OpenSSL, die sehr gut untersucht
+ und getestet sind.
+\end_layout
+
+\end_body
+\end_document

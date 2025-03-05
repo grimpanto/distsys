@@ -1,0 +1,773 @@
+#LyX 1.4.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 245
+\begin_document
+\begin_header
+\textclass scrbook
+\begin_preamble
+
+\end_preamble
+\language ngerman
+\inputencoding latin1
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+
+Systemarchitektur
+\end_layout
+
+\begin_layout Minisec
+Definition
+\end_layout
+
+\begin_layout Standard
+Es gibt keine allgemein gültige Definition des Begriffes `Systemarchitektur'.
+ Die folgende Definition ist von G.Booch:
+\end_layout
+
+\begin_layout Quote
+Die Architektur regelt den konzeptionellen Zusammenhang zwischen den verschieden
+en eigenständigen Komponenten eines Systems.
+ Sie formt die logische und physikalische Struktur eines Systems mit allen
+ strategischen und taktischen Entwurfsentscheidungen, welche während dem
+ Entwicklungsprozess angewendet werden müssen.
+ 
+\end_layout
+
+\begin_layout Standard
+Das SEI (Software Engineering Institute) der Carnegie Mellon University
+ definiert den Begriff `architecture' folgendermaßen:
+\end_layout
+
+\begin_layout Quote
+A specification that identifies components and their associated functionality,
+ describes connectivity of components, and describes the mapping of functionalit
+y onto components.
+ Architectures can be of different types, e.g., hardware, software, or system,
+ and can be domain-specific, e.g., networking.
+ 
+\end_layout
+
+\begin_layout Standard
+Eine etwas pragmatischere Defintion für den Begriff Systemarchitektur: Man
+ versteht darunter die Konzipierung des Aufbaus von IT-Systemen aus Hardware,
+ System-, Middleware- und Anwendungssoftware, Netzwerkstrukturen, Betriebsperson
+al und Nutzern.
+\end_layout
+
+\begin_layout Standard
+Die Systemarchitektur als solches ist ein Produkt (oder auch Artifakt),
+ das im Zuge der Entwicklung entsteht und der Kommunikation zwischen den
+ Projektmitgliedern dient.
+\end_layout
+
+\begin_layout Minisec
+Kriterien für eine gute Architektur
+\end_layout
+
+\begin_layout Description
+Einfachheit KISS Prinzip 
+\end_layout
+
+\begin_layout Description
+Funktionalität In welchem Maße wird die geforderte Funktionalität abgedeckt?
+ 
+\end_layout
+
+\begin_layout Description
+Erweiterbarkeit extrem wichtig, besonders im Hinblick auf iterative Entwicklung
+ 
+\end_layout
+
+\begin_layout Description
+Kapselung starke Bindung innerhalb der Komponenten, schwache zwischen den
+ Komponenten 
+\end_layout
+
+\begin_layout Minisec
+Abgrenzung zur Softwarearchitektur
+\end_layout
+
+\begin_layout Standard
+Während sich die Systemarchitektur mit dem Aufbau und dem Zusammenspiel
+ als auch dem Umfeld des gesamten Systems beschäftigt, hat die Softwarearchitekt
+ur den Aufbau und das Zusammenspiel der Software zum Inhalt.
+\end_layout
+
+\begin_layout Standard
+In der Regel wird die gewählte Systemarchitektur einen großen Einfluss auf
+ die Softwarearchitektur haben!
+\end_layout
+
+\begin_layout Standard
+Ohne auf Details eingehen zu wollen, werden wir uns in weiterer Folge auf
+ die logische Struktur konzentrieren.
+\end_layout
+
+\begin_layout Section
+Client-Server-Modell
+\end_layout
+
+\begin_layout Subsection
+Schichten
+\end_layout
+
+\begin_layout Standard
+Es gibt (zumindest) 
+\emph on
+drei unterschiedliche Schichten
+\emph default
+ in denen Client- oder Server-Funktionalität beinhaltet sein kann:
+\end_layout
+
+\begin_layout Itemize
+Präsentationsebene (Presentation Layer, PL) Darstellung der Daten und Verarbeitu
+ng der Benutzereingaben.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+zeichenbasierte Benutzeroberfläche (Mainframe, DOS, Terminal) 
+\end_layout
+
+\begin_layout Itemize
+graphische Benutzeroberfläche (Win, X-Windows) 
+\end_layout
+
+\begin_layout Standard
+Diese Ebene kann auch noch aufgegliedert werden in:
+\end_layout
+
+\begin_layout Itemize
+Reine Anzeigefunktionalität (View - Komponente des MVC Paradigmas) 
+\end_layout
+
+\begin_layout Itemize
+Steuerung der Benutzerschnittstelle (Control - Komponente des MVC Paradigmas,
+ Presentation Logic) 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Verarbeitungsebene (Application Layer, AL)
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Beinhaltet die Business-Logic (Verarbeitung und Auswertung der Daten).
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Datenebene (Data Layer, DL) 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Persistenz der Daten: Dateisystem oder Datenbank 
+\end_layout
+
+\begin_layout Itemize
+Datenunabhängigkeit: Unabhängigkeit von den Applikationen soll gegeben sein.
+ 
+\end_layout
+
+\begin_layout Itemize
+Datenkonsistenz: DL soll die Konsistenz der Daten sicherstellen können (z.B.
+ durch Trigger in RDBMS oder Invarianten in OODBMS).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Client/Server - Architekturen
+\end_layout
+
+\begin_layout Standard
+Je nach Aufteilung der Schichtung auf Client bzw.
+ Server entstehen verschiedene 
+\emph on
+Client/Server - Architekturen
+\emph default
+:
+\end_layout
+
+\begin_layout Itemize
+2-Tier 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Client: PL --- Server: PL, AL, DL 
+\end_layout
+
+\begin_layout Itemize
+Client: PL --- Server: AL, DL 
+\end_layout
+
+\begin_layout Itemize
+Client: PL, AL --- Server: AL, DL 
+\end_layout
+
+\begin_layout Itemize
+Client: PL, AL --- Server: DL 
+\end_layout
+
+\begin_layout Itemize
+Client: PL, AL, DL --- Server: DL 
+\end_layout
+
+\begin_layout Standard
+PL ...
+ Presentation Layer (Terminal, GUI)
+\newline
+ AL ...
+ Application Layer (Business Logic)
+\newline
+ DL ...
+ Data Layer (z.B.
+ Dateisystem, XML Datenquellen, Datenbanken)
+\end_layout
+
+\begin_layout Standard
+Je nach Menge der Funktionalität am Client spricht man von Thin Client bzw.
+ von Fat Client.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+3-Tier (Server kann auch als Client arbeiten) 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Client: PL 
+\end_layout
+
+\begin_layout Itemize
+Anwendungserver (ist Client von Datenserver): AL 
+\end_layout
+
+\begin_layout Itemize
+Datenserver: DL 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+n-Tier (weitere Aufteilung um z.B.
+ auch Webclients zu bedienen) 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Client: PL (mit Presentation Logic) 
+\end_layout
+
+\begin_layout Itemize
+Client: PL (ohne Presentation Logic, z.B.
+ Webbrowser, oft hinter einer Firewall) 
+\end_layout
+
+\begin_layout Itemize
+Server: PL (beinhaltet Presentation Logic) 
+\end_layout
+
+\begin_layout Itemize
+Server: AL 
+\end_layout
+
+\begin_layout Itemize
+Datenserver: DL 
+\end_layout
+
+\begin_layout Standard
+n-Tier Architekturen dieser oder ähnlicher Art mit einer Firewall sind in
+ Firmennetzwerken anzutreffen.
+ Achtung, bei Firewalls treten die bekannten Probleme meistens an 2 Stellen
+ auf: Einmal auf der Server-Seite und einmal auf der Client-Seite! 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Es ist offensichtlich, dass in jeder Schicht mehrere physische Computer
+ angesiedelt sein können, die durchaus auch verschiedene Funktionen haben
+ können und unterschiedlich miteinander kooperieren.
+\end_layout
+
+\begin_layout Subsection
+Kriterien
+\end_layout
+
+\begin_layout Standard
+Je nach Konfiguration und Anwendung können verschiede Aspekte zur Entscheidung
+ über eine Architektur betrachtet werden.
+\end_layout
+
+\begin_layout Standard
+Kriterien für die Auswahl einer geeigneten Architektur (abgesehen von den
+ Kriterien, die direkt aus den allgemeinen Zielen abgeleitet werden können):
+\end_layout
+
+\begin_layout Itemize
+Antwortzeitverhalten, Netzwerkbelastung (Durchsatz): abhängig von Netzwerk,
+ Server, Client, Software,...
+ 
+\end_layout
+
+\begin_layout Itemize
+Zuverlässigkeit und Verfügbarkeit: Redundanz der Daten durch Replikation,
+ Redundanz der Hardware (Server, Netzwerk), Redundanz in der Software, Hardwaret
+ausch,...
+ 
+\end_layout
+
+\begin_layout Itemize
+Sicherheit (
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Sicherheit) 
+\end_layout
+
+\begin_layout Itemize
+Integration in Legacy-Systeme: wie läßt sich das neue System in die bestehenden
+ Systeme integrieren? Import von Daten, Austausch von Daten, Authentifizierung
+ und Zugriffskontrolle der Benutzer,...
+ 
+\end_layout
+
+\begin_layout Itemize
+Flexibilität: z.B.
+ Austauschbarkeit der Benutzerschnittstelle,...
+ 
+\end_layout
+
+\begin_layout Itemize
+Installation und Wartbarkeit: Wie leicht läßt sich das System installieren?
+ Wie leicht kann es gewartet werden? Wie leicht können neue Versionen eingespiel
+t werden (Application Deployment)? 
+\end_layout
+
+\begin_layout Itemize
+Skalierbarkeit: Hardwareaufrüstungen, neue Benutzer 
+\end_layout
+
+\begin_layout Itemize
+Administration 
+\end_layout
+
+\begin_layout Itemize
+Programmierproduktivität: je nach Komplexität der Anforderungen (siehe Ziele)
+ und der Systemarchitektur sowie der verwendeten Entwicklungstools! 
+\end_layout
+
+\begin_layout Itemize
+Kosten: von Lizenzen, Eigentumsverhältnisse 
+\end_layout
+
+\begin_layout Standard
+Als 'Spezialfall' der Client/Server Anordnung, die in dieser Form als vertikale
+ Anordnung bezeichnet wird, kann die horizontale Anordnung bezeichnet werden,
+ bei der ein Client oder ein Server in logisch äquivalente Teile aufgegliedert
+ werden, die jeder mit einem eigenem Anteil der vollständigen Datenmenge
+ operieren.
+\end_layout
+
+\begin_layout Section
+Peer-to-Peer Architektur
+\end_layout
+
+\begin_layout Standard
+Für bestimmte Arten von Anwendungen kann eine sogenannte Peer-to-Peer Architektu
+r eingesetzt werden.
+ Das besondere an einer derartigen Architektur ist, dass es keinen dedizierten
+ Server gibt.
+ In diesem Modell ist es so, dass z.B.
+ ein Host Kontakt zu einem anderen Host aufnimmt und diese danach miteinander
+ kommunizieren.
+ Weitere Hosts können ebenfalls mit diesen Hosts kommunizieren.
+ D.h.\InsetSpace ~
+im Sinne des Client / Server Konzeptes tauschen Client und Server die
+ Rollen!
+\end_layout
+
+\begin_layout Standard
+Der Vorteil ist, dass nicht ein einzelner Server den Flaschenhals bildet.
+\end_layout
+
+\begin_layout Standard
+Nachteile sind, dass es schwierig sein kann 
+\end_layout
+
+\begin_layout Itemize
+einen einheitlichen globalen Status einer Anwendung zu gewährleisten.
+ 
+\end_layout
+
+\begin_layout Itemize
+ein effizientes Routing der Kommunikation sicherzustellen.
+ 
+\end_layout
+
+\begin_layout Itemize
+einen Kommunikationspartner zu finden.
+ 
+\end_layout
+
+\begin_layout Itemize
+Netzwerksausfälle zu maskieren.
+ 
+\end_layout
+
+\begin_layout Standard
+Hauptgrund für die oben genannten Nachteile ist, dass es keine zentrale
+ Instanz gibt, die die Aufgaben übernimmt.
+\end_layout
+
+\begin_layout Standard
+Bekannte Anwendungen der Peer-to-Peer Architektur sind z.B.
+ Chat oder File-Sharing (Napster, Gnutella).
+\end_layout
+
+\begin_layout Section
+Push-Architektur
+\end_layout
+
+\begin_layout Standard
+Das im Internet dominierende Kommunikationsmodell ist das vom WWW bekannte
+ Request/Reply Schema: ein aktiver Client stellt eine Anfrage und `pulled'
+ Information vom Server.
+ D.h.\InsetSpace ~
+der Client muss wissen 
+\emph on
+wo
+\emph default
+ und 
+\emph on
+wann
+\emph default
+ die Information vorhanden ist.
+ Dadurch ist es die Aufgabe des Benutzers Informationen zu finden und regelmäßig
+ auf Verfügbarkeit bzw.\InsetSpace ~
+Änderung zu überprüfen.
+ Ist ein kontinuierlicher Informationsfluss notwendig, versagt dieses Kommunikat
+ionsmuster (polling!).
+\end_layout
+
+\begin_layout Standard
+Bei der 
+\emph on
+Push-Architektur
+\emph default
+ wird die Information ohne Zutun des Clients vom Server 
+\begin_inset Quotes eld
+\end_inset
+
+gepushed
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Hauptsächlicher Einsatzzweck ist es große Mengen von Informationen an eine
+ große Anzahl von Benutzern zu verteilen.
+ Beispiele dafür gibt es schon seit den Anfängen des Internet, wie z.B.
+ E-Mail oder Usenet News.
+\end_layout
+
+\begin_layout Standard
+Das allgemeine Modell sieht folgendermaßen aus: Ein Anbieter von Informationen
+ klassifiziert diese und kündigt die Verfügbarkeit der Informationen (z.B.
+ als Kanal) an.
+ Interessenten abonnieren beim Anbieter bestimmte Informationskategorien
+ (also Kanäle).
+ Sobald neue Information vorhanden ist wird diese an alle Abonnenten verteilt.
+\end_layout
+
+\begin_layout Standard
+Vergleiche entsprechende Implementierungen von MOM, die ebenfalls diese
+ Funktion anbieten.
+\end_layout
+
+\begin_layout Section
+Event-Architektur
+\end_layout
+
+\begin_layout Standard
+Event-basierte Systeme (EBS) sind in gewisser Weise eng verwandt mit Push-basier
+ten Systemen.
+ Bei diesem Ansatz geht es darum, dass Ereignisse und deren Verteilung in
+ den Vordergrund gestellt werden.
+\end_layout
+
+\begin_layout Standard
+In einem EBS interagieren die beteiligten, verteilten Komponenten dadurch,
+ dass sie Events erzeugen und empfangen, ohne dass eine direkte Verbindung
+ zwischen ihnen besteht.
+ Vielmehr kann jede Komponente Events erzeugen und and die EBS-Infrastruktur
+ übergeben, die diese dann verteilt.
+ Komponenten können ihr Interesse an bestimmten Events, Event-Klassen oder
+ auch bestimmten Event-Mustern bei der EBS-Infrastruktur registrieren und
+ werden benachrichtigt, sobald passende Events oder Muster auftreten.
+ Ein Beispiel könnte sein, dass eine Komponente eines Börseinformationssystem
+ informiert werden will, wenn eine Aktie unter einen gewissen Wert fällt.
+\end_layout
+
+\begin_layout Standard
+Die Unterschiede zur Push-Architektur liegen darin, dass Events einerseits
+ prinzipiell kleine Informationsmengen repräsentieren und dass die Spezifizierun
+g der gewünschten Information viel genauer ist.
+\end_layout
+
+\begin_layout Standard
+Ein besondere Herausforderung ist ein effizientes Routing der Events, insbesonde
+re wenn Muster von Events unterstützt werden, da es bei vielen Komponenten
+ und entsprechender Event-Frequenz schnell zu großen Ressourcenverbrauch
+ kommt.
+\end_layout
+
+\begin_layout Section
+Agenten-Architektur
+\end_layout
+
+\begin_layout Standard
+Ein Softwareagent ist ein Computerprogramm, das zielorientiert in einem
+ dynamischen Umfeld für einen Menschen oder eine andere Software ohne direkte
+ Überwachung möglichst selbständig Aufgaben lösen soll.
+\end_layout
+
+\begin_layout Standard
+Folgendes Szeneario will man mit Hilfe einer Agenten-Architektur erreichen:
+\end_layout
+
+\begin_layout Quote
+Ein Benutzer will sich eine Reise zusammenstellen und bedient sich dazu
+ eines Softwareagenten.
+ Unter einem solchen Agenten kann man sich eine Einheit vorstellen, die
+ für den Benutzer die günstigste Reiseroute zusammenstellt (in Bezug auf
+ Zeit, Geld, zurückgelegte Strecke) und den günstigsten Reiseveranstalter
+ selbständig ausfindig macht.
+ Dazu bekommen sie vom Benutzer die Vorgaben bezüglich Reisezeit, Budget,
+ notwendige Zwischenstopps,...
+ und ermittelt selbständig eine möglichst optimale Lösung.
+ Dazu kann sie bei Reiseveranstaltern, Datenbanken,...
+ Anfragen stellen oder auch andere Agenten um Hilfe bitten.
+ Unter Umständen ist es notwendig, dass sich der Agent auch zu anderen Rechner
+ verschiebt und zum Schluss mit der Lösung wieder zum Benutzer zurückkehrt
+ (z.B.
+ damit Bandbreite gespart wird).
+ 
+\end_layout
+
+\begin_layout Standard
+Um die Verschiebbarkeit der Agenten realisieren zu können benötigt man das
+ Konzept der Code-Migration, das im nachsten Abschnitt besprochen wird.
+ Danach wird auf die eigentlichen Softwareagenten etwas genauer eingegangen.
+\end_layout
+
+\begin_layout Subsection
+Code-Migration
+\end_layout
+
+\begin_layout Standard
+Zur Erreichung einer Migrationstransparenz bzw.\InsetSpace ~
+einer Relokationstransparenz
+ auf Ausführungsebene, müssen auch Threads bzw.\InsetSpace ~
+Prozesse von einer Maschine
+ zu einer anderen Maschine verschoben werden können.
+\end_layout
+
+\begin_layout Standard
+Um dies durchführen zu können, muss das System eine Möglichkeit der Code-Migrati
+on zur Verfügung stellen.
+\end_layout
+
+\begin_layout Standard
+Gründe in einer erwünschten Code-Migration liegen meistens darin, dass die
+ allgemeine Systemleistung verbessert werden soll, z.B.:
+\end_layout
+
+\begin_layout Itemize
+Code soll immer auf der Client-Maschine ausgeführt werden (z.B.
+ Applet).
+ 
+\end_layout
+
+\begin_layout Itemize
+eine Maschine ist ausgelastet, eine andere Maschine soll übernehmen.
+ 
+\end_layout
+
+\begin_layout Itemize
+die Netzwerksbandbreite ist ausgeschöpft.
+ 
+\end_layout
+
+\begin_layout Itemize
+Der Code soll in die physische Nähe der Daten transportiert werden (um wiederum
+ den Netzwerksoverhead zu minimieren).
+ 
+\end_layout
+
+\begin_layout Standard
+Aber auch die Flexibilität ist ein Grund für den Wunsch den Code an beliebigen
+ Stellen zur Ausführung zu bringen: Am Client kann dynamisch eine Konfiguration
+ durchgeführt werden!
+\end_layout
+
+\begin_layout Standard
+Grundsätzlich müssen die Maschinen zwischen denen eine Code-Migration stattfinde
+n entweder:
+\end_layout
+
+\begin_layout Itemize
+auf der Ebene der Plattform (Hardware, Betriebssystem) eine gemeinsame Basis
+ aufweisen, oder 
+\end_layout
+
+\begin_layout Itemize
+eine Ebene mit Zwischencode existieren, mit der plattformübergreifend agiert
+ werden kann (Java, C#, Perl, Python, Ruby, Tcl) oder die Programmiersprache
+ ist eine reine Interpretersprache, sodass der Quellcode transferiert wird.
+ 
+\end_layout
+
+\begin_layout Standard
+Prinzipiell werden wir nur zwischen zwei Arten der Code-Migration unterscheiden
+ (obwohl vielfältige und feine Unterscheidungen möglich sind):
+\end_layout
+
+\begin_layout Itemize
+schwache Mobilität: Es wird nur das Codesegment übertragen (eventuell mit
+ Initialisierungsdaten).
+ Deshalb wird bei dieser Art der Mobilität ein übertragener Code immer von
+ seinem Ausgangsstatus aus gestartet (z.B.
+ Java Applet).
+ 
+\end_layout
+
+\begin_layout Itemize
+starke Mobilität: Im Gegensatz zur schwachen Mobilität wird zusätzlich zum
+ Codesegment auch das Ausführungssegment übertragen.
+ Das charakteristische Merkmal der starken Mobilität ist, dass ein ausgeführter
+ Prozess unterbrochen, auf eine andere Maschine verschoben und dann fortgesetzt
+ werden kann.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Ein spezielles Problem, das hauptsächlich bei der starken Mobilität auftritt
+ ist: Was passiert mit den Ressourcen auf die der Thread zugreift? Eine
+ offene Datei kann nicht bewegt werden und auch Hardware kann nicht über
+ das Netz verschoben werden.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Besonderes Augenmerk: Sicherheit!
+\end_layout
+
+\begin_layout Subsection
+Softwareagenten
+\end_layout
+
+\begin_layout Standard
+\begin_inset LatexCommand \label{sec:sw-agent}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Software-Agenten sind ein Beispiel, wo u.U.
+ Code-Migration auftritt.
+\end_layout
+
+\begin_layout Standard
+Agenten spielen im Kontext verteilter Systeme eine immer wichtiger werdende
+ Rolle.
+ Es handelt sich dabei um autonome Einheiten, die in Zusammenarbeit mit
+ anderen (u.U.
+ entfernten) Agenten eine Aufgabe lösen.
+\end_layout
+
+\begin_layout Standard
+Allen Softwareagenten ist gemein, dass sie die folgenden Eigenschaften aufweisen.
+ Sie sind: 
+\end_layout
+
+\begin_layout Itemize
+autonom: kann eigenständig agieren.
+ 
+\end_layout
+
+\begin_layout Itemize
+reaktiv: reagiert rechtzeitig auf Änderungen in seiner Umgebung.
+ 
+\end_layout
+
+\begin_layout Itemize
+proaktiv: initiiert Aktionen, die seine Umgebung beeinflussen.
+ 
+\end_layout
+
+\begin_layout Itemize
+kommunikativ: kann Informationen mit Benutzern und anderen Agenten austauschen.
+ 
+\end_layout
+
+\begin_layout Standard
+Agenten können auch noch folgende Eigenschaften aufweisen: 
+\end_layout
+
+\begin_layout Itemize
+mobil: kann von einem System auf ein anderes migrieren.
+ 
+\end_layout
+
+\begin_layout Itemize
+adaptiv: ist lernfähig.
+ Oft handelt es sich dabei um Systeme, die den Endbenutzer helfen sollen,
+ eine oder mehrere Applikationen zu benutzen.
+ Solche Agenten sind lernfähig: je länger ein Benutzer mit dem Agenten arbeitet,
+ desto besser kann der Agent dem Benutzer helfen: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Ein Agent, der Käufer und Verkäufer zusammenbringen soll, erkennt bevorzugte
+ Suchanfragen, Vorlieben,...
+ 
+\end_layout
+
+\begin_layout Itemize
+Ein E-Mail-Agent kann in der Lage sein, unerwünschte E-Mail aus der Mailbox
+ entfernen, oder automatisch in die entsprechenden themenspezifizschen Mailboxen
+ verteilen.
+ 
+\end_layout
+
+\end_body
+\end_document

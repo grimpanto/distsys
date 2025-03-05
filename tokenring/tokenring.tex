@@ -1,0 +1,49 @@
+
+\chapter{Tokenring}
+
+Die Tokenring Technologie wurde ursprünglich von IBM entwickelt und
+ist in IEEE 802.5 spezfiziert. Ursprünglich waren entweder 4MBit/s
+(Ringlänge max. 360m) bzw. 16MBit/s (Ringlänge max. 168m) Datenrate
+möglich. Bezüglich der Übertragungsleistung entspricht dies in etwa
+der Übertragungsleistung eines Ethernet-Netzes mit 10MBit/s bzw. 100MBit/s.
+Aktuelle Weiterentwicklungen sind z.B. die GBit-Variante (IEEE 802.5v),
+ein Konzept zur Realisierung von VLANs bzw. das Konzept der Link Aggregation.
+Link Aggregation bedeutet die Verbindung zweier Switches durch parallele
+Links zur Erhöhung der Bandbreite.
+
+
+\section{Prinzip}
+
+Das Konzept besteht darin, dass ein logischer Ring der Arbeitsstationen
+gebildet wird. In diesem Ring wird ein Token (dt. Marke) im Kreis
+geschickt. Solange keine Station senden will, kreist ein Frei-Token.
+Will eine Station senden, nimmt es das Token aus dem Ring und ersetzt
+es durch ein Besetzt-Token und hängt die Daten und die Adresse an
+und schickt das Token wieder in den Ring. Kommt das Token beim Empfänger
+an, wird das Token von diesem kopiert und wieder in den Ring eingespeist.
+Erst der Sender entnimmt das Token aus dem Ring und ersetzt es wieder
+durch ein Frei-Token. Jeder Sender darf maximal für die Dauer der
+THT (token holding time) senden (typisch 10ms), danach muss er ein
+Frei-Token weitergeben.
+
+Es gibt also keine ausgezeichnete Station, die den Zugriff steuert.
+D.h. der Tokenring verwendet ein dezentrales Zuteilungsverfahren.
+Zur Überwachung des Ringes wird eine Station als aktiver Monitor bestimmt,
+während andere Stationen als passive Monitore (standby monitors) agieren
+können, die bei Ausfall des aktiven Monitors selbst aktiv werden.
+
+
+\section{Netzaufbau}
+
+Die Stationen werden aktiv in den Ring eingefügt. Sie empfangen und
+regenerieren das am Eingang ankommende Signal, werten es aus und geben
+es regeneriert am Ausgang weiter. Fällt eine Station aus oder wird
+sie ausgeschaltet, würde allerdings der Ring unterbrochen werden.
+Um dies zu verhindern, werden die Stationen \emph{sternartig} an einen
+Ringleitungsverteiler, genannt auch MSAU (multi station access unit)
+in den Ring eingefügt.
+
+In jeder MSAU sind Schalter eingebaut, die bei Ausfall oder Abschaltung
+einer Station diese überbrücken und dadurch den Ring wieder herstellen.
+D.h. z.B., dass die Verkabelung sternartig durchgeführt wird, aber
+das Netz logisch als Ring arbeitet.

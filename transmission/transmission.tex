@@ -1,0 +1,729 @@
+
+\chapter{Nachrichtenübertragung}
+
+Dieser Abschnitt erläutert die Grundlagen zur Nachrichtenübertragung
+zwischen \emph{zwei} Kommunikationspartnern, die \emph{direkt} physikalisch
+über ein Medium oder logisch über einen Kanal miteinander verbunden
+sind (Punkt-zu-Punkt Verbindung).
+
+In diesem Kapitel werden einerseits die allgemeinen Aspekte einer
+Nachrichtenübertragung bei einer Punkt-zu-Punkt Verbindung behandelt,
+aber auch die spezielle Kommunikation über eine physikalische Übertragungsstrecke.
+
+
+\section{Kommunikationsmodell\label{sec:communication_model}}
+
+Ein allgemeines Kommunikationsmodell, das dann natürlich auch für
+eine physikalische Punkt-zu-Punkt Verbindung gilt sieht folgendermaßen
+aus:
+
+%
+\begin{figure}[H]
+\centering
+
+\includegraphics[bb=0bp 0bp 128mm 19mm,clip]{transmission/communication_model}
+
+\caption{Kommunikationsmodell}
+
+\end{figure}
+
+\begin{description}
+\item [{Quelle}] (engl. source) Die (Informations-)Quelle erzeugt die zu
+übertragenden Nachrichten.
+\item [{Sender}] (engl. transmitter) Der Sender nimmt von der Quelle die
+Nachrichten entgegen, kodiert diese und wandelt sie in Signale um.
+Danach werden diese gemäß den Zugriffsregeln dem Übertragungssystem
+zum Transport übergeben.
+\item [{Übertragungssystem}] (engl. transmission System) Im eigentlichen
+Übertragungssystem (oder auch Übertragungsstrecke genannt) werden
+die Signale übertragen. Im einfachsten Fall handelt es sich beim Übertragungssystem
+um eine elektrische Leitung über die elektrische Signale übertragen
+werden, im allgemeinen Fall jedoch um ein komplettes Netzwerk (siehe
+Kapitel \vref{sec:network_architecture}).
+\item [{Empfänger}] (engl. receiver) Am anderen Ende wandelt der Empfänger
+die Signale wieder in Nachrichten um, die entsprechend dekodiert an
+die Senke weitergegeben werden. Im Prinzip besteht ein Empfänger aus
+einem Signalumsetzer und einer Fehlersicherungseinrichtung.
+\item [{Senke}] (engl. destination) Die (Informations-)Senke empfängt die
+Nachrichen und verarbeitet diese.
+\end{description}
+Sowohl Quelle als auch Senke werden aus der Sicht eines verteilten
+Systems als Netzprozess oder kurz Prozess betrachtet. Unter einem
+Prozess versteht man die Ausführung von einem Progamm. Zwei solcher
+Prozesse sind logisch über einen (Kommunikations-) Kanal miteinander
+verbunden. Die Rollen der Quelle und der Senke können natürlich dynamisch
+tauschen.
+
+Technisch gesehen lässt sich das Kommunikationsmodell für eine physikalische
+Verbindung folgendermaßen abbilden:
+
+%
+\begin{figure}[H]
+\centering
+
+\includegraphics[bb=0bp 0bp 126mm 22mm,clip]{transmission/data_transmission}
+
+\caption{Datenübertragung}
+
+\end{figure}
+
+
+Unter der Datenendeinrichtung (DEE oder engl. Data Terminal Equipment,
+DTE) wird sowohl die Quelle der Information als auch die Senke verstanden.
+Im Falle der Rechnernetze handelt es sich dabei um die Rechner, die
+auch als Hosts bezeichnert werden. Unter einer Datenübertragungseinrichtung
+(DÜE oder engl. Data Communications Equipment, DCE) werden die Geräte
+verstanden, die die Transmitter bzw. die Receiver darstellen. Beispiele
+für solche DÜE sind z.B. Modems (MODulator/DEModulator) oder die Netzwerksschnittstellenkarten
+(Network Interface Card - NIC).
+
+
+\section{Übertragungsmedien\label{sec:transmission_media}}
+
+Dieser Abschnitt betrachtet jetzt speziell die verschiedenen Arten
+von Übertragungsmedien, die in Rechnernetzen eingesetzt werden. Prinzipiell
+erfolgt die Übertragung in einer von zwei Formen:
+\begin{itemize}
+\item leitungsgebunden d.h. entweder über metallische Leiter wie z.B. bei
+den Ethernet Technologien oder optische Fasern wie z.B. bei FDDI.
+\item leitungsungebunden d.h. mittels elektromagnetischer Wellen wobei als
+Übertragungsmedium die Luft dient. Hier haben sich folgende Spezialformen
+etabliert:
+
+\begin{itemize}
+\item ungerichtete Übertragung wie z.B. beim Einsatz von Technologien im
+terrestrischen Funk wie Wireless LAN, Bluetooth, GSM, UMTS.
+\item gerichtete Übertragung wie z.B. beim Richtfunk, der Satellitenkommunikation
+oder auf Basis optischer Signale wie z.B. Infrarotübertragung.
+\end{itemize}
+\end{itemize}
+Je nach Übertragungsmedium werden zusätzlich entweder Steckverbindungen,
+Antennen oder andere Übertragungsglieder benötigt, um den Übergang
+des Signals auf das Übertragungsmedium durchzuführen.
+
+
+\subsection{Metallische Leiter}
+
+Es werden entweder symmetrische Kupferkabel oder Koaxialkabel eingesetzt.
+Bei Verwendung metallischer Leiter kommen heute nur mehr symmetrische
+Kupferkabel zum Einsatz.
+
+
+\subsubsection{Symmetrische Kupferkabel}
+
+Diese Form der Kupferkabel verwendet ein oder mehrere verdrillte Paare
+von Kupferadern. Aus diesem Grund werden diese Kabel auch als Twisted
+Pair (TP) bezeichnet. Der Aufbau der Kabelbezeichnungen ist nach ISO/IEC-11801:2002
+folgendermaßen XX/YZZ wobei XX die Angabe der Kabelabschirmung darstellt
+und entweder
+\begin{labeling}{00.00.0000}
+\item [{U}] unshielded, d.h. ohne Abschirmung des gesamten Kabels,
+\item [{S}] screened, d.h. Abschirmung des gesamten Kabels mittels Drahtgeflecht,
+\item [{F}] foiled, d.h. Abschirmung des gesamten Kabels mittels Folie,
+\item [{SF}] screened, foiled, d.h. Abschirmung des gesamten Kabels mittels
+Drahtgeflecht und Folie
+\end{labeling}
+annehmen kann. Y steht für die Abschirmung der einzelnen Aderpaare
+und kann die Werte
+\begin{labeling}{00.00.0000}
+\item [{U}] unshielded, d.h. keine Abschirmung der einzelnen Aderpaare,
+\item [{S}] shielded, d.h. Abschirmung der einzelnen Aderpaare mittels
+Drahtgeflecht,
+\item [{F}] foiled, d.h. Abschirmung der einzelnen Aderpaare mittels Folie
+\end{labeling}
+annehmen. ZZ ist immer TP (also Twisted Pair). In der Abbildung \vref{fig:twisted_pair_cable}
+ist ein 4 adriges TP Kupferkabel schematisch dargestellt.
+
+%
+\begin{figure}[h]
+\centering
+
+\includegraphics[bb=0bp 0bp 8cm 5cm,clip]{transmission/cable}
+
+\caption{\label{fig:twisted_pair_cable}TP Kupferkabel mit 4 Adern}
+
+\end{figure}
+
+
+In der ISO/IEC Spezifikation 11801 werden außerdem sogenannte Linkklassen
+definiert, die die Qualität einer gesamten Übertragungsstrecke inkl.
+Kabel und Steckverbindungen angeben. Es gibt die Linkklassen A bis
+F, in denen die notwendigen elektrischen Parameter definiert sind,
+die für den Einsatz von bestimmten Anwendungen -- wie z.B. 100MBit
+Ethernet oder Gigabit-Ethernet -- benötigt werden.
+
+Je Linkklasse können verschiedene Kabeltypen eingesetzt werden. Die
+Kabeltypen werden in sogenannte Kategorien eingeteilt, wobei die Kategorien
+von 1 bis 7 durchnummeriert werden. Für jeden Kabeltyp sind wieder
+verschiedene elektrische Parameter festgelegt.
+
+Aus der Kombination von Linkklasse und Kabeltyp ergeben sich überbrückbare
+Distanzen. Im LAN werden derzeit hauptsächlich Kategorie 5 (Cat-5)
+Kabel eingesetzt, die eine 100MBit Ethernet Verbindung über 100m erlauben.
+Mit einem Cat-5 Kabel bestehend aus 4 Doppeladern kann auch eine Gigabit
+Ethernet Verbindung in beide Richtungen aufgebaut werden. Für 10 Gigabit
+Ethernet muss allerdings ein Kabeltyp höherer Kategorie verwendet
+werden.
+
+Zu dem Kabel passend müssen auch die Steckverbindungen ausgeführt
+sein. Als Steckverbindungen werden heute meist die 8 poligen RJ-45
+Stecker verwendet.
+
+Die Vorteile der Twisted-Pair Kabel liegen darin, dass die Verlegung
+relativ einfach ist, die Kosten gering sind, eine weite Anwendbarkeit
+besteht und die Verbreitung sehr hoch ist.
+
+
+\subsubsection{Koaxialkabel\label{sec:coaxial_cable}}
+
+Koaxialkabel bestehen gewöhnlich aus einem isolierten Innenleiter
+(auch Seele genannt), der vom Außenleiter umgeben ist. Dieser Außenleiter
+ist in einem konstanten Abstand um den Innenleiter angebracht und
+von diesem durch einen Isolator getrennt. Im Regelfall ist diese Ummantelung
+ebenfalls nach außen isoliert. Solch ein in Rechnernetzen eingesetztes
+Koaxialkabel ähnelt dem Fernsehkabel.
+
+Das Koaxialkabel wurde früher in Ethernet Rechnernetzen verwendet.
+Dazu wurden hauptsächlich 2 Kabeltypen eingesetzt: Eines für die Ethernet
+Spezifikation 10Base5 und eines für die Ethernet Spezifikation 10Base2.
+
+10Base5 (Thicknet oder Yellow Cable genannt) verwendete ein 10mm dickes
+Koaxialkabel. Die Verbindungen wurden mittels Anbohren des Kabels
+(im Abstand von min. 2.5m) und Anklemmen eines Transceivers, der über
+eine AUI (engl. access unit interface) Schnittstelle die Verbindung
+zum Ethernet-Controller herstellte.
+
+10Base2 (Thinnet genannt) verwendete ein ca. 6mm dickes Koaxialkabel.
+Zur Verbindung wurden allerdings BNC (engl. bayonet Neill-Concelman)
+Stecker verwendet.
+
+Koaxialkabel werden heutzutage nicht mehr oft verwendet.
+
+
+\subsection{Optische Leiter}
+
+Die optischen Leiter (engl. optical fiber) bestehen aus einem Kern
+(engl. core) und einem Mantel (engl. cladding). Das Lichtsignal wird
+in den Kern über eine Photodiode oder eine Laserdiode eingespeist.
+Da der Brechungsindex des Mantels niedriger ist als der des Kerns
+kommt es zu einer Reflexion am Übergang von Kern zu Mantel, wodurch
+sich das Lichtsignal im Kern zickzackförmig ausbreitet.
+
+Es werden im Wesentlichen zwei Typen von Glasfasern unterschieden:
+dies sind die Multimodefasern und die Single- bzw. Monomodefasern.
+Multimodefaser haben einen Durchmesser des Kernes von 50$\mu m$ oder
+62.5$\mu m$, während Singlemodefasern einen Kerndurchmesser von ca.
+3 bis 9$\mu m$ haben.
+
+Auf Grund des relativ hohen Durchmessers der Multimodefasern wird
+das Licht in mehreren Wellen (Moden) übertragen. Dadurch kann es bei
+der Multimodeübertragung allerdings zu Signalbeeinflussungen kommen.
+Daher sind Multimodefasern für sehr lange Übertragungsstrecken bei
+hoher Bandbreite nicht geeignet. Bei der Singlemodefaser kann sich
+das Licht auf Grund des kleinen Kerndurchmessers nahezu geradlinig
+in einer Mode ausbreiten. D.h. es kommt zu keinen Signalbeeinflussungen
+und zu einer geringeren Dämpfung. Unter Dämpfung versteht man die
+Umwandlung von Schwingungsenergie in eine andere Energieform, d.h.
+es kommt zu einer Verminderung der übertragenen Energie im Verlauf
+einer Übertragungsstrecke. Dadurch lassen sich höhere Entfernungen
+bei größerer Bandbreite als bei den Multimodefasern überbrücken.
+
+Optische Leiter zeichnen sich -- abgesehen von der höheren Bandbreite
+bei größerer Entfernung -- durch geringere Störempfindlichkeit und
+höhere Abhörsicherheit aus. Allerdings ist die Verlegung schwieriger
+und die Kosten sind höher.
+
+
+\subsection{Funk\label{sec:wireless_transmission}}
+
+Die Übertragung basiert darauf, dass hochfrequente Wellen (800MHz
+bis mehrere GHz) über das Übertragungsmedium Luft gesendet werden.
+Besonders in LANs oder auch in PANs (siehe Seite \pageref{min:net_dimensions})
+werden häufig Netzwerke mittels Funktechnologie aufgebaut, aber auch
+die Abdeckung über immer größere geographische Gebiete wie ganze Städte
+wird aktuell. Der große Vorteil liegt in der Einfachheit und Flexibilität
+sowie in der leichten Wartbarkeit der Netze. Ebenfalls ein großer
+Vorteil liegt in der Mobilität. Ein drahtloser Übertragungskanal besitzt
+die Broadcast-Eigenschaft.
+
+Funkübertragung hat mit vielen Problemen zu kämpfen:
+\begin{itemize}
+\item Es treten Störungen und Interferenzen auf. Die Qualität des Übertragungskanals
+ändert sich mit der Zeit.
+\item Das Übertragungsmedium muss mit anderen Kommunikationsteilnehmern
+geteilt werden. Unter Umständen handelt es sich um ,,ungewünschte''
+Sender.
+\item Es gibt viele Regulierungen (speziell bei der Frequenzvergabe) seitens
+nationaler Anforderungen. Daher ist die Übertragungskapazität beschränkt,
+da freie Frequenzbereiche nicht einfach zu finden sind.
+\item Auf Grund des einfachen Zugriffes auf das Medium Luft treten Sicherheitsprobleme
+auf.
+\end{itemize}
+Gegenüber der leitungsgebundenen Übertragung ergeben sich niedrigere
+Übertragungsraten im Bereich von 1 bis 54MBit/s. Neuere Entwicklungen
+gehen bis 540MBit/s.
+
+
+\section{Übertragungsverfahren\label{sec:transmission_methods}}
+
+In diesem Abschnitt wird zuerst etwas näher auf Signale eingegangen,
+danach wird besprochen wie die Kodierung der Signale durchgeführt
+werden kann und zum Schluss wie mehrere Signale über eine Übertragungsstrecke
+mittels Multiplexen übertragen werden können.
+
+
+\subsection{Signal}
+
+Wie schon in Abschnitt \vref{sec:communication} angesprochen, werden
+Nachrichten auf pyhsikalischer Ebene in Form von Signalen (elektrisch,
+optisch, Funk) über ein Übertragungsmedium versendet. Ein Signal ist
+die physikalische Darstellungsform einer Nachricht und besteht aus
+einer diskreten oder kontinuierlichen Folge von Werten eines Signalparameters
+(z.B. ein Spannungswert, Stromwert oder Feldstärke) über die Zeit.
+
+
+\minisec{Signalarten}
+
+Signale können bezüglich Wertevorrat oder Zeit entweder kontinuierlich
+oder diskret sein.
+\begin{description}
+\item [{zeitkontinuierlich}] Werte eines Signals können zu jedem beliebigen
+Zeitwert innerhalb eines Zeitintervalls auftreten.
+\item [{zeitdiskret}] Werte eines Signals können nur zu bestimmten Zeitwerten
+eines Zeitintervalls auftreten. Diese Zeitwerte sind oft innerhalb
+des Zeitintervalls äquidistant.
+\item [{wertkontinuierlich}] Werte des Signals können jeden beliebigen
+Wert innerhalb des Werte\-intervalls annehmen.
+\item [{wertdiskret}] Werte des Signals können nur bestimmte Werte des
+Werteintervalls annehmen. 
+\end{description}
+Daraus ergeben sich 4 Möglichkeiten:
+\begin{itemize}
+\item zeitdiskret und wertdiskret: Man spricht von digitalen Signalen. Kommen
+genau zwei diskrete Werte im Wertebereich des digitalen Signales vor,
+dann spricht man von einem binären Signal. Oft werden die Begriffe
+digital und binär synonym verwendet.
+\item zeitdiskret und wertkontinuierlich.
+\item zeitkontinuierlich und wertdiskret.
+\item zeitkontinuierlich und wertkontinuierlich: analoge Signale.
+\end{itemize}
+
+\minisec{Signalverarbeitung und Signalübertragung}
+
+Analoge Signale treten auf, wenn z.B. ein Audio- oder Videosignal
+vorliegt. Analoge Signale müssen in digitale Signale transformiert
+werden, damit sie in einem Rechner verarbeitet werden können. Dazu
+dienen Analog/Digital Wandler. Diese tasten das analoge Signal zu
+diskreten Zeitpunkten ab und ermitteln zu diesem Zeitpunkt einen diskreten
+Wert des Signalparameters.
+
+Danach wird das Signal kodiert und kann entweder verarbeitet oder
+übertragen werden. Eine Übertragung findet entweder im Basisbandbereich
+oder im Breitbandbereich statt.
+
+Unter dem Begriff Basisband (engl. baseband) versteht man denjenigen
+Frequenzbereich, in dem sich das zu übertragende Nutzsignal befindet.
+In der Regel hat ein Basisbandsignal daher einen Frequenzbereich von
+0 bis f$_{\text{max}}$Hz. Bei der analogen Telefonie beispielsweise
+ist das Frequenzband der Bereich von 300 bis 3400 Hz.
+
+Unter Breitband (engl. broadband) wird speziell bei der Datenübertragung
+ein Verfahren verstanden, bei dem die digitalen Signale -- im Unterschied
+zum Basisbandverfahren -- nicht direkt übertragen werden, sondern
+auf ein oder mehrere hochfrequente Trägersignale aufmoduliert werden
+(Modulation). Damit gibt es bei einem Breitbandsignal einen Frequenzbereich
+von f$_{\text{min}}$ bis f$_{\text{max}}$. Breitband wird jedoch
+oft auch mit einer hohen Bandbreite gleichgesetzt oder in der Bedeutung
+verwendet, dass es sich um eine schnelle Datenübertragung handelt.
+
+Allgemein ist die Modulation die Änderung von Signalparametern (Amplitude,
+Frequenz, Phase,\ldots{}) eines Trägersignals durch ein modulierendes/aufgeprägtes
+Signal. Bei der Demodulation wird das ursprüngliche Signal wieder
+zurückgewonnen. Gründe dafür liegen z.B. in der Mehrfachbenutzung
+des Übertragungssystems (z.B. Frequenzmultiplex, siehe Abschnitt \vref{sec:synchronous_multiplex})
+oder einer besseren Übertragung und Filterung hochfrequenter Signale
+(Basisbandübertragung nur über elektrische Leitungen).
+
+Nachdem das Signal übertragen worden ist, wird es unter Umständen
+wieder dekodiert, in ein analoges Signal gewandelt und ausgegeben
+(z.B. Fernseher, Lautsprecher).
+
+Das gesamte Modell der Signalverarbeitung und Signalübertragung lässt
+sich folgendermaßen darstellen:
+
+%
+\begin{figure}[H]
+\centering
+
+\includegraphics[bb=0bp 0bp 105mm 40mm,clip]{transmission/signal_model}
+
+\caption{Signalverarbeitung und Signalübertragung}
+
+\end{figure}
+
+
+
+\subsection{Kodierung\label{sec:coding}}
+
+siehe Foliensatz!
+
+\subsection{Multiplexverfahren\label{sec:multiplex}}
+
+Unter Multiplexen (wörtlich: mehrfach) versteht man das Konzept der
+gemeinsamen Nutzung einer Systemressource durch mehrere Nutzer. Der
+Grund für Multiplexen liegt einerseits in der wirtschaftlichen Nutzung
+einer Ressource und andererseits in der Anforderung eine gewisse Form
+der Nebenläufigkeit zu erzeugen. Das bedeutet, dass mehrere Nutzer
+die Systemressource gewissermaßen gleichzeitig nutzen. Ein bekanntes
+Beispiel sind die Betriebssystemprozesse, die vom Scheduler des Betriebssystems
+in einem Multiplexverfahren dem Prozessor (die Systemressource) zugeteilt
+werden.
+
+Betrachtet man den Begriff Ressource, der im Sinne der Rechnernetze
+und der Übertragung von Nachrichten eine Rolle spielt, dann handelt
+es sich bei der Ressource um konkrete Übertragungskanäle.
+
+Im Kontext der Übertragungstechnik kann folgende Unterteilung der
+Multiplexverfahren getroffen werden.
+
+
+\subsubsection{Raummultiplex\label{sec:space_division_multiplex}}
+
+Das Raummultiplex (engl. space division multiplexing) wird auch Space
+Division Multiple Access (SDMA) genannt. Die Signale werden dabei
+über räumlich verschiedene -- also mehrfache ($\rightarrow$ multiplex)
+-- Übertragungswege übertragen. Sollen n Signale übertragen werden,
+dann werden n Leitungen verwendet. Das analoge Telefonnetz mit der
+Leitungsvermittlung kann in diese Kategorie eingeordnet werden.
+
+
+\subsubsection{Synchrones Multiplex\label{sec:synchronous_multiplex}}
+
+Die hier angeführten Multiplexverfahren werden deshalb als ,,synchron''
+bezeichnet, da die einzelnen Signale jeweils die gleichen (oder zumindest
+konstante) Anteile der Übertragungskapazität zur Verfügung gestellt
+bekommen.
+\begin{description}
+\item [{Frequenzmultiplex}] Es werden beim Frequenzmultiplexverfahren (engl.
+frequency division multiplexing, FDM) die einzelnen Signale auf Träger
+unterschiedlicher Frequenz aufmoduliert. Die (lineare) Summe dieser
+modulierten Signale wird übertragen.
+\item [{Codemultiplex}] Beim Codemultiplex (engl. code division multiplexing,
+CDM) wird jedes Bit mit einer Symbolfolge, die Code genannt wird,
+multipliziert. Die Codes sind zu einander orthogonal und jeder Sender
+erhält einen solchen Code. Die, sich so ergebenen Signale werden gleichzeitig
+auf dem Übertragungskanal im gleichen Frequenzband übertragen. Solange
+Empfänger mit dem Sender zeitlich synchronisiert sind, kann der Empfänger
+das empfangene Signal wieder mit einem einzelnen Code multiplizieren
+und erhält das einzelne Bit wieder zurück. Es ist ein aufwändiges
+Verfahren, das z.B. bei UMTS verwendet wird.
+\item [{Synchrones~Zeitmultiplex}] (engl. synchronous time division multiplexing,
+STDM oder STM) Es wird ein Rahmen (engl. frame) mit einer festgelegten
+Dauer definiert. Dieser Frame wird in Zeitschlitze (engl. time slots)
+unterteilt, die den einzelnen Signalen zugeordnet werden. Solche Frames
+werden nacheinander über den Übertragungskanal übertragen.
+\end{description}
+
+\subsubsection{Asynchrones Zeitmultiplex\label{sec:asynchronous_multiplex}}
+
+Das asynchrone Zeitmultiplexverfahren (engl. asynchronous time division
+multiplexing, ATDM oder ATM) wird auch als statistisches Multiplexen
+bezeichnet. Im Prinzip funktioniert es wie STM, jedoch erhalten nur
+diejenigen Signale einen Zeitschlitz, die auch etwas zu übertragen
+haben. Dieses Verfahren heißt deshalb auch statistisches Multiplexen,
+weil die verfügbare Übertragungskapazität im statistischen Mittel
+besser ausgenutzt wird. Damit allerdings ein Zeitschlitz einem Signal
+zugeordnet werden kann, muss eine Zuordnung im Zeitschlitz mitübertragen
+werden. Diese Zuordnung wird in der Regel mit einem Header durchgeführt,
+der am Anfang eines Zeitschlitzes übertragen wird. Dadurch entsteht
+ein gewisser Overhead.
+
+Das asynchrone Zeitmultiplexverfahren wird außer in der Übertragungstechnik
+bei der Entwicklung von Kommunikationsprotokollen eingesetzt! Damit
+ist es das wichtigste Multiplexverfahren, das für den Entwickler von
+verteilten Systemen eine Rolle spielt.
+
+
+\section{Sicherungsverfahren}
+
+In diesem Abschnitt werden wir uns zuerst mit der Rahmenbildung beschäftigen,
+dann mit dem Thema Fehlererkennung und Fehlerkorrektur und anschließend
+Methoden zur zuverlässigen Übertragung zwischen Punkt-zu-Punkt Verbindungen
+beschreiben.
+
+
+\subsection{Rahmen\label{sec:frames}}
+
+Die Bildung von Rahmen (engl. frames) behandelt das Erkennen von Anfang
+und Ende von Informationseinheiten. Auf der Ebene der physikalischen
+Übertragung von Bits geht es darum den Anfang und das Ende von Bitfolgen
+bzw. von Bytefolgen zu erkennen. So eine zusammenhängende Folge von
+Bits oder Bytes wird als Frame bezeichnet.
+
+Protokolle, die auf einer Folge von Bytes basieren werden Byte-orientierte
+Protokolle genannt. Analog dazu gibt es die Bit-orientierten Protokolle.
+Der Unterschied zwischen einem Byte-orientierten Protokoll und einem
+Bit-orientierten Protokoll liegt darin, dass sich ein Bit-orientiertes
+Protokoll nicht um Byte-Grenzen kümmern muss.
+
+Folgende zwei grundlegende Methoden werden wir behandeln: die Sentinel-Methode
+und die Zählmethode.
+
+
+\subsubsection{Sentinel-Methode}
+
+Die Sentinel-Methode (sentinel zu Deutsch: Wächter) geht davon aus,
+dass ein Frame mit je einem speziellen Startzeichen und einem Endezeichen
+-- eben den Sentinel-Zeichen -- markiert wird.
+
+Das Protokoll BSC (engl. binary synchronous communication) von IBM
+ist ein Beispiel für ein solches Byte-orientiertes Protokoll. D.h.
+der Rahmen besteht aus einer Folge von Bytes, die durch je ein Startbyte
+(STX, start of text) und ein Endebyte (ETX, end of text) markiert
+werden. Was passiert allerdings, wenn ein ETX im Datenanteil des Frames
+enthalten ist? Dann wird diesem ETX Zeichen ein spezielles Zeichen
+(DLE, data link escape) vorangestellt. Sollte ein DLE Zeichen im Datenanteil
+vorkommen, dann wird diesem ebenfalls ein DLE Zeichen vorangestellt.
+Dieses Verfahren nennt man das character stuffing (Zeichen auffüllen).
+Beim BSC Protokoll gibt es zusätzlich zum Datenanteil noch einen Header,
+Synchronisationsbytes und eine Prüfsumme (2 Bytes).
+
+Ein weiteres Beispiel für ein Byte-orientiertes Protokoll, das auf
+der Sentinel-Methode basiert ist PPP (point-to-point Protokoll).
+
+Das bitorientierte Protokoll HDLC (high-level data link control) verwendet
+ebenfalls die Sentinel-Methode. Es wird als Anfangs- und Endesequenz
+jeweils die Bitfolge 01111110 verwendet. Auch hier stellt sich die
+Frage wie zu verfahren ist, wenn eine längere Folge von Einsen im
+Frame vorkommen. Der Sender fügt nach fünf aufeinanderfolgenden Einsen
+im Datenanteil eine Null in den Datenstrom ein. Der Empfänger verfährt
+folgendermaßen, wenn er eine Folge von fünf Einsen erhält: ist das
+nächste Bit eine 0, dann wird es vom Empfänger entfernt, ist es eine
+Eins, dann wird das darauffolgende Bit auch noch angesehen. Ist dieses
+eine Null, dann handelt es sich um die Endesequenz, ist es eine Eins,
+dann liegt ein Fehler vor. Im Fehlerfall wird der Frame verworfen
+und auf den Beginn des nächsten Rahmens gewartet.
+
+
+\subsubsection{Zählmethode}
+
+Die Zählmethode basiert darauf, dass die Bits bzw. Bytes des Datenanteils
+gezählt werden und diese Länge vor dem Datenanteil übertragen wird.
+Damit weiß der Empfänger genau wie lange der zu empfangene Datenanteil
+ist und muss nicht den Datenanteil auf ein Endezeichen untersuchen.
+Ein Nachteil dieser Methode ist, dass die Anzahl der übertragenen
+Bits bzw. Bytes beschränkt ist, da das Längenfeld eine feste Größe
+haben muss und dieses nicht zu groß gewählt werden sollte, damit der
+Overhead bei kurzen Frames nicht zu groß ist.
+
+Ein Beispiel für ein Bit-orientiertes Rahmenformat, das auf der Zählmethode
+basiert ist das Ethernet Protokoll (siehe Kapitel \vref{sec:ethernet}).
+Als Beispiel für ein Byte-orientiertes Protokoll kann UDP (siehe Kapitel
+\vref{sec:udp}) dienen.
+
+
+\subsection{Fehlererkennung und Fehlerkorrektur\label{sec:error_detection}}
+
+siehe Foliensatz!
+
+
+\subsection{Zuverlässige Übertragung}
+
+Hinausgehend über eine einfache Fehlererkennung (unter Umständen mit
+Fehlerbehebung in einzelnen Nachrichten) ist es notwendig, eine zuverlässige
+Übertragung sicherzustellen. Die wichtigsten Aufgaben, die im Zuge
+der zuverlässigen Übertragung von Nachrichten anfallen sind:
+\begin{itemize}
+\item Zuverlässige Zustellung von Nachrichten. Dafür gibt es zwei grundlegende
+Mechanismen: Bestätigungen (engl. acknowledgements) und Zeitablauf
+(engl. timeout). Eine Bestätigung oder kurz ACK ist eine kurze Nachricht
+vom Empfänger an den Sender, die die ursprüngliche Nachricht bestätigt.
+Ein ACK kann außerdem auch im Huckepackverfahren (engl. piggyback)
+an eine normale Nachricht, die der Empfänger an den Sender senden
+will, angeschlossen werden. Dadurch wird das Senden einer Nachricht
+eingespart. Durch den Empfang eines ACK weiß der Sender, dass der
+Empfänger die Nachricht erhalten hat. Erhält der Sender kein ACK innerhalb
+einer bestimmten Zeitspanne -- eben dem timeout --, dann sendet der
+Sender die Nachricht noch einmal an den Empfänger.
+\item Einhaltung der Reihenfolge von Nachrichten. Die Reihenfolge der Nachrichten
+wird durch Sequenznummern realisiert.
+\item Flusskontrolle. Darunter versteht man einen Mechanismus mit dem der
+Empfänger den Sender drosseln kann, sodass der Sender Nachrichten
+nicht schneller sendet als der Empfänger diese verarbeiten kann. Im
+Prinzip funktioniert das so, dass der Sender nur senden darf, wenn
+nicht mehr als eine bestimmte Anzahl von ACKs ausständig sind (siehe
+Abschnitt \vref{sec:stop-and-go} und Abschnitt \vref{sec:sliding-window}).
+\end{itemize}
+In diesem Abschnitt werden die beiden wichtigsten Verfahren beschrieben,
+die jedoch auch in anderen Abschnitten erwähnt werden.
+
+
+\subsubsection{Stop-And-Go Algorithmus\label{sec:stop-and-go}}
+
+Der Stop-And-Go Algorithmus basiert darauf, dass der Sender auf das
+ACK wartet bevor der Sender die nächste Nachricht absendet. Falls
+das ACK nicht innerhalb einer bestimmten Zeit (timeout) eintrifft,
+wird die ursprüngliche Nachricht noch einmal abgesendet.
+
+Dadurch ergeben sich genau 4 Fälle:
+\begin{enumerate}
+\item Das ACK kommt innerhalb der timeout Zeitspanne an.
+\item Die ursprüngliche Nachricht geht am Weg zum Empfänger verloren und
+der Sender sendet nach Ablauf der Zeitspanne die Nachricht erneut.
+\item Das ACK geht am Weg vom Empfänger zum Sender verloren und der Sender
+sendet nach Ablauf der Zeitspanne die Nachricht erneut.
+\item Das ACK trifft nach Ablauf der Zeitspanne ein und der Sender hat die
+ursprüngliche Nachricht noch einmal gesendet.
+\end{enumerate}
+Die Fälle 3 und 4 sind insoferne interessant als das der Empfänger
+die Nachricht zwei Mal bekommt! Da der Empfänger nicht wissen kann,
+dass es sich beim zweiten Mal um eine Kopie der ersten Nachricht bekommt,
+muss es einen Mechanismus geben, der es ihm ermöglicht dies zu erkennen.
+Die Lösung sieht so aus, dass jede Nachricht noch einen Header aufweist,
+die eine 1 Bit lange Sequenznummer bekommt. Erhält der Empfänger mehrmals
+hintereinander die gleiche Sequenznummer weiß dieser, dass es sich
+um die gleiche Nachricht handelt.
+
+Der Nachteil dieses Verfahrens ist, dass der Übertragungskanal nicht
+ausgelastet wird.
+
+
+\subsubsection{Sliding-Window Algorithmus\label{sec:sliding-window}}
+
+Bei dem Sliding-Window Algorithmus handelt es sich um eine Erweiterung
+des Stop-And-Go Algorithmus.
+
+
+\minisec{Sender}
+
+Der Sender weist jeder Nachricht eine Sequenznummer (engl. sequence
+number, abgekürzt mit SEQ) zu und verwaltet zwei Variablen:
+\begin{itemize}
+\item Die maximale Anzahl der noch nicht bestätigten Nachrichten, die der
+Sender senden kann, wird als Größe des Sendefensters (engl. send window
+size, SWS) bezeichnet.
+\item Die Sequenznummer des zuletzt empfangenen ACK (engl. last ack received,
+LAR).
+\end{itemize}
+Die Abbildung \vref{fig:sliding_window_sender} zeigt das.
+
+%
+\begin{figure}[H]
+\centering
+
+\includegraphics[bb=0bp 0bp 95mm 23mm,clip]{transmission/sliding_window_sender}
+
+\caption{\label{fig:sliding_window_sender}Sliding-Window des Senders}
+
+\end{figure}
+
+
+
+\minisec{Empfänger}
+
+Der Empfänger verwaltet drei Variablen:
+\begin{itemize}
+\item Die maximale Anzahl der Nachrichten, die der Empfänger annimmt ohne
+eine Bestätigung für diese gesendet zu haben, wird als Größe des Empfangsfensters
+(engl. receive window size, RWS) bezeichnet.
+\item Die Sequenznummer der zuletzt akzeptierten Nachricht (engl. last ack
+sent, LAS). D.h. das ist die größte Sequenznummer, für die eine Bestätigung
+geschickt wurde.
+\item Die kleinste Sequenznummer, die empfangen wurde und für die noch keine
+Bestätigung gesendet wurde (engl. first message not acknowledged,
+FMN).
+\end{itemize}
+Die Abbildung \vref{fig:sliding_window_receiver} illustriert dies:
+
+%
+\begin{figure}[h]
+\centering
+
+\includegraphics[bb=0bp 0bp 93mm 27mm,clip]{transmission/sliding_window_receiver}
+
+\caption{\label{fig:sliding_window_receiver}Sliding-Window des Empfängers}
+
+\end{figure}
+
+
+
+\minisec{Algorithmus}
+
+Der Sender schickt eine Nachricht mit der Sequenznummer SEQ ab, wenn
+die Bedingung SEQ $\leq$ LAR + SWS eingehalten ist. Das sagt aus,
+dass der Sender nicht mehr Nachrichten im voraus absendet als er Bestätigungen
+erhalten hat. Der Sender verhält sich folgendermaßen:
+\begin{enumerate}
+\item Für jede Nachricht, die der Sender abschickt startet er einen Timer
+und legt diese Nachricht in einem Zwischenspeicher ab. Wird für diese
+Nachricht eine Bestätigung empfangen, dann wird der Timer gestoppt.
+Kommt es zu einem Zeitablauf, dann wird die Nachricht, die zu diesem
+Timer gehört nochmals abgesendet.
+\item Erhält der Sender eine Bestätigungsnachricht für die Sequenznummer
+SEQ, dann setzt der Sender LAR auf SEQ (wenn SEQ größer als LAR).
+\end{enumerate}
+Der Empfänger verhält sich folgendermaßen:
+\begin{enumerate}
+\item Erhält der Empfänger eine Nachricht mit der Sequenznummer SEQ und
+befindet sich diese innerhalb des Empfangsfensters, d.h. LAS $<$
+SEQ $\leq$ LAS $+$ RWS, dann wird diese Nachricht akzeptiert und
+zwischengespeichert, wenn eine Nachricht mit dieser SEQ noch nicht
+empfangen wurde. Anderenfalls wird diese Nachricht verworfen.
+\item Ist die Sequenznummer der gerade zwischengespeicherten Nachricht kleiner
+als FMN, dann wird FMN zu SEQ gesetzt.
+\item Ist die Bedingung FMN = LAS + 1 erfüllt, dann wird die größte Sequenznummer
+NMA (next message to acknowledge) der empfangenen Nachrichten innerhalb
+des Sliding-Window gesucht, sodass sich keine nicht empfangenen Nachrichten
+zwischen NMA und FMN befinden. Es wird LAS auf NMA gesetzt und es
+wird eine Bestätigungsnachricht mit NMA an den Sender gesendet. Damit
+bestätigt der Empfänger alle Nachrichten inkl. derjenigen mit der
+Sequenznummer NMA. Danach wird noch FMN neu gesetzt.
+\end{enumerate}
+
+\minisec{Varianten}
+
+Es gibt Varianten zu dem gerade beschriebenen Algorithmus:
+\begin{itemize}
+\item Es besteht die Möglichkeit jede empfangene Nachricht, die sich innerhalb
+des Empfangsfensters befindet sofort zu bestätigen. Diese Möglichkeit
+nennt man \emph{selektives} Bestätigen im Gegensatz zur gerade beschriebenen
+Methode der \emph{kumulativen} Bestätigung. 
+\item Im Gegensatz zu den positiven Bestätigungen kann der Empfänger auch
+negative Bestätigungen (engl. negative acknowledgments, NAK) senden,
+die anzeigen, dass eine Nachricht nicht erhalten wurde.
+\end{itemize}
+Beiden Varianten ist gemein, dass sie die Komplexität der Software
+vergrößern und in gewissen Maße auch zu einem erhöhten Nachrichtenverkehr
+führen. Allerdings kann der Sender schneller auf Fehler reagieren
+und unter Umständen den verfügbaren Übertragungskanal besser ausnutzen.
+
+
+\minisec{Endliche Sequenznummern}
+
+Nicht betrachtet wurde bei dem beschriebenen Algorithmus allerdings,
+dass die Sequenznummern eine maximale Größe haben, die durch die Implementierung
+festgelegt ist. D.h. die Sequenznummern können nicht unendlich wachsen:
+sie sind endlich.
+
+Betrachten wir zuerst den Stop-And-Go-Algorithmus mit einer 1 Bit
+langen Sequenznummer. Damit gibt es 2 verschiedene Sequenznummern,
+aber nur eine Nachricht darf ausständig sein.
+
+Vergrößert man den Speicherplatz für die Sequenznummern auf 3 Bit,
+ergibt sich ein Bereich für die Sequenznummern von 0 bis 7 (= SEQ$_{\text{max}}$).
+Nehmen wir an, dass SWS = RWS = 7 ist und der Sender Nachrichten mit
+den Sequenznummern 0 bis 6 sendet. Der Empfänger empfängt diese und
+sendet ACKs, die jedoch verloren gehen. D.h. aus der Sicht des Empfängers
+sieht es so aus, dass als nächstes die Nachricht mit der Sequenznummer
+7 kommen muss und danach wieder Sequenznummern mit 0 beginnend. Beim
+Sender laufen jedoch die Timer ab, sodass dieser die alten Nachrichten
+mit den Sequenznummern 0 bis 6 nochmals sendet, die vom Empfänger
+jedoch als neue Nachrichten interpretiert werden würden.
+
+Die Anzahl der möglichen Sequenznummern muss größer sein als die der
+maximalen Anzahl der ausstehenden Frames. Es muss gelten, dass: SWS
+$+$ RWS $<$ SEQ$_{\text{max}}$ $+$ 1. Bei SWS = RWS folgt damit,
+dass SWS $<$ (SEQ$_{\text{max}}$ $+$ 1) / 2 sein muss. D.h. analog
+zum Stop-And-Go Algorithmus, der jeweils zwischen den Sequenznummern
+0 und 1 wechselt, wird hier -- allerdings kontinuierlich -- zwischen
+den beiden Hälften der Sequenznummern hin- und herbewegt.

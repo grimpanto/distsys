@@ -1,0 +1,22 @@
+
+\setupbodyfont[bonum]
+
+\starttext
+
+\starttyping
+while True:
+    warte auf nächste Routingnachricht M von einem Nachbarn N
+    for E in M:  # E ... Eintrag
+
+        E == (V, D)  # V ... Ziel, D ... Distanz
+        C = D + 1   # C ... Kosten über diesen Link
+
+        if (es gibt keine Route zu V):
+            neuen Eintrag mit V, N und D hinzufügen
+        elif (es gibt eine Route mit Next-Hop N):
+            ersetze Distanz in der existierenden Route durch C
+        elif (es gibt eine Route mit Distanz größer als C):
+            ändere Next-Hop auf N und Distanz auf C
+\stoptyping
+
+\stoptext

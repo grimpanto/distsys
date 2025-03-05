@@ -1,0 +1,893 @@
+#LyX 1.5.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass scrbook
+\begin_preamble
+
+\end_preamble
+\language ngerman
+\inputencoding latin1
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 0
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Das Konzept der Sicherheit
+\end_layout
+
+\begin_layout Standard
+Hier geht es primär darum, ein Bewusstsein für die vielfältigen Probleme
+ im Zusammenhang mit dem Thema Sicherheit zu schaffen und die grundlegenden
+ Möglichkeiten aufzuzeigen.
+\end_layout
+
+\begin_layout Standard
+Da die Definition von Sicherheit sehr weit gesteckt ist, werden wir hier
+ den Begriff der Computersicherheit informal festlegen: Unter Computersicherheit
+ versteht man die Sicherheit eines Computersystems vor Ausfall und Manipulation
+ sowie vor unerlaubten Zugriff.
+\end_layout
+
+\begin_layout Standard
+Eindeutig ausgenommen ist hier das Thema des Datenschutzes!
+\end_layout
+
+\begin_layout Section
+Bedrohungsanalyse
+\end_layout
+
+\begin_layout Standard
+In der Bedrohungsanalyse geht es darum alle möglichen Bedrohungen und Angreifer
+ zu identifizieren.
+ Es kann prinzipiell nach dem Ort der Gefahrenquelle unterschieden werden,
+ d.h.\InsetSpace ~
+tritt die Gefahr bei der Datenübertragung oder bei der Datenspeicherung
+ auf.
+ Wobei im Sinne der verteilten Systeme hauptsächlich die Probleme der Datenübert
+ragung interessant sind.
+\end_layout
+
+\begin_layout Standard
+Bei der Art der Gefährdung kann man prinzipiell unterscheiden zwischen allgemein
+en Bedrohungen und den eigentlichen Grundbedrohungen.
+\end_layout
+
+\begin_layout Subsection
+Allgemeine Bedrohungen
+\end_layout
+
+\begin_layout Standard
+Wie in der Definition angeführt, hängt Sicherheit nicht nur mit böswilligen
+ Angriffen von Crackern zusammen.
+ Es ist prinzipiell von Ausfall die Rede.
+ Ausfall kann einerseits einen Totalausfall eines Systems oder einen teilweise
+ Ausfall bezeichnen.
+ Andererseits ist ein Ausfall auch eine Fehlfunktion.
+ In diesem Sinne lassen sich zumindest folgende Bedrohungen identifizieren:
+\end_layout
+
+\begin_layout Itemize
+Äußere Einflüsse (technischer Art) 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Netzschwankungen und Netzausfall, elektrostatische Aufladungen, Magnetische
+ Felder und Einstrahlungen benachbarter (Rundfunk)Sender.
+\end_layout
+
+\begin_layout Itemize
+Übertragungsfehler und Fehlrouting (z.B.
+ in Folge des vorhergehenden Punktes).
+\end_layout
+
+\begin_layout Itemize
+Überhitzung oder Brand, Blitzschlag, Explosion, Erdbeben, Wasser, Tiere,...
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Systemfehler, wie z.B.
+ Programmierfehler, Konfigurationsfehler (in Folge z.B.
+ ebenfalls Fehlrouting) oder Verschleißerscheinung der HW.
+\end_layout
+
+\begin_layout Itemize
+Menschliche Fehler (ohne schädigende Absicht): wie z.B.
+ Eingabe- oder Bedienungsfehler.
+ 
+\end_layout
+
+\begin_layout Standard
+Bei diesen allgemeinen Gefahren sind hauptsächlich Methoden, wie bei Fehlertoler
+anz und Konsistenz bzw.\InsetSpace ~
+Replikation besprochen wurden, anzuwenden.
+\end_layout
+
+\begin_layout Subsection
+Grundbedrohungen
+\end_layout
+
+\begin_layout Standard
+Unter Grundbedrohungen verstehen wir in weiterer Folge die speziellen Bedrohunge
+n, die bei einem Computerangriff vorkommen.
+\end_layout
+
+\begin_layout Description
+Verlust\InsetSpace ~
+der\InsetSpace ~
+Vertraulichkeit Ein unberechtigter Dritter hat Zugriff auf einen
+ Dienst oder Daten erhalten.
+ D.h.\InsetSpace ~
+dadurch kommt es zu einer Verletzung der Vertraulichkeit.
+\end_layout
+
+\begin_layout Description
+Verlust\InsetSpace ~
+der\InsetSpace ~
+Integrität Es kommt zu unerlaubten oder auch unabsichtlichen Veränderu
+ngen (Modifikation) der Daten oder der Abänderung eines Dienstes, sodass
+ dieser nicht mehr so funktioniert wie in der Spezifikation vorgesehen.
+ Integrität bedeutet, dass die Daten unverfälscht und vollständig sind.
+\end_layout
+
+\begin_layout Description
+Verlust\InsetSpace ~
+der\InsetSpace ~
+Authentizität Authentizität bedeutet, dass verifizierbar ist,
+ ob eine behauptete Identität mit der tatsächlichen Identität übereinstimmt.
+ Der Nachweis der Authentizität kann entweder durch elektronische Merkmale
+ (z.B.
+ Chipkarte) oder auf nichtelektronischem Wege (z.B.
+ Ausweis) erfolgen.
+ Der Verlust der Authentizität führt natürlich auch zum Verlust der Vertraulichk
+eit und kann jedoch auch zum Verlust der Integrität führen.
+\end_layout
+
+\begin_layout Description
+Verlust\InsetSpace ~
+der\InsetSpace ~
+Verbindlichkeit Verbindlichkeit bedeutet, dass eine bestandene
+ Kommunikationsbeziehung nicht geleugnet werden kann.
+ Wichtig wird dies im Zusammenhang mit der Abwicklung von Geschäften im
+ Internet.
+ Das kann das einfache Abstreiten über den Erhalt einer E-Mail bedeuten
+ oder das Leugnen eines Geschäftsabschlusses.
+\end_layout
+
+\begin_layout Description
+Verlust\InsetSpace ~
+der\InsetSpace ~
+Verfügbarkeit Dienste werden unterbrochen oder Daten stehen nicht
+ mehr zur Verfügung, sodass sie nicht mehr nutzbar sind, zerstört wurden,
+ usw.
+ Im weitesten Sinne wird dadurch die Verfügbarkeit eines Systems beinträchtigt.
+ 
+\end_layout
+
+\begin_layout Subsection
+Passive Angriffe
+\end_layout
+
+\begin_layout Standard
+Spezielle Angriffe führen zu Bedrohungen wie besprochen.
+ Prinzipiell kann zwischen passiven Angriffen und aktiven Angriffen unterschiede
+n werden.
+ Passive Angriffe führen zu keinen Veränderungen der Daten oder der Kommunikatio
+n.
+\end_layout
+
+\begin_layout Subsubsection
+Abhören von Daten
+\end_layout
+
+\begin_layout Standard
+Im weitesten Sinne können folgende Angriffe darunter zusammengefasst werden:
+\end_layout
+
+\begin_layout Itemize
+Sammeln von 
+\begin_inset Quotes pld
+\end_inset
+
+Abfall
+\begin_inset Quotes erd
+\end_inset
+
+ (Müll).
+ D.h.\InsetSpace ~
+es besteht physischer Zugang zu den Räumlichkeiten.
+ 
+\end_layout
+
+\begin_layout Itemize
+Illegales Kopieren von Daten.
+ D.h.\InsetSpace ~
+es besteht physischer Zugriff auf den Datenträger (z.B.
+ USB Stick oder auch Festplatte).
+ Wenn Zugriff auf die Festplatte besteht (entweder direkt oder über entfernten
+ Zugang), dann kann u.U.
+ auch auf bereits gelöschte Dateien oder auf die swap Partition zugegriffen
+ werden (Paßwörter und andere sensible Daten).
+ Auch ein direkter Zugriff auf den Hauptspeicher kann möglich sein oder
+ lesender Zugriff auf das GUI System (z.B.
+ mitlesen der Passworteingabe).
+ 
+\end_layout
+
+\begin_layout Itemize
+Abhören einer Kommunikationsverbindung.
+ D.h.\InsetSpace ~
+es besteht physischer Zugriff auf das Kommunikationsmedium (z.B.\InsetSpace ~
+Internet,
+ WLAN).
+ Dazu sind Sniffer Programme notwendig.
+ Wenn das LAN abgehört wird, muss in der Regel ein root Account auf einem
+ Host des LAN verwendet werden.
+ 
+\end_layout
+
+\begin_layout Itemize
+Empfangen der Abstrahlung (Monitor, Kommunikationswege)! 
+\end_layout
+
+\begin_layout Subsubsection
+Abhören der Teilnehmeridentitäten
+\end_layout
+
+\begin_layout Standard
+Der Angriff dient dazu herauszufinden, welche Teilnehmer untereinander eine
+ Datenverbindung aufbauen und Daten austauschen.
+ Aufgrund dieser Tatsachen, wer zu welchem Zeitpunkt mit wem Daten ausgetauscht
+ hat, sind Rückschlüsse über die ausgetauschten Daten und das Verhalten
+ der Benutzer möglich.
+ Z.B.
+ kann aus einem regen Datenaustausch zwischen zwei Geschäftsführern zweier
+ Unternehmen geschlossen werden, dass eine Kooperation besteht oder es kann
+ ein Profil über einen bestimmten Benutzer erstellt werden (Verletzung der
+ Privatsphäre).
+\end_layout
+
+\begin_layout Subsubsection
+Verkehrsflussanalyse
+\end_layout
+
+\begin_layout Standard
+Werden die Informationen verschlüsselt übertragen, können diese nicht mehr
+ ohne weiteres abgehört werden.
+ Ein Angreifer kann sich aber durch eine Verkehrsflussanalyse Angaben über
+ die Kommunikation der Teilnehmer beschaffen sowie über Informationen, die
+ ihm bei der Entschlüsselung der übertragenen Daten nützlich sein können.
+ Mit Hilfe einer Verkehrsflussanalyse erfährt der Angreifer Zeit, Grösse,
+ Häufigkeit und Richtung eines Datentransfers.
+ Diese Angaben können zum Beispiel für Börsentransaktionen von Interesse
+ sein.
+\end_layout
+
+\begin_layout Subsection
+Aktive Angriffe
+\end_layout
+
+\begin_layout Standard
+Aktive Angriffe verändern Daten!
+\end_layout
+
+\begin_layout Subsubsection
+Wiederholen oder Verzögern von Informationen 
+\end_layout
+
+\begin_layout Standard
+Duplizieren von Daten durch Wiedereinspielen aufgezeichneter (und u.U.
+ modifizierter) Datenströme (z.B.
+ weitere Transaktion auf ein anderes Konto).
+ Aber auch das Abfangen und verzögerte Senden von Daten stellt einen Angriff
+ dar (Verzögerung eines großen Aktienkaufes zwecks Übernahme einer Firma
+ kann genutzt werden, um von einem Kursanstieg zu profitieren).
+\end_layout
+
+\begin_layout Subsubsection
+Einfügen und Löschen bestimmter Daten
+\end_layout
+
+\begin_layout Standard
+Durch das Einfügen oder dem Löschen von Daten soll der Empfänger zu falschem
+ Verhalten veranlasst werden.
+\end_layout
+
+\begin_layout Subsubsection
+Modifikation von Daten
+\end_layout
+
+\begin_layout Standard
+Abhören einer Datenverbindung mit gleichzeitiger Modifizierung der Daten
+ (z.B.
+ Verändern der Kontonummer einer Transaktion).
+ Aber auch Systemveränderungen (z.B.
+ der Konfiguration wie dem Hinzufügen eines weiteren Eintrages in eine Passwortd
+atei) oder die Veränderung von Datenbankeinträgen zählt dazu.
+\end_layout
+
+\begin_layout Subsubsection
+Verweigerungsangriffe (Denial of Service) 
+\end_layout
+
+\begin_layout Standard
+Prinzipiell soll durch einen Angriff ein Dienst für andere Benutzer unbenutzbar
+ gemacht werden.
+ Das kann einerseits ein Boykott des Kommunikationssystems oder anderer
+ Ressourcen sein.
+ Beispiele:
+\end_layout
+
+\begin_layout Itemize
+Boykott durch Trennen der Kommunikationsverbindung.
+\end_layout
+
+\begin_layout Itemize
+Überlastung eines Webservers durch Anfragen.
+\end_layout
+
+\begin_layout Itemize
+Füllen der Festplatte mit E-Mail Bomben.
+\end_layout
+
+\begin_layout Itemize
+Senden von gefälschten ICMP Paketen (Anzeigen des Abbruchs der Verbindung,
+ Weiterleitung oder Erhöhung der Netzwerklast).
+\end_layout
+
+\begin_layout Itemize
+Eine bekannte Methode besteht auch im SYN-Flood: Im Zuge des Aufbaus einer
+ TCP Verbindung sendet der Client an den Server ein Paket mit gesetztem
+ SYN Bit, der Server antwortet mit gesetztem SYN und ACK bit und wartet
+ auf die Beendigung des Handshakes, dass der Client ein Paket mit gesetztem
+ ACK sendet.
+ Sendet der Client jedoch nur das erste Paket, nicht jedoch das letzte Paket
+ des Handshake und öffnet jedoch viele Verbindungen auf diese Weise, dann
+ werden die Ressourcen (offene Verbindungen) des Servers aufgebraucht, da
+ dieser noch eine gewisse Zeit auf das Antwortpaket wartet.
+ Der Client flutet den Server mit SYN Paketen bis dieser keine weiteren
+ Verbindungsanfragen mehr annehmen kann.
+\end_layout
+
+\begin_layout Standard
+Nach einem Einbruch in das Computersystem kann auch eine Überlastung durch
+ Allozierung von Hauptspeicher, Prozessen oder Festplattenplatz herbeigeführt
+ werden.
+ Im weitesten Sinne zählt auch unerwünschte Werbe-E-Mail (Spam) dazu!
+\end_layout
+
+\begin_layout Subsubsection
+Vortäuschen einer falschen Identität (Masquerade) 
+\end_layout
+
+\begin_layout Standard
+Durch Maskerade (Vorspielen einer falschen Identität) können Daten abgerufen
+ oder verändert werden für die sonst keine Berechtigung vorhanden wäre.
+\end_layout
+
+\begin_layout Standard
+Einfach gelangt man zu einer Identität durch Ausspähen von Benutzername
+ und Passwort, Diebstahl einer Bankomatkarte, Verfälschen von Absenderadresse
+ einer E-Mail oder Verändern der Kartenadresse einer Netzwerkkarte.
+\end_layout
+
+\begin_layout Standard
+Allgemein versteht man heute unter Spoofing (Verschleierung, Manipulation)
+ Täuschungsversuche in Netzwerken zur Verschleierung der eigenen Identität.
+ Beispiele sind ARP-Spoofing, DNS-Spoofing, IP-Spoofing, URL-Spoofing.
+\end_layout
+
+\begin_layout Minisec
+ARP-Spoofing
+\end_layout
+
+\begin_layout Standard
+Mittels falscher ARP Pakete kann ein Angreifer C die Kommunikation zwischen
+ A und B in einem Netz abhören:
+\end_layout
+
+\begin_layout Standard
+Angreifer C sendet an den Host A ein manipuliertes ARP Paket, sodass Host
+ A anstatt an B jetzt an C sendet.
+ Weiters sendet C an B ein manipuliertes ARP Paket, sodass B anstatt an
+ A an C sendet.
+ C leitet daraufhin alle Pakete weiter und lauscht die Kommunikation mit.
+ Ein klassischer man-in-the-middle Angriff.
+\end_layout
+
+\begin_layout Minisec
+DNS-Spoofing
+\end_layout
+
+\begin_layout Standard
+Also die Fälschung von DNS zu IP Adressen oder umgekehrt war auf Grund eines
+ Fehlers in DNS Software relativ einfach.
+ Diese Fehler sind jetzt in neueren Versionen beseitigt.
+ Als Alternative könnte man in einen DNS Server einbrechen und dort die
+ Informationen verändern oder auf IP-Spoofing zurückgreifen.
+\end_layout
+
+\begin_layout Minisec
+IP-Spoofing
+\end_layout
+
+\begin_layout Standard
+IP-Spoofing bezeichnet in Computernetzen das Versenden von IP-Paketen mit
+ gefälschter Quell-IP-Adresse.
+ Dies kann verwendet werden, um eine IP-Adressenbasierte Authentifizierung
+ zu hintergehen.
+\end_layout
+
+\begin_layout Minisec
+URL-Spoofing
+\end_layout
+
+\begin_layout Standard
+URL-Spoofing bezeichnet das Vorspielen einer falschen URL in einem Webbrowser.
+ Analog zu DNS-Spoofing hängt das von der verwendeten Software ab (in diesem
+ Fall dem Browser).
+\end_layout
+
+\begin_layout Minisec
+Phishing
+\end_layout
+
+\begin_layout Standard
+Bei phishing (password fishing) geht es darum einen Benutzer mit gefälschten
+ Angaben zur Herausgabe von sensitiven Daten (wie z.B.
+ Passwörtern) zu bewegen.
+ Dazu wird der Benutzer aufgefordert eine E-Mail mit den Daten zu versenden
+ oder ein Link auf eine Webseite wird angeboten.
+ Diese Links sind ähnlich wie bestehende (wie z.B.
+ www.security-bawag.com), jedoch noch relativ leicht zu durchschauen.
+\end_layout
+
+\begin_layout Standard
+Problematisch ist es seit der Einführung der Umlautdomänen geworden, da
+ hiermit einerseits der Benutzer leichter hinter das Licht geführt werden
+ kann (guenter.at vs.\InsetSpace ~
+günter.at) und andererseits bestimmte Zeichen in bestimmten
+ Zeichensätzen nicht von den normalen im Browser zu unterscheiden sind (kyrillis
+ches a und normales a)!
+\end_layout
+
+\begin_layout Subsubsection
+Leugnen einer Kommunikationsbeziehung
+\end_layout
+
+\begin_layout Standard
+Einer der Kommunikationsteilnehmer leugnet, dass eine bestimmte Kommunikation
+ oder ein Informationsaustausch stattgefunden hat.
+ Dabei kann es sich entweder um den Sender handeln, welcher abstreitet,
+ eine Nachricht gesandt zu haben oder um den Empfänger, welcher abstreitet,
+ die Nachricht erhalten zu haben (z.B.
+ ein Geschäftsabschluss wie eine Bestellung).
+\end_layout
+
+\begin_layout Subsubsection
+Trittbrettfahrer (Hijacking)
+\end_layout
+
+\begin_layout Standard
+Bei einem Hijacking Angriff schaltet sich der Angreifer in eine bestehende
+ Terminal- oder Login-Sitzung ein, welche vom System bereits authentifiziert
+ wurde, und übernimmt diese.
+ Technisch betrachtet, hängt sich der Angreifer in die Kommunikationsverbindung
+ ein, verfolgt die Login-Prozedur mit und kapert die Login-Bestätigung des
+ Servers.
+ Dem Rechner des autorisierten Benutzers wird ein Verbindungsabbau zugesandt,
+ und der Angreifer verfügt aufgrund des erfolgreichen Logins über alle Rechte
+ des autorisierten Benutzers.
+\end_layout
+
+\begin_layout Subsubsection
+Erzeugung von Systemanomalien
+\end_layout
+
+\begin_layout Standard
+Unter Systemanomalien sind solche Situationen zu verstehen, bei denen die
+ Hardware- und Softwarekomponenten die vorgesehene Leistung nicht erbringen.
+ Das kann eine einfache Veränderung von Software sein oder auch die Zerstörung
+ von Hardware bewirken.
+\end_layout
+
+\begin_layout Description
+Viren Als Viren (engl.
+ viruses) werden sich selbst produzierende Programme bezeichnet, welche
+ sich in andere Programme hineinkopieren und in Verbindung mit diesen bestimmte
+ Funktionen ausführen.
+ 
+\end_layout
+
+\begin_layout Description
+Würmer Ähnlich wie Viren, sind Würmer (engl.
+ worms) ebenfalls selbstreproduzierende Programme.
+ Sie sind jedoch im Gegensatz zu Viren eigenständig und laufen deshalb ohne
+ Wirtprogramme.
+ 
+\end_layout
+
+\begin_layout Description
+Trojaner Trojaner (engl.
+ trojan horses oder kurz trojans) sind Programme, welche vorgeben, eine
+ gewisse Aufgabe zu erfüllen, aber in Wirklichkeit eine andere Funktion
+ ausüben, werden als Trojaner (Trojanische Pferde) bezeichnet.
+ 
+\end_layout
+
+\begin_layout Description
+Bomben Als Bomben (engl.
+ bombs) werden solche Programme zusammengefasst, welche den Betrieb eines
+ Rechners stören, sobald sie durch ein bestimmtes Ereignis (Zeit oder logisches
+ Ereignis, wie das Einloggen eines bestimmten Benutzers) aktiviert werden.
+ 
+\end_layout
+
+\begin_layout Description
+Falltüren Als Falltüren (engl.
+ back doors) werden alle Teile eines Programmes bezeichnet, welche vom Programmi
+erer zu Testzwecken oder in manipulativer Absicht eingebaut wurden.
+ 
+\end_layout
+
+\begin_layout Section
+Schwachstellenanalyse
+\end_layout
+
+\begin_layout Standard
+Nachdem die Bedrohungsanalyse das Ziel hat potentiell alle Bedrohungen zu
+ untersuchen, soll die Schwachstellenanalyse die Schwachstellen eines konkreten
+ Systems (Hardware, Software, Umgebung) aufzeigen.
+\end_layout
+
+\begin_layout Itemize
+Menschliche Schwachstellen (Fahrlässigkeit, Naiivität, Wissensmangel, Käuflichke
+it, ehemalige Mitarbeiter).
+\end_layout
+
+\begin_layout Itemize
+Organisatorische Schwachstellen, wie z.B.
+ die Vergabe von Zugangsberechtigungen oder der Standort eines Computersystems.
+\end_layout
+
+\begin_layout Itemize
+Technische Schwachstellen sind der technische Anteil, den wir bis jetzt
+ hauptsächlich betrachtet haben.
+ Darunter fallen Dienste, die angeboten werden (wie z.B.
+ ftp oder telnet).
+\end_layout
+
+\begin_layout Section
+Gefahrenanalyse
+\end_layout
+
+\begin_layout Standard
+Sobald die auf ein System einwirkenden Bedrohungen (z.B.
+ Ausführen von Programmen mit unerwünschter Wirkung) mit den in der Unternehmung
+ vorhandenen Schwachstellen (z.B.
+ ActiveX) zusammentreffen, ergeben sich Gefahren.
+\end_layout
+
+\begin_layout Standard
+Das Ziel der Gefahrenanalyse ist deshalb, die Wechselwirkungen von Bedrohungen
+ und Schwachstellen festzustellen, um rechtzeitig Maßnahmen zur Risikoreduzierun
+g ergreifen zu können.
+\end_layout
+
+\begin_layout Section
+Sicherheitsmanagement
+\end_layout
+
+\begin_layout Standard
+Ohne umfassendes Sicherheitsmanagement kann kein zufriedenstellender Grad
+ der Sicherheit erreicht werden (100% Sicherheit gibt es bekanntlich nicht).
+ Nur punktuelle Maßnahmen sind nicht ausreichend.
+\end_layout
+
+\begin_layout Subsection
+Personelle Maßnahmen
+\end_layout
+
+\begin_layout Standard
+Personelle Maßnahmen betreffen die Schulung, die Förderung des Sicherheitsbewuss
+tsein sowie Verbote.
+ In diesem Zusammenhang ist auch die gesamte Führungskultur innerhalb der
+ Firma sicher von besonderer Bedeutung!
+\end_layout
+
+\begin_layout Subsection
+Organisatorische Maßnahmen
+\begin_inset LatexCommand label
+name "sec:security_organisational_actions"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Sicherheitspolicy: z.B.
+ Zutrittskontrolle zu Hardware, Zugangsberechtigungen zu Daten, Schlüsselverwalt
+ung und PKI (Public Key Infrastructure) mit Chipkarte der Sozialversicherung,
+ Backup, Brandschutz, Redundanzen,...
+ 
+\end_layout
+
+\begin_layout Itemize
+Audit-Trail Management (engl.
+ audit trail): Ursprünglich wurde der englische Begriff `Audit' im Rechnungswese
+n für die Rechnungsprüfung verwendet.
+ In der Informatik kann jedoch das Audit als Revision und Controlling von
+ sicherheitsrelevanten Ereignissen angesehen werden.
+ Die Revision dient der sporadischen Überprüfung, das Controlling hingegen
+ der laufenden Überwachung.
+ Dabei handelt es sich, um eine lückenlose elektronische Protokollierung
+ aller Schritte und Ereignisse zur Beweissicherung und Rekonstruktion von
+ Vorgängen im System.
+\end_layout
+
+\begin_layout Itemize
+Eventhandling: diejenigen Tätigkeiten, die bei unerwarteteten Ereignissen
+ durchgeführt werden müssen.
+\end_layout
+
+\begin_layout Itemize
+Fehlermanagement: diejenigen Tätigkeiten, die notwendig sind, um Fehler
+ zu entdecken, eine Fehlerdiagnose zu erstellen und eine Fehlerkorrektur
+ vorzunehmen.
+\end_layout
+
+\begin_layout Subsection
+Technische Maßnahmen
+\end_layout
+
+\begin_layout Standard
+Diese betreffen z.B.
+ das Netzwerk (Redundanz, Glasfaser, Firewall,...), die Computer (Redundanz,
+ Virenschutzprogramme), den Brandschutz und sonstige Maßnahmen sowie das
+ Betriebssystem und die eingesetzten Programmiersprachen.
+\end_layout
+
+\begin_layout Standard
+Kryptographische und verwandte Maßnahmen werden im Abschnitt 
+\begin_inset LatexCommand ref
+reference "sec:securityactions"
+
+\end_inset
+
+ behandelt.
+\end_layout
+
+\begin_layout Section
+Sicherheitsmaßnahmen
+\begin_inset LatexCommand label
+name "sec:securityactions"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In diesem Abschnitt werden technische Maßnahmen besprochen, die speziell
+ im Kontext der Kryptographie stehen.
+\end_layout
+
+\begin_layout Subsection
+Sicherheitsdienste
+\end_layout
+
+\begin_layout Standard
+Es gibt 5 Arten von Sicherheitsdiensten, die eingesetzt werden können, um
+ auf die möglichen Gefahrenquellen und Sicherheitsgefährdungen zu reagieren:
+\end_layout
+
+\begin_layout Subsubsection
+Authentifizierung 
+\end_layout
+
+\begin_layout Standard
+Die Authentifizierung (Authentication) betrifft die Überprüfung der Identität
+ eines Benutzers, Clients, Servers...
+\end_layout
+
+\begin_layout Itemize
+einseitige vs.\InsetSpace ~
+gegenseitige Authentifizierung! 
+\end_layout
+
+\begin_layout Itemize
+Angriff liegt hautpsächlich im Vortäuschen einer falschen Identität mit
+ den verschiedensten Methoden.
+ 
+\end_layout
+
+\begin_layout Itemize
+Methoden zur Sicherstellung der Identität:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Besitz einer geheimen Information (Paßwort, Frage-Antwort Verfahren, One-Time-Pa
+sswords wie TANs).
+\end_layout
+
+\begin_layout Itemize
+biometrische Verfahren (z.B.
+ Irisscan, Fingerabdruck, Gesichtserkennung).
+\end_layout
+
+\begin_layout Itemize
+Besitz einer bestimmten Hardware: Chipkarte,...
+\end_layout
+
+\begin_layout Itemize
+Challange/Response Verfahren: Server überträgt z.B.
+ eine Zufallszahl, die der Client verschlüsselt (mittels eines symmetrischen
+ Verschlüsselungsverfahren) wieder zurücksendet und dadurch nachweist, dass
+ er im Besitz des geheimen Schlüssels ist.
+ 
+\end_layout
+
+\begin_layout Itemize
+Digitale Signatur (siehe Abschnitt 
+\begin_inset LatexCommand vref
+reference "sec:certificate"
+
+\end_inset
+
+).
+\end_layout
+
+\end_deeper
+\begin_layout Subsubsection
+Geheimhaltung
+\end_layout
+
+\begin_layout Standard
+Sinn der Geheimhaltung (Vertraulichkeit, engl.
+ confidentiality) ist, dass nur die beteiligten Partner die Kommunikation
+ verstehen.
+\end_layout
+
+\begin_layout Itemize
+Angriffe sind, z.B.: Abhören von Informationen oder Durchführung einer Verkehrsflu
+ssanalyse.
+\end_layout
+
+\begin_layout Itemize
+Methoden zur Sicherstellung der Geheimhaltung:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Verschlüsselung (siehe symmetrische und asymmetrische Verschlüsselung) 
+\end_layout
+
+\begin_layout Itemize
+Auffüllen mit Fülldaten in den Sendepausen zwischen Nutzdaten.
+ Es wird so ein Nachrichtenstrom erzeugt, dessen Struktur nicht mehr dem
+ der Nutzdaten entspricht.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Subsubsection
+Integrität
+\end_layout
+
+\begin_layout Standard
+Die Integrität (engl.
+ data integrity) soll sicherstellen, dass der Inhalt der Information nicht
+ verändert wird.
+\end_layout
+
+\begin_layout Itemize
+Angriffe 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Modifizieren, Löschen oder Einfügen von Nachrichten.
+\end_layout
+
+\begin_layout Itemize
+Wiederholung (replay attack) oder Verzögerung einer Nachricht: Der Zeitpunkt
+ einer Nachricht oder eines Dokumentes kann wichtig sein (es ist wichtig,
+ wann ein Geschäft abgeschlossen wird!).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Methoden zur Sicherstellung der Integrität sind: Verschlüsselung, Prüfsummen
+ (siehe Message Digests), Laufnummern und Zeitstempel sowie Wiederholung
+ von gefälschten Daten.
+\end_layout
+
+\begin_layout Subsubsection
+Zugriffskontrolle
+\end_layout
+
+\begin_layout Standard
+Mit der Zugriffskontrolle (engl.
+ access control) wird der Zugriff zur Information pro Benutzer geregelt.
+\end_layout
+
+\begin_layout Itemize
+Angriffe 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+unberechtigtes Ausführen von Funktionen.
+\end_layout
+
+\begin_layout Itemize
+Modifikation von Benutzer- und Zugriffsrechten.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Methoden zur Sicherstellung der Zugriffskontrolle 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Access Control Lists (ACL) 
+\end_layout
+
+\begin_layout Itemize
+Schutzklassen (a la Unix) 
+\end_layout
+
+\end_deeper
+\begin_layout Subsubsection
+Nicht-Zurückweisung
+\end_layout
+
+\begin_layout Standard
+Die Nicht-Zurückweisung (engl.
+ non-repudiation) soll eine Garantie bieten, dass der Sender gesendet hat
+ bzw.\InsetSpace ~
+eine Garantie, dass der Empfänger die Nachricht empfangen hat, damit
+ eine Kommunikationsbeziehungen nicht geleugnet wird.
+ Z.B., dass ein Geschäftsabschluss im nachhinein nicht abgestritten werden
+ kann.
+\end_layout
+
+\end_body
+\end_document

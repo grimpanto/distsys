@@ -1,0 +1,121 @@
+#LyX 1.5.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass scrbook
+\language ngerman
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Tokenring
+\end_layout
+
+\begin_layout Standard
+Die Tokenring Technologie wurde ursprünglich von IBM entwickelt und ist
+ in IEEE 802.5 spezfiziert.
+ Ursprünglich waren entweder 4MBit/s (Ringlänge max.
+ 360m) bzw.
+ 16MBit/s (Ringlänge max.
+ 168m) Datenrate möglich.
+ Bezüglich der Übertragungsleistung entspricht dies in etwa der Übertragungsleis
+tung eines Ethernet-Netzes mit 10MBit/s bzw.
+ 100MBit/s.
+ Aktuelle Weiterentwicklungen sind z.B.
+ die GBit-Variante (IEEE 802.5v), ein Konzept zur Realisierung von VLANs
+ bzw.
+ das Konzept der Link Aggregation.
+ Link Aggregation bedeutet die Verbindung zweier Switches durch parallele
+ Links zur Erhöhung der Bandbreite.
+\end_layout
+
+\begin_layout Section
+Prinzip
+\end_layout
+
+\begin_layout Standard
+Das Konzept besteht darin, dass ein logischer Ring der Arbeitsstationen
+ gebildet wird.
+ In diesem Ring wird ein Token (dt.
+ Marke) im Kreis geschickt.
+ Solange keine Station senden will, kreist ein Frei-Token.
+ Will eine Station senden, nimmt es das Token aus dem Ring und ersetzt es
+ durch ein Besetzt-Token und hängt die Daten und die Adresse an und schickt
+ das Token wieder in den Ring.
+ Kommt das Token beim Empfänger an, wird das Token von diesem kopiert und
+ wieder in den Ring eingespeist.
+ Erst der Sender entnimmt das Token aus dem Ring und ersetzt es wieder durch
+ ein Frei-Token.
+ Jeder Sender darf maximal für die Dauer der THT (token holding time) senden
+ (typisch 10ms), danach muss er ein Frei-Token weitergeben.
+\end_layout
+
+\begin_layout Standard
+Es gibt also keine ausgezeichnete Station, die den Zugriff steuert.
+ D.h.
+ der Tokenring verwendet ein dezentrales Zuteilungsverfahren.
+ Zur Überwachung des Ringes wird eine Station als aktiver Monitor bestimmt,
+ während andere Stationen als passive Monitore (standby monitors) agieren
+ können, die bei Ausfall des aktiven Monitors selbst aktiv werden.
+\end_layout
+
+\begin_layout Section
+Netzaufbau
+\end_layout
+
+\begin_layout Standard
+Die Stationen werden aktiv in den Ring eingefügt.
+ Sie empfangen und regenerieren das am Eingang ankommende Signal, werten
+ es aus und geben es regeneriert am Ausgang weiter.
+ Fällt eine Station aus oder wird sie ausgeschaltet, würde allerdings der
+ Ring unterbrochen werden.
+ Um dies zu verhindern, werden die Stationen 
+\emph on
+sternartig
+\emph default
+ an einen Ringleitungsverteiler, genannt auch MSAU (multi station access
+ unit) in den Ring eingefügt.
+\end_layout
+
+\begin_layout Standard
+In jeder MSAU sind Schalter eingebaut, die bei Ausfall oder Abschaltung
+ einer Station diese überbrücken und dadurch den Ring wieder herstellen.
+ D.h.
+ z.B., dass die Verkabelung sternartig durchgeführt wird, aber das Netz logisch
+ als Ring arbeitet.
+\end_layout
+
+\end_body
+\end_document

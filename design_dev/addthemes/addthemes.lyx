@@ -1,0 +1,354 @@
+#LyX 1.5.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass scrbook
+\begin_preamble
+
+\end_preamble
+\language english
+\inputencoding latin1
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 0
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Weitere Themen
+\end_layout
+
+\begin_layout Standard
+In diesem Kapitel werden weitere Themen kurz angerissen, die im Zusammenhang
+ mit verteilten Systemen eine wichtige Rolle spielen.
+\end_layout
+
+\begin_layout Section
+Namen
+\end_layout
+
+\begin_layout Standard
+Ein 
+\emph on
+Name
+\emph default
+ in einem verteilten System ist eine Zeichenkette, die genutzt wird, um
+ auf eine Ressource zu verweisen.
+ Namen sind von Menschen interpretierbar.
+\end_layout
+
+\begin_layout Standard
+Um mit einer Ressource arbeiten zu können, wird ein Zugangspunkt benötigt.
+ Der Name eines solchen Zugangspunktes wird als 
+\emph on
+Adresse
+\emph default
+ bezeichnet.
+ Jede Ressource kann über mehrere Zugangspunkte verfügen.
+\end_layout
+
+\begin_layout Standard
+Beispiel: Ein Telefon kann als Zugangspunkt zu einer Person betrachtet werden,
+ wobei die Telefonnummer der Adresse entspricht.
+ Jede Person kann mehrere Telefonnummern haben, wobei jeder dieser Nummern
+ der Adresse eines Zugangspunktes entspricht.
+\end_layout
+
+\begin_layout Standard
+Eine Einheit kann im Laufe der Zeit ihren Zugangspunkt ändern.
+\end_layout
+
+\begin_layout Standard
+Beispiel: Zieht die Person um, werden sich in der Regel auch einige der
+ Telefonnummern ändern.
+\end_layout
+
+\begin_layout Standard
+Eine Adresse ist also ein spezieller Name, der auf einen Zugangspunkt einer
+ Einheit verweist.
+ Da sich die Zugangspunkte ändern können (ein FTP Server kann unter einer
+ anderen IP Adresse betrieben werden), ist es nicht sinnvoll den Namen des
+ Zugangspunktes als Namen für die Einheit zu verwenden (besser ist es den
+ FTP Dienst unter einem separaten Namen anzusprechen, der unabhängig von
+ der Adresse des FTP Servers ist).
+ Weiteres Beispiel: Load-Balancing von Web-Diensten.
+\end_layout
+
+\begin_layout Standard
+Ein weiterer spezieller Fall von Namen, der sehr wichtig ist, sind 
+\emph on
+ID
+\emph default
+s, die Einheiten eindeutig identifizieren.
+ Dazu sollten die folgenden Eigenschaften erfüllt sein:
+\end_layout
+
+\begin_layout Enumerate
+Eine ID verweist auf höchstens eine Einheit.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Jede Einheit wird durch höchstens eine ID angesprochen.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Eine ID verweist immer auf die selbe Einheit (d.h.\InsetSpace ~
+sie wird nie wiederverwendet).
+ 
+\end_layout
+
+\begin_layout Minisec
+Nachschlagdienste
+\end_layout
+
+\begin_layout Standard
+Meistens liegen Adressen und IDs nur in maschinenlesbarer Form vor.
+ Deshalb werden 
+\emph on
+benutzerfreundliche Namen
+\emph default
+, die auf die Verwendung durch den Menschen zugeschnitten sind, als weiterer
+ spezieller Namenstyp betrachtet.
+\end_layout
+
+\begin_layout Standard
+Prinzipiell kann von drei verschiedenen Arten von Nachschlagdiensten gesprochen
+ werden:
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Namensdienste Namen werden in verteilten Systemen in so genannten Namensräumen
+ angeordnet.
+ Namensräume können flach oder hierarchisch organisiert sein.
+ Unter einer Namensdomäne versteht man einen Namensraum für den es eine
+ einzige übergreifende administrative Autorität gibt, die die Zuordnung
+ von Namen im Namensraum regelt.
+ Ein üblicher hierarchischer Namensraum ist z.B.
+ das DNS.
+ Das DNS ist gleichzeitig ein Namensdienst, der Namen in Adressen auflöst.
+ Solche Dienste werden auch `white pages' genannt.
+ 
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Verzeichnisdienste Oft werden Ressourcen oder allgemein Objekten Attribute
+ zugeordnet.
+ Der Vorteil ist, dass Objekte auf Grund genauer Attributspezifikationen
+ ausgewählt werden können.
+ Ein Schlüsselattribut eines Objektes ist dann seine Adresse.
+ Ein Beispiel für einen Verzeichnisdienst (der also Objekte auf Grund von
+ Attributspezifikationen findet) ist LDAP (Light Directory Access Protocol).
+ Andere Verzeichnisdienst sind Active Directory (bietet ebenfalls eine LDAP
+ Schnittstelle) oder X.500.
+ Zu solchen Diensten sagt man auch `yellow pages'.
+ 
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Erkennungsdienste In spontanen Netzwerken werden Ressourcen einfach zum
+ Netzwerk hinzugefügt oder wieder entfernt.
+ Als solches bieten sie eine Schnittstelle zur automatischen Registrierung
+ bzw.\InsetSpace ~
+Deregistrierung von Diensten.
+ Beispiele sind Bonjour oder Jini.
+\end_layout
+
+\begin_layout Section
+Konsistenz und Replikation
+\end_layout
+
+\begin_layout Standard
+Gründe für die Replizierung von Daten sind: 
+\end_layout
+
+\begin_layout Itemize
+Erhöhung der Zuverlässigkeit 
+\end_layout
+
+\begin_layout Itemize
+Verbesserung der Leistung 
+\end_layout
+
+\begin_layout Standard
+Aus dem Prinzip der Replikation und den nicht verhinderbaren Abgleichzeiten,
+ kann es zu dazu kommen, dass Unterschiede in den Datenbeständen auftreten.
+ D.h.\InsetSpace ~
+die Konsistenz der Daten ist nicht mehr sichergestellt.
+\end_layout
+
+\begin_layout Standard
+Replikationsprotokolle und die zugrundeliegenden Überlegungen können relativ
+ komplex werden.
+ Andererseits kann man vom Standpunkt der Anwendungsentwicklung aus die
+ entstehenden Probleme in die Replikationsmechanismen der untenliegenden
+ DBMS verlagern, solange man mit der Abstraktion einer datenzentrierten
+ Replikation auskommt.
+\end_layout
+
+\begin_layout Section
+Fehlertoleranz
+\end_layout
+
+\begin_layout Standard
+Das Ziel ist es, 
+\emph on
+verlässliche Systeme
+\emph default
+ zu entwickeln.
+ Darunter versteht man Systeme, die die folgenden Anforderungen abdecken:
+\end_layout
+
+\begin_layout Itemize
+Die 
+\emph on
+Verfügbarkeit
+\emph default
+ drückt die Wahrscheinlichkeit aus, dass ein System zu einem gewissen (d.h.\InsetSpace ~
+jeden
+ beliebigen) Zeitpunkt korrekt funktioniert.
+ 
+\end_layout
+
+\begin_layout Itemize
+Unter 
+\emph on
+Zuverlässigkeit
+\emph default
+ versteht man die Eigenschaft, dass ein System fehlerfrei über ein gewisses
+ Zeitintervall funktioniert.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Der 
+\emph on
+Unterschied zwischen Verfügbarkeit und Zuverlässigkeit
+\emph default
+ lässt sich leicht erklären: Wenn ein System jede Stunde für eine Millisekunde
+ ausfällt hat es eine Verfügbarkeit von 0.999999, aber es ist jedoch höchst
+ unzuverlässig.
+ Analog dazu kann es sein, dass ein System niemals abstürzt, aber in jedem
+ August zwei Wochen heruntergefahren wird, und damit zwar zuverlässig ist,
+ aber nur 96 Prozent Verfügbarkeit aufweist.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Im Zusammenhang mit Fehlertoleranz versteht man unter Sicherheit, dass nichts
+ Katastrophales passieren darf, wenn ein System vorübergehend nicht korrekt
+ funktioniert.
+ 
+\end_layout
+
+\begin_layout Itemize
+Die Wartbarkeit bezieht sich darauf, wie einfach oder schwierig es ist,
+ ein ausgefallenes System zu reparieren.
+ 
+\end_layout
+
+\begin_layout Standard
+Ein Fehler wird als Ursache eines (teilweisen) Ausfalls eines Systems betrachtet.
+ Dazu wird die Fehlertoleranz als Eigenschaft betrachtet, dass das System
+ seine Dienste trotz Vorliegen eines Fehlers einer Komponente bereitstellen
+ kann (Fehlermaskierung).
+\end_layout
+
+\begin_layout Standard
+Folgende 
+\emph on
+Fehlerarten
+\emph default
+ kommen vor: vorübergehender Fehler (tritt nur einmal auf und verschwinden),
+ periodischer Fehler (tritt auf, verschwindet wieder, tritt auf...), permanenter
+ Fehler (existiert bis der Fehler behoben ist).
+\end_layout
+
+\begin_layout Standard
+Die Möglichkeit zur Erreichung der Fehlermaskierung liegt in der 
+\emph on
+Redundanz
+\emph default
+: 
+\end_layout
+
+\begin_layout Itemize
+physische Redundanz: mehrfache Ausführung der Komponenten oder der Prozesse.
+ D.h.\InsetSpace ~
+physische Ausführung kann mithilfe von Software oder Hardware realisiert
+ werden.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Beispiele: mehrfache Ausführung der Netzgeräte, Lüfter, Netzwerksschnittstellen;
+ gespiegelte Festplatten; Notstromversorgung; 2 Server, wobei einer im Standby
+ läuft; Verwendung von n Servern, wobei eine Einigung erzielt werden muss.
+\end_layout
+
+\begin_layout Standard
+Wichtig ist, dass Fehler erkannt werden, damit die redundant ausgelegte
+ Systemkomponente den Betrieb übernehmen kann.
+ Dies kann entweder durch den Bediener oder automatisch passieren.
+ In der Regel wird zusätzliche Hardware benötigt, die die Fehler erkennt
+ und die Umschaltung durchführt.
+ Diese Hardware muss besonders zuverlässig sein.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Informationsredundanz: es wird zusätzliche Information hinzugefügt, um die
+ Wiederherstellung der Daten zu ermöglichen.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Beispiele: Fehlerkorrekturcodes (z.B.
+ Hamming Code) oder 3 Festplatten als RAID-5 betrieben.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+zeitliche Redundanz: eventuelle Wiederholung einer Aktion.
+ Ein Beispiel ist die Verwendung von Transaktionen.
+ Wird eine Transaktion abgebrochen, kann sie problemlos wiederholt werden.
+ 
+\end_layout
+
+\end_body
+\end_document

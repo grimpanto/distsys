@@ -1,0 +1,170 @@
+% Definitionen Teil 1
+
+% always latin1!!!
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{ngerman} % german language ;-)
+\usepackage{palatino} % font
+
+\usepackage{scrpage2} % used for headers and footers
+\renewcommand{\descfont}{\bfseries} % used for description-like text
+
+% various useful packages...
+\usepackage{alltt}
+\usepackage{textcomp}
+\usepackage{latexsym}
+\usepackage{graphicx}
+\usepackage{pifont}
+\usepackage{enumerate}   % z.B.: \begin{enumerate}[\hspace{0.5cm}(i)]
+\usepackage[ngerman]{varioref}
+\usepackage{makeidx}
+\usepackage{float} % to get the `H' option for placing floats
+\usepackage{xspace}
+\usepackage{xr}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{array}
+\usepackage{listings}
+
+%\usepackage{changebar}
+\usepackage{color}
+\definecolor{orange}{rgb}{0.996,0.212,0.012}
+\definecolor{black}{gray}{0}
+\newcommand{\cbstart}{\color{red}\xspace}
+\newcommand{\cbend}{\color{black}\xspace}
+\newenvironment{changes}{\color{red}}{}
+
+\usepackage{pstricks,pst-tree,pst-node}
+
+% get a decent euro symbol and define a new command \eur
+%\ifpdfoutput{\usepackage{marvosym} \newcommand{\eur}{\EUR}}
+%	    {\usepackage{eurosym} \newcommand{\eur}{\euro{}}}
+
+% if output is not pdf then convert to bmp!
+\ifpdfoutput{}{\DeclareGraphicsRule{.png}{bmp}{}{}}
+\DeclareGraphicsRule{.wmf}{bmp}{}{}
+\DeclareGraphicsRule{.emf}{bmp}{}{}
+\DeclareGraphicsRule{.pdftex}{pdf}{}{}
+
+% used to get an index
+\makeindex
+
+\nonfrenchspacing
+
+\sloppy
+
+\newcommand{\lt}{\ensuremath{\leadsto}\xspace} % leads to
+\newcommand{\ar}{\ensuremath{\rightarrow}\xspace} % right arrow
+\newcommand{\aR}{\ensuremath{\Rightarrow}\xspace} % right arrow
+\newcommand{\mt}{\ensuremath{\mapsto}\xspace} % maps to
+\newcommand{\ld}{\ensuremath{\operatorname{ld}}\xspace} % logarithmus dualis
+
+\newcommand{\lneg}{\ensuremath{\lnot}\xspace} % logical not
+\renewcommand{\land}{\ensuremath{\wedge}\xspace} % logical and
+\renewcommand{\lor}{\ensuremath{\vee}\xspace} % logical or
+\newcommand{\lxor}{\ensuremath{\overline{\vee}}\xspace} % logical xor
+\newcommand{\limp}{\ensuremath{\rightarrow}\xspace} % logical implication
+\newcommand{\lequ}{\ensuremath{\leftrightarrow}\xspace} % equivalence
+\newcommand{\lder}{\ensuremath{\Rightarrow}\xspace} % derive
+
+\newcommand{\landx}[1]{\ensuremath{\underset{#1}{\bigwedge}}\xspace} % logical and
+\newcommand{\lorx}[1]{\ensuremath{\underset{#1}{\bigvee}}\xspace} % logical or
+
+\newcommand{\eps}{\ensuremath{\varepsilon}\xspace} % epsilon
+
+\newcommand{\phone}{\Pisymbol{pzd}{37}\xspace} % Telefonsymbol
+\newcommand{\file}[1]{\textsf{#1}} % Für Datei- und Verzeichnisnamen
+\newcommand{\litem}[1]{\item[\descfont #1]} % speziell für die labeling Umgebung
+\newcommand{\term}[1]{\emph{#1}\index{#1}} % Neue Namen, die automatisch in den
+					   % Index gehen und hervorgehoben werden
+\newcommand{\vital}[1]{\emph{\textbf{\textsf{#1}}}}
+\newcommand{\LA}{\ensuremath{\langle}} % linke spitze Klammer
+\newcommand{\RA}{\ensuremath{\rangle}} % rechte spitze Klammer
+
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\sub}[1]{\textsubscript{#1}}
+\newcommand{\super}[1]{\textsuperscript{#1}}
+
+\newcommand{\eg}{z.B.\xspace}
+\newcommand{\Eg}{Z.B.\xspace}
+\newcommand{\ie}{d.h.\xspace}
+\newcommand{\Ie}{D.h.\xspace}
+\newcommand{\ca}{ca.\xspace}
+\newcommand{\resp}{bzw.\xspace}
+\newcommand{\etc}{etc.\xspace}
+
+\newcommand{\code}[1]{\texttt{#1}}
+
+\newcommand{\cpp}{C++\xspace}
+\newcommand{\csharp}{C\#\xspace}
+
+\newcommand{\R}{\ensuremath{\backslash}r} 
+\newcommand{\N}{\ensuremath{\backslash}n} 
+
+% commands for saving title,...
+\newcommand{\setTitle}[1]{\newcommand{\getTitle}{#1}}
+\newcommand{\setDocumentId}[1]{\newcommand{\getDocumentId}{#1}}
+\newcommand{\setDate}[1]{\newcommand{\getDate}{#1}}
+\newcommand{\setAuthors}[1]{\newcommand{\getAuthors}{#1}}
+\newcommand{\setVersion}[1]{\newcommand{\getVersion}{#1}}
+\newcommand{\setSubject}[1]{\newcommand{\getSubject}{#1}}
+\newcommand{\setKeywords}[1]{\newcommand{\getKeywords}{#1}}
+
+% command used to print the titlepage
+\newcommand{\printTitle}{%
+\title{\getTitle}%
+\titlehead{\parbox{\textwidth}{\vspace{-2cm}\centering%
+%\ifpdfoutput{\includegraphics*{arcs_logo_small.png}}{\mbox{ }}%
+%\ifpdfoutput{\includegraphics[width=5cm]{seibersdorf_research_logo.jpg}}{\mbox{ }}
+%\\[1.5cm]{\small \copyrigth Günter KolousekH\\%
+%\phone 02635/67402\\%
+%       \url{http://www.arcsmed.at}}}}%
+}}
+\subject{\rule{\textwidth}{1mm}\\[0.5cm]\getDocumentId}%
+\author{\getAuthors}%
+\date{{\small Version \getVersion}\\[1cm]\getDate}%
+\publishers{\rule{\textwidth}{1mm}\\ \vspace{2.5cm}%
+{\small \copyright\ Dr.~Günter Kolousek}}%
+\maketitle%
+\thispagestyle{empty}%
+}
+
+% several useful environments...
+\newenvironment{oklist}{\begin{dinglist}{51}}{\end{dinglist}}
+\newenvironment{fingerlist}{\begin{dinglist}{43}}{\end{dinglist}}
+\newenvironment{crosslist}{\begin{dinglist}{55}}{\end{dinglist}}
+\newenvironment{penlist}{\begin{dinglist}{46}}{\end{dinglist}}
+%\newenvironment{example}{\begin{tabular}[t]{ll} \textsf{Bsp.:} &\begin{minipage}[t]{13cm}}{\end{minipage}\end{tabular}}
+
+\setkomafont{descriptionlabel}{\sffamily\bfseries\small}
+
+\newenvironment{example}{%
+  \begin{labeling}{\usekomafont{descriptionlabel}Beispiel }%
+    \item[\usekomafont{descriptionlabel}Beispiel ]%
+}{\end{labeling}}
+
+\newenvironment{comment}[1][Anmerkung]{%
+  \begin{addmargin*}[1em]{1em}%
+    \begin{minipage}{\linewidth}%
+      \small%
+      \sloppy%
+      \vspace{1em}%
+      \rule[-0.5\baselineskip]{\linewidth}{0.5pt}%
+      \minisec{#1}%
+}{%
+      \newline%
+      \rule[0.25\baselineskip]{\linewidth}{0.5pt}%
+      \vspace{1em}%
+    \end{minipage}%
+  \end{addmargin*}%
+}
+
+\setcounter{secnumdepth}{6} %Bis paragraph (subsubsection) numerieren
+
+\newsavebox{\Citname}
+\newenvironment{Citation}[1]%
+  {\sbox{\Citname}{\textit{#1}}%
+   \begin{quote}}
+  {\hspace*{\fill}\nolinebreak[1]\hspace*{\fill}%
+  \usebox{\Citname}\end{quote}}

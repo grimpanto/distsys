@@ -1,0 +1,696 @@
+
+\chapter{Internet Protokoll\label{sec:ip}}
+
+Das Internet Protokoll (IP) ist der Kern des TCP/IP Stacks. Derzeit
+ist die Version 4 (IPv4) beschrieben im RFC 791 aus dem Jahr 1981
+flächendeckend im Einsatz. Weitere relevante RFCs sind 950, 919 and
+922 und RFC 2474. 
+
+Bei IP handelt es sich um ein verbindungsloses Protokoll auf der Schicht
+3, dessen Hauptfunktionen in der Bereitstellung der Adressierung,
+der Weiterleitung und der Abstraktion der unterliegenden physikalischen
+Schicht liegt.
+
+Es handelt sich bei IP um ein nicht zuverlässiges Protokoll, das nach
+dem best-effort Prinzip arbeitet. Das bedeutet, dass versucht wird
+die Pakete so gut wie möglich zuzustellen. Trotzdem können Pakete
+verloren gehen, nicht in der richtigen Reihenfolge ankommen oder auch
+mehrfach ankommen. IP geht davon aus, dass die höheren Schichten sich
+um diese Punkte kümmern.
+
+
+\section{IP Adressen}
+
+Die IP Adresse dient dazu, Hosts auf der Vermittlungsschicht eindeutig
+ansprechen zu können und die Wegewahl von IP-Paketen zwischen Sender
+und Empfänger zu unterstützen. 
+
+In IPv4 besteht jede Adresse aus genau 32 Bits, die meist in 4 Bytes
+angeschrieben werden. Die Bytes werden in der Darstellung durch je
+einen Punkt getrennt und in dezimaler Zahlendarstellung angegeben.
+
+IPv4 unterteilt die Adressen in Unicast-, Multicast- und Broadcastadressen.
+Zusätzlich bietet IPv4 insgesamt 3 Arten von Adressierungsvarianten:
+Standardadressen, Subnetzadressen und das sogenannte Classless Inter-Domain
+Routing (CIDR).
+
+Prinzipiell besteht jede Adresse aus einem Netzanteil und einem Hostanteil.
+Der Netzanteil identifiziert das Netz und der der Hostanteil gibt
+den Host innerhalb des Netzes an. Der Grund für diese Einteilung liegt
+in der Notwendigkeit der Weiterleitung!
+
+
+\subsection{Standardadressen\label{sec:standard_ip_addresses}}
+
+Bei den Standardadressen gibt es 4 Hauptadressklassen und eine Klasse,
+die für zukünftige Anwendungen vorgesehen ist:
+\begin{labeling}{00.00.0000}
+\item [{Klasse~A}] Diese Klasse ist für eine hohe Anzahl an Hosts vorgesehen.
+Der Netzanteil ist jeweils das erste Byte einer Adresse, wobei das
+erste Bit einer solchen Adresse ist immer 0 ist. Daraus ergibt sich
+ein theoretischer Adressbereich von 0.0.0.0 bis 127.255.255.255. Die
+Netze 0.0.0.0 und 127.0.0.0 sind jedoch reserviert, sodass es 126
+verschiedene Klasse A Netze gibt. Je Klasse A Netz gibt es maximal
+16.777.214 ($2^{24}-2$) Hosts. Der Grund warum 2 abgezogen werden
+muss und warum die Netze 0.0.0.0 und 127.0.0.0 ebenfalls nicht zur
+Verfügung stehen wird im Abschnitt \vref{sec:special_ip_addresses}
+und im Abschnitt \vref{sec:reserved_ip_addresses} beschrieben. Der
+effektive, nutzbare Bereich geht also von 1.0.0.1 bis 126.255.255.254.
+\item [{Klasse~B}] Klasse B Netze sind für eine mittlere Anzahl an Hosts
+vorgesehen. Der Netzanteil sind die beiden ersten Bytes, wobei die
+ersten beiden Bits immer 10 sind. Daraus ergibt sich ein theoretischer
+Adressbereich von 128.0.0.0 bis 191.255.255.255. Insgesamt sind so
+16384 ($2^{14}$) verschiedene Klasse B Netze möglich. Je Klasse C
+Netz gibt es maximal 65534 ($2^{16}-2$). Der effektive Bereich ergibt
+sich zu 128.0.0.1 bis 191.255.255.254.
+\item [{Klasse~C}] Klasse C Netze sind für eine kleine Anzahl an Hosts
+vorgesehen. Der Netzanteil sind die ersten drei Bytes, wobei die ersten
+drei Bits immer 110 sind. Daraus ergibt sich ein theoretischer Adressbereich
+von 192.0.0.0 bis 223.255.255.255. Insgesamt sind so 2097152 ($2^{21}$)
+verschiedene Klasse C Netze möglich. Je Klasse C Netz gibt es maximal
+254 ($2^{8}-2$) Hosts. Der effektive Bereich ergibt sich zu 192.0.0.1
+bis 223.255.255.254.
+\item [{Klasse~D}] Klasse D Netzadressen sind für Multicast-Anwendungen
+reserviert. Die ersten vier Bits sind immer 1110 und die restlichen
+28 Bits geben die Multicast-Gruppen-Id an. Der theoretische Adressbereich
+geht von 224.0.0.0 bis 239.255.255.255. Von diesen sind jedoch einige
+vordefiniert, wie z.B. wieder 224.0.0.0 als reservierte Basisadresse,
+224.0.0.1 für alle Hosts in dem Subnetz und weitere.
+\item [{Klasse~E}] Diese Klasse ist für zukünftige Anwendungen rerserviert.
+Solche Adressen beginnen mit 11110.
+\end{labeling}
+Die Gründe für den Aufbau der Adressen sind, dass
+\begin{itemize}
+\item durch diese Einteilung die Einträge in den Routern minimiert werden
+können. Daher kommt es auch, dass den einzelnen geographischen Regionen
+auf der Erde verschiedene IP Adressbereiche zugeordnet sind. Europa
+sind z.B. für die Klasse C Netze die Adressbereiche 194.0.0.0 bis
+195.255.255.255 zugeordnet.
+\item Router lediglich durch Überprüfung der ersten 5 Bits die entsprechende
+Klasse eruieren können. Außerdem ist der Zugriff auf den Netzanteil
+bzw. den Hostanteil sehr einfach, da diese Teile immer an Bytegrenzen
+ausgerichtet sind.
+\item die Einteilung der Klassen auf diese Art und Weise so vorgenommen
+wurde, dass sehr große Organisationen Klasse A Netze zugeteilt bekommen
+und sehr kleine Organisationen Klasse C Netze. Mittleren Organisationen,
+d.h. alle die mehr als 254 Hosts benötigen oder die erwarten, dass
+sie mehr als 254 IP Adressen benötigen, wurden die Klasse B Netze
+zugedacht, wodurch in den 80er Jahre fast nur Klasse B Netze verteilt
+wurden. Das verursachte Ende der 80er Jahre die Voraussage: ,,Mitte
+der 90er Jahre gehen die Klasse B Netze aus''. Daher wurde die Zuteilung
+der Netze neu geregelt. Es wurden Regeln aufgestellt, die genau festlegen
+wann ein Klasse A Netz vergeben wird oder alternativ mehrere aufeinanderfolgende
+Klasse B Netze bzw. ein Klasse B Netz oder alternativ mehrere aufeinanderfolgende
+Klasse C Netze. Abgesehen von diesen organisatorischen Maßnahmen sind
+auch noch technische Maßnahmen eingeführt worden, die später noch
+beschrieben werden.
+\end{itemize}
+
+\subsection{Spezielle IP Adressen\label{sec:special_ip_addresses}}
+
+Netzanteil und Hostanteil können spezielle Muster aufweisen. Lauter
+0en und lauter 1en werden besonders interpretiert:
+\begin{itemize}
+\item Sind alle Bits im Hostanteil 0, dann wird dies als ,,dieser Host''
+interpretiert.
+\item Sind alle Bits im Netzanteil 0, dann wird dies als ,,dieses Netz''
+interpretiert.
+\item Sind alle Bits im Hostanteil 1, dann wird dies als ,,alle Hosts''
+interpretiert.
+\item Sind alle Bits im Netzanteil 1, dann wird dies ,,alle Netze'' interpretiert.
+\end{itemize}
+Daraus ergeben sich 6 verschiedene sinnvolle Fälle:
+
+\begin{longtable}{|c|c|p{90mm}|}
+\hline 
+Netzanteil & Hostanteil & Bedeutung\tabularnewline
+\hline
+\hline 
+Netz Id & Host Id & Normale Bedeutung. Ein Beispiel ist die Klasse A Adresse 10.2.9.14.\tabularnewline
+\hline 
+Netz Id & alle 0 & Prinzipiell handelt es sich um diesen Host (wenn z.B. der Host sein
+IP Adresse noch nicht kennt. Außerdem wird so auch das Netz bezeichnet.
+Ein Beispiel ist das Klasse A Netz 10.0.0.0.\tabularnewline
+\hline 
+alle 0 & Host Id & Mit dieser Bezeichnung wird ein spezieller Host im aktuellen Netz
+bezeichnet. So eine Adresse kann verwendet werden, wenn ein Host noch
+nicht die Netzadresse kennt oder wenn die Netzinformation nicht relevant
+ist, dann sendet er ein Paket mit der Hostadresse und dem Netzanteil
+bestehend aus lauter 0en. Der angesprochene Host auf diesem Netz wird
+mit einem Paket mit ausgefülltem Netzanteil antworten. Ein Beispiel
+einer solchen Klasse A Adresse könnte sein: 0.2.9.14.\tabularnewline
+\hline 
+alle 0 & alle 0 & Diese Adresse bezeichnet den eigenen Host. Meist wird diese verwendet,
+wenn die eigene Adresse noch nicht bekannt ist (z.B. bei DHCP). Allerdings
+wird diese Adresse auch bei multi-homed Hosts (wie z.B. Router) verwendet,
+um eine beliebige Adresse zu spezifizieren. Die einzige Adresse gemäß
+diesem Muster ist 0.0.0.0.\tabularnewline
+\hline 
+Netz Id & alle 1 & Es werden alle Hosts in dem angegebenen Netz angesprochen. D.h. es
+handelt sich um eine Broadcast-Adressen. Ein Beispiel für eine Klasse
+A Broadcast-Adresse: 10.255.255.255.\tabularnewline
+\hline 
+alle 1 & alle 1 & Die Bedeutung ist: ,,alle Hosts von allen Netzen''. D.h. diese Adresse
+gibt einen globalen Broadcast an. Da es jedoch praktisch unmöglich
+ist an alle Hosts im Internet zu senden, ist die Bedeutung dieser
+Adresse eines Broadcasts an das direkt angeschlossene Netz! Die einzige
+Adresse gemäß diesem Muster ist 255.255.255.255.
+
+Semantisch äquivalent wäre noch die Adresse mit einem Netzanteil mit
+0en und einem Hostanteil mit 1en. Das wird jedoch nicht verwendet,
+die obige Lösung außerdem den Vorteil hat, nicht zwischen Netz- und
+Hostanteil unterscheiden zu müssen.\tabularnewline
+\hline
+\end{longtable}
+
+Eine Kombination hat keine sinnvolle Bedeutung und wird deshalb nicht
+verwendet: Im Netzanteil alles 1en und im Hostanteil eine Host Id.
+Das würde bedeuten: alle Hosts einer bestimmten Host Id in allen Netzen.
+Das ist wieder praktisch unmöglich und wird daher nicht verwendet.
+
+
+\subsection{Reservierte Adressen\label{sec:reserved_ip_addresses}}
+
+Verschiedenen Adressen wurden, abgesehen von den klassen-basierten
+Standardadressen eine bestimmte Bedeutung zugewiesen und reserviert:
+\begin{itemize}
+\item 127.0.0.0 ist ein spezielles Netz, das für den lokalen IP Verkehr
+vorgesehen ist und als Loopback Netz bezeichnet wird. Adressen in
+diesem Netz sind nicht mit einem physikalischen Interface (wie z.B.
+einem Ethernet-Interface) verbunden. Meistens wird die Adresse 127.0.0.1
+einer virtuellen Schnittstelle, dem sogenannten ,,loopback interface''
+zugeordnet. Jedes Paket, das an diese Schnittstelle gesendet wird,
+wird zurückgeliefert als ob es von einem anderen System kommen würde.
+Damit eignet sich diese Schnittstelle sehr gut für Tests oder lokale
+Anwendungen, die keinen Anschluss an das Internet benötigen.
+\item Private Adressen: Benötigt man Adressen für ein lokales Netz, die
+nicht global verfügbar sein müssen, dann kann man Adressen aus bestimmten
+Adressbereichen verwenden, die als private Adressen reserviert worden
+sind. Pakete mit solchen Adressen werden von Routern im Internet \emph{nicht}
+weitergeleitet. Damit sind solche Adressen ein Mechanismus, um die
+Situation der Adressknappheit im Internet zu verbessern. Folgende
+Adressbereiche wurden als privat festgelegt:\\
+\begin{longtable}{|c|c|c|p{50mm}|}
+\hline 
+Klasse & von & bis & Bemerkung\tabularnewline
+\hline
+\hline 
+A & 10.0.0.0 & 10.255.255.255 & 1 Klasse A Netz\tabularnewline
+\hline 
+B & 172.16.0.0 & 172.31.255.255 & 16 aufeinanderfolgende Klasse B Netze.\tabularnewline
+\hline 
+C & 192.168.0.0 & 192.168.255.255 & 256 aufeinanderfolgende Klasse C Netze.\tabularnewline
+\hline
+\end{longtable}
+
+
+Will man so ein privates Netz (Intranet), das mit solchen Adressen
+betrieben wird an das Internet anschließen, dann kann man dies durch
+\begin{itemize}
+\item ein anwendungsspezifisches Gateway erreichen (siehe Abschnitt\vref{sec:coupling_devices})
+erreichen.
+\item ein anwendungsneutralen Gateway wie z.B. SOCKS erreichen.
+\item NAT (siehe Abschnitt \vref{sec:NAT}) erzielen.
+\end{itemize}
+\item Zur automatischen Zuweisung einer privaten Adresse im Zusammenhang
+mit DHCP steht ein spezielles Klasse B Netz zur Verfügung: 169.254.0.0
+bis 169.254.255.255. Eine Erläuterung dazu findet sich im Abschnitt
+\vref{sec:DHCP}.
+\item Sonstige reservierte Adressbereiche, sind z.B.:
+
+\begin{itemize}
+\item Klasse A Netz: 0.0.0.0 bis 0.255.255.255 (siehe Abschnitt \vref{sec:standard_ip_addresses})
+\item Klasse B Netz: 128.0.0.0 bis 128.0.255.255
+\item Klasse C Netz: 192.0.0.0 bis 192.0.0.255
+\end{itemize}
+An sich muss man sich um diese reservierten Klasse B und Klasse C
+Netze nicht kümmern, da diese Adressen einfach nicht vergeben werden.
+Weiters gibt es noch einige andere Netze, die ebenfalls reserviert
+sind.
+
+\end{itemize}
+
+\subsection{Subnetting}
+
+Subnetting bezeichnet die Bildung von Teilnetzen und ist aus mehreren
+Gründen notwendig:
+\begin{itemize}
+\item Aus organisatorischen Gründen, wie z.B. abteilungsweise Gliederung
+der Teilnetze.
+\item Aus geographischen Gründen, wenn eine große Distanz zwischen den Hosts
+eine Einführung von Teilnetzen nahelegt bzw. erfordert.
+\item Wenn ein neuer Typ von physischem Netz installiert wird.
+\item Wenn durch Hinzufügen weiterer Hosts eine Teilung des Netzes notwendig
+wird.
+\end{itemize}
+Nur durch Verwendung klassenbasierter Standardadressen mussten immer
+entsprechende Adressbereiche angefordert werden. Dadurch entstehen
+gerade in diesem Zusammenhang (meist bei größeren Organisationen)
+etliche Probleme:
+\begin{itemize}
+\item Die Routertabellen wachsen explosionsartig an. Große Routertabellen
+bewirken jedoch einerseits einen vergrößerten Wartungsaufwand bei
+den Routern als auch eine verminderte Leistung der Router.
+\item Jedes Mal, wenn mehr Adressen in einem Netz benötigt werden, muss
+ein neuer Adressbereich angefordert werden, obwohl noch Adressen in
+den schon vergebenen Netzen zur Verfügung wären.
+\item Jede Änderung der internen Netzstruktur hatte Auswirkungen auf die
+Adressen!
+\end{itemize}
+Um diese Probleme zu lösen, wurde das Konzept des Subnetting eingeführt.
+Das grundlegende Prinzip ist, dass Subnetting lokal durchgeführt wird
+und das gesamte Netz von außerhalb der Organisation als ein einziges
+Netz gesehen wird. Das wird dadurch erreicht, dass das zweistufige
+Konzept mit Netz-Id und Host-Id auf ein dreistufiges Konzept mit Netz-Id,
+Subnetz-Id und Host-Id erweitert wird. Diese Erweiterung wird dadurch
+erreicht, dass der ursprüngliche Hostanteil geteilt wird. Lokal ist
+subnetting deshalb, da die Subnetzmaske von außerhalb nicht gesehen
+wird.
+
+Damit können die oben genannten Probleme gelöst werden. Konkret ergeben
+sich damit folgende Vorteile:
+\begin{itemize}
+\item Die Routertabellen vergrößern sich nicht.
+\item Es müssen viel seltener neue Adressen angefordert werden.
+\item Die Flexibilität erhöht sich, da Änderungen an der Netzstruktur keine
+Änderungen der Adressen mit sich ziehen.
+\item Die Netze können besser auf die physikalischen Gegebenheiten abgestimmt
+werden.
+\item Die interne Netzstruktur ist von außen nicht sichtbar. Das ist aus
+sicherheitstechnischen Überlegungenen wünschenswert.
+\end{itemize}
+Bei der Subnetzmaske handelt es sich um eine 32 Bit Maske, wobei jede
+1 in der Subnetzmaske den Netzanteil angibt, während eine 0 in der
+Subnetzmaske den Hostanteil angibt. Für die ursprüngliche Netz-Id
+stehen immer eine 1en. Aus praktischen Gründen handelt es sich immer
+um zusammenhängende Bereiche (einfachere Implementierung im Router),
+auch wenn es vom Standard nicht unbedingt gefordert wird.
+
+Damit kann man die sogenannten Default-Subnetzmasken für die klassenbasierten
+Adressbereiche angeben:
+\begin{itemize}
+\item Klasse A Netze haben die Default-Subnetzmaske 255.0.0.0
+\item Klasse B Netze haben die Default-Subnetzmaske 255.255.0.0
+\item Klasse C Netze haben die Default-Subnetzmaske 255.255.255.0
+\end{itemize}
+Diese Default-Subnetzmasken bewirken natürlich eigentlich kein Subnetting.
+Allerdings bewirkt die Subnetzmaske 255.255.255.0 z.B. bei einem Klasse
+B Netz (also eine Subnetz-ID mit der Länge von 8 Bits) sehr wohl Subnetting:
+192.168.0.0/255.255.255.0 bezeichnet den Adressbereich für Hosts von
+192.168.0.1 bis 192.168.0.254. D.h., mit dem Klasse B Netz 192.168.0.0
+und der Subnetmaske 255.255.255.0 ergeben sich 256 Teilnetze mit je
+254 Hosts.
+
+Das Beispiel in der Abbildung \vref{fig:subnet_ex1} zeigt die Aufteilung
+des Klasse B Netzes 172.16.0.0 mit 65534 Hosts mittels einer 5 Bit
+langen Subnetz-Id in 32 Subnetze mit je 2046 Hosts.
+
+%
+\begin{figure}
+\centering
+
+\includegraphics[bb=0bp 0bp 98mm 26mm,clip]{ip/subnet_ex1}
+
+\caption{\label{fig:subnet_ex1}Beispiel einer Subnetzbildung eines Klasse
+B Netzes}
+
+\end{figure}
+
+
+Die Subnetz-Id wird meistens ebenfalls in der dezimalen Form durch
+Punkte getrennt angegeben. Für das Beipiel in Abbildung \ref{fig:subnet_ex1}
+lautet die Subnetzmaske 11111111.11111111.11111000.00000000. Das dezimale
+Äquivalent und damit die Form in der die Subnetzmaske angeführt wird
+lautet daher 255.255.248.0. Das erste Subnetz wird dann folgendermaßen
+angegeben: 172.168.0.0/255.255.248.0. Unter der gültigen Voraussetzung,
+dass nur zusammenhängende Bereiche als Subnetzmaske zugelassen sind,
+kann man die Subnetzmaske auch durch Angabe der Anzahl der 1en vom
+linken Rand angeben: 172.168.0.0/21. Das nächste Subnetz hat dann
+folgende Adresse: 172.168.8.0/255.255.248.0!
+
+Die bisher behandelte Form von Subnetting wird auch als ,,static
+subnetting'' bezeichnet, da alle Teilnetze immer die gleiche Größe
+haben. Dies ist jedoch oft ungünstig! Betrachten wir folgendes Beispiel:
+Eine Organisation bekommt das Klasse C Netzwerk 193.170.149.0 zugeordnet.
+Nehmen wir weiters an, dass aus organisatorischen und technischen
+Gründen der Bedarf an folgenden Netzen besteht: 4 Netze mit je 10
+Hosts, 1 Netz mit 50 Hosts und ein Netz mit 100 Hosts. In Summe ergibt
+das 100 Hosts. Insgesamt stehen bei einem Klasse C Netz 254 IP Adressen
+für Hosts zur Verfügung. Allerdings ergibt sich folgendes Problem:
+es werden insgesamt 6 Teilnetze benötigt. Also muss die Subnet-ID
+die Länge 3 haben. Das wiederum bedeutet, dass insgesamt 5 Bits für
+die Hosts je Teilnetz zur Verfügung stehen. Das ergibt eine maximale
+Anzahl an Hosts von 30 je Teilnetz. Man sieht, dass eine Einteilung
+in Teilnetze nicht möglich ist. Die Lösung dafür liegt in VLSM (siehe
+Abschnitt \vref{sec:VLSM}).
+
+Damit Subnetze eingeführt werden können, müssen die Router innerhalb
+der Organisation beim Weiterleiten der Pakete (siehe Abschnitt \vref{sec:ip_forwarding})
+und auch die Routingprotokolle (wenn nicht statisches Routing verwendet
+wird, siehe Abschnitt \vref{sec:routing_protocols}) angepasst werden.
+
+
+\subsection{VLSM\label{sec:VLSM}}
+
+Um unterschiedlich große Teilnetze einrichten zu können, wurde VLSM
+(variable length subnet masking) eingeführt. Darunter versteht man
+das Prinzip, dass Subnetze weiter unterteilt werden. Jedes Subnetz
+hat seine eigene Subnetzmaske.
+
+Gehen wir wieder von dem Beispiel aus dem vorhergehenden Abschnitt
+aus: Eine Organisation bekommt das Klasse C Netz 193.170.149.0 zugeordnet
+und benötigt 4 Netze je 10 Hosts, 1 Netz mit 50 Hosts und ein Netz
+mit 100 Hosts. Die resultierende Aufteilung in entsprechende Subnetze
+ist in Abbildung \vref{fig:subnet_ex2} zu sehen. In dieser Abbildung
+ist jeweils die Subnetznummer und die Subnetzmaske angegeben.
+
+%
+\begin{figure}
+\centering
+
+\includegraphics[bb=0bp 0bp 146mm 80mm,clip]{ip/subnet_ex2}
+
+\caption{\label{fig:subnet_ex2}Beispiel für Anwendung von VLSM}
+
+\end{figure}
+
+
+
+\subsection{Weiterleiten\label{sec:ip_forwarding}}
+
+Weiterleiten in IP funktioniert im Prinzip wie in Abschnitt \vref{sec:forwarding}
+beschrieben. In IP kommt es durch die Verwendung von Subnetzmasken
+es zu folgendem prinzipiellen Ablauf im Router:
+\begin{enumerate}
+\item Wenn es sich um das Zielsystem handelt, dann stopp. D.h. der Router
+ist das Ziel.
+\item Für jeden Eintrag (Subnetznummer, Subnetmaske, Nächster Hop) der Weiterleitungstabelle
+
+\begin{enumerate}
+\item D1 = Zieladresse \& Subnetmaske
+\item Wenn D1 == Subnetznummer
+
+\begin{enumerate}
+\item dann: Wenn Nächster Hop ist ein Interface
+
+\begin{enumerate}
+\item dann: Paket an diesem Interface ausliefern
+\item anderenfalls: Paket an dem Interface ausliefern, das zu diesem Router
+führt
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+\item Wenn kein Router gefunden, dann an den Default-Router weitersenden.
+Ist kein Defaultrouter definiert, dann ICMP Fehlernachricht ,,network
+unreachable'' schicken (siehe Abschnitt \vref{sec:ICMP}).
+\end{enumerate}
+Es handelt sich hier um den prinzipiellen Ablauf und nicht um eine
+Beschreibung einer konkreten Implementierung, da es nicht sehr sinnvoll
+ist, jedes Mal eine lineare Suche in der Weiterleitungstabelle durchzuführen
+bzw. die bitweise UND Verknüpfung immer neu zu berechnen, auch wenn
+sich die Subnetmaske nicht geändert hat.
+
+Der Default Router, an den alle IP Pakete weitergeleitet werden, für
+die keine Route in der Weiterleitungstabelle eingetragen ist wird
+oft auch Default Gateway genannt, obwohl es sich im strengen Sinne
+um kein Gateway handelt.
+
+
+\subsection{CIDR\label{sec:CIDR}}
+
+Der Erschöpfung der IP Adressen wird durch Subnetting nicht weiter
+vorgebeugt, da eine Organisation, die z.B. 2 Adressen benötigt, ein
+Klasse C Netzwerk zugewiesen bekommt. D.h. die ,,Effizienz'' beträgt
+2/254{*}100\% also 0.78\%! Nehmen wir als weiteres Beispiel an, dass
+eine Organisation 256 Hosts an das Internet anschließen muss. Es wird
+also ein Klasse B Netzwerk benötigt. D.h. die ,,Effizienz'' beträgt
+256/65534{*}100\% also lediglich 0.39\%!
+
+Benötigt eine Organisation mehr als 254 Adressen aber nicht nahezu
+65534 Adressen, dann bekommt sie wahrscheinlich anstatt eines Klasse
+B Netzes mehrere Klasse C Netze zugewiesen, da freie B Netze nur in
+beschränkten Umfang vorhanden sind bzw. die Effizienz der Adressvergabe
+verbessert wird. Damit wachsen jedoch automatisch die Routertabellen
+im Internet an, wodurch es zu Performanceinbußen kommt. Ein weiteres
+Problem ist, dass Routertabellen nur eine beschränkte Größe haben.
+
+Trotz der Vorteile des Subnetting, private Netze effizient zu partitionieren,
+bleibt die ineffiziente Adressvergabe weiters bestehen. Gelöst werden
+diese Probleme mit CIDR (engl. classless inter-domain routing). CIDR
+wird auch supernetting genannt, da es sich im Prinzip, um eine analoge
+Lösung wie das subnetting handelt, allerdings auf Internet-Ebene.
+
+CIDR versucht die Anzahl der Routingeinträge in den Routern des Internet
+zu minimieren. Das wird so gemacht, dass eine Organisation mehrere
+\emph{aufeinanderfolgende} z.B. Klasse C Adressbereiche zugewiesen
+bekommt. Diese aufeinanderfolgenden Routen werden zu einer Route mit
+Hilfe einer Netzmaske (meist angegeben durch Suffixdarstellung) aggregiert.
+
+Nehmen wir an, dass eine Organisation einen Bedarf an 16 Klasse C
+Netzen hat und diese Organisation deshalb einen zusammenhängenden
+Bereich von 192.4.16.0/24 bis 192.4.31.0/24 zugewiesen bekommt. Man
+erkennt, dass die oberen 20 Bits aller dieser Adressen gleich ist,
+nämlich 11000000 00000100 0001. Das bedeutet, dass dadurch eine 20
+Bit lange effektive Netznummer erzeugt worden ist. D.h. das resultierende
+Netz lässt sich als 192.4.16.0/20 angeben. Man sieht, dass die Angabe
+in gleicher Weise wie beim Subnetting vorgenommen wird. Das Ergebnis
+ist, dass nur mehr ein Routereintrag für diese Organisation vorgenommen
+werden muss.
+
+Dieses Verfahren lässt sich auch über mehrere Organisationen kaskadieren:
+Werden die Adressbereiche mehrerer Organisationen ebenfalls aufeinanderfolgend
+vergeben, können diese Adressbereiche ebenfalls zu einem Eintrag aggregiert
+werden! Damit sinkt die Anzahl der Routereinträge weiter.
+
+Damit wird mit CIDR sowohl die Effizienz der Vergabe verbessert als
+auch die Anzahl der Routereinträge minimiert.
+
+Ähnlich wie bei Subnetting müssen die Routingprotokolle (siehe Abschnitt
+\vref{sec:routing_protocols}) ebenfalls mit dieser Form der Adressangabe
+umgehen können.
+
+
+\section{Aufbau eines Datagram}
+
+Der Aufbau eines IPv4 Datagram ist in Abbildung \vref{fig:ip_datagram}
+zu sehen.
+
+%
+\begin{figure}
+\centering
+
+\includegraphics[bb=0bp 0bp 102mm 80mm,clip]{ip/ip-datagram}
+
+\caption{\label{fig:ip_datagram}IP Datagram}
+
+\end{figure}
+
+\begin{labeling}{00.00.0000}
+\item [{Version}] Enthält entweder den Wert 4 für IPv4 oder den Wert 6
+für IPv6. An Hand dieser 4 Bits kann jede Implementierung des TCP/IP
+Protokollstacks sofort erkennen, um welches IP Paket es sich handelt.
+Das ist deshalb wichtig, da der Aufbau eines IPv6 Datagrams ansonsten
+verschieden ist!
+\item [{HLen}] Gibt die Anzahl der 32 Bitworte an, die ein Header inklusive
+Optionen lang ist. Der Optionenbereich ist variabel, daher ist das
+Feld HLen notwendig.
+\item [{TOS}] Type-of-service Feld wurde schon für mehrere Funktionen eingesetzt.
+Seit 1998 wird es lt. RFC 2474 für DS (differential services) verwendet.
+DS ist ein bestimmtes Quality of Service (QoS) Verfahren zur Priorisierung
+von IP Paketen.
+\item [{Len}] Gibt die Gesamtlänge eines IP Datagrams in Byte an. Da hierfür
+16 Bit zur Verfügung stehen, ist die maximale Größe eine IP Datagrams
+auf 65535 Bytes beschränkt.
+\item [{Identification}] Das Feld Identification wird im Zuge der Fragmentierung
+verwendet und stellt eine eindeutige Identifikation zur Verfügung
+(siehe Abschnitt \vref{sec:fragmenting}).
+\item [{Flags}] Zwischen Identifcation und Offset sind 3 Flags untergebracht:
+
+\begin{labeling}{00.00.0000}
+\item [{0}] Das erste Bit muss immer ein 0 Bit sein.
+\item [{DF}] ,,Do not fragment'' wird ebenfalls im Zuge der Fragmentierung
+verwendet (siehe Abschnitt \vref{sec:fragmenting}).
+\item [{MF}] ,,More fragments'' wird ebenfalls im Zuge der Fragmentierung
+verwendet (siehe Abschnitt \vref{sec:fragmenting}).
+\end{labeling}
+\item [{Offset}] Offset wird ebenfalls im Zuge der Fragmentierung verwendet
+(siehe Abschnitt \vref{sec:fragmenting}).
+\item [{TTL}] ,,Time-to-live'' gibt die Lebensdauer des Paketes an und
+wird zur Verhinderung endlos kreisender Pakete eingesetzt. Der sendende
+Host setzt TTL auf einen Anfangswert und jede Station, die das Datagram
+weiterreicht vermindert den Zähler um eins. Hat TTL den Wert 0 erreicht,
+dann wird das Paket verworfen. Üblich sind die Anfangswerte von 64
+und 128.
+\item [{Protocol}] Dieses Feld enthält eine eindeutige Zahl, die das verwendete
+Transportprotokoll angibt. Diese Nummern werden von der IANA (Internet
+Assigned Numbers Authority) verwaltet. Beispiele: 1 (ICMP), 6 (TCP),
+17 (UDP).
+\item [{Checksum}] Das ist eine Prüfsumme über den gesamten Header. Die
+Idee ist, dass die Korrektheit der Daten von einem übergeordneten
+Protokoll überprüft werden muss und dadurch die Berechnung der Prüfsumme
+schnell durchgeführt werden kann, sodass die Verzögerung bei der Weiterleitung
+in einem Router gering gehalten werden kann. Das Verfahren der Berechnung
+der Checksumme ist in Abschnitt \vref{sec:error_detection_checksums}
+beschrieben.
+\item [{Source}] Die IP-Adresse des Senders.
+\item [{Destination}] Die IP-Adresse des Empfängers.
+\item [{Options}] Das Options-Feld ist dafür gedacht zusätzliche variable
+Informationen mitzuübertragen, für die es nicht notwendig ist einen
+festen Platz in der Header-Struktur vorzusehen. Es handelt sich hierbei
+um Informationen zum Routing, Security, Zeitstempel,\ldots{} Eventuell
+muss mit Nullen aufgefüllt werden, damit der Header an einer 32 Bitgrenze
+endet.
+\end{labeling}
+
+\section{Fragmentierung\label{sec:fragmenting}}
+
+Die Anpassung der Paketlänge an eine kleinere maximale Paketgröße
+der untenliegenden Schicht, also die Segmentierung (siehe Abschnitt
+\vref{sec:segmenting}), wird in IP Fragmentierung genannt. Wie im
+Abschnitt \vref{sec:ethernet_frame} beschrieben besteht ein Datenblock
+in einem Ethernet Frame aus maximal 1500 Bytes während ein Paket in
+einem FDDI Netzwerk maximal 4500 Bytes beinhalten kann. Wird ein IP
+Paket über mehrere Netze mit unterschiedlichen Technologien versendet,
+besteht entweder die Möglichkeit sicherzustellen, dass die IP Pakete
+maximal die kleinste Größe aller Technologien annehmen, oder die Pakete
+jeweils an die verschiedenen Technologien durch Segmentierung und
+Reassemblierung anzupassen.
+
+IPv4 unterstützt den Ansatz mittels Segmentierung und Reassemblierung.
+Das zentrale Konzept ist, dass es bei jeder Technologie eine maximale
+Übertragungseinheit (engl. max transmission unit oder MTU) gibt, die
+die maximale Paketgröße angibt, die über ein Netz übertragen werden
+kann. Im Fall von Ethernet beträgt dieser Wert 1500. In IP müssen
+die Router bzw. die physische Netztechnologien eine minimale MTU von
+zumindest 576 Bytes unterstützen.
+
+Das Header-Feld DF zeigt an, dass dieses IP Paket nicht fragmentiert
+werden darf. Kommt ein IP Paket zu einen Router oder einem Netz, das
+eine Fragmentierung dieses Paketes erfordern würde, dann wird eine
+ICMP Nachricht (siehe \vref{sec:ICMP}) vom Typ 3 mit Code 5 (Fragmentation
+needed but the Do Not Fragment bit was set) gesendet.
+
+Das Zusammenspiel der Identification, des Flags MF und des Offsets
+ist in folgenden Beispielen zu sehen, wenn wir von einer Länge der
+zu übertragenden Daten von 1400 ausgehen:
+\begin{itemize}
+\item nicht fragmentiertes Paket mit: Identification = x; MF = 0; Offset
+= 0; Data (1400 Bytes)
+\item fragmentierte Pakete bei einer MTU mit 532 Bytes mit:
+
+\begin{enumerate}
+\item Identification = x; MF = 1; Offset = 0; Data (512 Bytes)
+\item Identification = x; MF = 1; Offset = 64; Data (512 Bytes)
+\item Identification = x; MF = 0; Offset = 128; Data (376 Bytes)
+\end{enumerate}
+\end{itemize}
+Das Prinzip der Fragmentierung ist folgendes:
+\begin{itemize}
+\item Das Identifikationsfeld bezeichnet ein IP Datagram, wird vom Sender
+frei gewählt und ist für alle Fragmente gleich.
+\item Das Flag MF ist gesetzt, wenn weitere Fragmente folgen.
+\item Der Offset gibt den Offset des Fragmentes relativ zum gesamten Datenblock
+in jeweils 8 Byte an (512 / 8 = 64). Die Einheit von 8 Bytes liegt
+darin begründet, das nur 13 Bits für den Offset zur Verfügung stehen
+und die maximale Größe eine IP Datagrams 65535 Bytes ist.
+\item Das Datenfeld beinhaltet 512 Bytes, da 20 Bytes für den IP Header
+anfallen.
+\item Die Fragmente werden vom Empfänger im Zuge der Reassemblierung wieder
+zusammengesetzt. Der Empfänger kann dies deshalb durchführen, da er
+alle zusammengehörigen Fragmente an der gleichen Identifikation erkennt.
+Geht eines der Fragmente verloren, dann wird das gesamte IP Datagram
+samt allen bisher empfangenen Fragmente verworfen. D.h. IP versucht
+nicht, fehlende Fragmente wieder zu beschaffen. Die Reassemblierung
+erfolgt am empfangenden Host und nicht an einem Router.
+\end{itemize}
+
+\section{ICMP\label{sec:ICMP}}
+
+ICMP (engl. internet control message protocol) ist ein Hilfsprotokoll,
+dessen Funktion primär die Unterstützung des verbindungslosen und
+nicht fehlergesicherten IP mit zusätzlichen Status-, Steuer- und Fehlerinformationsmeldungen
+ist. Neben IP können auch höher geschichtete Protokoll wie TCP, Routingprotokolle
+oder auch Anwendungen die Information von ICMP Nachrichten auswerten.
+
+Die bekannteste Anwendung von ICMP ist die Verwendung der ICMP Echo
+Request bzw. der ICMP Echo Reply Nachricht, die in der ping Anwendung
+eingesetzt wird.
+
+Jede ICMP Nachricht besteht aus einem Typ und einem Code, einer Prüfsumme
+und einem Inhalt, der von Typ und Code abhängig ist. Jede dieser Nachrichten
+ist entweder eine Query Nachricht oder eine Fehler Nachricht.
+
+Beispielhaft sind die wichtigsten ICMP Nachrichtentypen angeführt:
+\begin{itemize}
+\item Echo Request (Typ 8, Code 0) und Echo Reply (Typ 0, Code 0). Query-Nachricht.
+\item Ziel nicht erreichbar (Typ 3, Code 0-15). Fehler-Nachricht. Dieser
+Nachrichtentyp inkludiert die Fehlernachrichten für ,,Netzwerk nicht
+erreichbar'', ,,Host nicht erreichbar'', ,,Protokoll nicht erreichbar'',
+,,Port nicht erreichbar'', ,,Fragmentierung erforderlich, aber
+DF Bit gesetzt'', ,,Source Route fehlerhaft'', ,,Zielnetzwerk
+unbekannt'',...
+\item Quelle unterdrücken (engl. source quench) (Typ 4, Code 0). Fehler-Nachricht.
+Dieser Nachrichtentyp stellt die einzige Möglichkeit von IP dar, einem
+Sender mitzuteilen, dass er seine Datenrate reduzieren soll. Der Empfänger
+sendet so lange solche Nachrichten an den Sender solange dieser die
+Datenrate reduzieren soll. Empfängt der Sender keine weiteren ICMP
+Nachrichten, dann kann er seine Datenrate wieder erhöhen. D.h. in
+dieser Nachricht gibt es keine explizite Möglichkeit die Datenrate
+anzugeben bzw. anzugeben wann wieder eine höhere Datenrate erlaubt
+ist. Es ist im Standard explizit festgehalten, dass im Falle eines
+Verwerfens eines IP-Datagrams ein ICMP source quench Nachricht gesendet
+werden kann (aber nicht muss). Auf jeden Fall muss der Empfang eines
+solchen ICMP Paketes an die Transportschicht weitergegeben werden.
+Im Falle von TCP sollte TCP die Senderate reduzieren und im Falle
+von UDP sollte die Anwendung darauf entsprechend reagieren.
+\item Redirect (Typ 5, Code 0-3). Fehler-Nachricht. Dient der Signalisierung
+eines Routers an einen Sender, dass ein besserer Router für die eingegangenen
+Pakete existiert. Diese stellen ein Sicherheitsrisiko, da gefälschte
+ICMP Pakete den Sender veranlassen seine Paket an einen anderen Router
+zu senden.
+\item Router-Advertisement (Typ 9, Code 0) und Router-Anforderung (Typ 10,
+Code 0).  Dienen dazu, um Router in einem lokalen Netzwerk zu erkennen
+(Sicherheitsrisiko).
+\end{itemize}
+
+\section{ARP\label{sec:ARP}}
+
+Mittels Weiterleiten kommt ein IP Datagram zum richtigen Netz. Die
+offene Frage ist jetzt, wie das Paket zum richtigen Host kommt. Jedes
+Gerät ist mit seiner MAC Adresse eindeutig zu adressieren. Es ist
+notwendig die MAC Adresse zu kennen, um einen Host in einem Segment
+zu adressieren.
+
+ARP (engl. address resolution protocol) ist ein Protokoll, das die
+MAC Adresse eines Hosts ermittelt. Dazu macht es sich die Eigenschaft
+zu Nutze, dass Ethernet und andere LAN Technologien ebenfalls über
+eine Broadcast Eigenschaft verfügen. Jeder Host merkt sich alle ihm
+schon bekannten Zuordnungen von IP Adresse zu MAC Adresse in einem
+Cache (ARP Cache oder ARP Tabelle genannt). Soll ein Paket einem Host
+in einem Netz zugestellt werden, dann wird zuerst dieser Cache konsultiert.
+Ist eine Zuordnung dort vorhanden, dann wird sie verwendet, um das
+Paket zuzustellen. Ist keine Zuordnung für diese IP Adresse im Cache
+vorhanden, dann wird ein Broadcast Frame an alle Hosts in diesem Segment
+gesendet, der die fragliche IP Adresse enthält. Der gesuchte Host
+antwortet mit seiner IP Adresse, worauf dem ARP Cache die neue Zuordnung
+hinzugefügt werden kann.
+
+Diejenigen Stationen, die ebenfalls den Broadcast empfangen, können
+diese Zuordnung (Sender IP, Sender MAC) ebenfalls lernen. Ist so eine
+Zuordnung schon im ARP Cache enthalten wird sie lediglich aufgefrischt
+und der Timer zurückgesetzt. Läuft der Timer ab, dann wird die Zuordnung
+aus dem Cache gelöscht.
+
+ARP wurde nicht unter dem Gesichtspunkt der Sicherheit entworfen und
+ist deshalb besonders anfällig: Unter ARP-Spoofing versteht man das
+gezielte Versenden gefälschter ARP Pakete, die dazu benutzt werden,
+den Datenverkehr zwischen zwei Hosts in einem Netz abzuhören oder
+zu manipulieren.
+
+RARP (engl. reverse address resolution protocol) ist ein Protokoll,
+das die inverese Funktionalität aufweist und die IP Adressse zu einer
+MAC Adresse finden soll. Es wird allerdings nicht mehr eingesetzt,
+da es durch BOOTP und in weiterer Folge von DHCP abgelöst worden ist.
+Die Gründe liegen darin, dass man mittels RARP nur die IP Adresse,
+aber keine zusätzlichen Informationen wie z.B. die Netzmaske oder
+den Default-Router ermitteln kann.

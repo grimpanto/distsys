@@ -1,0 +1,106 @@
+
+\chapter{Prozesse}
+
+
+\section{Prozesse vs. Threads}
+
+
+\minisec{Prozesse}
+\begin{itemize}
+\item Was ist ein \emph{Prozess}? 
+
+\begin{itemize}
+\item Programm besteht aus Anweisungen 
+\item Prozess entsteht bei Ausführung eines Programmes 
+\item Ein Prozess hat einen oder mehrere Threads 
+\item Aus allgemeiner Sicht ist jeder Prozess ein eigener Ablaufpfad (und
+kann daher im Computer entweder durch einen Prozess oder durch einen
+Thread repräsentiert werden).
+
+
+Wir verwenden im weiteren Text den Begriff Prozess sowohl für die
+Bedeutung in allgemeiner Sicht als auch für die konkrete Sicht als
+Betriebssystemprozess. 
+
+\end{itemize}
+\item \textbf{Vorteile}: Nichtbeinflussung durch andere Prozesse. Dies wird
+erreicht, indem jedem Prozess ein eigener virtueller Prozessor mit
+einem eigenen Adressraum vorgespielt wird. Abgesehen von dem Adressraum
+greift der Prozessor natürlich auch auf die anderen Ressourcen im
+System zu, die von anderen Prozessen genutzt werden. Dazu benötigt
+das Betriebssystem Unterstützung seitens der Hardware (z.B. MMU). 
+\item \textbf{Nachteile}: Diese Art der Nebenläufigkeitstransparenz hat
+einen relativ hohen Preis: Bei jeder Erzeugung eines Prozesses muss
+ein eigener unabhängiger Adressraum gebildet werden (Speichersegmente
+initialisieren,...), ein Stack angelegt werden,...
+
+
+Weiters ist auch die Umschaltung zwischen den Prozessen relativ aufwändig
+(Context switching overhead): CPU Kontext (Register, Programmzähler,
+Stackpointer,...), MMU Register, Prozesse auf Festplatte auslagern
+bzw. in den Hauptspeicher laden, CPU Abrechnungen erstellen,... 
+
+\item Zur Kommunikation zwischen Prozessen (Interprocess Communication,
+IPC) können Pipes, Shared Memory, Sockets (TCP) oder Datagrams (UDP)
+oder auch Dateien verwendet werden.
+\end{itemize}
+
+\minisec{Threads}
+\begin{itemize}
+\item Was ist ein \emph{Thread}? 
+
+\begin{itemize}
+\item Jeder Thread bedeutet eigenen Ausführungszweig \emph{innerhalb} eines
+Prozesses. 
+\item Basis für effiziente und robuste Server 
+\item zwischen Threads kann direkt auf Variablen zugegriffen werden (bei
+Prozessen nicht). 
+\item Zugriff auf die lokalen Daten eines anderen Thread nicht möglich (Stack,
+primitive vs. Objekttypen!) 
+\end{itemize}
+\item \textbf{Vorteile}: geringerer Overhead (es müssen hauptsächlich die
+CPU Register gewechselt werden), Zugriff auf Daten und offene Dateien,... 
+\item \textbf{Nachteile}: Beeinflussung durch andere Threads 
+\item Kommunikation zwischen Threads: wie bei Prozessen und zusätzlich über
+gemeinsame Daten.
+\end{itemize}
+Prozesse und Threads vereinfachen einerseits die Programmierung, da
+quasi-parallele (nur ein Prozessor, Zeitscheiben) oder auch parallele
+Aktionen (mehrere Prozessoren) leicht programmiert werden können.
+Als gemeinsamer Nachteil sind die Probleme zu nennen, die durch die
+gemeinsame Kommunikation entstehen ($\rightarrow$ Synchronisation).
+
+Beispiele für nebenläufige Anwendungen, die Threads oder Prozesse
+verwenden (Client und/oder Server) sind Web services, Anwendungen
+der nummerische Mathematik und Simulation, I/O Verarbeitung, GUI-basierte
+Anwendungen (X-Window: Server/Client) und Embedded systems (Verwendung
+in Echtzeitsystemen).
+
+
+\section{Threads}
+
+Verwendung finden Threads auch oft in nicht verteilten Systemen: hauptsächlich,
+um bei dem Aufruf von \emph{blockierenden Systemaufrufen} nicht die
+Gesamtanwendung zum Stillstand zu bringen.
+
+Beispiele: 
+\begin{itemize}
+\item Zugriff auf Ein-/Ausgabegeräte, wie serielle Schnittstelle, das Netzwerk,
+den Drucker, aber auch die Festplatte. 
+\item Durchführen von langen Berechnungen bei GUI Anwendungen (z.B. einer
+Tabellenkalkulation), damit weitere Benutzereingaben getätigt werden
+können. In so einem Fall werden meistens zwei Threads verwendet: einer
+für die Interaktion und einer für die Berechnungen. 
+\item Nutzung von mehreren Prozessoren in Multiprozessor-Maschinen. 
+\end{itemize}
+Weiters kann der Entwurf einfacher werden, da die Gesamtanwendung
+in mehrere Teile zerlegt werden kann, wobei jeder Thread für einen
+dedizierten Teil der Gesamtanwendung zuständig ist.
+
+Obwohl die Erzeugung und Verwaltung von Threads weniger kostspielig
+ist, als die entsprechenden Operationen für Prozesse, kann es durchaus
+sinnvoll sein, auch hier Optimierungen vorzunehmen: Das Ziel ist es,
+Threads nur so oft zu erzeugen wie dies unbedingt notwendig ist --
+dies wird mit Threadpooling erreicht.
+
+ 

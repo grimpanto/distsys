@@ -1,0 +1,2088 @@
+#LyX 1.6.4.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass scrbook
+\use_default_options false
+\language ngerman
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Internet Protokoll
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:ip"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Das Internet Protokoll (IP) ist der Kern des TCP/IP Stacks.
+ Derzeit ist die Version 4 (IPv4) beschrieben im RFC 791 aus dem Jahr 1981
+ flächendeckend im Einsatz.
+ Weitere relevante RFCs sind 950, 919 and 922 und RFC 2474.
+ 
+\end_layout
+
+\begin_layout Standard
+Bei IP handelt es sich um ein verbindungsloses Protokoll auf der Schicht
+ 3, dessen Hauptfunktionen in der Bereitstellung der Adressierung, der Weiterlei
+tung und der Abstraktion der unterliegenden physikalischen Schicht liegt.
+\end_layout
+
+\begin_layout Standard
+Es handelt sich bei IP um ein nicht zuverlässiges Protokoll, das nach dem
+ best-effort Prinzip arbeitet.
+ Das bedeutet, dass versucht wird die Pakete so gut wie möglich zuzustellen.
+ Trotzdem können Pakete verloren gehen, nicht in der richtigen Reihenfolge
+ ankommen oder auch mehrfach ankommen.
+ IP geht davon aus, dass die höheren Schichten sich um diese Punkte kümmern.
+\end_layout
+
+\begin_layout Section
+IP Adressen
+\end_layout
+
+\begin_layout Standard
+Die IP Adresse dient dazu, Hosts auf der Vermittlungsschicht eindeutig anspreche
+n zu können und die Wegewahl von IP-Paketen zwischen Sender und Empfänger
+ zu unterstützen.
+ 
+\end_layout
+
+\begin_layout Standard
+In IPv4 besteht jede Adresse aus genau 32 Bits, die meist in 4 Bytes angeschrieb
+en werden.
+ Die Bytes werden in der Darstellung durch je einen Punkt getrennt und in
+ dezimaler Zahlendarstellung angegeben.
+\end_layout
+
+\begin_layout Standard
+IPv4 unterteilt die Adressen in Unicast-, Multicast- und Broadcastadressen.
+ Zusätzlich bietet IPv4 insgesamt 3 Arten von Adressierungsvarianten: Standardad
+ressen, Subnetzadressen und das sogenannte Classless Inter-Domain Routing
+ (CIDR).
+\end_layout
+
+\begin_layout Standard
+Prinzipiell besteht jede Adresse aus einem Netzanteil und einem Hostanteil.
+ Der Netzanteil identifiziert das Netz und der der Hostanteil gibt den Host
+ innerhalb des Netzes an.
+ Der Grund für diese Einteilung liegt in der Notwendigkeit der Weiterleitung!
+\end_layout
+
+\begin_layout Subsection
+Standardadressen
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:standard_ip_addresses"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Bei den Standardadressen gibt es 4 Hauptadressklassen und eine Klasse, die
+ für zukünftige Anwendungen vorgesehen ist:
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Klasse
+\begin_inset space ~
+\end_inset
+
+A Diese Klasse ist für eine hohe Anzahl an Hosts vorgesehen.
+ Der Netzanteil ist jeweils das erste Byte einer Adresse, wobei das erste
+ Bit einer solchen Adresse ist immer 0 ist.
+ Daraus ergibt sich ein theoretischer Adressbereich von 0.0.0.0 bis 127.255.255.255.
+ Die Netze 0.0.0.0 und 127.0.0.0 sind jedoch reserviert, sodass es 126 verschiedene
+ Klasse A Netze gibt.
+ Je Klasse A Netz gibt es maximal 16.777.214 (
+\begin_inset Formula $2^{24}-2$
+\end_inset
+
+) Hosts.
+ Der Grund warum 2 abgezogen werden muss und warum die Netze 0.0.0.0 und 127.0.0.0
+ ebenfalls nicht zur Verfügung stehen wird im Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:special_ip_addresses"
+
+\end_inset
+
+ und im Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:reserved_ip_addresses"
+
+\end_inset
+
+ beschrieben.
+ Der effektive, nutzbare Bereich geht also von 1.0.0.1 bis 126.255.255.254.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Klasse
+\begin_inset space ~
+\end_inset
+
+B Klasse B Netze sind für eine mittlere Anzahl an Hosts vorgesehen.
+ Der Netzanteil sind die beiden ersten Bytes, wobei die ersten beiden Bits
+ immer 10 sind.
+ Daraus ergibt sich ein theoretischer Adressbereich von 128.0.0.0 bis 191.255.255.255.
+ Insgesamt sind so 16384 (
+\begin_inset Formula $2^{14}$
+\end_inset
+
+) verschiedene Klasse B Netze möglich.
+ Je Klasse C Netz gibt es maximal 65534 (
+\begin_inset Formula $2^{16}-2$
+\end_inset
+
+).
+ Der effektive Bereich ergibt sich zu 128.0.0.1 bis 191.255.255.254.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Klasse
+\begin_inset space ~
+\end_inset
+
+C Klasse C Netze sind für eine kleine Anzahl an Hosts vorgesehen.
+ Der Netzanteil sind die ersten drei Bytes, wobei die ersten drei Bits immer
+ 110 sind.
+ Daraus ergibt sich ein theoretischer Adressbereich von 192.0.0.0 bis 223.255.255.255.
+ Insgesamt sind so 2097152 (
+\begin_inset Formula $2^{21}$
+\end_inset
+
+) verschiedene Klasse C Netze möglich.
+ Je Klasse C Netz gibt es maximal 254 (
+\begin_inset Formula $2^{8}-2$
+\end_inset
+
+) Hosts.
+ Der effektive Bereich ergibt sich zu 192.0.0.1 bis 223.255.255.254.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Klasse
+\begin_inset space ~
+\end_inset
+
+D Klasse D Netzadressen sind für Multicast-Anwendungen reserviert.
+ Die ersten vier Bits sind immer 1110 und die restlichen 28 Bits geben die
+ Multicast-Gruppen-Id an.
+ Der theoretische Adressbereich geht von 224.0.0.0 bis 239.255.255.255.
+ Von diesen sind jedoch einige vordefiniert, wie z.B.
+ wieder 224.0.0.0 als reservierte Basisadresse, 224.0.0.1 für alle Hosts in dem
+ Subnetz und weitere.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Klasse
+\begin_inset space ~
+\end_inset
+
+E Diese Klasse ist für zukünftige Anwendungen rerserviert.
+ Solche Adressen beginnen mit 11110.
+\end_layout
+
+\begin_layout Standard
+Die Gründe für den Aufbau der Adressen sind, dass
+\end_layout
+
+\begin_layout Itemize
+durch diese Einteilung die Einträge in den Routern minimiert werden können.
+ Daher kommt es auch, dass den einzelnen geographischen Regionen auf der
+ Erde verschiedene IP Adressbereiche zugeordnet sind.
+ Europa sind z.B.
+ für die Klasse C Netze die Adressbereiche 194.0.0.0 bis 195.255.255.255 zugeordnet.
+\end_layout
+
+\begin_layout Itemize
+Router lediglich durch Überprüfung der ersten 5 Bits die entsprechende Klasse
+ eruieren können.
+ Außerdem ist der Zugriff auf den Netzanteil bzw.
+ den Hostanteil sehr einfach, da diese Teile immer an Bytegrenzen ausgerichtet
+ sind.
+\end_layout
+
+\begin_layout Itemize
+die Einteilung der Klassen auf diese Art und Weise so vorgenommen wurde,
+ dass sehr große Organisationen Klasse A Netze zugeteilt bekommen und sehr
+ kleine Organisationen Klasse C Netze.
+ Mittleren Organisationen, d.h.
+ alle die mehr als 254 Hosts benötigen oder die erwarten, dass sie mehr
+ als 254 IP Adressen benötigen, wurden die Klasse B Netze zugedacht, wodurch
+ in den 80er Jahre fast nur Klasse B Netze verteilt wurden.
+ Das verursachte Ende der 80er Jahre die Voraussage: 
+\begin_inset Quotes pld
+\end_inset
+
+Mitte der 90er Jahre gehen die Klasse B Netze aus
+\begin_inset Quotes prd
+\end_inset
+
+.
+ Daher wurde die Zuteilung der Netze neu geregelt.
+ Es wurden Regeln aufgestellt, die genau festlegen wann ein Klasse A Netz
+ vergeben wird oder alternativ mehrere aufeinanderfolgende Klasse B Netze
+ bzw.
+ ein Klasse B Netz oder alternativ mehrere aufeinanderfolgende Klasse C
+ Netze.
+ Abgesehen von diesen organisatorischen Maßnahmen sind auch noch technische
+ Maßnahmen eingeführt worden, die später noch beschrieben werden.
+\end_layout
+
+\begin_layout Subsection
+Spezielle IP Adressen
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:special_ip_addresses"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Netzanteil und Hostanteil können spezielle Muster aufweisen.
+ Lauter 0en und lauter 1en werden besonders interpretiert:
+\end_layout
+
+\begin_layout Itemize
+Sind alle Bits im Hostanteil 0, dann wird dies als 
+\begin_inset Quotes pld
+\end_inset
+
+dieser Host
+\begin_inset Quotes prd
+\end_inset
+
+ interpretiert.
+\end_layout
+
+\begin_layout Itemize
+Sind alle Bits im Netzanteil 0, dann wird dies als 
+\begin_inset Quotes pld
+\end_inset
+
+dieses Netz
+\begin_inset Quotes prd
+\end_inset
+
+ interpretiert.
+\end_layout
+
+\begin_layout Itemize
+Sind alle Bits im Hostanteil 1, dann wird dies als 
+\begin_inset Quotes pld
+\end_inset
+
+alle Hosts
+\begin_inset Quotes prd
+\end_inset
+
+ interpretiert.
+\end_layout
+
+\begin_layout Itemize
+Sind alle Bits im Netzanteil 1, dann wird dies 
+\begin_inset Quotes pld
+\end_inset
+
+alle Netze
+\begin_inset Quotes prd
+\end_inset
+
+ interpretiert.
+\end_layout
+
+\begin_layout Standard
+Daraus ergeben sich 6 verschiedene sinnvolle Fälle:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="3">
+<features islongtable="true">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="block" valignment="top" width="90mm">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Netzanteil
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Hostanteil
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Bedeutung
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Netz Id
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Host Id
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Normale Bedeutung.
+ Ein Beispiel ist die Klasse A Adresse 10.2.9.14.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Netz Id
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+alle 0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Prinzipiell handelt es sich um diesen Host (wenn z.B.
+ der Host sein IP Adresse noch nicht kennt.
+ Außerdem wird so auch das Netz bezeichnet.
+ Ein Beispiel ist das Klasse A Netz 10.0.0.0.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+alle 0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Host Id
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Mit dieser Bezeichnung wird ein spezieller Host im aktuellen Netz bezeichnet.
+ So eine Adresse kann verwendet werden, wenn ein Host noch nicht die Netzadresse
+ kennt oder wenn die Netzinformation nicht relevant ist, dann sendet er
+ ein Paket mit der Hostadresse und dem Netzanteil bestehend aus lauter 0en.
+ Der angesprochene Host auf diesem Netz wird mit einem Paket mit ausgefülltem
+ Netzanteil antworten.
+ Ein Beispiel einer solchen Klasse A Adresse könnte sein: 0.2.9.14.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+alle 0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+alle 0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Diese Adresse bezeichnet den eigenen Host.
+ Meist wird diese verwendet, wenn die eigene Adresse noch nicht bekannt
+ ist (z.B.
+ bei DHCP).
+ Allerdings wird diese Adresse auch bei multi-homed Hosts (wie z.B.
+ Router) verwendet, um eine beliebige Adresse zu spezifizieren.
+ Die einzige Adresse gemäß diesem Muster ist 0.0.0.0.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Netz Id
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+alle 1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Es werden alle Hosts in dem angegebenen Netz angesprochen.
+ D.h.
+ es handelt sich um eine Broadcast-Adressen.
+ Ein Beispiel für eine Klasse A Broadcast-Adresse: 10.255.255.255.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+alle 1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+alle 1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Die Bedeutung ist: 
+\begin_inset Quotes pld
+\end_inset
+
+alle Hosts von allen Netzen
+\begin_inset Quotes prd
+\end_inset
+
+.
+ D.h.
+ diese Adresse gibt einen globalen Broadcast an.
+ Da es jedoch praktisch unmöglich ist an alle Hosts im Internet zu senden,
+ ist die Bedeutung dieser Adresse eines Broadcasts an das direkt angeschlossene
+ Netz! Die einzige Adresse gemäß diesem Muster ist 255.255.255.255.
+\end_layout
+
+\begin_layout Plain Layout
+Semantisch äquivalent wäre noch die Adresse mit einem Netzanteil mit 0en
+ und einem Hostanteil mit 1en.
+ Das wird jedoch nicht verwendet, die obige Lösung außerdem den Vorteil
+ hat, nicht zwischen Netz- und Hostanteil unterscheiden zu müssen.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Eine Kombination hat keine sinnvolle Bedeutung und wird deshalb nicht verwendet:
+ Im Netzanteil alles 1en und im Hostanteil eine Host Id.
+ Das würde bedeuten: alle Hosts einer bestimmten Host Id in allen Netzen.
+ Das ist wieder praktisch unmöglich und wird daher nicht verwendet.
+\end_layout
+
+\begin_layout Subsection
+Reservierte Adressen
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:reserved_ip_addresses"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Verschiedenen Adressen wurden, abgesehen von den klassen-basierten Standardadres
+sen eine bestimmte Bedeutung zugewiesen und reserviert:
+\end_layout
+
+\begin_layout Itemize
+127.0.0.0 ist ein spezielles Netz, das für den lokalen IP Verkehr vorgesehen
+ ist und als Loopback Netz bezeichnet wird.
+ Adressen in diesem Netz sind nicht mit einem physikalischen Interface (wie
+ z.B.
+ einem Ethernet-Interface) verbunden.
+ Meistens wird die Adresse 127.0.0.1 einer virtuellen Schnittstelle, dem sogenannte
+n 
+\begin_inset Quotes pld
+\end_inset
+
+loopback interface
+\begin_inset Quotes prd
+\end_inset
+
+ zugeordnet.
+ Jedes Paket, das an diese Schnittstelle gesendet wird, wird zurückgeliefert
+ als ob es von einem anderen System kommen würde.
+ Damit eignet sich diese Schnittstelle sehr gut für Tests oder lokale Anwendunge
+n, die keinen Anschluss an das Internet benötigen.
+\end_layout
+
+\begin_layout Itemize
+Private Adressen: Benötigt man Adressen für ein lokales Netz, die nicht
+ global verfügbar sein müssen, dann kann man Adressen aus bestimmten Adressberei
+chen verwenden, die als private Adressen reserviert worden sind.
+ Pakete mit solchen Adressen werden von Routern im Internet 
+\emph on
+nicht
+\emph default
+ weitergeleitet.
+ Damit sind solche Adressen ein Mechanismus, um die Situation der Adressknapphei
+t im Internet zu verbessern.
+ Folgende Adressbereiche wurden als privat festgelegt:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="4">
+<features islongtable="true">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="block" valignment="top" width="50mm">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Klasse
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+von
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+bis
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Bemerkung
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+A
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10.0.0.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10.255.255.255
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1 Klasse A Netz
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+B
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+172.16.0.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+172.31.255.255
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+16 aufeinanderfolgende Klasse B Netze.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+C
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+192.168.0.0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+192.168.255.255
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+256 aufeinanderfolgende Klasse C Netze.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Will man so ein privates Netz (Intranet), das mit solchen Adressen betrieben
+ wird an das Internet anschließen, dann kann man dies durch
+\end_layout
+
+\begin_layout Itemize
+ein anwendungsspezifisches Gateway erreichen (siehe Abschnitt
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:coupling_devices"
+
+\end_inset
+
+) erreichen.
+\end_layout
+
+\begin_layout Itemize
+ein anwendungsneutralen Gateway wie z.B.
+ SOCKS erreichen.
+\end_layout
+
+\begin_layout Itemize
+NAT (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:NAT"
+
+\end_inset
+
+) erzielen.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Zur automatischen Zuweisung einer privaten Adresse im Zusammenhang mit DHCP
+ steht ein spezielles Klasse B Netz zur Verfügung: 169.254.0.0 bis 169.254.255.255.
+ Eine Erläuterung dazu findet sich im Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:DHCP"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Sonstige reservierte Adressbereiche, sind z.B.:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Klasse A Netz: 0.0.0.0 bis 0.255.255.255 (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:standard_ip_addresses"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Klasse B Netz: 128.0.0.0 bis 128.0.255.255
+\end_layout
+
+\begin_layout Itemize
+Klasse C Netz: 192.0.0.0 bis 192.0.0.255
+\end_layout
+
+\begin_layout Standard
+An sich muss man sich um diese reservierten Klasse B und Klasse C Netze
+ nicht kümmern, da diese Adressen einfach nicht vergeben werden.
+ Weiters gibt es noch einige andere Netze, die ebenfalls reserviert sind.
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Subnetting
+\end_layout
+
+\begin_layout Standard
+Subnetting bezeichnet die Bildung von Teilnetzen und ist aus mehreren Gründen
+ notwendig:
+\end_layout
+
+\begin_layout Itemize
+Aus organisatorischen Gründen, wie z.B.
+ abteilungsweise Gliederung der Teilnetze.
+\end_layout
+
+\begin_layout Itemize
+Aus geographischen Gründen, wenn eine große Distanz zwischen den Hosts eine
+ Einführung von Teilnetzen nahelegt bzw.
+ erfordert.
+\end_layout
+
+\begin_layout Itemize
+Wenn ein neuer Typ von physischem Netz installiert wird.
+\end_layout
+
+\begin_layout Itemize
+Wenn durch Hinzufügen weiterer Hosts eine Teilung des Netzes notwendig wird.
+\end_layout
+
+\begin_layout Standard
+Nur durch Verwendung klassenbasierter Standardadressen mussten immer entsprechen
+de Adressbereiche angefordert werden.
+ Dadurch entstehen gerade in diesem Zusammenhang (meist bei größeren Organisatio
+nen) etliche Probleme:
+\end_layout
+
+\begin_layout Itemize
+Die Routertabellen wachsen explosionsartig an.
+ Große Routertabellen bewirken jedoch einerseits einen vergrößerten Wartungsaufw
+and bei den Routern als auch eine verminderte Leistung der Router.
+\end_layout
+
+\begin_layout Itemize
+Jedes Mal, wenn mehr Adressen in einem Netz benötigt werden, muss ein neuer
+ Adressbereich angefordert werden, obwohl noch Adressen in den schon vergebenen
+ Netzen zur Verfügung wären.
+\end_layout
+
+\begin_layout Itemize
+Jede Änderung der internen Netzstruktur hatte Auswirkungen auf die Adressen!
+\end_layout
+
+\begin_layout Standard
+Um diese Probleme zu lösen, wurde das Konzept des Subnetting eingeführt.
+ Das grundlegende Prinzip ist, dass Subnetting lokal durchgeführt wird und
+ das gesamte Netz von außerhalb der Organisation als ein einziges Netz gesehen
+ wird.
+ Das wird dadurch erreicht, dass das zweistufige Konzept mit Netz-Id und
+ Host-Id auf ein dreistufiges Konzept mit Netz-Id, Subnetz-Id und Host-Id
+ erweitert wird.
+ Diese Erweiterung wird dadurch erreicht, dass der ursprüngliche Hostanteil
+ geteilt wird.
+ Lokal ist subnetting deshalb, da die Subnetzmaske von außerhalb nicht gesehen
+ wird.
+\end_layout
+
+\begin_layout Standard
+Damit können die oben genannten Probleme gelöst werden.
+ Konkret ergeben sich damit folgende Vorteile:
+\end_layout
+
+\begin_layout Itemize
+Die Routertabellen vergrößern sich nicht.
+\end_layout
+
+\begin_layout Itemize
+Es müssen viel seltener neue Adressen angefordert werden.
+\end_layout
+
+\begin_layout Itemize
+Die Flexibilität erhöht sich, da Änderungen an der Netzstruktur keine Änderungen
+ der Adressen mit sich ziehen.
+\end_layout
+
+\begin_layout Itemize
+Die Netze können besser auf die physikalischen Gegebenheiten abgestimmt
+ werden.
+\end_layout
+
+\begin_layout Itemize
+Die interne Netzstruktur ist von außen nicht sichtbar.
+ Das ist aus sicherheitstechnischen Überlegungenen wünschenswert.
+\end_layout
+
+\begin_layout Standard
+Bei der Subnetzmaske handelt es sich um eine 32 Bit Maske, wobei jede 1
+ in der Subnetzmaske den Netzanteil angibt, während eine 0 in der Subnetzmaske
+ den Hostanteil angibt.
+ Für die ursprüngliche Netz-Id stehen immer eine 1en.
+ Aus praktischen Gründen handelt es sich immer um zusammenhängende Bereiche
+ (einfachere Implementierung im Router), auch wenn es vom Standard nicht
+ unbedingt gefordert wird.
+\end_layout
+
+\begin_layout Standard
+Damit kann man die sogenannten Default-Subnetzmasken für die klassenbasierten
+ Adressbereiche angeben:
+\end_layout
+
+\begin_layout Itemize
+Klasse A Netze haben die Default-Subnetzmaske 255.0.0.0
+\end_layout
+
+\begin_layout Itemize
+Klasse B Netze haben die Default-Subnetzmaske 255.255.0.0
+\end_layout
+
+\begin_layout Itemize
+Klasse C Netze haben die Default-Subnetzmaske 255.255.255.0
+\end_layout
+
+\begin_layout Standard
+Diese Default-Subnetzmasken bewirken natürlich eigentlich kein Subnetting.
+ Allerdings bewirkt die Subnetzmaske 255.255.255.0 z.B.
+ bei einem Klasse B Netz (also eine Subnetz-ID mit der Länge von 8 Bits)
+ sehr wohl Subnetting: 192.168.0.0/255.255.255.0 bezeichnet den Adressbereich
+ für Hosts von 192.168.0.1 bis 192.168.0.254.
+ D.h., mit dem Klasse B Netz 192.168.0.0 und der Subnetmaske 255.255.255.0 ergeben
+ sich 256 Teilnetze mit je 254 Hosts.
+\end_layout
+
+\begin_layout Standard
+Das Beispiel in der Abbildung 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:subnet_ex1"
+
+\end_inset
+
+ zeigt die Aufteilung des Klasse B Netzes 172.16.0.0 mit 65534 Hosts mittels
+ einer 5 Bit langen Subnetz-Id in 32 Subnetze mit je 2046 Hosts.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename subnet_ex1.pdf
+	BoundingBox 0bp 0bp 98mm 26mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:subnet_ex1"
+
+\end_inset
+
+Beispiel einer Subnetzbildung eines Klasse B Netzes
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die Subnetz-Id wird meistens ebenfalls in der dezimalen Form durch Punkte
+ getrennt angegeben.
+ Für das Beipiel in Abbildung 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:subnet_ex1"
+
+\end_inset
+
+ lautet die Subnetzmaske 11111111.11111111.11111000.00000000.
+ Das dezimale Äquivalent und damit die Form in der die Subnetzmaske angeführt
+ wird lautet daher 255.255.248.0.
+ Das erste Subnetz wird dann folgendermaßen angegeben: 172.168.0.0/255.255.248.0.
+ Unter der gültigen Voraussetzung, dass nur zusammenhängende Bereiche als
+ Subnetzmaske zugelassen sind, kann man die Subnetzmaske auch durch Angabe
+ der Anzahl der 1en vom linken Rand angeben: 172.168.0.0/21.
+ Das nächste Subnetz hat dann folgende Adresse: 172.168.8.0/255.255.248.0!
+\end_layout
+
+\begin_layout Standard
+Die bisher behandelte Form von Subnetting wird auch als 
+\begin_inset Quotes pld
+\end_inset
+
+static subnetting
+\begin_inset Quotes prd
+\end_inset
+
+ bezeichnet, da alle Teilnetze immer die gleiche Größe haben.
+ Dies ist jedoch oft ungünstig! Betrachten wir folgendes Beispiel: Eine
+ Organisation bekommt das Klasse C Netzwerk 193.170.149.0 zugeordnet.
+ Nehmen wir weiters an, dass aus organisatorischen und technischen Gründen
+ der Bedarf an folgenden Netzen besteht: 4 Netze mit je 10 Hosts, 1 Netz
+ mit 50 Hosts und ein Netz mit 100 Hosts.
+ In Summe ergibt das 100 Hosts.
+ Insgesamt stehen bei einem Klasse C Netz 254 IP Adressen für Hosts zur
+ Verfügung.
+ Allerdings ergibt sich folgendes Problem: es werden insgesamt 6 Teilnetze
+ benötigt.
+ Also muss die Subnet-ID die Länge 3 haben.
+ Das wiederum bedeutet, dass insgesamt 5 Bits für die Hosts je Teilnetz
+ zur Verfügung stehen.
+ Das ergibt eine maximale Anzahl an Hosts von 30 je Teilnetz.
+ Man sieht, dass eine Einteilung in Teilnetze nicht möglich ist.
+ Die Lösung dafür liegt in VLSM (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:VLSM"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Damit Subnetze eingeführt werden können, müssen die Router innerhalb der
+ Organisation beim Weiterleiten der Pakete (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:ip_forwarding"
+
+\end_inset
+
+) und auch die Routingprotokolle (wenn nicht statisches Routing verwendet
+ wird, siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:routing_protocols"
+
+\end_inset
+
+) angepasst werden.
+\end_layout
+
+\begin_layout Subsection
+VLSM
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:VLSM"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Um unterschiedlich große Teilnetze einrichten zu können, wurde VLSM (variable
+ length subnet masking) eingeführt.
+ Darunter versteht man das Prinzip, dass Subnetze weiter unterteilt werden.
+ Jedes Subnetz hat seine eigene Subnetzmaske.
+\end_layout
+
+\begin_layout Standard
+Gehen wir wieder von dem Beispiel aus dem vorhergehenden Abschnitt aus:
+ Eine Organisation bekommt das Klasse C Netz 193.170.149.0 zugeordnet und benötigt
+ 4 Netze je 10 Hosts, 1 Netz mit 50 Hosts und ein Netz mit 100 Hosts.
+ Die resultierende Aufteilung in entsprechende Subnetze ist in Abbildung
+ 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:subnet_ex2"
+
+\end_inset
+
+ zu sehen.
+ In dieser Abbildung ist jeweils die Subnetznummer und die Subnetzmaske
+ angegeben.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename subnet_ex2.pdf
+	BoundingBox 0bp 0bp 146mm 80mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:subnet_ex2"
+
+\end_inset
+
+Beispiel für Anwendung von VLSM
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Weiterleiten
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:ip_forwarding"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Weiterleiten in IP funktioniert im Prinzip wie in Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:forwarding"
+
+\end_inset
+
+ beschrieben.
+ In IP kommt es durch die Verwendung von Subnetzmasken es zu folgendem prinzipie
+llen Ablauf im Router:
+\end_layout
+
+\begin_layout Enumerate
+Wenn es sich um das Zielsystem handelt, dann stopp.
+ D.h.
+ der Router ist das Ziel.
+\end_layout
+
+\begin_layout Enumerate
+Für jeden Eintrag (Subnetznummer, Subnetmaske, Nächster Hop) der Weiterleitungst
+abelle
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+D1 = Zieladresse & Subnetmaske
+\end_layout
+
+\begin_layout Enumerate
+Wenn D1 == Subnetznummer
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+dann: Wenn Nächster Hop ist ein Interface
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+dann: Paket an diesem Interface ausliefern
+\end_layout
+
+\begin_layout Enumerate
+anderenfalls: Paket an dem Interface ausliefern, das zu diesem Router führt
+\end_layout
+
+\end_deeper
+\end_deeper
+\end_deeper
+\begin_layout Enumerate
+Wenn kein Router gefunden, dann an den Default-Router weitersenden.
+ Ist kein Defaultrouter definiert, dann ICMP Fehlernachricht 
+\begin_inset Quotes pld
+\end_inset
+
+network unreachable
+\begin_inset Quotes prd
+\end_inset
+
+ schicken (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:ICMP"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Es handelt sich hier um den prinzipiellen Ablauf und nicht um eine Beschreibung
+ einer konkreten Implementierung, da es nicht sehr sinnvoll ist, jedes Mal
+ eine lineare Suche in der Weiterleitungstabelle durchzuführen bzw.
+ die bitweise UND Verknüpfung immer neu zu berechnen, auch wenn sich die
+ Subnetmaske nicht geändert hat.
+\end_layout
+
+\begin_layout Standard
+Der Default Router, an den alle IP Pakete weitergeleitet werden, für die
+ keine Route in der Weiterleitungstabelle eingetragen ist wird oft auch
+ Default Gateway genannt, obwohl es sich im strengen Sinne um kein Gateway
+ handelt.
+\end_layout
+
+\begin_layout Subsection
+CIDR
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:CIDR"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Der Erschöpfung der IP Adressen wird durch Subnetting nicht weiter vorgebeugt,
+ da eine Organisation, die z.B.
+ 2 Adressen benötigt, ein Klasse C Netzwerk zugewiesen bekommt.
+ D.h.
+ die 
+\begin_inset Quotes pld
+\end_inset
+
+Effizienz
+\begin_inset Quotes prd
+\end_inset
+
+ beträgt 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+2/254*100%
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+ also 0.78%! Nehmen wir als weiteres Beispiel an, dass eine Organisation
+ 256 Hosts an das Internet anschließen muss.
+ Es wird also ein Klasse B Netzwerk benötigt.
+ D.h.
+ die 
+\begin_inset Quotes pld
+\end_inset
+
+Effizienz
+\begin_inset Quotes prd
+\end_inset
+
+ beträgt 256/65534*100% also lediglich 0.39%!
+\end_layout
+
+\begin_layout Standard
+Benötigt eine Organisation mehr als 254 Adressen aber nicht nahezu 65534
+ Adressen, dann bekommt sie wahrscheinlich anstatt eines Klasse B Netzes
+ mehrere Klasse C Netze zugewiesen, da freie B Netze nur in beschränkten
+ Umfang vorhanden sind bzw.
+ die Effizienz der Adressvergabe verbessert wird.
+ Damit wachsen jedoch automatisch die Routertabellen im Internet an, wodurch
+ es zu Performanceinbußen kommt.
+ Ein weiteres Problem ist, dass Routertabellen nur eine beschränkte Größe
+ haben.
+\end_layout
+
+\begin_layout Standard
+Trotz der Vorteile des Subnetting, private Netze effizient zu partitionieren,
+ bleibt die ineffiziente Adressvergabe weiters bestehen.
+ Gelöst werden diese Probleme mit CIDR (engl.
+ classless inter-domain routing).
+ CIDR wird auch supernetting genannt, da es sich im Prinzip, um eine analoge
+ Lösung wie das subnetting handelt, allerdings auf Internet-Ebene.
+\end_layout
+
+\begin_layout Standard
+CIDR versucht die Anzahl der Routingeinträge in den Routern des Internet
+ zu minimieren.
+ Das wird so gemacht, dass eine Organisation mehrere 
+\emph on
+aufeinanderfolgende
+\emph default
+ z.B.
+ Klasse C Adressbereiche zugewiesen bekommt.
+ Diese aufeinanderfolgenden Routen werden zu einer Route mit Hilfe einer
+ Netzmaske (meist angegeben durch Suffixdarstellung) aggregiert.
+\end_layout
+
+\begin_layout Standard
+Nehmen wir an, dass eine Organisation einen Bedarf an 16 Klasse C Netzen
+ hat und diese Organisation deshalb einen zusammenhängenden Bereich von
+ 192.4.16.0/24 bis 192.4.31.0/24 zugewiesen bekommt.
+ Man erkennt, dass die oberen 20 Bits aller dieser Adressen gleich ist,
+ nämlich 11000000 00000100 0001.
+ Das bedeutet, dass dadurch eine 20 Bit lange effektive Netznummer erzeugt
+ worden ist.
+ D.h.
+ das resultierende Netz lässt sich als 192.4.16.0/20 angeben.
+ Man sieht, dass die Angabe in gleicher Weise wie beim Subnetting vorgenommen
+ wird.
+ Das Ergebnis ist, dass nur mehr ein Routereintrag für diese Organisation
+ vorgenommen werden muss.
+\end_layout
+
+\begin_layout Standard
+Dieses Verfahren lässt sich auch über mehrere Organisationen kaskadieren:
+ Werden die Adressbereiche mehrerer Organisationen ebenfalls aufeinanderfolgend
+ vergeben, können diese Adressbereiche ebenfalls zu einem Eintrag aggregiert
+ werden! Damit sinkt die Anzahl der Routereinträge weiter.
+\end_layout
+
+\begin_layout Standard
+Damit wird mit CIDR sowohl die Effizienz der Vergabe verbessert als auch
+ die Anzahl der Routereinträge minimiert.
+\end_layout
+
+\begin_layout Standard
+Ähnlich wie bei Subnetting müssen die Routingprotokolle (siehe Abschnitt
+ 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:routing_protocols"
+
+\end_inset
+
+) ebenfalls mit dieser Form der Adressangabe umgehen können.
+\end_layout
+
+\begin_layout Section
+Aufbau eines Datagram
+\end_layout
+
+\begin_layout Standard
+Der Aufbau eines IPv4 Datagram ist in Abbildung 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:ip_datagram"
+
+\end_inset
+
+ zu sehen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ip-datagram.pdf
+	BoundingBox 0bp 0bp 102mm 80mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ip_datagram"
+
+\end_inset
+
+IP Datagram
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Version Enthält entweder den Wert 4 für IPv4 oder den Wert 6 für IPv6.
+ An Hand dieser 4 Bits kann jede Implementierung des TCP/IP Protokollstacks
+ sofort erkennen, um welches IP Paket es sich handelt.
+ Das ist deshalb wichtig, da der Aufbau eines IPv6 Datagrams ansonsten verschied
+en ist!
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+HLen Gibt die Anzahl der 32 Bitworte an, die ein Header inklusive Optionen
+ lang ist.
+ Der Optionenbereich ist variabel, daher ist das Feld HLen notwendig.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+TOS Type-of-service Feld wurde schon für mehrere Funktionen eingesetzt.
+ Seit 1998 wird es lt.
+ RFC 2474 für DS (differential services) verwendet.
+ DS ist ein bestimmtes Quality of Service (QoS) Verfahren zur Priorisierung
+ von IP Paketen.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Len Gibt die Gesamtlänge eines IP Datagrams in Byte an.
+ Da hierfür 16 Bit zur Verfügung stehen, ist die maximale Größe eine IP
+ Datagrams auf 65535 Bytes beschränkt.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Identification Das Feld Identification wird im Zuge der Fragmentierung verwendet
+ und stellt eine eindeutige Identifikation zur Verfügung (siehe Abschnitt
+ 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:fragmenting"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Flags Zwischen Identifcation und Offset sind 3 Flags untergebracht:
+\end_layout
+
+\begin_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+0 Das erste Bit muss immer ein 0 Bit sein.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+DF 
+\begin_inset Quotes pld
+\end_inset
+
+Do not fragment
+\begin_inset Quotes prd
+\end_inset
+
+ wird ebenfalls im Zuge der Fragmentierung verwendet (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:fragmenting"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+MF 
+\begin_inset Quotes pld
+\end_inset
+
+More fragments
+\begin_inset Quotes prd
+\end_inset
+
+ wird ebenfalls im Zuge der Fragmentierung verwendet (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:fragmenting"
+
+\end_inset
+
+).
+\end_layout
+
+\end_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Offset Offset wird ebenfalls im Zuge der Fragmentierung verwendet (siehe
+ Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:fragmenting"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+TTL 
+\begin_inset Quotes pld
+\end_inset
+
+Time-to-live
+\begin_inset Quotes prd
+\end_inset
+
+ gibt die Lebensdauer des Paketes an und wird zur Verhinderung endlos kreisender
+ Pakete eingesetzt.
+ Der sendende Host setzt TTL auf einen Anfangswert und jede Station, die
+ das Datagram weiterreicht vermindert den Zähler um eins.
+ Hat TTL den Wert 0 erreicht, dann wird das Paket verworfen.
+ Üblich sind die Anfangswerte von 64 und 128.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Protocol Dieses Feld enthält eine eindeutige Zahl, die das verwendete Transportp
+rotokoll angibt.
+ Diese Nummern werden von der IANA (Internet Assigned Numbers Authority)
+ verwaltet.
+ Beispiele: 1 (ICMP), 6 (TCP), 17 (UDP).
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Checksum Das ist eine Prüfsumme über den gesamten Header.
+ Die Idee ist, dass die Korrektheit der Daten von einem übergeordneten Protokoll
+ überprüft werden muss und dadurch die Berechnung der Prüfsumme schnell
+ durchgeführt werden kann, sodass die Verzögerung bei der Weiterleitung
+ in einem Router gering gehalten werden kann.
+ Das Verfahren der Berechnung der Checksumme ist in Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:error_detection_checksums"
+
+\end_inset
+
+ beschrieben.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Source Die IP-Adresse des Senders.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Destination Die IP-Adresse des Empfängers.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Options Das Options-Feld ist dafür gedacht zusätzliche variable Informationen
+ mitzuübertragen, für die es nicht notwendig ist einen festen Platz in der
+ Header-Struktur vorzusehen.
+ Es handelt sich hierbei um Informationen zum Routing, Security, Zeitstempel,\SpecialChar \ldots{}
+
+ Eventuell muss mit Nullen aufgefüllt werden, damit der Header an einer
+ 32 Bitgrenze endet.
+\end_layout
+
+\begin_layout Section
+Fragmentierung
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:fragmenting"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die Anpassung der Paketlänge an eine kleinere maximale Paketgröße der untenliege
+nden Schicht, also die Segmentierung (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:segmenting"
+
+\end_inset
+
+), wird in IP Fragmentierung genannt.
+ Wie im Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:ethernet_frame"
+
+\end_inset
+
+ beschrieben besteht ein Datenblock in einem Ethernet Frame aus maximal
+ 1500 Bytes während ein Paket in einem FDDI Netzwerk maximal 4500 Bytes
+ beinhalten kann.
+ Wird ein IP Paket über mehrere Netze mit unterschiedlichen Technologien
+ versendet, besteht entweder die Möglichkeit sicherzustellen, dass die IP
+ Pakete maximal die kleinste Größe aller Technologien annehmen, oder die
+ Pakete jeweils an die verschiedenen Technologien durch Segmentierung und
+ Reassemblierung anzupassen.
+\end_layout
+
+\begin_layout Standard
+IPv4 unterstützt den Ansatz mittels Segmentierung und Reassemblierung.
+ Das zentrale Konzept ist, dass es bei jeder Technologie eine maximale Übertragu
+ngseinheit (engl.
+ max transmission unit oder MTU) gibt, die die maximale Paketgröße angibt,
+ die über ein Netz übertragen werden kann.
+ Im Fall von Ethernet beträgt dieser Wert 1500.
+ In IP müssen die Router bzw.
+ die physische Netztechnologien eine minimale MTU von zumindest 576 Bytes
+ unterstützen.
+\end_layout
+
+\begin_layout Standard
+Das Header-Feld DF zeigt an, dass dieses IP Paket nicht fragmentiert werden
+ darf.
+ Kommt ein IP Paket zu einen Router oder einem Netz, das eine Fragmentierung
+ dieses Paketes erfordern würde, dann wird eine ICMP Nachricht (siehe 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:ICMP"
+
+\end_inset
+
+) vom Typ 3 mit Code 5 (Fragmentation needed but the Do Not Fragment bit
+ was set) gesendet.
+\end_layout
+
+\begin_layout Standard
+Das Zusammenspiel der Identification, des Flags MF und des Offsets ist in
+ folgenden Beispielen zu sehen, wenn wir von einer Länge der zu übertragenden
+ Daten von 1400 ausgehen:
+\end_layout
+
+\begin_layout Itemize
+nicht fragmentiertes Paket mit: Identification = x; MF = 0; Offset = 0;
+ Data (1400 Bytes)
+\end_layout
+
+\begin_layout Itemize
+fragmentierte Pakete bei einer MTU mit 532 Bytes mit:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Identification = x; MF = 1; Offset = 0; Data (512 Bytes)
+\end_layout
+
+\begin_layout Enumerate
+Identification = x; MF = 1; Offset = 64; Data (512 Bytes)
+\end_layout
+
+\begin_layout Enumerate
+Identification = x; MF = 0; Offset = 128; Data (376 Bytes)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Das Prinzip der Fragmentierung ist folgendes:
+\end_layout
+
+\begin_layout Itemize
+Das Identifikationsfeld bezeichnet ein IP Datagram, wird vom Sender frei
+ gewählt und ist für alle Fragmente gleich.
+\end_layout
+
+\begin_layout Itemize
+Das Flag MF ist gesetzt, wenn weitere Fragmente folgen.
+\end_layout
+
+\begin_layout Itemize
+Der Offset gibt den Offset des Fragmentes relativ zum gesamten Datenblock
+ in jeweils 8 Byte an (512 / 8 = 64).
+ Die Einheit von 8 Bytes liegt darin begründet, das nur 13 Bits für den
+ Offset zur Verfügung stehen und die maximale Größe eine IP Datagrams 65535
+ Bytes ist.
+\end_layout
+
+\begin_layout Itemize
+Das Datenfeld beinhaltet 512 Bytes, da 20 Bytes für den IP Header anfallen.
+\end_layout
+
+\begin_layout Itemize
+Die Fragmente werden vom Empfänger im Zuge der Reassemblierung wieder zusammenge
+setzt.
+ Der Empfänger kann dies deshalb durchführen, da er alle zusammengehörigen
+ Fragmente an der gleichen Identifikation erkennt.
+ Geht eines der Fragmente verloren, dann wird das gesamte IP Datagram samt
+ allen bisher empfangenen Fragmente verworfen.
+ D.h.
+ IP versucht nicht, fehlende Fragmente wieder zu beschaffen.
+ Die Reassemblierung erfolgt am empfangenden Host und nicht an einem Router.
+\end_layout
+
+\begin_layout Section
+ICMP
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:ICMP"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+ICMP (engl.
+ internet control message protocol) ist ein Hilfsprotokoll, dessen Funktion
+ primär die Unterstützung des verbindungslosen und nicht fehlergesicherten
+ IP mit zusätzlichen Status-, Steuer- und Fehlerinformationsmeldungen ist.
+ Neben IP können auch höher geschichtete Protokoll wie TCP, Routingprotokolle
+ oder auch Anwendungen die Information von ICMP Nachrichten auswerten.
+\end_layout
+
+\begin_layout Standard
+Die bekannteste Anwendung von ICMP ist die Verwendung der ICMP Echo Request
+ bzw.
+ der ICMP Echo Reply Nachricht, die in der ping Anwendung eingesetzt wird.
+\end_layout
+
+\begin_layout Standard
+Jede ICMP Nachricht besteht aus einem Typ und einem Code, einer Prüfsumme
+ und einem Inhalt, der von Typ und Code abhängig ist.
+ Jede dieser Nachrichten ist entweder eine Query Nachricht oder eine Fehler
+ Nachricht.
+\end_layout
+
+\begin_layout Standard
+Beispielhaft sind die wichtigsten ICMP Nachrichtentypen angeführt:
+\end_layout
+
+\begin_layout Itemize
+Echo Request (Typ 8, Code 0) und Echo Reply (Typ 0, Code 0).
+ Query-Nachricht.
+\end_layout
+
+\begin_layout Itemize
+Ziel nicht erreichbar (Typ 3, Code 0-15).
+ Fehler-Nachricht.
+ Dieser Nachrichtentyp inkludiert die Fehlernachrichten für 
+\begin_inset Quotes pld
+\end_inset
+
+Netzwerk nicht erreichbar
+\begin_inset Quotes prd
+\end_inset
+
+, 
+\begin_inset Quotes pld
+\end_inset
+
+Host nicht erreichbar
+\begin_inset Quotes prd
+\end_inset
+
+, 
+\begin_inset Quotes pld
+\end_inset
+
+Protokoll nicht erreichbar
+\begin_inset Quotes prd
+\end_inset
+
+, 
+\begin_inset Quotes pld
+\end_inset
+
+Port nicht erreichbar
+\begin_inset Quotes prd
+\end_inset
+
+, 
+\begin_inset Quotes pld
+\end_inset
+
+Fragmentierung erforderlich, aber DF Bit gesetzt
+\begin_inset Quotes prd
+\end_inset
+
+, 
+\begin_inset Quotes pld
+\end_inset
+
+Source Route fehlerhaft
+\begin_inset Quotes prd
+\end_inset
+
+, 
+\begin_inset Quotes pld
+\end_inset
+
+Zielnetzwerk unbekannt
+\begin_inset Quotes prd
+\end_inset
+
+,...
+\end_layout
+
+\begin_layout Itemize
+Quelle unterdrücken (engl.
+ source quench) (Typ 4, Code 0).
+ Fehler-Nachricht.
+ Dieser Nachrichtentyp stellt die einzige Möglichkeit von IP dar, einem
+ Sender mitzuteilen, dass er seine Datenrate reduzieren soll.
+ Der Empfänger sendet so lange solche Nachrichten an den Sender solange
+ dieser die Datenrate reduzieren soll.
+ Empfängt der Sender keine weiteren ICMP Nachrichten, dann kann er seine
+ Datenrate wieder erhöhen.
+ D.h.
+ in dieser Nachricht gibt es keine explizite Möglichkeit die Datenrate anzugeben
+ bzw.
+ anzugeben wann wieder eine höhere Datenrate erlaubt ist.
+ Es ist im Standard explizit festgehalten, dass im Falle eines Verwerfens
+ eines IP-Datagrams ein ICMP source quench Nachricht gesendet werden kann
+ (aber nicht muss).
+ Auf jeden Fall muss der Empfang eines solchen ICMP Paketes an die Transportschi
+cht weitergegeben werden.
+ Im Falle von TCP sollte TCP die Senderate reduzieren und im Falle von UDP
+ sollte die Anwendung darauf entsprechend reagieren.
+\end_layout
+
+\begin_layout Itemize
+Redirect (Typ 5, Code 0-3).
+ Fehler-Nachricht.
+ Dient der Signalisierung eines Routers an einen Sender, dass ein besserer
+ Router für die eingegangenen Pakete existiert.
+ Diese stellen ein Sicherheitsrisiko, da gefälschte ICMP Pakete den Sender
+ veranlassen seine Paket an einen anderen Router zu senden.
+\end_layout
+
+\begin_layout Itemize
+Router-Advertisement (Typ 9, Code 0) und Router-Anforderung (Typ 10, Code
+ 0).
+  Dienen dazu, um Router in einem lokalen Netzwerk zu erkennen (Sicherheitsrisik
+o).
+\end_layout
+
+\begin_layout Section
+ARP
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:ARP"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Mittels Weiterleiten kommt ein IP Datagram zum richtigen Netz.
+ Die offene Frage ist jetzt, wie das Paket zum richtigen Host kommt.
+ Jedes Gerät ist mit seiner MAC Adresse eindeutig zu adressieren.
+ Es ist notwendig die MAC Adresse zu kennen, um einen Host in einem Segment
+ zu adressieren.
+\end_layout
+
+\begin_layout Standard
+ARP (engl.
+ address resolution protocol) ist ein Protokoll, das die MAC Adresse eines
+ Hosts ermittelt.
+ Dazu macht es sich die Eigenschaft zu Nutze, dass Ethernet und andere LAN
+ Technologien ebenfalls über eine Broadcast Eigenschaft verfügen.
+ Jeder Host merkt sich alle ihm schon bekannten Zuordnungen von IP Adresse
+ zu MAC Adresse in einem Cache (ARP Cache oder ARP Tabelle genannt).
+ Soll ein Paket einem Host in einem Netz zugestellt werden, dann wird zuerst
+ dieser Cache konsultiert.
+ Ist eine Zuordnung dort vorhanden, dann wird sie verwendet, um das Paket
+ zuzustellen.
+ Ist keine Zuordnung für diese IP Adresse im Cache vorhanden, dann wird
+ ein Broadcast Frame an alle Hosts in diesem Segment gesendet, der die fragliche
+ IP Adresse enthält.
+ Der gesuchte Host antwortet mit seiner IP Adresse, worauf dem ARP Cache
+ die neue Zuordnung hinzugefügt werden kann.
+\end_layout
+
+\begin_layout Standard
+Diejenigen Stationen, die ebenfalls den Broadcast empfangen, können diese
+ Zuordnung (Sender IP, Sender MAC) ebenfalls lernen.
+ Ist so eine Zuordnung schon im ARP Cache enthalten wird sie lediglich aufgefris
+cht und der Timer zurückgesetzt.
+ Läuft der Timer ab, dann wird die Zuordnung aus dem Cache gelöscht.
+\end_layout
+
+\begin_layout Standard
+ARP wurde nicht unter dem Gesichtspunkt der Sicherheit entworfen und ist
+ deshalb besonders anfällig: Unter ARP-Spoofing versteht man das gezielte
+ Versenden gefälschter ARP Pakete, die dazu benutzt werden, den Datenverkehr
+ zwischen zwei Hosts in einem Netz abzuhören oder zu manipulieren.
+\end_layout
+
+\begin_layout Standard
+RARP (engl.
+ reverse address resolution protocol) ist ein Protokoll, das die inverese
+ Funktionalität aufweist und die IP Adressse zu einer MAC Adresse finden
+ soll.
+ Es wird allerdings nicht mehr eingesetzt, da es durch BOOTP und in weiterer
+ Folge von DHCP abgelöst worden ist.
+ Die Gründe liegen darin, dass man mittels RARP nur die IP Adresse, aber
+ keine zusätzlichen Informationen wie z.B.
+ die Netzmaske oder den Default-Router ermitteln kann.
+\end_layout
+
+\end_body
+\end_document

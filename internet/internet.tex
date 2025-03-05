@@ -1,0 +1,608 @@
+
+\chapter{Internet}
+
+Dieses Kapitel behandelt einige wichtige Standards und Protokolle,
+die im Internet eine wichtige Rolle spielen.
+
+
+\minisec{URI}
+
+Unter einer URI (Uniform Resource Identifier, RFC 3986) versteht man
+den Überbegriff zu einer URL (Uniform Resource Locator) und URN (Uniform
+Resource Name). Eine URL stellt die Adresse einer Internetressource
+dar. Die URL hat lediglich, dass Problem, dass eine `hängende Referenz'
+entsteht, wenn die Ressource verschoben wird, d.h.~zu einem anderen
+Host verlagert wird. Eine URN ist andererseits der dauerhafte Name
+einer Internetressource.
+\begin{description}
+\item [{URL}] steht für Uniform Ressource Locator und wird im Web verwendet,
+um Einheiten zu addressieren.
+
+
+Der typische Aufbau einer URL ist folgendermaßen:
+\begin{lyxcode}
+protocol://hostname:port/pathname{[}?query{]}{[}\#anchor{]}
+\end{lyxcode}
+Beispiele:
+\begin{lyxcode}
+http://www.htlwrn.ac.at:80/index.html
+
+http://www2.htlwrn.ac.at/ko/person.html\#top
+
+http://www.google.at/index?q=php
+\end{lyxcode}
+Jeder Teil eines Domänennamens ist eine Zeichenkette (alphanumerisch,
+als einziges Sonderzeichen ist `-' erlaubt) die mindestens ein Zeichen
+und maximal 63 Zeichen lang sind. Ein Domänenname darf inklusive aller
+Punkte maximal 255 Zeichen lang sein.
+
+Derzeit dürfen in URLs nur ASCII kodierte Zeichen vorkommen! Werden
+andere Zeichen oder Zeichen, die im Pfad einer URL eine Bedeutung
+haben (wie z.B. der Schrägstrich), benötigt, dann sind diese zu maskieren:
+\texttt{suche.cgi?name=G\%FCnter+Kolousek}
+\begin{enumerate}
+\item Die alphanummerischen Zeichen ,,a'' - ,,z'', ,,A'' - ,,Z''
+und ,,0'' - ,,9'' bleiben gleich. 
+\item Die Zeichen ,,.'', ,,-'', ,,{*}'' und ,,\_'' bleiben gleich
+. 
+\item Das Space Zeichen ,,~'' wird in ein ,,+'' gewandelt. 
+\item Alle anderen Zeichen werden in ein oder mehrere Bytes gewandelt (W3C
+empfiehlt UTF-8). Danach wird jedes Byte in einen 3-Zeichen String
+gewandelt, ,,\%xy'', wobei xy eine hexadezimale Zahl mit 2 Ziffern
+ist.
+\end{enumerate}
+Dies entspricht dem MIME Typ ,,application/x-www-form-urlencoded''.
+Dieser Sachverhalt ist in der Benennung von Datei\-namen zu beachten!
+
+Seit März 2004 können deutsche, österreichische, schweizer und lichtensteiner
+Domänen mit Umlauten registriert und verwendet werden. Um das neue
+System mit dem bisherigen kompatibel zu halten, werden die erweiterten
+Zeichensätze mit erlaubten Zeichen kodiert, also auf derzeit gültige
+Namen abgebildet (Punycode). 
+
+\item [{URN}] Uniform Resource Name ist ein eindeutiger Name, der unabhängig
+von der Adresse eine Ressource eindeutig identifiziert. Mit der URN
+kann man bei einem ,,URN-Verzeichnsdienst'' die zugehörige URL erhalten.
+Allerdings hat sich kein Verzeichnis für URN etablieren können. Eine
+URN hat folgende Gestalt: \texttt{urn:Namensraum:Name}, z.B. urn:isbn:3-8266-1378-3.
+\end{description}
+
+\section{HTTP}
+
+HTTP (hyper text transfer protocol) ist ein Client/Server Protokoll,
+das ursprünglich zur Abfrage von statischen Informationen entworfen
+wurde.
+
+
+\subsection{Beschreibung}
+\begin{itemize}
+\item Ist ein relativ einfaches, lightweight, zustandsloses Protocol. D.h.
+der Server merkt sich keinen Zustand zwischen mehreren Anfragen eines
+Clients.
+\item Ist ein verbindungsloses Protokoll. D.h. jede Verbindung wird prinzipiell
+nach jeder Abfrage wieder abgebaut (bis http/1.0).
+\item Wurde ursprünglich für die Abfrage rein statischer Information entworfen.
+\item Ist ein zeichen-orientiertes Protokoll (im Gegensatz zu einem binären
+Protokoll)
+\item Ist ein reines Request/Response Protokoll 
+
+\begin{itemize}
+\item Immer Client (user agent) beginnt request
+\item kein callback des Servers zum Client
+\item Client muss immer Verbindung aufbauen, Server schließt Verbindung
+nach response (beide können vorzeitig die Verbindung abbrechen)
+\end{itemize}
+\item Verhandlung über Datenrepräsentation 
+\item funktioniert mit TCP. Der Standardport ist 80. 
+\item Die erste Version von http war die Version 0.9, bei dem es sich um
+eine einfache Version handelte. Version 1.0 ist eine verbesserte Version,
+die hauptsächlich Nachrichten im MIME Format und Metainformation über
+die Daten beinhaltet. Derzeit gibt es hauptsächlich Implementierungen
+der Version 1.0 (RFC 1945) und der Version 1.1 (RFC 2616, 2817) von
+http.
+
+
+Ein wesentlicher Unterschied zwischen 1.0 und 1.1 liegt daran, dass
+in http/1.0 der Server nach dem Senden der Antwort die Verbindung
+zum Client geschlossen hat, wenn nicht der Header 'Connection: KeepAlive'
+vom Client gesendet worden ist. In http/1.1 wird die Verbindung aufrechterhalten,
+wenn nicht der Client explizit 'Connection: Close' gesendet hat. Aufgrund
+der vielen Inline-Images, Applets und Frames wird dadurch viel Overhead
+vermieden.
+
+Andere Unterschiede betreffen die Unterstützung zum Cachen von Internet
+Ressourcen und das Unterstützen mehrere Domänen zu einer IP Adresse.
+Außerdem ist das sogenannte `chunked encoding' hinzugekommen, das
+es erlaubt bereits die Antwort zu senden ohne die Länge der Antwort
+zu kennen. 
+
+\end{itemize}
+
+\subsection{Http Request}
+\begin{itemize}
+\item zeilenorientierter Aufbau
+
+
+\begin{tabular}{|l|l|}
+\hline 
+Methode Request-URI Protokoll\textbackslash{}r\textbackslash{}n & erste Zeile\tabularnewline
+\hline 
+(Key: Value\textbackslash{}r\textbackslash{}n){*} & beliebige Anzahl an Header Zeilen\tabularnewline
+\hline 
+\textbackslash{}r\textbackslash{}n & eine Leerzeile\tabularnewline
+\hline 
+(Daten)? & optionaler Datenblock\tabularnewline
+\hline
+\end{tabular}
+
+\textbackslash{}r entspricht einem Carrige Return (ASCII 13) und \textbackslash{}n
+entspricht einem Line Feed (ASCII 10).
+
+Daten in einer URL werden (im speziellen bei einem GET Request, aber
+auch bei einem POST Request) ,,urlencoded''. Meistens wird die Request-URI
+als eine relative URL angegeben. D.h. es sieht die URL z.B. so aus:
+/lva/prr.html. Es gibt jedoch folgendes dabei zu beachten: 
+\begin{itemize}
+\item Wird ein Proxy verwendet, dann sendet der Browser eine absolute URL
+an diesen, damit dieser weiß an welchen Server er die Anforderung
+weiter senden soll. Z.B. http://edvowww.htlwrn.ac.at/ko/prr5.html! 
+\item http 1.1 konforme Server müssen absolute URLs verstehen! 
+\end{itemize}
+\item Verfügbare Methoden (immer in Großbuchstaben) 
+
+\begin{description}
+\item [{GET}] Die GET Anforderung wird benötigt, um ein Dokument herunterzuladen
+(kein Datenbereich der Anforderung).
+
+
+Bei der Request-URI kann es sich um einen Pfadnamen zu einem Dokument
+aber auch die Angabe eines CGI Programmes handeln.
+
+Wird ein Formular ausgefüllt und mit der GET Methode ausgeführt, dann
+werden die ausgefüllten Felder an die Request-URI angehängt.
+
+Bsp.: \texttt{GET /cgi/greeetings.pl?name=max\&email=max@htlwrn.ac.at
+HTTP/1.0} Beinhaltet der GET-Request einen If-Modified-Since Header,
+dann werden die Daten nur im Bedarfsfall übertragen. Auch damit kann
+die Netzwerksbelastung gesenkt werden.
+
+Die Semantik einer GET Anforderung ist, dass prinzipiell am Server
+keine Veränderungen hervorgerufen werden sollen. D.h. mehrmaliges
+Senden einer GET Anforderung soll prinzipiell immer zum selben Ergebnis
+führen.
+
+\item [{HEAD}] Wie die GET Anforderung, jedoch Response ohne Daten. D.h.,
+es werden nur die Headerinformationen zurück übertragen.
+\item [{POST}] Die POST Methode dient der Übertragung eines Datenblockes
+an den Server (im Datenbereich).
+
+
+Die POST Methode wird verwendet, um beliebige Daten an den Server
+zu übertragen. Im Speziellen wird sie verwendet, um HTML FORM Daten
+zu übertragen. Dies hat den Vorteil, dass beliebige lange Daten übertragen
+werden können und keine Beschränkung bzgl. der Länge der Request-URI
+vorliegt.
+
+Die Semantik der POST Anforderung ist, dass es am Server prinzipiell
+zu Veränderungen kommen kann.
+
+\item [{PUT}] Gegenstück zu GET. Inhalt des Datenblockes soll unter der
+Request-URI abgespeichert werden.
+\item [{DELETE}] Löschen eines Dokumentes, das unter der Request-URI zu
+finden ist.
+\item [{TRACE}] Wird verwendet, um Requests durch Firewalls und über Proxy
+Server zu testen.
+\item [{OPTIONS}] Wird verwendet, um die Fähigkeiten des Servers abzufragen.
+\end{description}
+\item Die wichtigsten HTTP Header innerhalb einer Anfrage 
+
+\begin{description}
+\item [{Host:~host}] muss immer vorhanden sein (http/1.1) und enthält
+entweder die IP Adresse oder den Domännamen des Webservers. Damit
+kann zwischen verschiedenen virtuellen Hosts unterschieden werden.
+\item [{Connection:~options}] Keep-Alive oder Close. Mit Close wird der
+Server angewiesen die Verbindung zu schließen sobald die Übertragung
+abgeschlossen ist.
+\item [{User-Agent:~name}] übergibt Informationen über den verwendeten
+Browser
+\item [{Accept:~type/subtype}] MIME Type; siehe Beispiele 
+\item [{Accept-Charset}] gibt Zeichensätze an, die der Browser darstellen
+kann; siehe Beispiele 
+\item [{Accept-Encoding}] gibt Encoding an, das der Browser versteht; siehe
+Beispiele 
+\item [{Accept-Language}] gibt die bevorzugten Sprachen an. Damit kann
+der Webserver den Inhalt in der Sprache des Benutzers anzeigen (wenn
+vorhanden) 
+\item [{Authorization:~credidentials}] Wenn der Client eine 401 Antwort
+bekommenen hat, dann wird im nächsten Request dieser Header mitgeschickt. 
+\item [{If-Modified-Since:~datein-rfc1123-format}] Inhalt soll geschickt
+werden, wenn Dokument seit diesem Datum modifiziert worden ist. Wenn
+nicht modifiziert, dann wird eine 304 (not modified) Antwort zurückgesendet. 
+\item [{Cookie:~NAME=VALUE}] wird im Request zum Server mitübertragen
+\item [{Content-Length:~n}] siehe Beispiele
+\item [{Content-Type:~type/subtype}] MIME Type; siehe Beispiele
+\end{description}
+\end{itemize}
+
+\subsection{Http Response}
+\begin{itemize}
+\item zeilenorientierter Aufbau
+
+
+\begin{tabular}{|l|l|}
+\hline 
+Protokoll Statuscode Beschreibung\textbackslash{}r\textbackslash{}n & erste Zeile\tabularnewline
+\hline 
+(Key: Value\textbackslash{}r\textbackslash{}n){*} & beliebige Anzahl an Header Zeilen\tabularnewline
+\hline 
+\textbackslash{}r\textbackslash{}n & eine Leerzeile\tabularnewline
+\hline 
+(Daten)? & optionaler Datenblock\tabularnewline
+\hline
+\end{tabular}
+
+\item Die wichtigsten HTTP Header innerhalb von Response
+
+\begin{description}
+\item [{Date:~date-in-rfc1123-format}] Gibt das Datum der Antwort an;
+siehe vorhergehende Beispiele. Muss immer vorhanden sein (http/1.1). 
+\item [{Server}] Gibt den Namen des Servers bzw. des Serverprogrammes und
+der Version an.
+\item [{Accept-Ranges}] zeigt an, dass auch Anfragen zu einzelnen Bereichen
+der Ressource möglich sind und gibt die Einheit an, die dabei verwendet
+werden kann.
+\item [{Pragma:~no-cache}] Der Response soll zum Client gelangen, auch
+wenn es eine Version in einem Cache gibt. Nutzen zweifelhaft, da in
+der http Spezifikation Werte für pragma Header nicht definiert sind
+und die meisten Caches diesen Wert ignorieren.
+\item [{Expires:~rfc-1123-date}] nach dieser Zeit ist die Antwort als
+ungültig zu betrachten. Z.B.\texttt{: Expires: Fri, 30 Oct 2004 14:19:41
+GMT}
+\item [{Last-Modified:~date-in-rfc-1123-date}] wie ,,Date'', Modifikationsdatum.
+Der Client kann kann diese Information in einem lokalen Cache als
+Zeitstempel verwenden, sodass Ressourcen nur dann angefordert werden,
+wenn sie sich seit der letzten Anfrage geändert haben.
+\item [{Cache-control:~value}] Ist ein Header, der in http 1.1 definiert
+wurde. Zusammen mit Expires, Last-Modified und einem ETag header wird
+hauptsächlich das Caching kontrolliert.
+\item [{WWW-Authenticate:~scheme~realm}] Wenn der Server eine 401 (Unauthorized)
+Antwort zurückschickt, dann muss dieser auch diesen Header mitschicken.
+z.B.: \texttt{WWW-Authenticate: Basic realm=\textquotedbl{}secure\textquotedbl{}}. 
+\item [{Location:~URI}] redirect Message (siehe Redirect Statuscodes weiter
+unten)!
+\item [{Set-cookie:~NAME=VALUE}] z.B. kann der Value folgendermaßen aussehen:
+\texttt{Max-age=3600;Domain=\textquotedbl{}.htlwrn.ac.at\textquotedbl{};Path=\textquotedbl{}/\textquotedbl{}}
+\item [{Content-Length:~n}] siehe Beispiele
+\item [{Content-Type:~type/subtype}] siehe Beispiele
+\end{description}
+\item Die wichtigsten Statuscodes sind: 
+
+\begin{description}
+\item [{1xx}] Information 
+\item [{2xx}] Erfolgreich (im Speziellen '200 OK') 
+\item [{3xx}] Redirection (im Speziellen '301 Moved Permanently') 
+\item [{4xx}] Client Fehler. Verschiedene wichtige Codes sind: 400 (Bad
+Request), 401 (Unauthorized), 403 (Forbidden), 404 (Not Found)
+\item [{5xx}] Server Fehler: 500 (Internal Server Error), 501 (Not Implemented),
+503 (Service Unavailable), 505 (HTTP Version Not Supported)
+\end{description}
+\end{itemize}
+
+\subsection{Beispiele}
+
+
+\minisec{HTTP Request}
+\begin{lyxcode}
+Alle~Dateitypen,~Server~trennt~nicht!
+
+GET~/index.html~HTTP/1.0
+
+Accept:~text/html,~image/gif,~image/jpeg
+
+Accept-Encoding:~compress,~gzip
+
+Connection:~Keep-Alive
+
+Host:~www.w3.org~User-Agent:~Mozilla/5.0
+
+<\textcompwordmark{}<eof>\textcompwordmark{}>
+\end{lyxcode}
+
+\minisec{HTTP Response}
+\begin{lyxcode}
+HTTP/1.0~200~OK
+
+Date:~Wed,~19~May~1999~18:20:56~GMT
+
+Server:~Apache/1.3.6~(Uni)~PHP/3.0.7
+
+Last-Modified:~Mon,~17~May~1999~15:46:21~GMT
+
+Content-Length:~10352
+
+Connection:~close
+
+Content-Type:~text/html;~charset=utf-8
+
+<!DOCTYPE~HTML~PUBLIC~\textquotedbl{}-//W3C//DTD~XHTML~4.1~Strict//EN\textquotedbl{}>~\textquotedbl{}http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\textquotedbl{}>
+
+<html>~...~</html>
+
+<\textcompwordmark{}<eof>\textcompwordmark{}>
+\end{lyxcode}
+
+\subsection{Session Tracking}
+
+Es gibt die folgenden Möglichkeiten, um im WWW Sessions zu etablieren:
+\begin{itemize}
+\item URL rewriting wie z.B.\texttt{}~\\
+\texttt{<a href=\textquotedbl{}http://edvowww.htlwrn.ac.at/index.html?uid=ko\textquotedbl{}>EDVO
+WWW</a>}
+\item Cookies: Mit Cookies können natürlich leicht Sessions verwaltet werden,
+aber: Manche Benutzer verweigern Cookies! Deshalb ist es mit Java
+Servlets und JSP möglich Session transparent zu verwalten. Es wird
+zuerst versucht ein Cookie mit dem Namen jsessionid zu setzen und
+wenn dies fehlschlägt wird auf URL rewriting umgeschaltet (ebenfalls
+jsessionid).
+
+
+Damit das funktioniert sollten alle URLs folgendermaßen gebildet werden:
+\texttt{String shopUrl = response.encodeURL(\textquotedbl{}/shop\textquotedbl{});}
+
+\item Hidden form fields
+\item Sessions mit SSL
+\end{itemize}
+
+\subsection{Authentifizierung}
+
+Um sich bei einer Website anzumelden gibt es prinzipiell verschiedene
+Möglichkeiten:
+\begin{itemize}
+\item HTTP Basic Authentication: Es wird eine Dialogbox geöffnet in der
+der Benutzername und das Passwort eingegeben werden kann. Diese werden
+im Prinzip im Klartext (nur Base64 kodiert) zum Server übertragen.
+Das ist auch die größte Schwäche dieses Verfahrens!
+
+
+Im Prinzip funktioniert das folgendermaßen: 
+\begin{enumerate}
+\item Der Client sendet einen HTTP Request an den Server: \texttt{GET /secure/index.html
+http/1.0}. D.h. es soll auf eine Ressource in einem geschützten Verzeichnis
+zugegriffen werden. Dazu muss sich der Benutzer dem Server gegenüber
+identifizieren.
+\item Der Server antwortet mit folgendem Response:
+
+\begin{lyxcode}
+HTTP/1.0~401~Unauthorized
+
+...
+
+WWW-Authenticate:~Basic~realm=\textquotedbl{}secureapp\textquotedbl{}
+\end{lyxcode}
+D.h. der Server teilt mit, dass der Zugriff prinzipiell verweigert
+wird, das gewünschte Objekt (/secure/index.html) sich im Bereich 'secureapp'
+befindet und sich der Benutzer in diesen Bereich einloggen muss.
+
+\item Der Browser erzeugt daraufhin eine Dialogbox in die der Benutzer seinen
+Benutzernamen und sein Passwort eingeben kann. Dann wird wieder ein
+Request an den Server gesendet:
+
+\begin{lyxcode}
+GET~/secure/index.html~http/1.0
+
+...
+
+Authorization:~Basic~bWF4Om11c3Rlcg==
+\end{lyxcode}
+Damit teilt der Client dem Server mit, dass die Basic Authentication
+verwendet wird und der Benutzername und das Passwort sind in der folgenden
+Zeichenkette mittels Base64 kodiert und kann demzufolge von jedem
+Angreifer wieder rückkodiert werden! Base64: 3 Byte werden in 4 Teile
+zu je 6 bit zerteilt. Jeder dieser Teile wird ASCII mäßig folgendermaßen
+kodiert: 0 zu A, 1 zu B,...,26 zu a,..., 52 zu 0,...,61 zu 9 und 62
+zu + und 63 zu /. Als padding Zeichen wird = verwendet.
+
+\end{enumerate}
+\item NTLM Authentication: Funktioniert nur mit M\$ Browser-, Proxy- und
+Serverprodukten! Es handelt sich um eine Authentifizierung für M\$
+LANs, die etwas sicherer als HTTP Basic Authentication, aber nicht
+so sicher wie die HTTP Digest Authentication ist. 
+\item HTTP Digest Authentication (http/1.1): Um die Schwäche von HTTP Basic
+zu entfernen wurde HTTP Digest eingeführt. Im Prinzip funktioniert
+es folgendermaßen: 
+
+\begin{enumerate}
+\item Der Server sendet ein 'auth challenge' an den Client. Es handelt sich
+hierbei um einen mehr oder weniger zufälligen Wert, der meistens jedoch
+auch von der Zeit abhängt.
+\item Der Client generiert ein 'digest' (zu Deutsch ca. Auszug) mit folgendem
+Inhalt: Benutzername, HTTP realm und Passwort. Er erzeugt ein weiteres
+digest, das die Methode und die URL des ursprünglichen HTTP Request
+enthält. Diese beiden digest - Werte werden gemeinsam mit dem 'auth
+challenge' zu einem Wert mittels einer Hashfunktion (Einwegfunktion)
+verarbeitet, sodass nicht mehr auf das Passwort geschlossen werden
+kann und gemeinsam mit dem Benutzernamen zum Server übertragen. Achtung:
+auch bei dieser Methode sind prinzipiell Angriffe möglich, auch wenn
+das Passwort nicht mehr im Klartext übertragen wird. 
+\end{enumerate}
+\item Formularbasierte Anmeldung mit Cookies: Auf Grund der Unsicherheit
+von HTTP Basic Authentication und der nicht durchgehenden Verfügbarkeit
+der HTTP Digest Authentication werden die meisten Anmeldungen heutzutage
+durch eigene Formulare durchgeführt. Die Zustandsinformation wird
+mittels Cookies hergestellt. Allerdings wird das Paßwort auch hier
+in der Regel im Klartext übertragen!! Prinzipiell kann mit Hilfe von
+Javascript jedoch eine ähnliche Sicherheit wie bei HTTP Digest Authentication
+erreicht werden.
+
+
+Cookies werden oft einer http Basic Authentifizierung vorgezogen,
+da es bei http Basic Authentifizierung 
+\begin{itemize}
+\item keine Möglichkeit gibt, sich wieder auszuloggen.
+\item keine Möglichkeit gibt, eigene Formulare zu verwenden. 
+\item keine Möglichkeit gibt sich in mehreren Domänen (Realm) mit einem
+Login einzuloggen. 
+\item diese nicht sicher ist.
+\end{itemize}
+Die letzten beiden Punkte können mit http Digest Authentifizierung
+behoben werden, die ersten beiden nicht.
+
+\item HTTPS -Authentifizierung: Die einzige relativ sichere Variante besteht
+darin eine SSL Verbindung aufzubauen und entweder eine HTTPS Client
+Authentifizierung und/oder eine HTTP Server Authentifizierung durchzuführen.
+Dies ist einerseits leicht durchzuführen, jedoch andererseits mittels
+erhöhter Ressourcenanforderung verbunden. Deshalb wird oft nur die
+Anmeldung mittels einer HTTPS Serverauthentifizierung durchgeführt
+und danach wieder auf ungesicherte Verbindungen zurückgegriffen. 
+\end{itemize}
+
+\subsection{Server Redirection}
+
+Will ein Server eine Redirection auf http Ebene durchführen, dann
+funktioniert das folgendermaßen:
+\begin{enumerate}
+\item Der Client schickt einen Request an den Server, z.B. \texttt{GET /form.php?... http/1.0}
+\item Daraufhin antwortet der Server mit folgendem Response: 
+
+\begin{lyxcode}
+HTTP/1.0~302~Found
+
+...
+
+Location:~confirm.html
+\end{lyxcode}
+Damit teilt der Server dem Client mit, dass die 'gesuchte' Ressource
+unter der angegebenen Adresse zu finden ist.
+
+\item D.h. der Client stellt daraufhin einen neuen Request an den Server
+und fordert die angegebene Ressource an: \texttt{GET /confirm.html
+http/1.0}
+\end{enumerate}
+Die einzelnen Statuscodes geben Auskunft ob caching des Requests erlaubt
+ist, ob eine Rückfrage beim Benutzer bzgl. Weiterleitung durchgeführt
+werden muss, ob von einem POST Request nach einem POST Request weitergeleitet
+werden darf bzw. von POST Request nach GET und ob die Redirection
+selbst gecachet werden darf.
+
+
+\subsection{CGI}
+
+CGI steht für Common Gateway Interface und ist eine Spezifikation
+wie Prozesse am Server gestartet werden können und diese mit dem Input
+versorgt werden bzw. wie sie den Output wieder zurückgeben. Meistens
+werden solche CGI Programme in Folge eines POST Requests ausgeführt
+(aber nicht zwingend).
+
+Obwohl CGI Programme den prinzipiellen Nachteil haben, dass jedes
+Mal ein eigener Prozess gestartet wird und es durch serverseitige
+Skriptsprachen und Templatesprachen wie PHP, ASP und JSP weitgehend
+verdrängt worden ist, wird es doch noch hie und da eingesetzt.
+
+Wenn der Server ein CGI Programm als Prozess startet, dann bekommt
+dieser Prozess seine Eingaben durch Umgebungsvariablen, Kommandozeile
+und Standard Input. Alle Ausgaben werden mittels Standard Output getätigt.
+
+
+\minisec{Umgebungsvariablen}
+
+Folgende Umgebungsvariablen stehen z.B. zur Verfügung:
+\begin{description}
+\item [{REQUEST\_METHOD}] z.B. ,,GET'', ,,POST'',...
+\item [{QUERY\_STRING}] d.h. der Teil, der nach dem ? in der URL kommt.
+\item [{PATH\_INFO}] etwaige extra Information, die nach dem CGI Skriptnamen
+kommt, aber nicht der Query String ist. Z.B. \texttt{http://www.htlwrn.ac.at/cgi-bin/search.cgi/extra/path?user=ko}
+aber eben ohne den Query String 
+\item [{REMOTE\_ADDR}] die IP Adresse des Client 
+\item [{REMOTE\_HOST}] der Hostname, wenn bekannt
+\item [{CONTENT\_TYPE}]~
+\item [{CONTENT\_LENGTH}]~
+\end{description}
+Zusätzlich wird noch für jeden Header eine Umgebungsvariable erzeugt,
+die so lautet wie der Header jedoch mit dem Präfix HTTP\_ und alle
+Bindestriche durch Unterstriche ersetzt. Z.B. wird aus dem Header
+USER\_AGENT die Umgebungsvariable HTTP\_USER\_AGENT.
+
+
+\minisec{Kommandozeile}
+
+Diese wird nur bei ISINDEX Abfragen verwendet, die jedoch de facto
+nicht verwendet wird.
+
+
+\minisec{Standard Input}
+
+Der Standard Input enthält den Body des HTTP POST Requests bzw. eines
+PUT Request. D.h. es folgen CONTENT\_LENGTH Bytes.
+
+
+\minisec{Standard Output}
+
+Normalerweise parst der Server den Output des CGI Skripts auf Headerzeilen
+und ergänzt den Output so, dass eine gültige HTTP Antwort entsteht.
+D.h. in der Regel reicht es den CONTENT\_TYPE Header zu setzen und
+danach den Body der HTTP Antwort folgen zu lassen.
+
+Weitere Informationen unter http://www.w3.org/CGI/.
+
+FastCGI, SCGI
+
+
+\subsection{https}
+
+(RFC 2818)
+
+Eine gesicherte Verbindung mit dem Protokoll https wird durch Verwendung
+von SSL (Secure Socket Layer) / TLS (Transport Layer Security) erreicht.
+D.h. es wird http über SSL über TCP betrieben; es findet eine Punkt-zu-Punkt
+sichere Verbindung statt. Das wiederum heißt, dass es bzgl. Programmierung
+keine Änderungen gibt, nachdem eine derartige Verbindung aufgebaut
+worden ist.
+
+TLS 1.0 (RFC 2246) ist ein geringfügig modifiziertes SSL 3.0, das
+sich im Protokollheader als Version 3.1 meldet. TLS ist der neue Standard.
+Die Verwendung des Begriffes SSL ist jedoch noch immer weit verbreitet.
+
+Der Standardport für https ist 443.
+
+Andere Anwendungsfälle liegen in der gesicherten Verwendung von IMAP,
+SMTP oder LDAP.
+
+Am einfachsten kann man in Java mittels der Klasse java.net.URL auf
+einen Server mittels https zugreifen.
+
+Der Vorteil von TLS gegenüber ssh ist, dass die Authentifizierung
+des Hosts über eine PKI verläuft. D.h. der Host muss vorher nicht
+bekannt sein.
+
+Das folgende Beispiel zeigt, wie man mit URL und HttpURLConnection
+einfach auf eine Ressource zugreifen kann, wie ein Proxy konfiguriert
+werden kann und wie Redirection in Java (mittels HttpURLConnection)
+funktioniert. Aus Sicherheitsgründen wird allerdings kein automatisches
+Redirect zu einer https: URL vorgenommen. Dies muss explizit programmiert
+werden. 
+
+
+\subsection{WebDAV}
+
+(RFC 2291 und RFC 2518)
+
+WebDAV (WWW Distributed Authoring and Versioning) ist eine Erweiterung
+des http 1.1 Protokolls, das zum Bearbeiten von WWW Ressourcen geeignet
+ist. Das ,,Versioning'' im Namen wird derzeit im Protokoll nicht
+umgesetzt. Relevanz bekommt dieses Protokoll alleine schon dadurch,
+dass es von den Microsoft Office-Produkten und dem Internet Explorer
+(als Web Folder bekannt) unterstützt wird. Natürlich wird es auch
+von anderen Programmen und Betriebssystemen unterstützt, z.B.: Adobe
+InDesign, Konqueror, Mac OS X.
+
+Serverseitig wird dieses Protokoll z.B. von Apache, IIS, Subversion
+oder Zope unterstützt.
+
+Dazu unterstützt das Protokoll das Anlegen, Verändern, Kopieren und
+Verschieben von Ressourcen (auch Verzeichnissen). Weiters können Ressourcen
+gelockt werden und mit Eigenschaften (properties) versehen werden.
+D.h. man kann z.B. auf einfache Weise Dateien oder ganze Verzeichnisse
+von der lokalen Festplatte auf einen Internet-Server hochladen.
+
+Mit den ,,Versioning Extensions to WebDAV'' wurden als RFC 3253
+nun auch das Konzept der Versionierung spezifiziert.

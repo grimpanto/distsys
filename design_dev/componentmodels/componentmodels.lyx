@@ -1,0 +1,2420 @@
+#LyX 1.5.4 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass scrbook
+\begin_preamble
+
+\end_preamble
+\language ngerman
+\inputencoding latin1
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 0
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Komponentemodelle
+\end_layout
+
+\begin_layout Standard
+Es ist es das Ziel, Software industriemäßig zu entwickeln.
+ Die Idee ist, (vorgefertigte) Komponenten miteinander zu verbinden, sodass
+ die gewünschte Funktion erreicht wird.
+ D.h.\InsetSpace ~
+es werden Komponenten entwickelt, die in weiterer Folge zusammengesetzt
+ werden (z.B.
+ wie Teile eines Fertigteilhauses).
+ Software soll daher einerseits produktiver entwickelt werden und andererseits
+ soll auch ein Handel mit Softwarekomponenten möglich sein.
+ Ein Markt für Softwarekomponenten ist derzeit nicht im nennenswerten Umfang
+ vorhanden.
+\end_layout
+
+\begin_layout Standard
+Begonnen hat die Idee der komponenten-basierten Entwicklung von Software
+ allerdings schon im Jahr 1968 auf einem NATO Kongress mit dem Vortrag `Mass
+ Produced Software Components'!
+\end_layout
+
+\begin_layout Standard
+Wir betrachten nur Komponentenmodelle, die sich auch für die Implementierung
+ von verteilten Systemen eignen (also z.B.
+ nicht JavaBeans).
+ In diesem Sinne stellen, sind diese als Middleware zu klassifizieren.
+\end_layout
+
+\begin_layout Minisec
+Middlewareschicht
+\end_layout
+
+\begin_layout Standard
+Diese kann als Spezialfall der Applikationsschicht aufgefasst werden, die
+ zwischen der Darstellungsschicht und der Applikationsschicht liegt und
+ Aufgaben wie z.B.
+ die Authentifizierung, verteilte Transaktionen, verteilte Synchronisierung,
+ Benachrichtigungsdienst,...
+ übernimmt.
+\end_layout
+
+\begin_layout Standard
+Auch dafür gibt es keine Entsprechung im TCP/IP Protokoll und auch keine
+ im OSI Modell! Beispiele sind .NET, CORBA, JEE.
+ Eine detailierte Beschreibung ist im Abschnitt `Komponentenmodelle' zu
+ finden.
+\end_layout
+
+\begin_layout Section
+Prinzipien
+\end_layout
+
+\begin_layout Standard
+Komponentenmodelle definieren Standards für Implementierung, Benennung,
+ Interoperabilität, Zusammenstellung, Entwicklung und Verteilung von Komponenten.
+\end_layout
+
+\begin_layout Standard
+Es gibt jedoch keine allgemein gültige Definition für den Begriff (Software-)
+ Komponente!
+\end_layout
+
+\begin_layout Standard
+Eine gängige 
+\emph on
+Definition
+\emph default
+ führt 5 Kriterien an, die erfüllt sein müssen, dass etwas eine Komponente
+ ist: 
+\end_layout
+
+\begin_layout Itemize
+Sie kann mehrfach verwendet werden.
+ D.h.\InsetSpace ~
+sie kann ohne Änderung in verschiedener oder auch der gleichen Software
+ mehrfach eingesetzt werden.
+ 
+\end_layout
+
+\begin_layout Itemize
+Sie ist nicht kontextabhängig.
+ D.h.\InsetSpace ~
+sie kann in 
+\begin_inset Quotes pld
+\end_inset
+
+beliebigen
+\begin_inset Quotes prd
+\end_inset
+
+ Situationen eingesetzt werden.
+ 
+\end_layout
+
+\begin_layout Itemize
+Sie läßt sich mit anderen Komponenten verbinden.
+ D.h.\InsetSpace ~
+die Schnittstellen müssen klar definiert sein.
+ Dies betrifft nicht nur die Signaturen sondern auch die Semantik der Schnittste
+llen (voll spezifiziert).
+ 
+\end_layout
+
+\begin_layout Itemize
+Sie ist gekapselt.
+ D.h.\InsetSpace ~
+von außen nicht einsehbar.
+ 
+\end_layout
+
+\begin_layout Itemize
+Sie kann unabhängig eingesetzt werden und unterliegt ihrer eigenen Versionierung.
+ D.h.\InsetSpace ~
+eine Komponente stellt ein eigenständige Ressource (z.B.\InsetSpace ~
+eine .jar Datei)
+ dar, die in einen Container (siehe Abschnitt 
+\begin_inset LatexCommand ref
+reference "sec:j2ee"
+
+\end_inset
+
+) kopiert werden kann.
+ 
+\end_layout
+
+\begin_layout Standard
+Im UML 2 ist eine Komponente ein modularer Teil eines Systems, der zur Abstrakti
+on und Kapselung einer beliebig komplexen Struktur dient, die nach außen
+ wohl definierte Schnittstellen zur Verfügung stellt.
+ Der Ansatz der komponentenbasierten Softwareentwicklung (component-based
+ software development, CBS) stellt Komponenten schon beim Design der Software
+ in den Mittelpunkt und die Implementierung erfolgt mit den jeweils zur
+ Verfügung stehenden Mitteln!
+\end_layout
+
+\begin_layout Standard
+Pragmatisch kann man eine Komponente also einfach als ein Objekt (im allgemeinen
+ Sinne) definieren, das nach einer Spezifikation entwickelt worden ist.
+ Eine solche Spezifikation wird allgemein mit Hilfe eines Komponentenmodells
+ verfasst.
+\end_layout
+
+\begin_layout Standard
+Oft sind also Komponenten einfach Objekte im Sinne der Objektorientierung,
+ deren Schnittstelle durch eine Interface Definition Language (IDL) beschrieben
+ ist.
+ Das liegt aber einfach nur daran, dass Objekte ein zugrundeliegendes Sprachmitt
+el von Programmiersprachen sind (und Komponenten nicht).
+\end_layout
+
+\begin_layout Standard
+Ein prinzipieller 
+\emph on
+Unterschied
+\emph default
+ liegt aber eindeutig darin, dass eine Komponente physisch in einer Umgebung
+ eingesetzt werden können muss.
+ Z.B.
+ indem eine JAR Datei in einem geeigneten Container (siehe EJB der JEE)
+ kopiert wird und danach verwendet werden kann.
+ Eine Klasse an sich ist lediglich ein logisches Konstrukt; die physische
+ Komponente fehlt vollständig!
+\end_layout
+
+\begin_layout Standard
+In diesem Sinne definieren wir als eine Komponententechnologie eine Software,
+ die es ermöglicht allgemein mit Komponenten zu entwickeln.
+ Beispiele für Komponententechnologien sind z.B.
+ Microsofts COM, Microsofts COM+, Microsofts .NET, Suns JavaBeans, Suns JEE/EJB,
+ CORBA/CCM von der OMG.
+\end_layout
+
+\begin_layout Quote
+The best thing about standards is that there are so many to choose from.
+ (Andrew Tanenbaum) 
+\end_layout
+
+\begin_layout Standard
+In weiterer Folge betrachten wir lediglich Technologien, die sich zur Implementi
+erung von verteilter Software eignet.
+ In diesem Sinne folgt ein kurzer Überblick über CORBA 3.0, JEE und die Middlewar
+e Ice von ZeroC.
+ Pragmatisch gesehen sind diese Technologien im weitesten Sinne also Kompoenente
+ntechnologien.
+\end_layout
+
+\begin_layout Section
+CORBA
+\begin_inset LatexCommand label
+name "sec:corba"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+CORBA
+\emph default
+ (Common Object Request Broker Architecture) ist ein Standard der OMG (Object
+ Management Group), der eigentlich eine Spezifikation für ein 
+\emph on
+verteiltes Objektmodell
+\emph default
+ darstellt.
+\end_layout
+
+\begin_layout Standard
+Zusätzlich zu CORBA gibt es von der OMG eine Erweiterung CCM (CORBA Component
+ Model), die eine Component Interface Definition Language (CIDL), ein Implementi
+erungsframework, ein Programmiermodell liefert, als auch die Integration
+ mit EJB und das Deployment spezifiziert.
+ Dabei handelt es sich damit um eine echte Komponententechnologie.
+\end_layout
+
+\begin_layout Standard
+In weiterer Folge wird jedoch 
+\begin_inset Quotes pld
+\end_inset
+
+nur
+\begin_inset Quotes prd
+\end_inset
+
+ CORBA vorgestellt.
+\end_layout
+
+\begin_layout Standard
+Im 
+\emph on
+CORBA Objektmodell
+\emph default
+ verwenden jene Objekte, die miteinander in Verbindung stehen einen Vertrag
+ (contract), der in der Interface Definition Language (IDL) spezifiziert
+ ist.
+ Sprachabbildungen (language mappings) sind im Standard für die Programmiersprac
+hen C, 
+\family typewriter
+C++
+\family default
+, Java, COBOL, Smalltalk, Ada, Lisp und Python vorhanden.
+\end_layout
+
+\begin_layout Standard
+Der Object Request Broker (ORB) ist ein Software-Bus, der es einem Client
+ erlaubt, lokale Aufrufe in dem Kontext eines verteilten Systems durchzuführen.
+ Diese Aufrufe werden in einem Standardformat zum Server übertragen.
+ Serverseitig entpackt der ORB nun den Request des Clients und führt den
+ lokalen Aufruf des Zielobjekts durch.
+ Dafür werden Stubs und Skeletons generiert.
+ D.h.\InsetSpace ~
+es handelt sich um eine Remote Method Invocation (RMI).
+\end_layout
+
+\begin_layout Standard
+Neben dem klassischen RMI unterstützt CORBA 3.0 auch noch `Objects by value',
+ CORBA Messaging und den POA.
+\end_layout
+
+\begin_layout Standard
+Der POA definiert einerseits eine exakte Schnittstelle zwischen 
+\emph on
+verschiedenen
+\emph default
+ Implementierungen von CORBA Systemen (verschiedener Herstellern), persistente
+ und transiente Objekte, Aktivierung von Objekten und verschiedenen Policies
+ für das Multi-threading bei Methodenaufrufen (alles in einem Thread, jedes
+ Mal ein neuer Thread oder Threadpool).
+\end_layout
+
+\begin_layout Standard
+Das alleine ist jedoch zu wenig.
+ Deshalb hat die OMG in der Object Management Architecture (OMA) eine Rahmenarch
+itektur für verteilte Anwendungen definiert, jedoch keine Spezifikation
+ und auch keine Implementierung.
+\end_layout
+
+\begin_layout Standard
+Die OMA besteht aus folgenden Teilen: 
+\end_layout
+
+\begin_layout Description
+ORB ist die Kommunikationsplattform für alle verteilte Objekte.
+ Dieser ist für die Transparenz und Interoperabilität der verteilten Objekte
+ zuständig.
+ 
+\end_layout
+
+\begin_layout Description
+CORBA-Dienste stehen für sämtlichen verteilten Anwendungen zur Verfügung:
+ Naming-Services, Event-Services, Lifecycle-Services, Access-Control-Services,
+ Persistency-Services, Transaction-Services.
+ 
+\end_layout
+
+\begin_layout Description
+Horizontale Funktionalität sind die horizontalen (anwendungsunabhängigen)
+ Funktionen, z.B.
+ Workflow-Management, Dokumentenmanagement, Druckdienste, Mailing-Dienste.
+ 
+\end_layout
+
+\begin_layout Description
+Vertikale Funktionalität sind die von der Anwendungsdomäne abhängigen Funktionen
+, die im Gesundheitswesen, im Finanzdienstleistungssektor,...
+ verwendet werden.
+ 
+\end_layout
+
+\begin_layout Description
+Anwendungsobjekte sind die eigentlichen anwendungsspezifischen Objekte.
+ 
+\end_layout
+
+\begin_layout Standard
+Die OMG wird in weiterer Zukunft die OMA durch Model Driven Architecture
+ (MDA) ablösen.
+ Die Grundidee von MDA ist, durch den Einsatz eines Modells so viel Code
+ wie möglich automatisiert für die Plattform zu generieren.
+ Diese Vorgehensweise ermöglicht es, relativ einfach die Plattform zu wechseln
+ (etwa von C++ nach Java oder von CORBA nach EJB), beziehungsweise sich
+ an die Gegebenheiten einer bestimmten Plattform anzupassen.
+ Beispielsweise kann man beim Übergang von EJB 2.0 auf die Version 3.0 die
+ Methoden einfach neu generiert, ohne das Modell an die neue Version der
+ Plattform anzupassen.
+ In diesem Zusammenhang wird auch das CCM mehr Bedeutung gewinnen.
+\end_layout
+
+\begin_layout Standard
+CORBA hat ein umfassendes Funktionsspektrum, jedoch wird die volle Fülle
+ dieser Funktionen von wenigen Produkten erfüllt.
+ Eine lange Zeit wurde in CORBA 
+\emph on
+der
+\emph default
+ Weg gesehen die Interoperabiltätsprobleme in verteilten Systemen zu lösen.
+ Im Businessbereich wird heute vermehrt auf Webservices gesetzt, um die
+ Interoperabilitätsprobleme zu lösen.
+\end_layout
+
+\begin_layout Standard
+CORBA Software ist am Markt in ausreichender Menge vorhanden: Orbix von
+ IONA, VisiBroker von Borland, Weblogic Server von Bea oder auch frei verfügbare
+ Implementierungen wie z.B.
+ JacORB.
+\end_layout
+
+\begin_layout Section
+JEE
+\begin_inset LatexCommand label
+name "sec:j2ee"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Systemarchitektur
+\end_layout
+
+\begin_layout Standard
+Die 
+\emph on
+JEE Plattform
+\emph default
+ verwendet eine verteilte Multi-Tier Systemarchitektur mit dem Ziel Unternehmens
+anwendungen entwickeln zu können.
+\end_layout
+
+\begin_layout Standard
+Üblicherweise ist eine JEE Applikation aus 
+\emph on
+3 oder 4 Schichten (Tiers)
+\emph default
+ aufgebaut: 
+\end_layout
+
+\begin_layout Enumerate
+Client Tier: Diese beinhaltet entweder eine Client-Anwendung oder einfach
+ einen Web-Client.
+ Diese Schicht ist natürlich auf der Client-Maschine.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Web Tier: Diese stellt die Web-Funktionalität zur Verfügung und ist natürlich
+ nur dann vorhanden, wenn die Anwendung auch eine Web-Komponente aufweist.
+ Technologien, die zum Einsatz kommen sind JSP, Servlets, Struts, JavaServer
+ Faces.
+ Diese Tier ist entweder auf einer dedizierten Web-Maschine oder allgemein
+ auf einer Server-Maschine (auch mehrere) vorhanden.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Business Tier: Hier ist die eigentliche Business Logic beheimatet.
+ Als Technologie kommen hier die Enterprise JavaBeans (EJB) zum Einsatz.
+ Die Business Tier läuft auf einer oder mehrere Server-Maschinen.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Enterprise Information System Tier: Diese stellt in der Regel die Datenbank
+ (oder eine beliebige Datenquelle) zur Verfügung und läuft auf einer oder
+ mehrerer Datenbankmaschinen.
+ 
+\end_layout
+
+\begin_layout Subsection
+JEE API
+\end_layout
+
+\begin_layout Standard
+Bei JEE 5 handelt es sich eigentlich um eine Spezifikation und eine Referenzimpl
+ementierung in Form der Sun Java System Application Server Plattform Edition.
+ Die Spezifikation und die Referenzimplementierung kann frei zur Entwicklung
+ und zum Einsatz verwendet werden.
+\end_layout
+
+\begin_layout Standard
+Es gibt viele kommerzielle Implementierungen, wie z.B.
+ WebSphere von IBM, WebLogic von BEA, Borland Enterprise Server oder Oracle
+ Application Server 10g.
+ Und auch viele frei verfügbare Implementierungen, wie z.B.
+ JBoss, Geronimo von Apache oder der Gluecode Application Server von IBM
+ oder Suns Java System Application Server.
+\end_layout
+
+\begin_layout Standard
+JEE hat einen mächtigen Funktionsumfang: 
+\end_layout
+
+\begin_layout Itemize
+JavaServer Pages und Java Servlets.
+ JavaServer Pages sind ähnlich zu ASP, PHP mit jedoch unterschiedlichen
+ und zum Teil erweiterten Funktionsumfang.
+ Ein JavaServlet ist eine Klasse, die in einem Webcontainer verwendet werden
+ kann und diesen um eine Funktion erweitert.
+ JavaServer Pages werden im Hintergrund von dem Webcontainer in JavaServlets
+ übersetzt.
+ 
+\end_layout
+
+\begin_layout Itemize
+Enterprise JavaBeans (siehe Abschnitt 
+\begin_inset LatexCommand ref
+reference "sec:ejb"
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Itemize
+Java Database Connectivity (JDBC) Extensions.
+ Zugriff auf Datenbanken.
+ 
+\end_layout
+
+\begin_layout Itemize
+Connector Architecture.
+ Verwaltet Connections.
+ 
+\end_layout
+
+\begin_layout Itemize
+Java Transaction API (JTA) bietet erlaubt Transaktionen unabhängig von einem
+ speziellen Transaktionsmanager zu programmieren.
+ 
+\end_layout
+
+\begin_layout Itemize
+Java Naming and Directory Interface (JNDI).
+ Zugriff auf verschiedene Typen von Namens- und Verzeichnisdiensten, wie
+ z.B.
+ LDAP.
+ 
+\end_layout
+
+\begin_layout Itemize
+Management Model und Java Management Extensions (JMX).
+ Dient zum Verwalten und Beobachten (monitoring) von Applikationen und Services.
+ 
+\end_layout
+
+\begin_layout Itemize
+Java API for XML-Based RPC (JAX-RPC).
+ Hier wird die gesamte Kommunikation zu Webservices abgedeckt.
+ Also Technologien wie SOAP und WSDL sind hier in einem API und einer Implementi
+erung vorhanden.
+ 
+\end_layout
+
+\begin_layout Itemize
+Java API for XML Registries (JAXR).
+ Um ein Webservice zu finden muss man es z.B.
+ in einer Registry (im Internet) suchen.
+ Dazu gibt es die Standards UDDI und ebXML.
+ Beide werden von JAXR unterstützt.
+ 
+\end_layout
+
+\begin_layout Itemize
+Remote Method Invocation über IIOP (RMI-IIOP).
+ Ein CORBA konformer ORB, der eine Schnittstelle zwischen RMI und CORBA
+ darstellt.
+ 
+\end_layout
+
+\begin_layout Itemize
+Java Message Service (JMS).
+ Nachrichten-orientierte Kommunikation.
+ 
+\end_layout
+
+\begin_layout Itemize
+JavaMail.
+ Zum Entwickeln von E-Mail-Anwendungen.
+ 
+\end_layout
+
+\begin_layout Subsection
+EJB
+\begin_inset LatexCommand label
+name "sec:ejb"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Das primäre Ziel von EJB (Enterprise JavaBeans) ist es, komponenten-basierte
+ Softwareentwicklung zu unterstützen und diesen Komponenten eine vollständige
+ Infrastruktur zur Verfügung zu stellen.
+ Diese Infrastruktur beinhaltet Funktionen wie Transaktionen, Zustand und
+ Persistenz, Sicherheit, Multi-Threading und Ressource-Pooling.
+ D.h.\InsetSpace ~
+der Entwickler soll sich `nur' mehr um die eigentliche Businesslogik
+ kümmern müssen.
+ D.h.\InsetSpace ~
+es handelt sich um nichtvisuelle Komponenten.
+\end_layout
+
+\begin_layout Standard
+Die grundlegende Idee ist, dass ein Entwickler eine Komponente schreibt
+ (eine oder mehrere Enterprise Beans), die lediglich die Businesslogik beinhalte
+n.
+ Diese Bean wird in einen Container eines Application Servers eingepflanzt,
+ der die gesamte Infrastruktur zur Verfügung stellt.
+ Welche Funktionen der Infrastruktur benötigt werden, wird in XML Dateien
+ bzw.
+ in Java Annotations (EJB 3) angegeben.
+ D.h.\InsetSpace ~
+es kann festgelegt werden, welche Benutzer es in dem System gibt, welcher
+ Benutzer auf diese spezielle Bean zugreifen kann, welche Methoden in Transaktio
+nen ablaufen sollen, wie die Daten persistent gehalten werden, was multi-threade
+d ablaufen soll und was nicht.
+ Dies nennt man eine deklarative Spezifikation.
+ Damit das funktioniert, muss sich der Entwickler bei der Programmierung
+ lediglich an ein API und einige vorgegebene Regeln halten.
+\end_layout
+
+\begin_layout Standard
+Ein weiterer 
+\emph on
+Vorteil
+\emph default
+ ist, neben der einfacheren Entwicklung, dass die Komponente in jedem JEE
+ konformen Container eingesetzt werden kann und man nicht von einem Hersteller
+ abhängig ist.
+ Außerdem ist, bei Einhaltung gewisser Regeln, die Skalierbarkeit gegeben:
+ Ein entsprechender Server kann auf mehreren Maschinen installiert werden
+ und dieser verteilt die Komponenten automatisch auf die vorhandenen Ressourcen!
+\end_layout
+
+\begin_layout Section
+Ice
+\begin_inset LatexCommand label
+name "sec:ice"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Bei Ice (Internet Communications Engine) handelt es sich um eine objekt-orientie
+rte Middleware Software, die einige Vorteile gegenüber anderen Middleware
+ Systemen bietet:
+\end_layout
+
+\begin_layout Itemize
+Die wichtigste Eigenschaft: Die Pragrammierung ist einfach.
+ 
+\end_layout
+
+\begin_layout Itemize
+Es wird für mehrere Plattformen angeboten, wie Windows und UNIX artige Betriebss
+ysteme (Linux, AIX, Solarix, Mac OS X,...) und ist auch auf embedded devices
+ einsetzbar.
+ 
+\end_layout
+
+\begin_layout Itemize
+Es werden viele Programmiersprachen unterstützt: 
+\family typewriter
+C++
+\family default
+, Java, C#, VisualBasic, Python, PHP.
+ 
+\end_layout
+
+\begin_layout Itemize
+Ist ein effizientes System.
+ 
+\end_layout
+
+\begin_layout Itemize
+Es wird als GPL und als kommerzielle Version angeboten.
+ 
+\end_layout
+
+\begin_layout Subsection
+Beschreibung
+\end_layout
+
+\begin_layout Standard
+Ein 
+\emph on
+Ice Objekt
+\emph default
+ ist eine konzeptionelle Entität und 
+\end_layout
+
+\begin_layout Itemize
+kann entweder im lokalen oder entfernten Adressraum sein und auf Anfragen
+ reagieren.
+ 
+\end_layout
+
+\begin_layout Itemize
+kann entweder auf einem oder mehreren Servern instanziert sein (trotzdem
+ das selbe Ice Objekt).
+ 
+\end_layout
+
+\begin_layout Itemize
+hat entweder ein oder mehrere Interfaces.
+ Ein Interface ist das Haupt-Interface.
+ Die anderen Interfaces werden als facets bezeichnet.
+ Ein Client kann sich entscheiden mit welchen Interface er arbeiten will.
+ 
+\end_layout
+
+\begin_layout Itemize
+hat eine globale eindeutige ID.
+ 
+\end_layout
+
+\begin_layout Standard
+Ein 
+\emph on
+Proxy
+\emph default
+ 
+\end_layout
+
+\begin_layout Itemize
+ist ein Client-seitiges Objekt, das notwendig ist, um auf ein Ice Objekt
+ entfernt zuzugreifen.
+ Es entspricht also einem Stub.
+ 
+\end_layout
+
+\begin_layout Itemize
+kann ein direkter Proxy sein.
+ Dieser enthält die Protokollart (tcp oder udp) und eine protokollspezifische
+ Adresse (Hostname und Port).
+ Die ID des Ice Objektes wird mit jedem Aufruf mitgesendet.
+ Die Information, die in einem Proxy gespeichert ist, kann als String dargestell
+t werden, z.B.
+ `SimpleCalculator:default -p 10000' 
+\end_layout
+
+\begin_layout Itemize
+kann ein indirekter Proxy sein.
+ Dieser enthält die ID und einen Adapternamen.
+ Diese Informationen werden zu einem Namensdienst gesendet, der daraufhin
+ die Adresse des Ice Objektes zurückliefert.
+ Damit muss man die Adresse des Ice Objektes nicht kennen.
+ 
+\end_layout
+
+\begin_layout Itemize
+ist von der Basisklasse 
+\emph on
+Ice.ObjectPrx
+\emph default
+ abgeleitet.
+ 
+\end_layout
+
+\begin_layout Standard
+Ein 
+\emph on
+Servant
+\emph default
+ 
+\end_layout
+
+\begin_layout Itemize
+ist ein Server-seitiges Objekt, das die Methoden des Interface implementiert.
+ 
+\end_layout
+
+\begin_layout Itemize
+ist registriert für ein oder mehrere Ice Objekte.
+ Andererseits kann ein Ice Objekt auch mehrere Servants haben.
+ In diesem Fall kann man z.B.
+ einen Proxy mit zwei Adressen erzeugen, die jeweils auf einen Servant auf
+ je einer Maschine zeigen.
+ Ein Methodenaufruf zu solch einem Proxy versucht zuerst die Methode auf
+ dem einen Server aufzurufen.
+ Funktioniert dies nicht, z.B.
+ weil der Server ausgefallen ist, dann wird der zweite Server kontaktiert.
+ 
+\end_layout
+
+\begin_layout Itemize
+ist (indirekt) von der Basisklasse 
+\emph on
+Ice.ObjectPrx
+\emph default
+ abgeleitet.
+ 
+\end_layout
+
+\begin_layout Standard
+Ein 
+\emph on
+Object Adapter
+\emph default
+ 
+\end_layout
+
+\begin_layout Itemize
+verwaltet die Servants mit ihrer jeweiligen object identity.
+ Einkommende Nachrichten werden in entsprechende Methodenaufrufe an den
+ entsprechenden Servant umgesetzt.
+ 
+\end_layout
+
+\begin_layout Itemize
+lauscht an einem oder mehreren Endpunkten.
+ Jeder Endpunkt besteht aus Protokoll und Port.
+ Dadurch kann ein Servant auch über mehrere Protokolle (z.B.
+ tcp oder udp) angesprochen werden.
+ 
+\end_layout
+
+\begin_layout Itemize
+erzeugt Proxy Objekte, die an den Client weitergereicht werden.
+ Da ein Object Adapter den exakten Typ, die Identität und die Protokollinformati
+onen kennt, kann auch ein entsprechendes Proxy Objekt erzeugt werden.
+\end_layout
+
+\begin_layout Standard
+Diese Proxy-Struktur ist in Abbildung 
+\begin_inset LatexCommand vref
+reference "fig:ice_structure"
+
+\end_inset
+
+ zu sehen.
+ Am Server ist die Struktur der Objekte zur Laufzeit durch das Objektdiagramm
+ in Abbildung beschrieben.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename structure.pdf
+	scale 70
+	BoundingBox 0bp 0bp 17cm 65mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+\begin_inset LatexCommand label
+name "fig:ice_structure"
+
+\end_inset
+
+Proxystruktur
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename runtime.pdf
+	scale 70
+	BoundingBox 0bp 0bp 165mm 6cm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+\begin_inset LatexCommand label
+name "fig:ice_runtime"
+
+\end_inset
+
+Objekte zur Laufzeit
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ice bietet mehrere verschiedene Arten von Methodenaufrufen an: 
+\end_layout
+
+\begin_layout Description
+synchroner Methodenaufruf (synchronous method invocation) entspricht einem
+ entfernten Funktionsaufruf (siehe Abschnitt 
+\begin_inset LatexCommand ref
+reference "sec:message_types"
+
+\end_inset
+
+ 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ remote-invocation send).
+ 
+\end_layout
+
+\begin_layout Description
+asynchroner Methodenaufruf (asynchronous method invocation) entspricht einem
+ asynchronen Funktionsaufruf mit callback Modell.
+ Für den Server ist der asynchrone Methodenaufruf transparent! (
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ no-wait send).
+ 
+\end_layout
+
+\begin_layout Description
+asynchrone Methodenverarbeitung (asychronous method dispatch) ist das entspreche
+nde Gegenstück zum asynchronen Methodenaufruf am Server.
+ Tätigt der Client einen Methodenaufruf, dann wird der Server davon benachrichti
+gt.
+ Im Gegensatz zu einem synchronen Aufruf, der einen Thread am Server für
+ die Abarbeitungszeit des Methodenaufrufes belegt, kann der Server entscheiden
+ die Anfrage erst zu einem späteren Zeitpunkt zu bearbeiten.
+ Dadurch wird dafür kein Serverthread belegt.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Sinn macht das, wenn der Server selbst wieder auf das Ergebnis eines asynchronen
+ Methodenaufrufes warten muss.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Einweg Methodenaufruf (oneway method invocation) entspricht dem asynchronen
+ Funktionsaufruf.
+ D.h.\InsetSpace ~
+der Methodenaufruf kommt zurück, wenn die Nachricht an das lokale Transportsy
+stem übergeben worden ist.
+ So eine Art von Methodenaufrufe sind demzufolge nicht zuverlässig.
+ Da keinerlei Rückgabe erfolgt, kann diese Art auch keinen Rückgabewert
+ besitzen.
+ D.h.\InsetSpace ~
+es entspricht einem asynchronen Prozeduraufruf.
+ Einweg Methodenaufrufe werden nur über ein Stream-orientiertes Protokoll
+ versendet.
+ D.h., dass auf dem Übertragungsweg keine Informationen verloren gehen können
+ und auch keine Verfälschungen auftreten! 
+\end_layout
+
+\begin_layout Description
+Serien-Einweg Methodenaufruf Wie der vorhergehende Punkt, jedoch lassen
+ sich mehrere Einweg Methodenaufrufe zu einem Aufruf zusammenfassen, das
+ eine verbesserte Performanz ergibt.
+ Allerdings werden alle Methodenaufrufe eines Serien-Einweg Methodenaufrufes
+ am Server in einem Thread abgearbeitet.
+ 
+\end_layout
+
+\begin_layout Description
+Datagram Methodenaufruf Dies entspricht einem Einweg Methodenaufruf jedoch
+ mit UDP als Transportprotokoll.
+ Damit sind zusätzlich zu den `Nachteilen' des Einweg Methodenaufruf auch
+ noch die Nachteile von UDP vorhanden.
+ D.h.\InsetSpace ~
+einzelne Pakete können verloren gehen oder doppelt beim Server ankommen.
+ Daher ist der Haupteinsatz von Datagram Methodenaufrufen auf das LAN beschränkt
+, wo die Pakete mit hoher Wahrscheinlichkeit ankommen.
+ 
+\end_layout
+
+\begin_layout Description
+Serien-Datagram Methodenaufruf analog zum Serien-Einweg Methodenaufruf.
+ Die Verarbeitung findet am Server wieder in einem Thread statt.
+ 
+\end_layout
+
+\begin_layout Standard
+Bei den synchronen und den asynchronen Methodenaufrufen ist sichergestellt,
+ dass Ice entweder die Methode zustellt oder eine Fehlermeldung liefert!
+\end_layout
+
+\begin_layout Subsection
+Dienste
+\end_layout
+
+\begin_layout Standard
+Ice bietet eine Reihe von Diensten an: 
+\end_layout
+
+\begin_layout Description
+IceGrid ein Namensdienst, Serveraktivierung, Softwareverteilung (in Kombination
+ mit IcePatch2), Replizierung und Load-Balancing, automatisches `failover',
+ Administration.
+ 
+\end_layout
+
+\begin_layout Description
+Freeze mit Freeze können Objekt persistent gemacht werden.
+ 
+\end_layout
+
+\begin_layout Description
+IceStorm eine einfache Publish/Sucribe MOM 
+\end_layout
+
+\begin_layout Description
+IcePatch2 ein Dienst, um auf Dateien zu replizieren.
+ 
+\end_layout
+
+\begin_layout Description
+IceSSL Ice über SSL transparent verwenden.
+ 
+\end_layout
+
+\begin_layout Description
+Glacier2 ein Firewall Dienst, um Ice durch eine Firewall und sicher (mittels
+ IceSSL) zu betreiben.
+ 
+\end_layout
+
+\begin_layout Description
+IceBox ist an sich ein 
+\begin_inset Quotes pld
+\end_inset
+
+super server
+\begin_inset Quotes prd
+\end_inset
+
+ für Ice, sodass server als Dienst betrieben werden können.
+ 
+\end_layout
+
+\begin_layout Subsection
+Slice
+\end_layout
+
+\begin_layout Standard
+Slice (Specification Language for Ice) ist an sich eine IDL.
+ Genauso wie CORBA sogenannte Sprachabbildungen (language mappings) definiert,
+ definiert auch Ice language mappings.
+ In diesem Fall für die Programmiersprachen 
+\family typewriter
+C++
+\family default
+, C#, Java, Python, VisualBasic und PHP (nur Client).
+\end_layout
+
+\begin_layout Subsubsection
+Slice Sprache
+\end_layout
+
+\begin_layout Standard
+Die Syntax sieht fast wie Java aus.
+\end_layout
+
+\begin_layout Itemize
+Slice Dateien müssen mit 
+\family typewriter
+.ice
+\family default
+ enden.
+ 
+\end_layout
+
+\begin_layout Itemize
+Identifier nur aus ASCII Zeichen.
+ Alle Identifier, die mit 
+\begin_inset Quotes pld
+\end_inset
+
+Ice
+\begin_inset Quotes prd
+\end_inset
+
+ beginnen sind reserviert.
+ Identifier, die mit Helper, Holder, Prx oder Ptr enden sind ebenfalls nicht
+ erlaubt.
+ Keine underscores! 
+\end_layout
+
+\begin_layout Itemize
+Alle Identifier sind case-insensitive, müssen jedoch konsistent geschrieben
+ werden.
+ 
+\end_layout
+
+\begin_layout Itemize
+Kommentare wie in 
+\family typewriter
+C++
+\family default
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+Es muss immer ein Modul geben.
+ In dieses Modul können alle Slice Konstrukte geschrieben werden.
+ Module können sich über mehrere Dateien erstrecken und werden auf Java
+ packages abgebildet.
+ 
+\end_layout
+
+\begin_layout Itemize
+An Basisdatentypen gibt es die integralen Datentypen: 
+\family typewriter
+bool
+\family default
+ (false, true), 
+\family typewriter
+byte
+\family default
+, 
+\family typewriter
+short
+\family default
+ (16 bits), 
+\family typewriter
+int
+\family default
+ (32 bits), 
+\family typewriter
+long
+\family default
+ (64bits) und weiters die nicht integralen Datentypen 
+\family typewriter
+float
+\family default
+ (IEEE single precision, 32 bits), 
+\family typewriter
+double
+\family default
+ (IEEE double precision 64 bits), 
+\family typewriter
+string
+\family default
+ (Unicode ohne Nullzeichen).
+ Alle Zahlen sind wie in Java vorzeichenbehaftet.
+ 
+\end_layout
+
+\begin_layout Itemize
+Konstanten: 
+\family typewriter
+const double PI = 3.1425926;
+\end_layout
+
+\begin_layout Itemize
+enum und struct in etwa wie in 
+\family typewriter
+C++
+\family default
+.
+ Alle enum Konstanten sind im umschließenden Namensraum (ebenfalls wie in
+ 
+\family typewriter
+C++
+\family default
+).
+ 
+\end_layout
+
+\begin_layout Itemize
+Sequenzen sehen in etwa folgendermaßen aus: 
+\family typewriter
+sequence<Book> BookLst
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+Dictionaries: 
+\family typewriter
+dictionary<string, Book> BookDict
+\family default
+ kann z.B.
+ ein assoziatives Array darstellen, das eine ISBN Nummer mit einem Buch
+ - Objekt verbindet.
+ Als keys dürfen auf jeden Fall integrale Datentypen, Aufzählungstypen und
+ string verwendet werden.
+ 
+\end_layout
+
+\begin_layout Itemize
+Exceptions müssen explizit deklariert werden und sind wie structs anzugeben:
+ 
+\family typewriter
+exception ValveError { int valueId; int cause; }
+\end_layout
+
+\begin_layout Itemize
+Interfaces, Klassen und Methoden werden in etwa wie in Java deklariert,
+ allerdings ist kein overloading von Methoden erlaubt.
+ 
+\end_layout
+
+\begin_layout Itemize
+Typdefinitionen dürfen nicht verschachtelt werden (Ausnahme: Module).
+ 
+\end_layout
+
+\begin_layout Itemize
+Parameter und Returnwerte werden pass-per-value übergeben.
+ 
+\end_layout
+
+\begin_layout Itemize
+Wird ein Parameter mit einem 
+\family typewriter
+*
+\family default
+ versehen, dann wird der Parameter als Proxy verstanden.
+ D.h.\InsetSpace ~
+von der Semantik her, handelt es sich um pass-per-reference.
+ 
+\end_layout
+
+\begin_layout Itemize
+Methoden können als 
+\family typewriter
+nonmutating
+\family default
+ deklariert werden.
+ Im Falle eines Verbindungsabbruch kann einfach die Methode nochmals gesendet
+ werden (in 
+\family typewriter
+C++
+\family default
+ werden solche Methoden zusäzlich const deklariert).
+ 
+\end_layout
+
+\begin_layout Itemize
+Methoden können als 
+\family typewriter
+idempotent
+\family default
+ deklariert werden.
+ Dies bedeutet, dass die Methode mehrmals aufgerufen werden kann und immer
+ das selbe bewirkt (
+\family typewriter
+x = 1
+\family default
+ ist idempotent).
+ Eine Methode kann allerdings nicht idempotent und nonmutating gleichzeitig
+ sein (nonmutating impliziert idempotent).
+ 
+\end_layout
+
+\begin_layout Itemize
+Forward Declarations sind möglich! 
+\end_layout
+
+\begin_layout Itemize
+Der Operator 
+\family typewriter
+::
+\family default
+ wird verwendet, um auf Typen in anderen Modulen zuzugreifen (a la 
+\family typewriter
+C++
+\family default
+).
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Java Mapping
+\end_layout
+
+\begin_layout Itemize
+Konstanten werden als Interface mit einer Konstanten names 
+\family typewriter
+value
+\family default
+ abgebildet: 
+\family typewriter
+interface PI { value = 3.1415926; }
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+enum und struct werden auf Klassen abgebildet.
+ 
+\end_layout
+
+\begin_layout Itemize
+Sequenzen werden auf Arrays abgebildet.
+ Es kann jedoch eine alternative Implementierung folgendermaßen angegeben
+ werden:
+\newline
+
+\family typewriter
+["java:type:java.util.LinkedList"]sequence<Book> BookLst
+\family default
+ 
+\end_layout
+
+\begin_layout Itemize
+Dictionaries werden immer als eine Instanz vom Typ 
+\family typewriter
+java.util.Map
+\family default
+ dargestellt (defaultmäßig 
+\family typewriter
+java.util.HashMap
+\family default
+).
+ 
+\end_layout
+
+\begin_layout Itemize
+Exceptions werden als Klasse von der Klasse 
+\family typewriter
+Ice.UserException
+\family default
+ abgeleitet.
+ Wird eine Exception geworfen, die nicht in einer Methode deklariert ist,
+ dann erhält der Client eine Exception, die von 
+\family typewriter
+Ice.LocalException
+\family default
+ abgeleitet ist.
+ 
+\end_layout
+
+\begin_layout Itemize
+Proxies, Sequenzen, Dictionaries und Strings können als Parameter als 
+\family typewriter
+null
+\family default
+ übergeben werden.
+ Allerdings werden immer 
+\begin_inset Quotes pld
+\end_inset
+
+leere
+\begin_inset Quotes prd
+\end_inset
+
+ Objekte übertragen.
+ Ein 
+\begin_inset Quotes pld
+\end_inset
+
+leerer
+\begin_inset Quotes prd
+\end_inset
+
+ Proxy entspricht einem 
+\family typewriter
+null
+\family default
+ Pointer.
+ 
+\end_layout
+
+\begin_layout Subsection
+Programmiermodell
+\end_layout
+
+\begin_layout Minisec
+Definition eines Slice Interfaces
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=IDL"
+inline false
+status open
+
+\begin_layout Standard
+
+// calculator.ice
+\end_layout
+
+\begin_layout Standard
+
+module Calculator {
+\end_layout
+
+\begin_layout Standard
+
+  interface Power {
+\end_layout
+
+\begin_layout Standard
+
+    double pow(double x, double y);
+\end_layout
+
+\begin_layout Standard
+
+  };
+\end_layout
+
+\begin_layout Standard
+
+};
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Minisec
+Generieren der Stubs und Skeletons
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=sh"
+inline false
+status open
+
+\begin_layout Standard
+
+mkdir generated
+\end_layout
+
+\begin_layout Standard
+
+slice2java --output-dir generated calculator.ice
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dabei werden die erzeugten Dateien im Verzeichnis 
+\family typewriter
+generated
+\family default
+ abgelegt.
+\end_layout
+
+\begin_layout Minisec
+Implementierung der Servant - Klasse
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+public class SimpleCalculator extends Calculator.PowerDisp {
+\end_layout
+
+\begin_layout Standard
+
+  public double pow(double x, double y, Ice.Current current) {
+\end_layout
+
+\begin_layout Standard
+
+    return Math.pow(x,y);
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dinge, die zu beachten sind: 
+\end_layout
+
+\begin_layout Itemize
+Die Servant-Klasse muss immer von einer bestimmten Klasse abgeleitet werden.
+ Diese wird von 
+\family typewriter
+slice2java
+\family default
+ generiert und befindet sich in einem Paket, das so heißt wie der Modulname
+ aus der 
+\family typewriter
+.ice
+\family default
+ Datei.
+ Der Klassenname beginnt mit einem underscore und es wird einfach `Disp'
+ angehängt.
+ 
+\end_layout
+
+\begin_layout Itemize
+Als letzter Parameter jeder Methode muss ein zusätzlicher Parameter mit
+ dem Typ 
+\family typewriter
+Ice.Current
+\family default
+ angehängt werden, der jedoch vorerst nicht beachtet werden muss.
+ 
+\end_layout
+
+\begin_layout Itemize
+Der Name der Klasse sollte entweder durch Anhängen von 
+\begin_inset Quotes pld
+\end_inset
+
+I
+\begin_inset Quotes prd
+\end_inset
+
+ (z.B.
+ 
+\family typewriter
+CalculatorI
+\family default
+, wie Impelementierung) oder durch Angabe einer speziellen Funktion (wie
+ z.B.
+ 
+\family typewriter
+SimpleCalculator
+\family default
+, d.h.
+ einfache Implementierung der Schnittstelle Calculator) vorgenommen werden.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=sh"
+inline false
+status open
+
+\begin_layout Standard
+
+# oder permanent setzen
+\end_layout
+
+\begin_layout Standard
+
+export CLASSPATH=classes:CLASSPATH
+\end_layout
+
+\begin_layout Standard
+
+javac -d classes -source 1.4 generated/Calculator/*.java
+\end_layout
+
+\begin_layout Standard
+
+javac -d classes SimpleCalculator.java
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Zu beachten ist, dass die Java-Sourcen für die Skeletons in Java 1.4 übersetzt
+ werden müssen (die eigenen nicht).
+\end_layout
+
+\begin_layout Minisec
+Implementierung des Server-Programmes
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+// von Ice.Application ableiten:
+\end_layout
+
+\begin_layout Standard
+
+// kümmert sich um initialisieren und beenden (Communicator Instanz)
+\end_layout
+
+\begin_layout Standard
+
+// Argumentenliste wird gelesen und Ice Optionen aus args entfernt
+\end_layout
+
+\begin_layout Standard
+
+// außerdem wird ein Exception Handler installiert (für java.lang.Exception)
+\end_layout
+
+\begin_layout Standard
+
+public class Server extends Ice.Application {
+\end_layout
+
+\begin_layout Standard
+
+  // run Methode implementieren
+\end_layout
+
+\begin_layout Standard
+
+  public int run(String[] args) {
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    // liefert eine Referenz auf den Communicator zurück
+\end_layout
+
+\begin_layout Standard
+
+    Ice.Communicator ic = communicator();
+\end_layout
+
+\begin_layout Standard
+
+    // Anlegen eines Object Adapters mit einem Endpunkt
+\end_layout
+
+\begin_layout Standard
+
+    Ice.ObjectAdapter adapter =
+\end_layout
+
+\begin_layout Standard
+
+      ic.createObjectAdapterWithEndpoints("SimpleCalculatorAdapter",
+\end_layout
+
+\begin_layout Standard
+
+                                          "default -p 10000");
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    Ice.Object object = new SimpleCalculator(); // Servant erzeugen
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    // Servant beim Adapter registrieren
+\end_layout
+
+\begin_layout Standard
+
+    adapter.add(object,Ice.Util.stringToIdentity("calculator"));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    adapter.activate(); // aktiviert: dann werden Requests angenommen
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    ic.waitForShutdown(); // blockiert bis Server beendet wird
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    // wenn shutdown auf Communicator (z.B.
+ Ctrl-C), dann...
+ 
+\end_layout
+
+\begin_layout Standard
+
+    if (interrupted())
+\end_layout
+
+\begin_layout Standard
+
+      System.out.println(appName() + ": terminating");
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    return 0; // alles ok, beenden
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+  public static void main(String[] args) {
+\end_layout
+
+\begin_layout Standard
+
+    // Application instanzieren
+\end_layout
+
+\begin_layout Standard
+
+    Server app = new Server();
+\end_layout
+
+\begin_layout Standard
+
+    // ruft die obige run Methode auf und kümmert sich, dass die
+\end_layout
+
+\begin_layout Standard
+
+    // Communicator Instanz erzeugt und *sicher* wieder entfernt wird.
+\end_layout
+
+\begin_layout Standard
+
+    // Application bekommt Name: Server
+\end_layout
+
+\begin_layout Standard
+
+    int status = app.main("Server", args);
+\end_layout
+
+\begin_layout Standard
+
+    System.exit(status);
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Danach kann man die serverseitigen Klassen kompilieren:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=sh"
+inline false
+status open
+
+\begin_layout Standard
+
+javac -d classes Server.java
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Minisec
+Implementierung des Client-Programmes
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+// von Ice.Application ableiten
+\end_layout
+
+\begin_layout Standard
+
+public class Client extends Ice.Application {
+\end_layout
+
+\begin_layout Standard
+
+  public int run(String[] args) {
+\end_layout
+
+\begin_layout Standard
+
+    Ice.Communicator ic = communicator();
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    // mache Proxy aus String
+\end_layout
+
+\begin_layout Standard
+
+    // NAME:PROTOKOLL -p PORT
+\end_layout
+
+\begin_layout Standard
+
+    Ice.ObjectPrx obj = ic.stringToProxy("calculator:default -p 10000");
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    // nachfragen, ob wirklich ein PowerPrx: dazu wird eine Klasse
+\end_layout
+
+\begin_layout Standard
+
+    // PowerPrxHelper verwendet, die von slice2java erzeugt wird
+\end_layout
+
+\begin_layout Standard
+
+    // checkedCast ...
+ Server wird nach dem Typ gefragt
+\end_layout
+
+\begin_layout Standard
+
+    // uncheckedCast ...
+ Server wird nicht gefragt
+\end_layout
+
+\begin_layout Standard
+
+    Calculator.PowerPrx power = Calculator.PowerPrxHelper.checkedCast(obj);
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    if (power == null)
+\end_layout
+
+\begin_layout Standard
+
+      throw new Error("Invalid proxy");
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    System.out.println("2**3= " + power.pow(2,3));
+\end_layout
+
+\begin_layout Standard
+
+    return 0; // alles ok, beenden
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+  public static void main(String[] args) {
+\end_layout
+
+\begin_layout Standard
+
+    Client app = new Client();
+\end_layout
+
+\begin_layout Standard
+
+    int status = app.main("Client", args);
+\end_layout
+
+\begin_layout Standard
+
+    System.exit(status);
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Danach kann man der Client kompiliert werden:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=sh"
+inline false
+status open
+
+\begin_layout Standard
+
+javac -d classes Client.java
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Minisec
+Starten von Server und Client
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+java Server
+\end_layout
+
+\begin_layout Standard
+
+# und in einer anderen Shell:
+\end_layout
+
+\begin_layout Standard
+
+java Client
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Proxies und Klassen als Parameter und Returnwerte
+\end_layout
+
+\begin_layout Minisec
+Proxies als Rückgabe
+\end_layout
+
+\begin_layout Standard
+Oft müssen Proxies zurückgegeben werden.
+ Dazu muss der Server einen Proxy anlegen.
+\end_layout
+
+\begin_layout Enumerate
+Entsprechende Slice Definition anlegen, z.B.:
+\newline
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+interface CalcMgr {
+\end_layout
+
+\begin_layout Standard
+
+  Science* getScienceCalculator();
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Am Server muss zumindest ein Mal ein Proxy angelegt werden:
+\newline
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+// addWithUUID liefert Typ ObjectPrx deshalb uncheckedCast!
+\end_layout
+
+\begin_layout Standard
+
+// ist gleich zu `add(object, Ice.Util.generateUUID())'
+\end_layout
+
+\begin_layout Standard
+
+simpSciencePrx = SciencePrxHelper.
+\end_layout
+
+\begin_layout Standard
+
+  uncheckedCast(adapter.addWithUUID(new SimpleScience()));
+\end_layout
+
+\end_inset
+
+Von Slice wird automatisch auch eine `Helper' Klasse generiert, die eine
+ Proxy Instanz erzeugt.
+ Die Methode 
+\family typewriter
+addWithUUID
+\family default
+ registriert einen Servant beim Object Adapter mit einer eindeutigen ID.
+ Da wir den Proxy zurückliefern ist eine allgemein bekannte ID nicht notwendig.
+ 
+\end_layout
+
+\begin_layout Minisec
+Instanzen von Klassen
+\end_layout
+
+\begin_layout Standard
+Will man Instanzen von Klassen zurückliefern, dann muss die Ice Runtime
+ wissen, um welche Klasse es sich handelt und wie diese zu instanzieren
+ ist (verschiedene Programmiersprachen!).
+\end_layout
+
+\begin_layout Standard
+Dafür wollen wir das vorhergehende Beispiel erweitern.
+ Nehmen wir dazu an, dass die Berechnung aus Performancegründen jetzt am
+ Client stattfinden soll.
+ Dazu soll der Server einen Taschenrechner übertragen.
+\end_layout
+
+\begin_layout Enumerate
+Ändern der Slice Datei: Klassen statt Interface bei den Returnwerten, also
+ z.B.
+ 
+\family typewriter
+Finance getFinanceCalculator()
+\family default
+ wobei 
+\family typewriter
+Finance
+\family default
+ jetzt eine Klasse in der Slice Datei sein soll.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Prinzipiell kann der Rückgabewert formal auch ein Interface sein.
+ Es muss lediglich auch eine Klassendeklaration geben, die dieses Interface
+ auch implementiert, sodass Ice weiß welche Instanzvariablen zu übertragen
+ sind.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Der Server ist insoferne anzupassen, dass dieser jetzt direkt Instanzen
+ dieser Klassen zurückliefert anstatt Proxies auf Interfaces.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Unabhängig davon macht es u.U.
+ auch Sinn Proxies auf Klasseninstanzen zurückzuliefern.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Es ist eine ObjectFactory zu implementieren, die die Instanzen anlegt:
+\newline
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+class ObjectFactory
+\end_layout
+
+\begin_layout Standard
+
+  extends Ice.LocalObjectImpl // Achtung: *Local*
+\end_layout
+
+\begin_layout Standard
+
+  implements Ice.ObjectFactory {
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+  public Ice.Object create(String type) {
+\end_layout
+
+\begin_layout Standard
+
+    // Typ von Klasse Science
+\end_layout
+
+\begin_layout Standard
+
+    // ::                         vom globalen Namensraum ausgehend 
+\end_layout
+
+\begin_layout Standard
+
+    //   Calculator               zum Calculator Modul
+\end_layout
+
+\begin_layout Standard
+
+    //             ::Finance      zur Finance Klasse
+\end_layout
+
+\begin_layout Standard
+
+    if (type.equals("::Calculator::Finance")) {
+\end_layout
+
+\begin_layout Standard
+
+      return new SimpleFinance();
+\end_layout
+
+\begin_layout Standard
+
+    } else {
+\end_layout
+
+\begin_layout Standard
+
+      assert(false);
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    return null; 
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+  public void destroy() {}
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Jetzt ist nur noch mehr die Factory zu installieren:
+\newline
+
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+Ice.Communicator ic = communicator();
+\end_layout
+
+\begin_layout Standard
+
+ObjectFactory of = new ObjectFactory();
+\end_layout
+
+\begin_layout Standard
+
+ic.addObjectFactory(of, "::Calculator::Finance");
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Ice Properties und Konfiguration
+\end_layout
+
+\begin_layout Standard
+Die Konfigurationsdateien sind einfach aufgebaut:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=sh"
+inline false
+status open
+
+\begin_layout Standard
+
+application.category[.subcategory]=value
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=sh"
+inline false
+status open
+
+\begin_layout Standard
+
+export ICECONFIG=config ./server
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die Konfigurationsdatei kann auch über die Kommandozeile wie jedes Property
+ gesetzt werden:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=sh"
+inline false
+status open
+
+\begin_layout Standard
+
+./server Ice.Config=config
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Interessant ist das Property 
+\family typewriter
+Ice.Trace.Protocol
+\family default
+, das als Wert den Level für die Ausgabe der Netzwerksmeldungen bekommt.
+ Höchster Wert ist 3.
+ Sollen keine Meldungen ausgegeben werden, dann ist der Wert leer zu lassen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=sh"
+inline false
+status open
+
+\begin_layout Standard
+
+./server --Ice.Trace.Protocol=1 # oder ./server --Ice.Trace.Protocol
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

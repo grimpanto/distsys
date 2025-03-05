@@ -1,0 +1,826 @@
+#LyX 1.6.4.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass scrbook
+\begin_preamble
+\sloppy
+\end_preamble
+\use_default_options true
+\language ngerman
+\inputencoding auto
+\font_roman palatino
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\float_placement H
+\paperfontsize 12
+\spacing single
+\use_hyperref true
+\pdf_title "Entwurf und Implementierung verteilter Systeme"
+\pdf_author "Dr. Günter Kolousek"
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize a4paper
+\use_geometry true
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 2cm
+\topmargin 3cm
+\rightmargin 2cm
+\bottommargin 3cm
+\headheight 4mm
+\headsep 7mm
+\footskip 13mm
+\secnumdepth 2
+\tocdepth 2
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\listings_params "basicstyle={\small\sffamily},frame=single,language=java,lineskip={-1pt}"
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Subject
+
+\family sans
+\series bold
+Entwurf und Implementierung verteilter Systeme
+\end_layout
+
+\begin_layout Title
+Rechnernetze 2009/10
+\end_layout
+
+\begin_layout Date
+\noindent
+6.9.2008
+\end_layout
+
+\begin_layout Author
+Dr.
+ Günter Kolousek
+\end_layout
+
+\begin_layout Publishers
+
+\size small
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+copyright
+\end_layout
+
+\end_inset
+
+ Dr.Günter Kolousek
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter*
+Vorwort
+\end_layout
+
+\begin_layout Standard
+Dieses Dokument behandelt die Grundlagen der Rechnernetze, die für einen
+ Entwickler von verteilten Systemen von Relevanz sind.
+ D.h.
+ es werden die Grundlagen in einem Detailierungsgrad präsentiert und aus
+ einem Blickwinkel betrachtet, der für Entwickler verteilter Systeme zum
+ Zwecke des Verständnisses notwendig ist.
+\end_layout
+
+\begin_layout Standard
+Das Verständnis der Grundlagen ist deshalb wichtig, damit der Entwickler
+ die nötigen Vorgaben zum Entwurf des Netzwerkes und der Wahl der Netztechnologi
+e liefern kann oder auch, um die Wünsche und Anforderungen der Netzbetreiber
+ zu berücksichtigen.
+\end_layout
+
+\begin_layout Standard
+Unbedingt notwendig sind diese Grundlagen natürlich auch direkt für den
+ Entwurf und die Implementierung verteilter Systeme.
+ Diese Kenntnisse sind unabdingbar bei 
+\end_layout
+
+\begin_layout Itemize
+der Festlegung der Systemarchitektur,
+\end_layout
+
+\begin_layout Itemize
+dem Entwurf einer Softwarearchitektur,
+\end_layout
+
+\begin_layout Itemize
+der Implementierung.
+\end_layout
+
+\begin_layout Standard
+Konkrete Beispiele für solche Tätigkeiten sind:
+\end_layout
+
+\begin_layout Itemize
+Entwurf und Entwicklung von Protokollen.
+ Solche Protokolle können z.B.
+ nötig sein, um auf technische Geräte (Messgeräte, Boardcomputer in Autos
+ oder Flugzeugen, Steuerungsrechner in Produktionsanlagen) oder bestehende
+ Informationssysteme (engl.
+ legacy systems) zuzugreifen.
+\end_layout
+
+\begin_layout Itemize
+Implementierung von Clients für bestehende Protokolle und im speziellen
+ Internetprotokolle, wie z.B.
+ für das APP (atom publishing protocol, Protokoll zum Publizieren und Verwalten
+ von Inhalten im Web).
+\end_layout
+
+\begin_layout Itemize
+Erstellung serverseitiger Programme beispielsweise basierend auf einer Dämon-Str
+uktur oder einer Super-Server-Struktur.
+ Beispiele sind http Server, Server für betriebswirtschaftliche Anwendungen
+ (z.B.
+ SAP NetWeaver), Spieleserver.
+\end_layout
+
+\begin_layout Itemize
+Erstellung einer Gefahrenanalyse bzw.
+ Implementierung von Sicherheitsmaßnahmen in den Bereichen Erstellung von
+ Sicherheitspolicies, Implementierung von Firewalls, Konzepten der Standortverne
+tzung...
+\end_layout
+
+\begin_layout Itemize
+Entwurf, Implementierung und in Betriebnahme von Webapplikationen und Webservice
+s z.B.
+ im Bereich E-Commerce oder Webcontentmanagement.
+\end_layout
+
+\begin_layout Itemize
+Entwurf, Implementierung und Inbetriebnahme von verteilten Anwendungen wie
+ verteiltes Dokumentenmanagement, Workflowanwendungen mit RFID Integration,
+ rechenintensive verteilte Anwendungen (Wettervorhersage, Simulationen bei
+ der Entwicklung neuer Autotypen) oder zuverlässige Anwendungen mit vielen
+ Geräten wie bei der Bargeldauszahlung in einem Netz von Bankomaten und
+ den zugehörigen Servern.
+\end_layout
+
+\begin_layout Standard
+Weitere Beispiele finden sich auf der Seite 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "pag:distributed_systems_examples"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Chapter*
+Struktur dieses Dokumentes
+\end_layout
+
+\begin_layout Standard
+Dieses Dokument gliedert sich in sechs große Teile:
+\end_layout
+
+\begin_layout Enumerate
+Grundlagen
+\end_layout
+
+\begin_layout Enumerate
+Technologien
+\end_layout
+
+\begin_layout Enumerate
+TCP/IP
+\end_layout
+
+\begin_layout Enumerate
+Dienste und Anwendungen
+\end_layout
+
+\begin_layout Enumerate
+Sicherheit
+\end_layout
+
+\begin_layout Enumerate
+Entwicklung verteilter Systeme
+\end_layout
+
+\begin_layout Standard
+Der erste Teil dieser Unterlage erläutert die Grundlagen der Kommunikation
+ und der Rechnernetze, danach werden im zweiten Teil konkrete Netztechnologien
+ --- wie die im LAN dominierende Ethernet-Technologie --- vorgestellt.
+ Der dritte Teil beschäftigt sich mit der heute wichtigsten Netzsoftware
+ TCP/IP.
+ Im vierten Teil werden heute häufig benutzte Dienste und Anwendungen des
+ Internets besprochen und anschließend werden die notwendigen Grundlagen
+ und Anwendungen rund um das Thema Sicherheit behandelt.
+ Der letzte Teil behandelt verschiedene Aspekte, die bei der Entwicklung
+ verteilter Systeme von Relevanz sind.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+setpartpreamble[uc][14cm]{
+\backslash
+vspace{3cm}
+\end_layout
+
+\end_inset
+
+Dieser Teil beschreibt die grundlegenden Mechanismen der Kommunikation und
+ der Rechnernetze.
+ Es wird in der 
+\begin_inset Quotes pld
+\end_inset
+
+Einleitung
+\begin_inset Quotes prd
+\end_inset
+
+ zuerst ein Überblick über die Themen Netzwerktechnik und Rechnernetze gegeben
+ als auch der Begriff des verteilten Systemes eingeführt.
+ Danach werden im Kapitel 
+\begin_inset Quotes pld
+\end_inset
+
+Grundlagen und Basiskonzepte
+\begin_inset Quotes prd
+\end_inset
+
+ die grundlegenden Begriffe und Konzepte vorgestellt, die in weiterer Folge
+ für das Verständnis absolut notwendig sind.
+ Im anschließenden Kapitel 
+\begin_inset Quotes pld
+\end_inset
+
+Nachrichtenübertragung
+\begin_inset Quotes prd
+\end_inset
+
+ werden die technischen Grundlagen für die Übertragung von Nachrichten in
+ einer Punkt-zu-Punkt Verbindung behandelt.
+ Abschließend werden die verschiedenen Arten und Aspekte der Netzarchitekturen
+ präsentiert.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Grundlagen
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "introduction/introduction.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "foundations/foundations.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "transmission/transmission.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "architecture/architecture.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+setpartpreamble[uc][14cm]{
+\backslash
+vspace{3cm}
+\end_layout
+
+\end_inset
+
+In diesem Teil werden die wichtigsten Technologien für LAN, WAN und Zugangsnetze
+ vorgestellt und im Überblick beschrieben.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Technologien
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "ethernet/ethernet.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "wlan/wlan.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "tokenring/tokenring.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "fddi/fddi.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "wan/wan.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+setpartpreamble[uc][14cm]{
+\backslash
+vspace{3cm}
+\end_layout
+
+\end_inset
+
+Dieser Teil beschreibt den 
+\begin_inset Quotes pld
+\end_inset
+
+defacto
+\begin_inset Quotes prd
+\end_inset
+
+ Standard TCP/IP in solch einem detailierten Niveau wie für das Verständnis
+ von Rechnernetzen notwendig.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+TCP/IP
+\begin_inset CommandInset label
+LatexCommand label
+name "par:tcpip"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "tcpip_overview/tcpip_overview.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "ip/ip.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "tcpudp/tcpudp.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "tcpip_appl/tcpip_appl.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "nat/nat.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "ipv6/ipv6.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+setpartpreamble[uc][14cm]{
+\backslash
+vspace{3cm}
+\end_layout
+
+\end_inset
+
+Der Teil beschreibt wichtige Dienste und Anwendungen für das Internet.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Dienste und Anwendungen
+\begin_inset CommandInset label
+LatexCommand label
+name "par:services_apps"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "data_transfer/data_transfer.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "email/email.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "internet/internet.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+setpartpreamble[uc][14cm]{
+\backslash
+vspace{3cm}
+\end_layout
+
+\end_inset
+
+Der Teil Sicherheit stellt die wichtigsten Konzepte, Mechanismen und Anwedungen
+ vor.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Sicherheit
+\begin_inset CommandInset label
+LatexCommand label
+name "par:security"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "security_foundations/security_foundations.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "security_mechanisms/security_mechanisms.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "security_practice/security_practice.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+setpartpreamble[uc][14cm]{
+\backslash
+vspace{3cm}
+\end_layout
+
+\end_inset
+
+Dieser Teil enthält die notwendigen Grundlagen und praxisrelevante Technologien,
+ um verteilte System programmieren zu können.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Entwicklung verteilter Systeme
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset CommandInset include
+LatexCommand include
+filename "design_dev/overview/overview.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "design_dev/processes/processes.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "design_dev/synchronization/synchronization.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "design_dev/communication/communication.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "design_dev/serverprogramming/serverprogramming.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "design_dev/addthemes/addthemes.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "design_dev/componentmodels/componentmodels.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "design_dev/systemarchitecture/systemarchitecture.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "design_dev/webservices/webservices.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

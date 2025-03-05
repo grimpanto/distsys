@@ -1,0 +1,46 @@
+
+\chapter{FDDI}
+
+FDDI (Fiber Distributed Data Interface) weist große Ähnlichkeiten
+mit dem Tokenring auf. Die Datenrate ist 100MBit/s. Es gibt auch eine
+Variante mit einer Datenrate von 1000MBit/s. Ringlängen sind bis zu
+100 oder 200km möglich.
+
+
+\section{Prinzip}
+
+In Abweichung zum Tokenring werden optische Fasern in einem Doppelring
+verwendet. Bei FDDI kreist ebenfalls ein Token im Kreis, im Unterschied
+zum Tokenring können jedoch auch mehrere Tokens gleichzeitig kreisen.
+Dazu gibt der Sender das Token sofort nach dem Senden des letzten
+Frames wieder frei. Das Entfernen der Rahmen wird ebenfalls nur vom
+Absender durchgeführt.
+
+
+\section{Netzaufbau}
+
+Der Doppelring besteht aus zwei Ringen, die gegeläufig betrieben werden
+und als Haupt- und Ersatzring ausgelegt sind. Bei einer Unterbrechung
+beider Ringe (an der selben Stelle) können die benachbarten Stationen
+den Ring wieder schließen. Damit wirkt sich die Unterbrechung, abgesehen
+von einer doppelt langen Ringlänge nicht aus.
+
+Ähnlich den MSAUs im Tokenring definiert der FDDI Standard ebenfalls
+Anschlussmöglichkeiten für die einzelnen Stationen. Allerdings werden
+verschiedene Arten von Stationen definiert:
+\begin{itemize}
+\item Eine DAS (dual attachment station) verfügt über zwei getrennte Anschlüsse,
+sodass die Station unabhängig über beide Ringe kommunizieren kann.
+Ebenfalls wie bei Tokenring wird bei Ausfall der Station der Ring
+nicht unterbrochen.
+\item Ein DAC (dual attachment concentrator) wird wie eine DAS an den Ring
+angeschlossen. Das Besondere ist, dass an einen DAC mehrere DAS bzw.
+SAS (siehe nächsten Punkt) angeschlossen werden können.
+\item Eine SAS (single attachment station) wird immer über eine DAS oder
+DAC an den Ring angeschlossen.
+\end{itemize}
+DAC bzw. DAS sind direkt im Doppelring einhängbar. Eine SAS kann nicht
+direkt in den Doppelring eingehängt werden. Eine DAS kann auch an
+zwei verschiedene DAC angeschlossen werden. Diese als Dual Homing
+bezeichnete Konfiguration und erhöht nochmals die Verfügbarkeit der
+Station am Netz.

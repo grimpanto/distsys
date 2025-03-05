@@ -1,0 +1,511 @@
+#LyX 1.5.4 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass scrbook
+\language ngerman
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Protokolle der Anwendungsschicht
+\end_layout
+
+\begin_layout Standard
+Hier werden die wichtigsten Protokolle besprochen, die der Anwendungsschicht
+ zuzurechnen sind und trotzdem für den Betrieb eines TCP/IP Netzes notwendig
+ sind.
+\end_layout
+
+\begin_layout Section
+DHCP
+\begin_inset LatexCommand label
+name "sec:DHCP"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Um einem Host automatisch mit einer IP Adresse, einer Subnetzmaske, einen
+ Default-Router, einen DNS-Server oder Proxy-Konfigurationen zu versorgen,
+ kann DHCP (dynamic host configuration protocol, RFC 2131) herangezogen
+ werden.
+\end_layout
+
+\begin_layout Standard
+Die prinzipielle Funktionsweise ist folgende:
+\end_layout
+
+\begin_layout Itemize
+Es existiert zumindest ein DHCP Server, der die Parameter für das Netz gespeiche
+rt hat.
+\end_layout
+
+\begin_layout Itemize
+Wird ein für DHCP konfigurierter Host hochgefahren, dann sendet er eine
+ DHCPDISCOVER Nachricht mittels UDP an die IP Broadcast-Adresse (also 255.255.255.2
+55) mit dem Zielport 67 und einem Absender 0.0.0.0 vom Quellport 68.
+ Diese Nachricht enthält natürlich außerdem die MAC Adresse des zu konfigurieren
+den Hosts.
+\end_layout
+
+\begin_layout Itemize
+Ein in diesem Netz vorhandener DHCP Server wird diese Nachricht empfangen
+ mit einer DHCPOFFER Broadcast-Nachricht vom UDP Quellport 68 zur Adresse
+ 255.255.255.255 mit dem UDP Zielport 67 antworten.
+ Diese Nachricht enthält einen Vorschlag für eine IP Adresse, u.U.
+ weitere Parameter als auch eine Lease und einen Serveridentifier.
+ Eine Lease bedeutet die Angabe einer Zeit, wie lange der Host diese IP
+ Adressen samt den übermittelten Parametern verwenden darf.
+ Der Host muss sich rechtzeitig vor Ablauf dieser Lease um eine Verlängerung
+ beim DHCP Server bemühen.
+\newline
+Der Vorschlag kann entweder auf Grund der MAC Adresse
+ statisch konfiguriert sein oder aus einem Pool von IP Adressen vom DHCP
+ Server dynamisch vergeben werden.
+\end_layout
+
+\begin_layout Itemize
+Da es mehrere DHCP Server in einem Netz geben darf, kann der Host jetzt
+ unter den Angeboten wählen (z.B.
+ den Server, der die längste Lease anbietet).
+ Er sendet eine Broadcast-Nachricht DHCPREQUEST mit dem Serveridentifier.
+ Alle anderen DHCP Server werden dies als Absage werten und nicht weiter
+ reagieren.
+ Der vom Host ausgewählte DHCP Server wird mit einer DHCPACK Nachricht die
+ Zuordnung bestätigen oder mit einer DHCPNAK Nachricht die Zuordnung verweigern.
+\end_layout
+
+\begin_layout Itemize
+Der Client wird sich standardmäßig nach der Hälfte der Lease erneut mittels
+ DHCPREQUEST (allerdings per Unicast) beim Server um eine Verlängerung ansuchen.
+ Der Server wird in der Regel mit den identischen Daten bestätigen.
+ Antwortet der Server jedoch nicht, kann der Client die Adresse weiterverwenden,
+ muss allerdings nach 7/8 der Zeit erneut um eine Verlängerung ansuchen
+ (per Broadcast).
+\end_layout
+
+\begin_layout Standard
+Folgende Punkte sind interessant:
+\end_layout
+
+\begin_layout Itemize
+Die Verwendung mehrerer DHCP Server kann durchaus sinnvoll sein, um eine
+ Redundanz und damit eine Ausfallsicherheit zu erreichen.
+\end_layout
+
+\begin_layout Itemize
+Es macht keinen Sinn in jedem Teilnetz einen DHCP Server zu betreiben.
+ Um trotzdem DHCP betreiben zu können, ist es lediglich notwendig in jedem
+ Teilnetz einen DHCP-Relay-Agenten zu konfigurieren.
+ Dieser reagiert auf alle DHCP Nachrichten und leitet sie per Unicast an
+ den eigentlichen DHCP Server weiter.
+\end_layout
+
+\begin_layout Itemize
+Es gibt DHCP Server, die mit einem DNS Server zusammenarbeiten und diesen
+ über die Vergabe einer Zuordnung von IP Adresse, Rechnernamen und Lease
+ informieren.
+ Dies wird als dynamisches DNS, abgekürzt DDNS (engl.
+ dynamical DNS), bezeichnet.
+\end_layout
+
+\begin_layout Section
+DNS
+\begin_inset LatexCommand label
+name "sec:DNS"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Das Domain Name System (DNS) ist ein verteiltes, hierarchisches System zur
+ Auflösung von Namen in IP-Adressen und umgekehrt.
+ Dieses System ermöglicht damit eine Positionstransparenz als auch eine
+ Migrationstransparenz.
+ Der große Vorteil liegt in der Flexibilität und der Wartbarkeit der Zuordnungen.
+\end_layout
+
+\begin_layout Standard
+Es existiert keine zentrale Datenbank.
+ Der Namensraum ist baumartig in Zonen aufgeteilt für die jeweils unabhängige
+ Administratoren zuständig sind.
+ Diese Zonen werden von DNS Servern verwaltet.
+ Die Wurzel dieses Baumes wird mit einem 
+\begin_inset Quotes pld
+\end_inset
+
+.
+\begin_inset Quotes prd
+\end_inset
+
+ bezeichnet.
+\end_layout
+
+\begin_layout Subsection
+Teile des DNS
+\end_layout
+
+\begin_layout Standard
+Das DNS besteht aus drei Komponenten:
+\end_layout
+
+\begin_layout Itemize
+Der Domainname (fully qualified domain name, FQDN) besteht aus einer Folge
+ von sogenannten 
+\begin_inset Quotes pld
+\end_inset
+
+Labels
+\begin_inset Quotes prd
+\end_inset
+
+, die aus Zeichenketten (alphanummerisch und der Bindestrich), die durch
+ Punkte von einander getrennt sind.
+ Beispiel: 
+\begin_inset Quotes pld
+\end_inset
+
+htlwrn.ac.at
+\bar under
+.
+\bar default
+
+\begin_inset Quotes prd
+\end_inset
+
+.
+ Ein Domainname wird mit einem Punkt abgeschlossen, der normalerweise jedoch
+ weggelassen wird.
+ So ein Domainname ist case-insensitive und darf inklusive aller Punkte
+ maximal 255 Zeichen lang sein.
+ Jedes Label darf maximal 63 Zeichen lang sein.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Die direkt unter der Wurzel befindlichen Domänen werden als Top Level Domains
+ (TLD) bezeichnet.
+ An TLD gibt es entweder Länderkürzel (als ISO 3666) wie 
+\begin_inset Quotes pld
+\end_inset
+
+.at
+\begin_inset Quotes prd
+\end_inset
+
+ oder generische TLD wie 
+\begin_inset Quotes pld
+\end_inset
+
+.com
+\begin_inset Quotes prd
+\end_inset
+
+, 
+\begin_inset Quotes pld
+\end_inset
+
+.org
+\begin_inset Quotes prd
+\end_inset
+
+, 
+\begin_inset Quotes pld
+\end_inset
+
+.net
+\begin_inset Quotes prd
+\end_inset
+
+, 
+\begin_inset Quotes pld
+\end_inset
+
+.name
+\begin_inset Quotes prd
+\end_inset
+
+ oder 
+\begin_inset Quotes pld
+\end_inset
+
+.info
+\begin_inset Quotes prd
+\end_inset
+
+.
+ Die TLD 
+\begin_inset Quotes pld
+\end_inset
+
+.eu
+\begin_inset Quotes prd
+\end_inset
+
+ liegt in gewisser Hinsicht in der Mitte.
+\end_layout
+
+\begin_layout Standard
+Um auch nicht ASCII Zeichen in Domain-Namen verwenden zu können, wurde das
+ Konzept IDN (Internationalized Domain Name) eingeführt, das ein Verfahren
+ angibt wie Domänennamen mit Unicode Zeichen in ASCII Zeichen umgesetzt
+ werden.
+ Diese Umsetzung wird direkt vom Client durchgeführt, sodass das neue System
+ kompatibel zur bestehenden Infrastruktur ist.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Die Nameserver (DNS Server) sind diejenigen Programme, die Anfragen zum
+ Domain-Namen beantworten.
+ Es wird zwischen autoritativen (diese sind für eine Zone verantwortlich)
+ und nicht autoritativen Nameservern (sind nicht für eine Zone verantwortlich)
+ unterschieden.
+ Nicht autoritative Nameserver beziehen ihre Informationen über eine Zone
+ von autoritativen oder auch nicht autoritativen Nameservern und halten
+ schon beantwortete Anfragen in einem Cache.
+\end_layout
+
+\begin_layout Itemize
+Ein Resolver (DNS Client) ist direkt in TCP integriert und steht dem Anwenderpro
+zess als Funktion zur Verfügung.
+\end_layout
+
+\begin_layout Subsection
+Zonen
+\end_layout
+
+\begin_layout Standard
+Da es sich beim DNS vom Prinzip her um eine verteilte Datenbank mit einem
+ hierarchischen Aufbau der Einträge handelt, wird die Verwaltung der Einträge
+ in Zonen aufgeteilt.
+ Eine Zone ist ein zusammenhängender Teil des Domänen-Baumes, für den diese
+ Zone autoritative Informationen zur Verfügung stellt.
+\end_layout
+
+\begin_layout Standard
+Das bedeutet, dass eine Zone für einen gewissen Teil dieses Baumes verantwortlic
+h ist.
+ Damit ist eine Zone für die Domain und eventuell für die Subdomains verantwortl
+ich, wenn die Subdomains nicht wiederum in eine Zone ausgelagert sind.
+\end_layout
+
+\begin_layout Standard
+Für jede Zone muss es mindestens 2 DNS Server geben, die für diese Zone
+ Anfragen entgegeben nehmen.
+ Dies wurde aus Gründen der Ausfallsicherheit so festgelegt.
+\end_layout
+
+\begin_layout Subsection
+Namensauflösung
+\end_layout
+
+\begin_layout Standard
+Im Zuge der Namensauflösung wird zwischen rekursiver und iterativer Namensauflös
+ung unterschieden:
+\end_layout
+
+\begin_layout Itemize
+Die rekursive Namensauflösung funktioniert so, dass der Resolver den konfigurier
+ten Nameserver kontaktiert.
+ Kennt dieser die Antwort nicht, dann fragt dieser selbstständig bei weiteren
+ Nameservern nach und liefert danach die Anwort an den Client zurück.
+\end_layout
+
+\begin_layout Itemize
+Bei der iterativen Namensauflösung liefert der Nameserver lediglich die
+ Adresse des nächsten abzufragenden Nameserver zurück, falls er die Antwort
+ nicht kennt und der Resolver muss selber die weiteren Anfragen durchführen.
+\end_layout
+
+\begin_layout Standard
+Die Unterscheidung welche der beiden Varianten bei einer Anfrage verwendet
+ wird, hängt von einem Flag in der Anfrage ab.
+ Ein Resolver wird in der Regel eine rekursive Namensauflösung verlangen.
+ Ein Root-Server akzeptiert nur iterative Anfragen.
+\end_layout
+
+\begin_layout Standard
+Unter einer inversen Anfrage versteht man die Auflösung der IP Adresse in
+ einen Domänennamen.
+ Dazu gibt es eine eigene vordefinierte Domäne namens in-addr.arpa, die folgender
+maßen verwendet wird: Angenommen es soll für die IP Adresse 193.170.149.127
+ der Domänenname gefunden werden, dann wird folgender Domänenname 127.149.170.193.in
+-addr.arpa beim DNS Server zur Auflösung www.htlwrn.ac.at führen.
+\end_layout
+
+\begin_layout Subsection
+Typen von DNS-Servern
+\end_layout
+
+\begin_layout Minisec
+Master- und Slave-Server
+\end_layout
+
+\begin_layout Standard
+Wie schon besprochen muss es für jede Zone mindestens 2 autoritative DNS
+ Server geben.
+ Genauer es muss genau einen primären Master-Server und einen oder mehrere
+ Slave-Server geben.
+ Änderungen werden nur am primären Master-Server vorgenommen.
+ Die Slave-Server fordern eine Kopie der Zonen-Datei an und laden sie von
+ diesem herunter.
+\end_layout
+
+\begin_layout Standard
+Master und Slave sind lediglich Rollen.
+ Ein Slave-Server kann durchaus auch Master-Server sein, wenn ein anderer
+ Slave-Server die Zonen-Datei anfordert.
+ Es kann jedoch nur einen primären Master-Server geben.
+ Alle anderen sind sekundäre Server für eine Zone.
+\end_layout
+
+\begin_layout Standard
+Änderungen an der Zonen-Datei werden von einem Slave-Server dadurch erkannt,
+ dass jede Änderung der Zonen-Datei eine Inkrementierung der Seriennummer
+ der Zonendatei um 1 bewirkt.
+\end_layout
+
+\begin_layout Minisec
+Caching-Server
+\end_layout
+
+\begin_layout Standard
+Master-Server und Slave-Server geben autoritative Antworten.
+ Von einem Caching-Server erhält man keine autoritative Antworten.
+ Dies liegt darin begründet, dass ein Caching-Server keine Kopie der Zonen-Datei
+ enthält.
+ Er speichert lediglich schon einmal ermittelte Antworten in einem Cache.
+ Die Einträge werden für eine gewisse Zeit in diesem Cache zwischengespeichert.
+ Solange eine Antwort im Cache liegt, kann der Caching-Server diese Antwort
+ im Zuge einer Anfrage zurückliefern und muss keine eigene Anfrage stellen.
+\end_layout
+
+\begin_layout Minisec
+Forwarder
+\end_layout
+
+\begin_layout Standard
+Ein Forwarder leitet eine Anfrage immer weiter und zwar immer an den selben
+ DNS-Server.
+ Damit dient er lediglich als Zwischenstation.
+\end_layout
+
+\begin_layout Section
+Routingprotokolle
+\begin_inset LatexCommand label
+name "sec:routing_protocols"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In Abhängigkeit, ob ein Router ein Teil eines autonomen Systems (ein oder
+ mehrere Netze, die von einer Organisation verwaltet werden) ist oder an
+ der Grenze eines autonomen Systems eingesetzt wird, verwendet man verschiedene
+ Arten von Routingprotokollen:
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Interior\InsetSpace ~
+Gateway\InsetSpace ~
+Protocol\InsetSpace ~
+(IGP) Es handelt sich um einen Typ von Routing-Protokolle
+n, die ausschließlich innerhalb eine autonomen Systems zum Einsatz kommt.
+ Beispiele sind: RIP und OSPF.
+ RIP (routing information protocol) ist das am häufigsten eingesetzte Protokoll
+ und verwendet den Distanzvektor-Algorithmus (siehe Abschnitt 
+\begin_inset LatexCommand vref
+reference "sec:distance-vector-algorithm"
+
+\end_inset
+
+), während OSPF (open shortest path first) den Link-State-Algorithmus (siehe
+ Abschnitt 
+\begin_inset LatexCommand vref
+reference "sec:link-state-algorithm"
+
+\end_inset
+
+) verwendet.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+RIP wird nur in kleineren Organisationen eingesetzt.
+ Dies liegt einerseits an den schon im Abschnitt 
+\begin_inset LatexCommand ref
+reference "sec:distance-vector-algorithm"
+
+\end_inset
+
+ erläuterten Nachteilen des eingesetzten Verfahrens, aber auch daran, dass
+ z.B.
+ immer nur die Hops als Gewichte herangezogen werden.
+ Damit würde eine ISDN Verbindung, die über einen Hop geht einer hoch performant
+en Standleitung mit 2 Hops der Vorzug gegeben werden.
+ Außerdem kann die Anzahl der Hops 15 ja nicht überschreiten.
+\end_layout
+
+\begin_layout Standard
+OSPF führt eine Wertigkeit der Links ein und kann damit einer Standleitung
+ den Vorzug gegenüber einer ISDN Leitung geben.
+ Allgemein findet es eine optimale Route auf Grund mehrerer Kriterien und
+ unterteilt außerdem noch in sogenannte Areas, um effiziente eine Router-Tabelle
+n-Übertragung zu erreichen.
+ OSPF ist ein bedeutend komplexeres Protokoll.
+\end_layout
+
+\end_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Exterior\InsetSpace ~
+Gateway\InsetSpace ~
+Protocol\InsetSpace ~
+(EGP) Diese werden zwischen Routern autonomer Systeme
+ eingesetzt.
+ Beispiele sind: BGP, EGP (nicht mehr in Verwendung).
+\end_layout
+
+\end_body
+\end_document

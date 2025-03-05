@@ -1,0 +1,375 @@
+
+\chapter{Überblick}
+
+
+\section{Defintion eines verteilten Systems\label{sec:defintion_distsys}}
+\begin{quote}
+Ein verteiltes System ist eine Menge von einander unabhängiger Computer,
+die dem Benutzer wie ein einzelnes System erscheinen. (Andrew S. Tanenbaum)
+\end{quote}
+D.h. ein verteiltes System kann laut dieser Definition als Rechnernetz
+gesehen werden, das jedoch den Eindruck vermittelt nur ein einziger
+Rechner zu sein. Der Schwerpunkt bei verteilten Systemen liegt darin,
+dass eine bestimmte Anwendung im Vordergrund steht, die über mehrere
+Rechnern verteilt ist und diese gemeinsam eine Aufgabe erledigen.
+Das Rechnernetz bleibt jedoch transparent.
+
+Um ein System für einen Benutzer als einzelnes, zusammenhängendes
+System erscheinen zu lassen, ist natürlich Software notwendig, die
+diese zusätzliche Abstraktionsebene zur Verfügung stellt. Im Falle
+mehrerer heterogener Computer mit z.T. unterschiedlichen Betriebssystemen
+wird häufig ein verteiltes System mittels einer Middleware-Komponente
+betrieben. Diese Middleware-Schicht erstreckt sich über mehrere Maschinen
+und sitzt zwischen dem lokalen Betriebssystem und der verteilten Applikation
+(siehe Protokollstack).
+
+Und wie erkennt man nun wirklich, dass es sich um ein verteiltes System
+handelt? Eine ,,Definition'' mit humoristischem Einschlag gibt es
+von Laslie Lamport:
+\begin{quote}
+A distributed system is one in which I cannot get something done because
+a machine I've never heard of is down. (Laslie Lamport)
+\end{quote}
+Aus der Sicht des Systementwicklers ist ein verteiltes System ein
+logisch verteiltes Anwendungssystem samt dem verwendeten Trägersystem
+(Rechnernetz, Hardware).
+
+
+\section{Ziele eines verteilten Systems}
+
+Es ist nicht immer sinnvoll jedes System als verteiltes System zu
+entwerfen. Die folgenden \emph{4 Ziele} sollten vorhanden sein, damit
+der Aufbau eines verteilten Systems sinnvoll ist: 
+\begin{description}
+\item [{Benutzer~und~Ressourcen~verbinden}] Das wichtigste Ziel ist
+es, den Benutzern so einfach wie möglich, auf entfernte Ressourcen
+\emph{zugreifen} zu lassen und diese Ressourcen mit anderen Benutzern
+in kontrollierter Weise gemeinsam zu nutzen.
+
+
+Beispiele: 
+\begin{itemize}
+\item Drucker, Speichergeräte 
+\item Prozessorleistung, Netzwerke 
+\item Dateien, Webseiten 
+\item Dienste 
+\end{itemize}
+Gründe: 
+\begin{itemize}
+\item Kosten der Hardware, Software (Lizenzen) 
+\item Informationsaustausch (z.B. Austausch von Dateien, E-Mails,...) 
+\item Vereinfachung der Zusammenarbeit (z.B. Workflow-Lösungen) 
+\item Sicherheit (Zugriffskontrolle, Protokollierung) $\rightarrow$ Gefahrenquellen
+und Sicherheitsgefährdungen. 
+\end{itemize}
+\item [{Transparenz}] Ein weiteres wichtiges Ziel ist es, die Tatsache
+zu \emph{verbergen}, dass Prozesse und Ressourcen physisch über mehrere
+Computer verteilt sind.
+
+
+Ein verteiltes System, das in der Lage ist, sich Benutzern und Applikationen
+so zu präsentieren, als wäre es ein einziges Computersystem, wird
+als transparent bezeichnet.
+
+Achtung: Der deutsche Begriff ,,trasparent'' bedeutet eigentlich
+durchscheinend und gibt daher eigentlich nicht den Sinn wider, den
+dieser Begriff in der Informatik hat. Im Englischen dafür wird `opaque'
+verwendet, das dem deutschen `undurchsichtig' entspricht, während
+das englische `transparent' sehr wohl mit dem deutschen ,,transparent''
+zu übersetzen ist.
+
+Zusammenfassend: Der Informatiker sagt ,,transparent'', wenn er
+\emph{nicht sichtbar}, \emph{nicht merklich} meint! `Opaque' als Anglizismus
+hat sich nicht etabliert.
+
+Verschiedene Arten der Transparenz: 
+\begin{itemize}
+\item Zugriffstransparenz: Unterschiede in der Datendarstellung und wie
+der Zugriff des Benutzers erfolgt sind transparent.
+
+
+Bsp.: Wie werden Zahlen repräsentiert? Welcher Zeichensatz wird verwendet?
+Mit welchem Protokoll erfolgt der Zugriff? 
+
+\item Positionstransparenz: Der physische Ort einer Ressource bleibt vor
+dem Benutzer verborgen.
+
+
+Bsp.: Wo befindet sich die Ressource physisch im System? Wie werden
+die Namen der Ressourcen vergeben? 
+
+\item Migrationstransparenz: Ressourcen können verschoben werden. Bsp.:
+Eine Datei wird von einem Server auf einen anderen Server verschoben. 
+\item Relokationstransparenz: Ressource kann verschoben werden \emph{während}
+der Zugriff erfolgt ($\rightarrow$ Positionstransparenz).
+
+
+Bsp.: Ein mobiler Benutzer mit Funk-Laptop bewegt sich bei bestehender
+Datenverbindung von einer GSM Zelle in eine andere. 
+
+\item Replikationstransparenz: Es existieren mehrere Kopien einer Ressource.
+Benutzer muss nicht wissen auf welche Replik er zugreift ($\rightarrow$
+Positionstransparenz).
+
+
+Bsp.: Der Zugriff erfolgt auf eine lokal verfügbare Datenbank, die
+mittels der Mechanismen des verwendeten DBMS repliziert wird. 
+
+\item Nebenläufigkeitstransparenz: Benutzer erkennt nicht, dass ein anderer
+Benutzer dieselbe Ressource simultan benutzt.
+
+
+Bsp.: Benutzer greift auf Daten in einer Tabelle zu, ohne Rücksicht
+darauf nehmen zu müssen, dass eventuell andere Benutzer ebenfalls
+auf diese Daten zugreifen. 
+
+\item Fehlertransparenz: Ein Fehler in einer Ressource ist für den Benutzer
+nicht sichtbar, d.h. wird vom System aufgelöst.
+
+
+Bsp.: Welche Festplatte einen Fehler in einer RAID-5 Konfiguration
+aufweist bleibt dem Benutzer verborgen und außerdem wird der Fehler
+korrigiert.
+
+Dazu muss natürlich folgendes passieren: 
+\begin{enumerate}
+\item Fehler erkennen 
+\item Fehler maskieren oder Fehler tolerieren 
+\item Wiederherstellen nach Fehlern 
+\end{enumerate}
+\item Persistenztransparenz: Ressource befindet sich entweder im flüchtigen
+Speicher oder z.B. auf einer Festplatte.
+
+
+Bsp.: Bei der Verwendung von objektorientierten Datenbanken wird auf
+ein Objekt in der Datenbank genauso zugegriffen wie auf ein Objekt
+im Hauptspeicher. 
+
+\end{itemize}
+Allerdings ist es \emph{nicht immer sinnvoll} einen hohen Transparenzgrad
+erreichen zu wollen. Gründe dafür liegen z.B. in: 
+\begin{itemize}
+\item Systemleistung: jede Art von Transparenz benötigt Ressourcen. Es ist
+deshalb eine Abwägung zu treffen zwischen Transparenzgrad und Systemleistung. 
+\item Physische Gegebenheiten können teilweise nicht verborgen werden (Prozess
+in Wr. Neustadt soll Verbindung zu Prozess in New York aufnehmen!). 
+\end{itemize}
+\item [{Offenheit}] Ein offenes verteiltes System ist ein System, das Dienste
+Standardregeln entsprechend anbietet (diese beschreiben die Syntax
+und die Semantik dieser Dienste). In Computernetzwerken kontrollieren
+diese Standardregeln das Format, den Inhalt und die Bedeutung gesendeter
+und empfangener Nachrichten. Solche Regeln werden in $\rightarrow$
+Protokollen formalisiert.
+
+
+In verteilten Systemen werden Dienste im Allgemeinen durch Schnittstellen
+spezifiziert, die häufig in einer IDL (Interface Definition Language)
+beschrieben sind. Derartige Schnittstellendefinitionen erfassen meistens
+nur die Syntax von Diensten. D.h.~sie spezifizieren exakt die Namen
+der Funktionen sowie die Typen der Parameter, Rückgabewerte, mögliche
+Ausnahmen, die geworfen werden, usw. Die Semantik wird meist in informeller
+Weise (sprich als verbale Dokumentation) angegeben.
+
+Derartige Schnittstellen müssen natürlich veröffentlicht werden, damit
+ein offenes System entsteht. Wichtige Organisationen, die Standards
+veröffentlichen: 
+\begin{description}
+\item [{IETF}] (Internet Engineering Task Force) RFC (Requests for Comment):
+http, smtp,... 
+\item [{W3C}] (World Wide Web Consortium) Recommendations: HTML, XML, SOAP,... 
+\item [{OMG}] (Object Management Group) Specifications: CORBA, OMA, UML \end{description}
+\begin{itemize}
+\item Interoperabilität beschreibt das Ausmaß, in dem zwei Implementierungen
+von Systemen nebeneinander existieren und zusammenarbeiten können,
+indem sie sich auf die Dienste des anderen verlassen, die nach einer
+gemeinsamen Definition spezifiziert sind. 
+\item Portabilität beschreibt, in welchem Ausmaß eine Anwendung, die für
+ein System A entwickelt wurde, ohne Veränderung auf einem System B
+ausgeführt werden kann, das dieselbe Schnittstelle wie A implementiert. 
+\end{itemize}
+\item [{Skalierbarkeit}]~
+
+\begin{itemize}
+\item Skalierbarkeit bezüglich der Größe des Systems: Hinzufügen weiterer
+Benutzer und Ressourcen. 
+\item Geographische Skalierbarkeit: Benutzer und Ressourcen können sehr
+weit auseinanderliegen. 
+\item Administrative Skalierbarkeit: Verwaltbarkeit, wenn sich das System
+über viele unabhängige administrative Organisationen erstreckt. 
+\end{itemize}
+Oft wird Skalierbarkeit durch die Verwendung eines zentralen Dienstes
+(also ein Server stellt alle Dienste zur Verfügung), durch die zentrale
+Speicherung der Daten (alle Daten werden an einem Ort gespeichert)
+bzw. durch die Verwendung von zentralen Algorithmen (anstatt von parallen
+Algorithmen) eingeschränkt.
+
+\emph{Skalierungstechniken} 
+\begin{itemize}
+\item Daraus lässt sich leicht erkennen, dass eine Möglichkeit zur Steigerung
+der Skalierbarkeit in der Verteilung liegt (Beispiel: der DNS-Namensraum
+ist hierarchisch als Domänenbaum aufgebaut und die DNS-Server sind
+ebenfalls hierarchisch vernetzt). 
+\item Eine weitere Form der Verteilung ist die Replikation, die einerseits
+für verbesserte Antwortzeiten herangezogen werden kann (da z.B. die
+Daten lokal bezogen werden können) und andererseits auch die Verfügbarkeit
+der Daten erhöht werden kann. 
+\item Weiters kann Caching als eine Spezialform der Replikation angesehen
+werden. Im Gegensatz zur Replikation werden Änderungen immer an einer
+Master-Datenquelle durchgeführt. 
+\item Außerdem können die Antwortzeiten verbessert werden, indem eine asynchrone
+Kommunikation anstatt einer synchroner Kommunikation eingesetzt wird:
+D.h.~es wird so weit als möglich vermieden auf die Antworten von
+entfernten Dienstanforderungen zu warten ($\rightarrow$ Nachrichtenorientierte
+Kommunikation). 
+\end{itemize}
+Andererseits ist es aus verschiedenen Gründen (z.B. der Sicherheit)
+oft notwendig bzw.~viel einfacher eine zentralisierte Struktur (d.h.~einen
+einzigen Server) zu verwenden. 
+
+\end{description}
+
+\section{Hardware- und Softwarekonzepte}
+
+Im folgenden werden verschiedene Möglichkeiten betrachtet, wie ein
+verteiltes System bezüglich Hardware und Software strukturiert werden
+kann:
+\begin{itemize}
+\item Hardware 
+
+\begin{itemize}
+\item Multiprozessor: ein Computer mit mehreren Prozessoren, d.h. diese
+Prozessoren verwenden einen gemeinsamen Speicher, der in einem einzigen
+physischen Adressraum für alle Prozessoren zugänglich ist (Bus-basierter
+oder Schalter-basierter Zugriff). 
+\item Multicomputer: mehrere Computer, die keinen gemeinsamen Speicher verwenden,
+d.h. jeder Computer hat seinen eigenen Speicher (meistens Bus-basierter
+Zugriff). 
+
+\begin{itemize}
+\item homogene Multicomputer: Hardware und Software sind gleich (meist in
+einem Schrank). 
+\item heterogene Multicomputer: unterschiedliche Hardware, unterschiedliches
+Betriebssystem,...). 
+\end{itemize}
+\end{itemize}
+\item Software 
+
+\begin{itemize}
+\item Verteilte Betriebssysteme: stellen eine Abstraktionsschicht zur Verfügung,
+die dem Benutzer den Eindruck eines einzigen Computers vermittelt.
+D.h.~es werden die vorhandenen Hardware-Ressourcen transparent zur
+Verfügung gestellt. 
+
+\begin{itemize}
+\item Einprozessor-Betriebssysteme: DOS, Win98, Mac OS 
+\item Mehrprozessor-Betriebssysteme: WinXP Server, {*}nix, Mac OS X, VM 
+\item Multicomputer-Betriebssysteme (homogene Hardware): MOSIX, MC/OS 
+\end{itemize}
+\item Netzwerkbetriebssysteme (Network Operating System - NOS): Novell,
+WinXP, {*}nix, Mac OS X, VMS
+
+
+Zugrundeliegende Hardware wird nicht als homogen vorausgesetzt und
+jeder Knoten hat deshalb seinen eigenen Betriebssystemkern, der in
+Kooperation mit den anderen Computern Ressourcen und Dienste verteilt
+zur Verfügung stellt. 
+
+\item Middleware: CORBA, .NET, J2EE, ICE
+
+
+Über die Möglichkeiten der Netzwerksbetriebssysteme hinausgehend werden
+Dienste benötigt, wie z.B. Kommunikationsfunktionen, der Namensgebung,
+Persistenz oder verteilte Transaktionen, die von eigenen Middleware-Systemen
+bereitgestellt werden ($\rightarrow$ Protokollstack). 
+
+\end{itemize}
+\end{itemize}
+
+\section{Client / Server Konzept}
+
+Das \emph{Client/Server Konzept} ist ein unabhängiges Konzept, das
+in verschiedener Ausprägung sich in jeder Art von Kommunikation wiedererkennen
+läßt (und ist nicht auf das zur Verfügungstellen von Dateidiensten
+in einer Server-zentrierten LAN Umgebung beschränkt).
+
+Unterscheidung Client/Server: 
+\begin{itemize}
+\item Client: Prozess ($\rightarrow$ Prozesse), der Dienste von Server
+anfordert 
+\item Server: Prozess, der Dienste für Client erbringt 
+\end{itemize}
+D.h.~ein Client ist ein Service Requester, der über ein Protokoll
+einen Dienst von einem Service Provider (Server) anfordert.
+
+Beispiele für Dienste, die ein Server zur Verfügung stellen kann: 
+\begin{itemize}
+\item Dateisystemdienst 
+\item Datenbankdienst 
+\item http Server 
+\item e-Banking - Dienst (überweise 100 Euro auf mein Konto) 
+\item Rechenzeit,... 
+\end{itemize}
+Ein Client benötigt die Adresse des Servers, Angaben über den Dienst
+und Angaben über das Protokoll, um auf den Server zugreifen zu können.
+
+Ein Prozess kann Server und/oder Client (zur gleichen Zeit) sein bzw.
+kann diese Rollen auch dynamisch wechseln.
+
+
+\section{Themen verteilter Systeme}
+
+Das gesamte Gebiet des Entwurfes und der Programmierung verteilter
+Systeme lässt sich in verschiedene Themen aufgliedern, die einerseits
+die wichtigen Konzepte repräsentieren und andererseits Anwendungen
+dieser Konzepte sind:
+\begin{itemize}
+\item Prozesse 
+
+\begin{itemize}
+\item Welche Rollen spielen Prozesse in verteilten Systemen? 
+\item Was ist der Unterschied zwischen Thread und Prozess? Wann ist es sinnvoll
+Threads zu verwenden, wann Prozesse? 
+\item Wie programmiert man mit Threads und ThreadPools? Wie mit Prozessen?
+\end{itemize}
+\item Synchronisierung 
+
+\begin{itemize}
+\item Wieso ist die Synchronisierung von Prozessen notwendig? Welche Probleme
+treten auf? 
+\item Wie kann Synchronisation prinzipiell erreicht werden? 
+\item Wie programmiert man Synchronisationsmechanismen? 
+\end{itemize}
+\item Kommunikation 
+
+\begin{itemize}
+\item Was sind Protokolle? Beispiele für Protokolle? 
+\item Welche unterschiedliche Kommunikationsarten gibt es? 
+\item Wie programmiert man einfache Protokolle? 
+\end{itemize}
+\item Programmieren von verteilten Systemen 
+
+\begin{itemize}
+\item Welche Softwarearchitekturen gibt es? 
+\item Welche Muster zur Implementierung verteilter Software gibt es? 
+\item Wie werden Serverprogramme aufgebaut? Was ist zu beachten? 
+\end{itemize}
+\item Namen 
+
+\begin{itemize}
+\item Wie werden Einheiten eindeutig benannt? 
+\item Wie findet man einen Dienst oder eine Ressource? 
+\end{itemize}
+\item Konsistenz und Replikation
+
+\begin{itemize}
+\item Warum wird Replikation benötigt und welche Welche Auswirkungen gibt
+es? 
+\end{itemize}
+\item Fehlertoleranz 
+
+\begin{itemize}
+\item Welche Arten und Typen von Fehlern gibt es? 
+\item Wie können Systeme (Software, Hardware) fehlertolerant aufgebaut werden? 
+\end{itemize}
+\end{itemize}
+

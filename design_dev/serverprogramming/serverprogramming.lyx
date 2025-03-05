@@ -1,0 +1,1042 @@
+#LyX 1.5.4 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass scrbook
+\begin_preamble
+
+\end_preamble
+\language ngerman
+\inputencoding latin1
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 0
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Serverseitiges Programmieren
+\end_layout
+
+\begin_layout Standard
+Nachdem wir jetzt die Grundlagen der Prozessbehandlung, der Synchronisation
+ und der Kommunikation kennengelernt haben, können wir uns die Techniken
+ der serverseitigen Programmierung genauer ansehen.
+\end_layout
+
+\begin_layout Standard
+Darunter versteht man alle Mechanismen und Methoden, die notwendig sind,
+ um robuste, performante und skalierbare Server zu 
+\emph on
+programmieren
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+Es ist extrem schwierig diese Ziele im Kontext von großen verteilten Anwendungen
+ zu erreichen!
+\end_layout
+
+\begin_layout Standard
+Wie können robuste Server entwickelt werden? 
+\end_layout
+
+\begin_layout Itemize
+Auswahl einer entsprechenden Technologie 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Betriebssystem, z.B.
+ WinXP Server vs.
+ Win98 
+\end_layout
+
+\begin_layout Itemize
+Middlewaretechnologie 
+\end_layout
+
+\begin_layout Itemize
+Programmiersprache, z.B.: Java vs.
+ C 
+\end_layout
+
+\begin_layout Itemize
+Entwurfswerkzeug 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Entwicklungsprozess (Qualitätssicherung, Peer reviews, Codegenerierung,...)
+ 
+\end_layout
+
+\begin_layout Itemize
+Entwurf und Programmierstil 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Programmierstil: Verwendung von Exceptions, Fehlerüberprüfungen und Fehlerbehand
+lung, Dokumentation, Verwendung von Invarianten,...
+ 
+\end_layout
+
+\begin_layout Itemize
+Verwendung von funktionierenden Lösungsansätzen (u.a.
+ Design patterns, Idioms,...) 
+\end_layout
+
+\begin_layout Itemize
+Programmiermodell 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Wie wird der Server strukturiert? 
+\end_layout
+
+\begin_layout Itemize
+Wie werden Ressourcen verwaltet? 
+\end_layout
+
+\begin_layout Itemize
+Werden Threads eingesetzt oder Prozesse? 
+\end_layout
+
+\begin_layout Itemize
+Oder gibt es event-gesteuerte, kooperative Tasks? 
+\end_layout
+
+\begin_layout Itemize
+Wird Protokollierung (audit trail) eingesetzt? 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+Beispiele von Fragestellungen bzgl.
+ der Performanz und der Skalierbarkeit: 
+\end_layout
+
+\begin_layout Itemize
+Skaliert die Technologie mit (triviales Beispiel: Benutzerdaten in Datei
+ vs.
+ in Datenbank)?
+\end_layout
+
+\begin_layout Itemize
+Werden die Synchronisationsmaßnahmen zu einem großen Overhead? 
+\end_layout
+
+\begin_layout Itemize
+Können die Threads auf andere Prozesse oder gar auf verschiedene Computer
+ verschoben werden? 
+\end_layout
+
+\begin_layout Itemize
+Wird ein Connection-Pooling zu einer Datenbank eingesetzt? 
+\end_layout
+
+\begin_layout Section
+Allgemeine Serveraspekte
+\end_layout
+
+\begin_layout Subsection
+Iterative vs.
+ Nebenläufige Server
+\end_layout
+
+\begin_layout Standard
+Es kann zwischen zwei Arten von Servern unterschieden werden: 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+iterativer oder sequentieller Server
+\emph default
+: Das Kennzeichen ist, dass der Server die Anfragen selbst verarbeitet und
+ ggf.\InsetSpace ~
+die Antwort an den Client sendet.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Es ist verständlich, dass solch ein Server nicht lange für die Behandlung
+ einer einzelnen Nachricht benötigen darf, da sonst das Antwortzeitverhalten
+ für weitere Anforderungen nicht befriedigend sein wird.
+\end_layout
+
+\begin_layout Standard
+Ein iterativer Server tritt in der Regel entweder auf als: 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+blocking Server
+\emph default
+: Es werden blockierende Funktionsaufrufe verwendet (z.B.
+ für accept, read, write).
+ In diesem Fall kann er nicht mehr als eine Verbindung zu einem Client betreiben.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+nonblocking Server
+\emph default
+: Es werden keine blockierenden Funktionsaufrufe verwendet.
+ Dazu gibt es zwei Möglichkeiten: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Es wird polling betrieben.
+ Z.B.
+ wird in Java mittels der 
+\family typewriter
+available()
+\family default
+ Methode der Klasse InputStream in einer Schleife abgefragt, ob Daten vorhanden
+ sind.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Dies ist natürlich keine performante Variante, da aktiv Prozessorzeit vernichtet
+ wird.
+\end_layout
+
+\begin_layout Standard
+Eine leicht verbesserte Version könnte Wartezeiten einfügen (z.B.
+ mittes 
+\family typewriter
+Thread.sleep
+\family default
+ oder mittels 
+\family typewriter
+setSoTimeout
+\family default
+ der Klasse 
+\family typewriter
+Socket
+\family default
+ und Verwendung der blocking 
+\family typewriter
+read
+\family default
+ Methode von Socket).
+\end_layout
+
+\begin_layout Standard
+In Java waren dies bis zur Version 1.4 des JDK die einzigen Möglichkeiten
+ einen iterativen Server als nonblocking Server zu implementieren.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Die bessere Variante liegt in der Verwendung des select API, das ursprünglich
+ im BSD Unix definiert wurde.
+ Das Prinzip ist, dass eine Menge von Ereignissen registriert werden kann
+ und ein einzelner blockierende Aufruf (nämlich select) durchgeführt wird,
+ der solange blockiert bis eines dieses Ereignisse eingetreten ist.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Ein Beispiel ist im Abschnitt 
+\begin_inset LatexCommand vref
+reference "sec:select-based-server"
+
+\end_inset
+
+ zu finden.
+ 
+\end_layout
+
+\end_deeper
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+
+\emph on
+nebenläufigen Server
+\emph default
+ (concurrent): Dieser verarbeitet die Anforderungen nicht selbst, sondern
+ gibt sie an einen separaten Prozess oder Thread weiter und wartet auf die
+ nächste Anforderung.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Ein Beispiel ist im Abschnitt 
+\begin_inset LatexCommand vref
+reference "sec:multi-threaded-server"
+
+\end_inset
+
+ zu finden.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Daemon-Server vs.
+ Super-Server
+\end_layout
+
+\begin_layout Standard
+Ein weiterer Aspekt ist, wie Clients einen Server kontaktieren.
+ Clients senden Anforderungen an einen Endpunkt (Port) und jeder Server
+ lauscht an einem Port.
+ Wie erfahren die Clients mit welchen Port sie sich verbinden sollen, um
+ einen bestimmten Dienst in Anspruch nehmen zu können?
+\end_layout
+
+\begin_layout Standard
+Es gibt einerseits die Möglichkeit, dass einem Dienst ein Port zugewiesen
+ ist, andererseits ist es für viele Dienste nicht notwendig, dass sie dauerhaft
+ einen zugewiesenen Endpunkt haben.
+ Es ist durchaus möglich, dass sie dynamisch einen Port zugewiesen bekommen.
+ Es stellt sich allerdings dann die Frage, wie der Client wissen kann welcher
+ Port kontaktiert werden soll.
+ Weiters ist es nicht immer notwendig, dass ein Server permanent läuft.
+ Oft ist es ausreichend, wenn dieser bei Bedarf gestartet wird:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Daemon Struktur
+\emph default
+: Ein Server wird gestartet und registriert sich bei einem (schon laufenden)
+ Daemon (engl.
+ disk and execution monitor, oft auch im Deutschen Dämon genannt).
+ Bei dieser Registrierung weist ihm der Daemon einen freien Port zu, unter
+ dem der Server seine Dienste anbieten kann.
+ D.h.\InsetSpace ~
+dieser Daemon verwaltet eine Liste alle gestarteten Server samt den besetzten
+ Ports.
+ Zusätzlich muss dieser Dämon an einem bekannten Port lauschen und auf diesem
+ bei Anfragen bzgl.
+ eines Dienstes dem Client die entsprechende Portnummer mitteilen.
+ Damit kann der Client danach direkt mit dem Server kommunizieren.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Der Vorteil dieser Methode liegt darin, dass ein Client nicht den speziellen
+ Port kennen muss, unter dem er einen Server erreicht.
+\end_layout
+
+\begin_layout Standard
+Ein Beispiel für eine derartige Struktur ist der portmapper Mechanismus.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\emph on
+Super-Server Struktur
+\emph default
+: Es läuft wiederum permanent ein Server, der als Super-Server bezeichnet
+ wird.
+ Dieser Super-Server lauscht an allen Ports, die den angebotenen Dienste
+ zugeordnet sind und startet bei Bedarf (d.h.\InsetSpace ~
+wenn ein Client sich mit dem
+ Port verbinden will) den entsprechenden Server.
+ Dananch kann der Client seine Kommunikation direkt mit dem gestarteten
+ Server fortsetzen.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Der Vorteil dieser Methode liegt darin, dass nicht permanent Prozesse laufen,
+ die vielleicht nur selten benötigt werden.
+\end_layout
+
+\begin_layout Standard
+Ein Beispiel für eine derartige Struktur liegt im inetd Modell von Unix.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Statusloser vs.
+ statusbehafteter Server
+\end_layout
+
+\begin_layout Standard
+Eine weitere Unterscheidung: 
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+statusloser Server
+\emph default
+: Dieser speichert keine Informationen über den Status seiner Clients und
+ kann seinen eigenen Status ändern ohne seine Clients informieren zu müssen.
+ Ein Webserver ist ein typischer statusloser Server.
+ Nach Bearbeitung der Anforderung vergisst der Server den Client vollständig.
+ Eng damit verbunden ist, dass http ein zustandsloses Protokoll ist.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Der Vorteil eines statuslosen Servers liegt darin, dass dieser sehr robust
+ gegenüber Abstürzen ist.
+\end_layout
+
+\begin_layout Standard
+Als Nachteil ist zu nennen, das Statusinformationen soferne sie benötigt
+ werden, der Client jedes Mal mitschicken muss.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+statusbehafteter Server: Es werden Informationen über die Clients verwaltet.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Der Vorteil ist, das komplexere Operationen möglich sind.
+\end_layout
+
+\begin_layout Standard
+Das Recovery nach einem Absturz kann sehr problematisch sein, da bereits
+ neu eintreffende Nachrichten von schon gesendeten Nachrichten abhängen
+ können.
+ Allerdings können auch schon gesendete Nachrichten nicht einfach vom Client
+ nochmals gesendet werden (
+\begin_inset Quotes pld
+\end_inset
+
+überweise 100 Euro
+\begin_inset Quotes prd
+\end_inset
+
+)! 
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Objektserver
+\end_layout
+
+\begin_layout Standard
+Ein 
+\emph on
+Objektserver
+\emph default
+ ist ein Server, der auf die Unterstützung verteilter Objekte zugeschnitten
+ ist.
+ Der wichtigste Unterschied zwischen einem allgemeinen Objektserver und
+ anderen Servern ist, dass ein Objektserver als solcher keinen speziellen
+ Dienst zur Verfügung stellt.
+ Im Wesentlichen stellt er nur die Mittel bereit, lokale Objekte abhängig
+ von Anforderungen durch entfernte Objekte aufzurufen.
+ Ein Beispiel dazu ist RMI von Java.
+\end_layout
+
+\begin_layout Standard
+Eigentlich ist ein Objektserver keine neue Art von Server, sondern lediglich
+ ein Server wie vorhergehend besprochen, der auf die Bereitstellung von
+ Objekten zugeschnitten ist.
+\end_layout
+
+\begin_layout Standard
+D.h.\InsetSpace ~
+im Sinne eines multi-threaded Servers (siehe Abschnitt 
+\begin_inset LatexCommand vref
+reference "sec:multi-threaded-server"
+
+\end_inset
+
+) gibt es die folgenden Möglichkeiten: 
+\end_layout
+
+\begin_layout Itemize
+Thread-pro-Anforderung 
+\end_layout
+
+\begin_layout Itemize
+Thread-pro-Verbindung 
+\end_layout
+
+\begin_layout Itemize
+Thread-pro-Objekt 
+\end_layout
+
+\begin_layout Standard
+Besonders bei Objektservern tritt die Problematik des Versionsmanagement
+ auf, da die Klassen im Laufe der Zeit weiterentwickelt werden und neue
+ Instanzen mit der neuen Version angelegt werden.
+\end_layout
+
+\begin_layout Section
+Multi-threaded Server
+\begin_inset LatexCommand label
+name "sec:multi-threaded-server"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Bei einem 
+\emph on
+multi-threaded Server
+\emph default
+ (also nebenläufig) wird je Client ein (oder mehrere) Threads gestartet:
+\end_layout
+
+\begin_layout Itemize
+Main-Thread wartet auf Verbindungen 
+\end_layout
+
+\begin_layout Itemize
+Client-Threads warten meistens (geblockt) auf die Anfragen der Clients.
+ Aus diesem Grund ist kein pollen notwendig und trotzdem ist der gesamte
+ Server nicht blockierend.
+ 
+\end_layout
+
+\begin_layout Standard
+Es wird also das Warten auf Verbindungen und das Bearbeiten der Verbindungen
+ getrennt.
+ Der Vorteil, der sich aus diesem Ansatz ergibt ist:
+\end_layout
+
+\begin_layout Itemize
+Auf einfache Art und Weise kann ein nebenläufiger Server entwickelt werden.
+ 
+\end_layout
+
+\begin_layout Standard
+An Nachteilen sind zu nennen: 
+\end_layout
+
+\begin_layout Itemize
+Das Erzeugen und Löschen von Threads ist (noch immer) eine kostspiele Operation.
+ Deshalb sollte dieser Ansatz in Kommbination mit einem Thread-Pool verwendet
+ werden, wenn es die Performance notwendig macht.
+ 
+\end_layout
+
+\begin_layout Itemize
+Die Skalierbarkeit kann mit diesem Vorgehen leiden, wenn sehr viele Threads
+ erzeugt werden müssen (unabhängig davon, ob Thread-pooling verwendet wird
+ oder nicht).
+ 
+\end_layout
+
+\begin_layout Itemize
+Weiters kann der Overhead, der auf Grund der Synchronisationsmechanismen
+ entsteht ein weiterer Grund für mangelnde Performance sein.
+ 
+\end_layout
+
+\begin_layout Itemize
+Die Wahrscheinlichkeit, dass Programmierfehler im Synchronistionscode sind
+ wird größer, je komplexer die Abhängigkeiten zwischen den Threads sind.
+ 
+\end_layout
+
+\begin_layout Minisec
+Beispiel: EchoServerMT mit TCP
+\end_layout
+
+\begin_layout Standard
+Das folgende Programm demonstriert die prinzipielle Struktur eines multithreaded
+ Servers (wobei aber das Thema Thread-Pooling nicht betrachtet wird):
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+import java.net.*;
+\end_layout
+
+\begin_layout Standard
+
+import java.io.*;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+// nicht blockender, multi-threaded EchoServer
+\end_layout
+
+\begin_layout Standard
+
+public class EchoServerMT extends Thread {
+\end_layout
+
+\begin_layout Standard
+
+  static int port = 9999;
+\end_layout
+
+\begin_layout Standard
+
+  Socket socket;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+  public EchoServerMT(Socket socket) {
+\end_layout
+
+\begin_layout Standard
+
+    this.socket = socket;
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+  public static void main(String[] args) throws IOException {
+\end_layout
+
+\begin_layout Standard
+
+    ServerSocket server = new ServerSocket(port);
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    while(true) {
+\end_layout
+
+\begin_layout Standard
+
+      Socket client = server.accept();
+\end_layout
+
+\begin_layout Standard
+
+      EchoServerMT s = new EchoServerMT(client);
+\end_layout
+
+\begin_layout Standard
+
+      s.start();
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+  public void run() {
+\end_layout
+
+\begin_layout Standard
+
+    try {
+\end_layout
+
+\begin_layout Standard
+
+      InputStream in = socket.getInputStream();
+\end_layout
+
+\begin_layout Standard
+
+      OutputStream out = socket.getOutputStream();
+\end_layout
+
+\begin_layout Standard
+
+      byte[] buffer = new byte[1024];
+\end_layout
+
+\begin_layout Standard
+
+      int read;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+      while ((read = in.read(buffer)) >= 0) {
+\end_layout
+
+\begin_layout Standard
+
+        out.write(buffer, 0, read);
+\end_layout
+
+\begin_layout Standard
+
+      }
+\end_layout
+
+\begin_layout Standard
+
+    } catch (IOException e) {
+\end_layout
+
+\begin_layout Standard
+
+      e.printStackTrace(); // zu Testzwecken
+\end_layout
+
+\begin_layout Standard
+
+    } finally {
+\end_layout
+
+\begin_layout Standard
+
+      try {
+\end_layout
+
+\begin_layout Standard
+
+        socket.close();
+\end_layout
+
+\begin_layout Standard
+
+      } catch (IOException e) {}
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+select-basierte Server
+\begin_inset LatexCommand label
+name "sec:select-based-server"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Bei einem 
+\emph on
+select-basierten Server
+\emph default
+ handelt es sich um einen iterativen, nonblocking Server.
+ Diese werden für hoch performante Server verwendet (z.B.
+ Videoserver).
+\end_layout
+
+\begin_layout Standard
+Gründe liegen darin, dass 
+\end_layout
+
+\begin_layout Itemize
+z.B.
+ es nicht sinnvoll ist darauf zu warten bis genügend Daten über das Netzwerk
+ übertragen ist (blockierende Aufrufe), sondern die Daten zu verarbeiten,
+ die schon vorhanden sind.
+ 
+\end_layout
+
+\begin_layout Itemize
+Eine hohe Anzahl von Threads ab einer gewissen Schranke immer zu Performanceprob
+lemen führt.
+ 
+\end_layout
+
+\begin_layout Itemize
+Die Synchronisierungsmechanismen zu Performanceeinbußen führen.
+ 
+\end_layout
+
+\begin_layout Standard
+Aus diesen Gründen wurden ab JDK 1.4 in Java die java.nio.* (new input/output)
+ Pakete eingeführt, die es ermöglichen, diese Performanceanforderungen prinzipie
+ll zu erfüllen.
+\end_layout
+
+\begin_layout Standard
+Auf Grund der besseren Verständlichkeit folgt zuerst ein Beispiel mit dem
+ Python select API und danach ein Beispiel mit dem nio Modell eines Echo-Clients
+ und eines Echo-Servers.
+\end_layout
+
+\begin_layout Minisec
+Beispiel: TimeServerSB
+\end_layout
+
+\begin_layout Standard
+Das folgende Python Programm demonstriert das select - API in einer übersichtlic
+hen Form.
+ Außerdem sieht die Python Implementierung ähnlich wie das originale C -
+ API von select aus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=Python"
+inline false
+status open
+
+\begin_layout Standard
+
+import select, socket, struct, time
+\end_layout
+
+\begin_layout Standard
+
+PORT = 8037
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+# Referenzzeit
+\end_layout
+
+\begin_layout Standard
+
+TIME1970 = 2208988800L # wie gehabt
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+serversock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+\end_layout
+
+\begin_layout Standard
+
+serversock.bind(("", PORT))
+\end_layout
+
+\begin_layout Standard
+
+serversock.listen(1)
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+print "lausche an Port", PORT
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+isreadable = [serversock]
+\end_layout
+
+\begin_layout Standard
+
+iswriteable = []
+\end_layout
+
+\begin_layout Standard
+
+iserror = [serversock]
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+while 1:
+\end_layout
+
+\begin_layout Standard
+
+    # es wird ein time-out von 1 Sekunde angegeben (wird nichts angegeben,
+\end_layout
+
+\begin_layout Standard
+
+    # dann wartet select bis eine IO Operation stattgefunden hat.
+\end_layout
+
+\begin_layout Standard
+
+    r,w,e = select.select(isreadable, iswriteable, iserror, 1)
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    if r:
+\end_layout
+
+\begin_layout Standard
+
+        client, info = serversock.accept()
+\end_layout
+
+\begin_layout Standard
+
+        print "Verbindung von", info
+\end_layout
+
+\begin_layout Standard
+
+        t = int(time.time()) + TIME1970
+\end_layout
+
+\begin_layout Standard
+
+        t = struct.pack("!I", t)
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        # 4 Bytes werden sicher nicht blocken!
+\end_layout
+
+\begin_layout Standard
+
+        client.send(t)
+\end_layout
+
+\begin_layout Standard
+
+        client.close()
+\end_layout
+
+\begin_layout Standard
+
+    else:
+\end_layout
+
+\begin_layout Standard
+
+        print "weiter warten!" 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Sollen größere Mengen von Daten gesendet werden (wo die potentielle Gefahr
+ des Blockens nicht mehr ignoriert werden kann), dann ist 'is_writeable'
+ zu verwenden und der Socket mit setblocking() auf nicht blocken zu setzen!
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_body
+\end_document

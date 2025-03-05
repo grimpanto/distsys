@@ -1,0 +1,6 @@
+* Distsys
+
+This script is a document that I have written for teaching purposes. The
+beginnings of this work date back about 20 years, but since the current version
+deals mainly with basic topics, the contents can be used for the most part.
+Please note the license.

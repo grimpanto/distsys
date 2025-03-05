@@ -1,0 +1,85 @@
+
+\chapter{Entfernter Zugriff}
+
+
+\section{FTP}
+
+Datenzugriff mittels ftp (RFC 959) ist ein relativ altes und noch
+immer sehr weit verbreitetes Protokoll. 
+
+Anders als http benützt ftp \emph{mehr} als eine Verbindung zwischen
+Client und Server: Zunächst baut der Client eine Verbindung zum Port
+21 (Control Port) des Servers auf. Diese Verbindung dient zur Authentifizierung
+und Befehlsübertragung. Zur eigentlichen Datenübertragung wird bei
+Bedarf eine eigene Verbindung aufgebaut.
+
+Dazu gibt es \emph{2 Betriebsarten}:
+\begin{description}
+\item [{Active~Mode}] Der Server baut von seinem Port 20 (Data Port) eine
+Verbindung zu einem vom Client gewählten Port (über 1023) auf. 
+\item [{Passive~Mode}] Der Client baut eine Verbindung zu einem vom Server
+gewählten Port auf (meistens beide größer 1023). 
+\end{description}
+Dieses Protokoll wird als relativ unsicher angesehen, da sowohl die
+Passwortübertragung als auch die Datenübertragung unverschlüsselt
+stattfindet. Technisch gesehen ist der Befehlskanal wie beim telnet
+Protokoll aufgebaut. Aus diesem Grund sollte man Daten nur mit scp
+(secure copy protocol) oder der Weiterentwicklung sftp (siehe \vref{sec:SSH})
+arbeiten.
+
+
+\section{Netzwerkdateisysteme}
+
+Als Alternative zu einer Übertragung mit ftp, scp oder sftp kann für
+den Datenzugriff ein Netzwerkdateisystem wie NFS (Network File System)
+oder CIFS (Common Internet File System) verwendet werden.
+
+
+\minisec{NFS}
+
+NFS wurde von SUN entwickelt und stellt ein Netzwerkdateisystem für
+Unix dar. NFS hat heutzutage keine dominante Bedeutung mehr. Viele
+wichtige Punkte wie die Authentifizierung der Benutzer (und nicht
+nur der Rechner wie in NFSv3) oder der Wegfall der Unix-Lastigkeit
+wurden erst in NFSv4 eingeführt. Diese Version hat sich jedoch nicht
+durchsetzen können.
+
+
+\minisec{CIFS}
+
+CIFS wurde 1996 von Microsoft bei der IETF eingereicht und stellt
+eine Erweiterung von SMB (Server Message Blocks) dar. SMB wurde von
+IBM mit dem Ziel entwickelt für DOS ein Netzwerkdateisystem zur Verfügung
+zu haben. Microsoft hat SMB weiterentwickelt und in ihre Produktlinie
+integriert. CIFS bietet entfernten Zugriff auf Dateien, Drucker oder
+andere Geräten als auch die Möglichkeit zur IPC.
+
+
+\section{Entfernte Ausführung}
+
+
+\subsection{SSH\label{sec:SSH}}
+
+siehe Foliensatz!
+
+%% SSH ist nicht nur ein Protokoll (siehe Abschnitt \vref{sec:SSH_protocol}),
+%% sondern auch eine Anwendung, die es erlaubt über das Netz sich auf
+%% einem Rechner anzumelden und Befehle abzusetzen.
+
+%% Es ersetzt unsichere Protokolle wie rsh, rlogin oder telnet. rcp kann
+%% durch scp (secure copy) ersetzt werden und ftp durch sftp (secure
+%% file transfer protocol). scp und sftp ersetzen die unverschlüsselten
+%% Protokolle, haben ansonst aber keine Gemeinsamkeiten. Z.B. gibt es
+%% bei sftp auch keinen getrennten Daten- und Befehlskanal. Es wird wie
+%% für ssh der Port 22 verwendet.
+
+
+\subsection{X-Window-Protokoll}
+
+Mit dem X-Window-Protokoll kann man graphische Ausgaben zum Client
+(dieser wird als Server bezeichnet) und Eingaben zum Server (das ist
+der eigentliche Client) schicken.
+
+Ähnlich: Windows Terminal Server
+
+

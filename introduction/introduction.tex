@@ -1,0 +1,311 @@
+
+\chapter{Einleitung}
+
+
+\section{Überblick}
+
+In diesem Abschnitt wird ein grober Überblick über das Gebiet der
+verteilten Systeme und im speziellen der Rechnernetze gegeben.
+
+Was ist überhaupt ein Netz? In einer ersten und sehr allgemeinen Definition
+verstehen wir darunter die Kommunikation mittels Protokolle zwischen
+zwei oder mehreren Kommunikationspartnern. Diese allgemeine Definition
+wird in weiterer Folge konkretisiert. Vorerst wollen wir uns diesem
+Thema jedoch mittels Beispielen annähern.
+
+Je nach Betrachter kann man ein Netz aus verschiedenen Blickwinkeln
+betrachten. Beispiele sind:
+\begin{itemize}
+\item Werden einfach zwei Geräte mittels serieller Leitungen (Terminals,
+Modem,...) verbunden kann das aus der Sicht der Benutzer schon ein
+Netz darstellen.
+\item Aus der Sicht der Endbenutzer ist ein Telekommunikationsnetz mit seinen
+Diensten Telefon, Telefax, Telex (TELEprinter EXchange), GSM oder
+UMTS ebenfalls ein Netz.
+\item Ebenfalls aus Benutzersicht tritt das Fernsehnetz mit seinen Diensten
+Fernsehen, Kabelfernsehen und Teletext als Netz auf.
+\item In dieser Unterlage wollen wir uns jedoch ausschließlich mit Rechnernetzen
+beschäftigen, also solchen Netzen in denen Rechner im Vordergrund
+stehen. Aber selbst dieses Gebiet ist sehr breit gefächert, wie die
+folgenden Beispiele zeigen:
+
+\begin{itemize}
+\item Ein Netz, das verschiedene Geräte für eine Industriesteuerung vernetzt
+stellt ganz spezielle Anforderungen an die Datenübertragung und die
+Ausfallsicherheit und wird als Feldbus bezeichnet.
+\item Netzverbindungen zum Anschluss von Peripheriegeräten an einen Rechner
+wie z.B. der Gerätebus USB sollen viele verschiedene Geräte anbinden
+können und möglichst preisgünstig sein.
+\item Ein Computersystem verbindet mehrere Rechner oder Prozessoren miteinander,
+um meist rechenintensive Aufgaben zu erledigen. Man kann prinzipiell
+unterteilen in Multiprozessor-Rechner (mehrere Prozessoren in einem
+Rechner) und Multicomputersysteme, die mehrere Rechner homogen (also
+alle gleichartige) oder heterogen (also verschiedenartige) zu einem
+Netz verbinden.
+\item Allgemeine Rechner-zu-Rechner Kommunikation wie z.B. über das Internet.
+In diesem Sinne handelt es sich hierbei um ein heterogenes Rechnernetz.
+\end{itemize}
+\end{itemize}
+In weiterer Folge werden wir uns nur mit Rechnernetzen also Netzen
+im Sinne der allgemeinen Rechner-zu-Rechner Kommunikation beschäftigen.
+Rechnernetze sind dadurch gekennzeichnet, dass
+\begin{itemize}
+\item die Kommunikationspartner beliebige Geräte sein können und nicht auf
+spezielle Anforderungen wie bei Telefon oder bei Geräteanbindungen
+eingeschränkt sind.
+\item die Kommunikation nicht auf spezielle Daten eingeschränkt ist. D.h.
+beliebige Daten wie z.B. WWW, E-Mail, Streaming-Audio und -Video (Download
+und Konferenzen), Chat, File-Sharing, verteiltes Rechnen oder elektronischer
+Handel.
+\end{itemize}
+Im folgenden Text werden Rechnernetze noch von weiteren Gesichtspunkten
+betrachtet, um die vielfältigen Aufgabenstellungen, die an Rechnernetze
+gestellt werden, zu veranschaulichen.
+
+
+\minisec{Behandlung der Daten}
+
+Betrachtet man die Kommunikation etwas näher so erkennt man, dass
+es auch verschiedene Arten gibt, wie Daten behandelt werden können.
+Das heißt, dass es verschiedene Arten der Anwendung von Daten gibt.
+Für Videodaten, gibt es z.B. folgende Arten: Video-Download, Video-on-Demand,
+Video-Konferenz. Jede dieser Anwendungen stellt besondere Anforderungen
+an das Netz:
+\begin{itemize}
+\item Ein Video-Download soll aus Benutzersicht lediglich möglichst schnell
+erfolgen. Ansonsten gibt es keine besonderen Bedingungen, die eingehalten
+werden müssen.
+\item Bei Video-on-Demand ist es z.B. akzeptabel 10s auf den ersten Frame
+zu warten, danach erwartet man sich jedoch eine synchrone Übertragung
+der Audio- und Videodaten ohne nennenswerte Verzögerungsschwankungen.
+\item Bei einer Video-Konferenz sind -- im Vergleich zu Video-on-Demand
+-- 10s Delay nicht akzeptabel und die Kommunikationsrichtung findet
+in beide Richtungen statt.
+\end{itemize}
+Charakteristisch bei Audio- oder Videosignalen ist auch, dass kleine
+Fehler oder ausgelassene Daten nicht stören! In einer reinen Datenkommunikation,
+müssen fehlerhafte Daten erkannt werden und danach entweder korrigiert
+oder wieder neu angefordert werden. Diese neuerliche Übertragung von
+Daten ist bei Audio- oder Videoanwendungen nicht notwendig und außerdem
+unerwünscht!
+
+
+\minisec{Zielstellung der Kommunikation}
+
+Je nach Zielstellung der Kommunikation kann man unterscheiden z.B.
+in:
+\begin{itemize}
+\item Datenübertragung (z.B. ftp).
+\item Zugriff auf nicht lokale Informationen, wie Daten (z.B. aus einem
+Datenbanksystem), Information (z.B. WWW) oder Programmen (z.B. mittels
+telnet oder besser ssh).
+\item Nachrichtenaustausch, kann entweder asynchron (z.B. E-Mail) oder synchron
+(z.B. Chat, Videokonferenz, Telefon) erfolgen.
+\item Allseitige Erreichbarkeit (kabellos, kabelgebunden).
+\item Broadcast-Kommunikation (z.B. Fernsehen, Rundfunk).
+\item Neue Arbeitsformen (z.B. Telelearning, Teleworking).
+\item Steuerung entfernter Prozesse.
+\end{itemize}
+
+\minisec{Art der Verbindungen}
+\begin{itemize}
+\item Direkte Verbindungen
+
+\begin{itemize}
+\item Punkt-zu-Punkt Verbindung (z.B. serielle RS-232)
+\item Mehrfachzugriffsverbindung (z.B. Ethernet, Bus)
+\end{itemize}
+\item Vermitteltes Netzwerk
+
+\begin{itemize}
+\item Leitungsvermitteltes Netzwerk (z.B. Telefonie)
+\item Paketvermitteltes Netzwerk (z.B. Internet)
+\end{itemize}
+\end{itemize}
+
+\minisec{Nutzergruppen}
+
+Unterschiedliche Perspektiven aus denen Rechnernetze betrachtet werden
+können:
+\begin{itemize}
+\item Netzbenutzer: will möglichst einfachen Zugriff auf Netzressourcen.
+\item Netzbetreiber: ist interessiert an Nutzungsgebühren, Wartbarkeit,
+Skalierbarkeit. Je nach Betreiber kann man die Netze einteilen:
+
+\begin{itemize}
+\item Öffentliche Netze (Telefon, Daten, Mobilfunk).
+\item nicht öffentliche Netze (Sondernetze: Polizei, Verkehrswesen, Energieversorger).
+\item Private Netze
+
+\begin{itemize}
+\item Corporate Networks: Unternehmensnetze auf Basis gemieteter oder unternehmenseigener
+Übertragungskanäle.
+\item Virtuell private Netze: Vernetzung von Unternehmensstandorten über
+fremde Übertragungskanäle, Kommunikation wie in einem lokalen Netz.
+\end{itemize}
+\end{itemize}
+\item Netzdesigner: ist interessiert an kostengünstigem Design, effektive
+Nutzung der Ressourcen. Der Netzdesigner benötigt Vorgaben vom Netzbetreiber
+aber auch Informationen über die Dienste, die im Netz angeboten werden
+sollen.
+\item Softwareentwickler ist interessiert an Diensten, die die Anwendung
+benötigt und die im Netzwerk zur Verfügung stehen. Der Softwareentwickler
+muss vom Netzdesign etwas verstehen, um dem Netzdesigner gegenüber
+seine Anforderungen formulieren zu können. Außerdem muss er die Auswirkungen
+des Netzdesigns auf die Anwendung abschätzen und auch die Anforderungen
+des Netzbetreibers beim Entwurf der verteilten Anwendung berücksichtigen.
+\end{itemize}
+
+\minisec{Netzausdehnung\label{min:net_dimensions}}
+
+Je nach Netzausdehnung kann man unterscheiden in
+\begin{description}
+\item [{PAN}] Personal Area Network, ca. 1m
+\item [{LAN}] Local Area Network, ca. 10m -- 1km
+\item [{MAN}] Metropolitan Area Network, ca. 10km
+\item [{WAN}] Wide Area Network, bis ca. 1000km
+\item [{GN}] Global Network, weltumspannend, Zusammenschluss mehrerer WANs,
+ca. 10000km
+\end{description}
+
+\section{Einsatzziele von Rechnernetzen}
+
+Die Rechner arbeiten in einem Rechnernetz autonom, aber trotzdem im
+Verbund an der Lösung einer oder mehrerer Aufgaben. Je nach Ziel des
+Verbundes kann man Rechnernetze unterscheiden in:
+\begin{description}
+\item [{Datenverbund}] Das Ziel eines Datenverbunds ist die logische Verbindung
+räumlich getrennter (persistenter) Datenbestände über das Netz. Hier
+gibt es prinzipiell zwei Vorgehensweisen:
+
+\begin{itemize}
+\item Die Partitionierung eines Datenbestandes auf mehrere Standorte. Ziele:
+höhere Sicherheit, niedrigere Zugriffszeiten, bessere Auslastung
+\item Die Verteilung eines Datenbestandes über mehrere Standorte. Ziele:
+höhere Verfügbarkeit, niedrigere Zugriffszeiten
+\end{itemize}
+Geht es um einen schnellen Zugriff auf große Datenmengen, dann wird
+heute ein sogenanntes SAN (Storage Area Network) verwendet. Es werden
+die Computer mittels eines speziellen Netzes mit den Speicherressourcen
+verbunden. Diese Netze unterscheiden sich dadurch von einem LAN, dass
+die Netze auf die Übertragung von blockorientierten Daten optimiert
+sind. Zwischen Computer und Festplatte werden entweder ATA oder SCSI
+verwendet. In SANs wird meistens SCSI oder Fibre Channel verwendet.
+
+\item [{Funktionsverbund}] In einem Funktionsverbund fasst man Geräte oder
+Systeme zur Realisierung spezieller Funktionen zusammen, so dass die
+anderen Knoten die neuen Funktionen nutzen können. D.h. es wird eine
+Verteilung von speziellen Funktionen auf spezielle Knoten vorgenommen.
+Beispiele sind: Superrechner, Abteilungsdrucker, Gatewaydienste wie
+Faxserver oder ein Internet-Zugang.
+\item [{Leistungsverbund}] Bei einem Leistungsverbund wird eine geforderte
+Rechenleistung von mehreren Rechnern erbracht. D.h. es wird vorausgesetzt,
+dass eine Aufgabe in mehrere Teilaufgaben zerlegt werden kann, deren
+Abarbeitung auf mehrere Rechner verteilt werden kann.
+
+
+Liegt das Hauptziel in der Bereitstellung einer möglichst großen Rechenleistung,
+dann verwendet man entweder Multiprozessorsysteme oder homogene Multicomputersysteme.
+Beide Arten haben einen homogenen Aufbau, d.h., dass die einzelnen
+Teile aus denen sie aufgebaut sind bzgl. einer gewissen Sichtweise
+gleich sind. Als (,,kostengünstige'') Alternative bieten sich Grids
+an, die eine Vielzahl an -- meist heterogenen -- Rechnern miteinander
+verbinden. Diese sind jedoch nur für gut zerlegbare Aufgabenstellungen
+geeignet, da die Verbindungen zwischen den Rechnern die eigentliche
+Begrenzung der Rechenleistung darstellen. 
+
+Bei einem Multiprozessorsystem sind mehrere gleiche Prozessoren mit
+je einem eigenem Cache über einen Bus mit einem gemeinsamen Hauptspeicher
+verbunden. Das Betriebssystem muss in der Lage sein, mehrere Prozessoren
+zu verwalten. Die Schwierigkeit liegt in der gemeinsamen effizienten
+Nutzung des gemeinsamen Speichers.
+
+Homogene Multicomputer sind in gewisser Weise wesentlich einfacher:
+Sie bestehen aus mehreren unabhängigen, aber ,,gleichen'' Computern
+mit jeweils einem eigenen Speicher, die über ein effizientes Verbindungsnetzwerk
+miteinander verbunden sind. Die Schwierigkeit liegt hier darin, eine
+wirklich effiziente Verbindung herzustellen. Das Verbindungsnetzwerk
+kann entweder wiederum ein Bussystem sein oder ein auf Schaltern basierendes
+Verbindungssystem. 
+
+In einem auf Schaltern basierenden Multicomputer werden die Nachrichten
+zwischen den Prozessen über ein Verbindungsnetzwerk geroutet und nicht
+mit Hilfe von Broadcasts über einen Bus übertragen. Eingesetzt wird
+häufig ein Maschennetz oder dreidimensionale Strukturen wie Würfel
+(engl. cube) oder vierdimensionale Strukturen (Hypercubes).
+
+Das Betriebsystem für einen homogenen Multicomputer muss in der Lage
+sein die Ressourcen zu verwalten ohne, dass es einen gemeinsam genutzten
+Speicher gibt. Auf Grund der gleichartigen Hardware kann das Betriebssystem
+optimal auf die Hardware zugeschnitten werden.
+
+\item [{Lastverbund}] Das Ziel eines Lastverbund ist die gleichmäßige Auslastung
+mehrer Ressourcen. Das heißt, dass ein stoßweiser Anfall einer Last
+auf verschiedene Rechner verteilt wird. In der Regel handelt es sich
+um Rechenleistung.
+\item [{Verfügbarkeitsverbund}] Unter einem Verfügbarkeitsverbund versteht
+man die Schaffung fehlertoleranter Systeme, die auch bei Ausfall einzelner
+Knoten noch eine Mindestleistung erbringen können. Z.B. Server im
+Standby-Betrieb.
+\item [{Allgemeiner~Verbund}] Liegt der Schwerpunkt auf einem möglichst
+generellen Einsatz ohne das spezielle Anforderungen vorliegen, dann
+werden heterogene Multicomputersysteme eingesetzt. Diese Computersysteme
+sind aus Teilen zusammengesetzt, die sich wesentlich von einander
+unterscheiden. Bei diesen Teilen geht es um Prozessortyp, Speichergrößen
+oder I/O Bandbreite. D.h. die Kommunikation zwischen den einzelnen
+Rechnern ist nur mehr mittels Nachrichten möglich. Eine gemeinsame
+Nutzung der Ressourcen ist nicht mehr einfach möglich.
+\end{description}
+In weiterer Folge werden wir nur mehr heterogene Rechnersysteme hauptsächlich
+im Kontext eines algemeinen Verbandes betrachten.
+
+
+\section{Begriff und Beispiele eines verteilten Systems}
+
+Ein \emph{verteiltes System} ist eine Menge voneinander unabhängiger
+Computer, die dem Benutzer wie ein einzelnes, zusammenhängendes System
+erscheinen. Der Zweck ist als eine Transparenz zu schaffen, die es
+ermöglicht die technischen Problemen der Netze und der Kommunikation
+zu verstecken. Eine genauere Betrachtung und Definition ist im Abschnitt
+\vref{sec:defintion_distsys} zu finden.
+
+Beispiele verteilter Anwendungen:\label{pag:distributed_systems_examples}
+\begin{itemize}
+\item Rechenintensive Anwendungen werden mittels Parallelrechner, Cluster
+oder Grid-Computing gelöst: 
+
+\begin{itemize}
+\item Simulationen in der Wettervorhersage, für Sturm- und Tsunamiwarnungen
+oder Vorhersage von Vulkanaktivitäten. 
+\item Bei der Konstruktion neuer Autotypen werden Kosten gespart, da auf
+aufwändige Crashversuche weitgehend verzichtet werden kann.
+\item In der Bioinformatik wird die aufwändige DNA-Sequenzanalyse mit Hilfe
+solcher Systeme gelöst.
+\item Im Data-Mining geht es darum, in sehr großen Datenvorkommen Muster
+zu erkennen und zu strukturieren. Ein populäres Beispiel ist SETI@home
+bei dem es darum geht, aus den aus dem Weltraum empfangenen Signalen
+nach Hinweisen auf Leben zu durchsuchen. Es ist insoferne populär,
+da es sich der Internetbenutzer bedient, die ihre lokale, freie Rechnerkapazität
+zur Verfügung stellen.
+\end{itemize}
+\item Integration von Legacy-Anwendungen und Einbindung neuer Systeme zu
+einem Gesamtsystem.
+\item Zusammenführung von Datenbeständen von verschiedenen Standorten mittels
+verteilten Datenbanken.
+\item Verteiltes Dokumentenmanagement.
+\item Fehlertolerante Anwendungen: Prozesssteuerung in einer Fabrik, einem
+Flugzeug oder einem Atomkraftwerk. Kennzeichen solcher Anwendungen
+ist, dass diese speziell auf den teilweisen Ausfall einzelner Komponenten
+oder den vollständigen Ausfall des gesamten Systems ausgelegt sind.
+\item Computer Supported Cooperative Work (CSCW): Groupware- und Workflowanwendungen.
+Aktuell ist auch die Einbindung von RFID in den Produktionsablauf
+und die Workflowsysteme.
+\item Teleworking, Distance Learning, Ausbildung: Tele-Medizin, Fernuniversität,
+Simulation von Flugsituationen in der Pilotenausbildung (Ausfall einzelner
+Komponenten, Wetter).
+\item Informationssysteme und -dienste: Hotelbuchung, Flugreservation.
+\item E-Commerce: Business-to-Business (B2B), Business-to-Consumer (B2C)
+wie z.B. Home-Banking.
+\end{itemize}
+Um solche Anwendungen entwickeln zu können, benötigt man entsprechende
+Techniken und vor allem aber ein Rechnernetz.

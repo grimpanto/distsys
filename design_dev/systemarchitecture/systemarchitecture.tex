@@ -1,0 +1,378 @@
+
+\chapter{Systemarchitektur}
+
+
+\minisec{Definition}
+
+Es gibt keine allgemein gültige Definition des Begriffes `Systemarchitektur'.
+Die folgende Definition ist von G.Booch:
+\begin{quote}
+Die Architektur regelt den konzeptionellen Zusammenhang zwischen den
+verschiedenen eigenständigen Komponenten eines Systems. Sie formt
+die logische und physikalische Struktur eines Systems mit allen strategischen
+und taktischen Entwurfsentscheidungen, welche während dem Entwicklungsprozess
+angewendet werden müssen. 
+\end{quote}
+Das SEI (Software Engineering Institute) der Carnegie Mellon University
+definiert den Begriff `architecture' folgendermaßen:
+\begin{quote}
+A specification that identifies components and their associated functionality,
+describes connectivity of components, and describes the mapping of
+functionality onto components. Architectures can be of different types,
+e.g., hardware, software, or system, and can be domain-specific, e.g.,
+networking. 
+\end{quote}
+Eine etwas pragmatischere Defintion für den Begriff Systemarchitektur:
+Man versteht darunter die Konzipierung des Aufbaus von IT-Systemen
+aus Hardware, System-, Middleware- und Anwendungssoftware, Netzwerkstrukturen,
+Betriebspersonal und Nutzern.
+
+Die Systemarchitektur als solches ist ein Produkt (oder auch Artifakt),
+das im Zuge der Entwicklung entsteht und der Kommunikation zwischen
+den Projektmitgliedern dient.
+
+
+\minisec{Kriterien für eine gute Architektur}
+\begin{description}
+\item [{Einfachheit}] KISS Prinzip 
+\item [{Funktionalität}] In welchem Maße wird die geforderte Funktionalität
+abgedeckt? 
+\item [{Erweiterbarkeit}] extrem wichtig, besonders im Hinblick auf iterative
+Entwicklung 
+\item [{Kapselung}] starke Bindung innerhalb der Komponenten, schwache
+zwischen den Komponenten 
+\end{description}
+
+\minisec{Abgrenzung zur Softwarearchitektur}
+
+Während sich die Systemarchitektur mit dem Aufbau und dem Zusammenspiel
+als auch dem Umfeld des gesamten Systems beschäftigt, hat die Softwarearchitektur
+den Aufbau und das Zusammenspiel der Software zum Inhalt.
+
+In der Regel wird die gewählte Systemarchitektur einen großen Einfluss
+auf die Softwarearchitektur haben!
+
+Ohne auf Details eingehen zu wollen, werden wir uns in weiterer Folge
+auf die logische Struktur konzentrieren.
+
+
+\section{Client-Server-Modell}
+
+
+\subsection{Schichten}
+
+Es gibt (zumindest) \emph{drei unterschiedliche Schichten} in denen
+Client- oder Server-Funktionalität beinhaltet sein kann:
+\begin{itemize}
+\item Präsentationsebene (Presentation Layer, PL) Darstellung der Daten
+und Verarbeitung der Benutzereingaben.
+
+\begin{itemize}
+\item zeichenbasierte Benutzeroberfläche (Mainframe, DOS, Terminal) 
+\item graphische Benutzeroberfläche (Win, X-Windows) 
+\end{itemize}
+Diese Ebene kann auch noch aufgegliedert werden in:
+\begin{itemize}
+\item Reine Anzeigefunktionalität (View - Komponente des MVC Paradigmas) 
+\item Steuerung der Benutzerschnittstelle (Control - Komponente des MVC
+Paradigmas, Presentation Logic) 
+\end{itemize}
+\item Verarbeitungsebene (Application Layer, AL)
+
+
+Beinhaltet die Business-Logic (Verarbeitung und Auswertung der Daten).
+
+\item Datenebene (Data Layer, DL) 
+
+\begin{itemize}
+\item Persistenz der Daten: Dateisystem oder Datenbank 
+\item Datenunabhängigkeit: Unabhängigkeit von den Applikationen soll gegeben
+sein. 
+\item Datenkonsistenz: DL soll die Konsistenz der Daten sicherstellen können
+(z.B. durch Trigger in RDBMS oder Invarianten in OODBMS). 
+\end{itemize}
+\end{itemize}
+
+\subsection{Client/Server - Architekturen}
+
+Je nach Aufteilung der Schichtung auf Client bzw. Server entstehen
+verschiedene \emph{Client/Server - Architekturen}:
+\begin{itemize}
+\item 2-Tier 
+
+\begin{itemize}
+\item Client: PL --- Server: PL, AL, DL 
+\item Client: PL --- Server: AL, DL 
+\item Client: PL, AL --- Server: AL, DL 
+\item Client: PL, AL --- Server: DL 
+\item Client: PL, AL, DL --- Server: DL 
+\end{itemize}
+PL ... Presentation Layer (Terminal, GUI)\\
+ AL ... Application Layer (Business Logic)\\
+ DL ... Data Layer (z.B. Dateisystem, XML Datenquellen, Datenbanken)
+
+Je nach Menge der Funktionalität am Client spricht man von Thin Client
+bzw. von Fat Client.
+
+\item 3-Tier (Server kann auch als Client arbeiten) 
+
+\begin{itemize}
+\item Client: PL 
+\item Anwendungserver (ist Client von Datenserver): AL 
+\item Datenserver: DL 
+\end{itemize}
+\item n-Tier (weitere Aufteilung um z.B. auch Webclients zu bedienen) 
+
+\begin{itemize}
+\item Client: PL (mit Presentation Logic) 
+\item Client: PL (ohne Presentation Logic, z.B. Webbrowser, oft hinter einer
+Firewall) 
+\item Server: PL (beinhaltet Presentation Logic) 
+\item Server: AL 
+\item Datenserver: DL 
+\end{itemize}
+n-Tier Architekturen dieser oder ähnlicher Art mit einer Firewall
+sind in Firmennetzwerken anzutreffen. Achtung, bei Firewalls treten
+die bekannten Probleme meistens an 2 Stellen auf: Einmal auf der Server-Seite
+und einmal auf der Client-Seite! 
+
+\end{itemize}
+Es ist offensichtlich, dass in jeder Schicht mehrere physische Computer
+angesiedelt sein können, die durchaus auch verschiedene Funktionen
+haben können und unterschiedlich miteinander kooperieren.
+
+
+\subsection{Kriterien}
+
+Je nach Konfiguration und Anwendung können verschiede Aspekte zur
+Entscheidung über eine Architektur betrachtet werden.
+
+Kriterien für die Auswahl einer geeigneten Architektur (abgesehen
+von den Kriterien, die direkt aus den allgemeinen Zielen abgeleitet
+werden können):
+\begin{itemize}
+\item Antwortzeitverhalten, Netzwerkbelastung (Durchsatz): abhängig von
+Netzwerk, Server, Client, Software,... 
+\item Zuverlässigkeit und Verfügbarkeit: Redundanz der Daten durch Replikation,
+Redundanz der Hardware (Server, Netzwerk), Redundanz in der Software,
+Hardwaretausch,... 
+\item Sicherheit ($\rightarrow$ Sicherheit) 
+\item Integration in Legacy-Systeme: wie läßt sich das neue System in die
+bestehenden Systeme integrieren? Import von Daten, Austausch von Daten,
+Authentifizierung und Zugriffskontrolle der Benutzer,... 
+\item Flexibilität: z.B. Austauschbarkeit der Benutzerschnittstelle,... 
+\item Installation und Wartbarkeit: Wie leicht läßt sich das System installieren?
+Wie leicht kann es gewartet werden? Wie leicht können neue Versionen
+eingespielt werden (Application Deployment)? 
+\item Skalierbarkeit: Hardwareaufrüstungen, neue Benutzer 
+\item Administration 
+\item Programmierproduktivität: je nach Komplexität der Anforderungen (siehe
+Ziele) und der Systemarchitektur sowie der verwendeten Entwicklungstools! 
+\item Kosten: von Lizenzen, Eigentumsverhältnisse 
+\end{itemize}
+Als 'Spezialfall' der Client/Server Anordnung, die in dieser Form
+als vertikale Anordnung bezeichnet wird, kann die horizontale Anordnung
+bezeichnet werden, bei der ein Client oder ein Server in logisch äquivalente
+Teile aufgegliedert werden, die jeder mit einem eigenem Anteil der
+vollständigen Datenmenge operieren.
+
+
+\section{Peer-to-Peer Architektur}
+
+Für bestimmte Arten von Anwendungen kann eine sogenannte Peer-to-Peer
+Architektur eingesetzt werden. Das besondere an einer derartigen Architektur
+ist, dass es keinen dedizierten Server gibt. In diesem Modell ist
+es so, dass z.B. ein Host Kontakt zu einem anderen Host aufnimmt und
+diese danach miteinander kommunizieren. Weitere Hosts können ebenfalls
+mit diesen Hosts kommunizieren. D.h.~im Sinne des Client / Server
+Konzeptes tauschen Client und Server die Rollen!
+
+Der Vorteil ist, dass nicht ein einzelner Server den Flaschenhals
+bildet.
+
+Nachteile sind, dass es schwierig sein kann 
+\begin{itemize}
+\item einen einheitlichen globalen Status einer Anwendung zu gewährleisten. 
+\item ein effizientes Routing der Kommunikation sicherzustellen. 
+\item einen Kommunikationspartner zu finden. 
+\item Netzwerksausfälle zu maskieren. 
+\end{itemize}
+Hauptgrund für die oben genannten Nachteile ist, dass es keine zentrale
+Instanz gibt, die die Aufgaben übernimmt.
+
+Bekannte Anwendungen der Peer-to-Peer Architektur sind z.B. Chat oder
+File-Sharing (Napster, Gnutella).
+
+
+\section{Push-Architektur}
+
+Das im Internet dominierende Kommunikationsmodell ist das vom WWW
+bekannte Request/Reply Schema: ein aktiver Client stellt eine Anfrage
+und `pulled' Information vom Server. D.h.~der Client muss wissen
+\emph{wo} und \emph{wann} die Information vorhanden ist. Dadurch ist
+es die Aufgabe des Benutzers Informationen zu finden und regelmäßig
+auf Verfügbarkeit bzw.~Änderung zu überprüfen. Ist ein kontinuierlicher
+Informationsfluss notwendig, versagt dieses Kommunikationsmuster (polling!).
+
+Bei der \emph{Push-Architektur} wird die Information ohne Zutun des
+Clients vom Server {}``gepushed''. Hauptsächlicher Einsatzzweck
+ist es große Mengen von Informationen an eine große Anzahl von Benutzern
+zu verteilen. Beispiele dafür gibt es schon seit den Anfängen des
+Internet, wie z.B. E-Mail oder Usenet News.
+
+Das allgemeine Modell sieht folgendermaßen aus: Ein Anbieter von Informationen
+klassifiziert diese und kündigt die Verfügbarkeit der Informationen
+(z.B. als Kanal) an. Interessenten abonnieren beim Anbieter bestimmte
+Informationskategorien (also Kanäle). Sobald neue Information vorhanden
+ist wird diese an alle Abonnenten verteilt.
+
+Vergleiche entsprechende Implementierungen von MOM, die ebenfalls
+diese Funktion anbieten.
+
+
+\section{Event-Architektur}
+
+Event-basierte Systeme (EBS) sind in gewisser Weise eng verwandt mit
+Push-basierten Systemen. Bei diesem Ansatz geht es darum, dass Ereignisse
+und deren Verteilung in den Vordergrund gestellt werden.
+
+In einem EBS interagieren die beteiligten, verteilten Komponenten
+dadurch, dass sie Events erzeugen und empfangen, ohne dass eine direkte
+Verbindung zwischen ihnen besteht. Vielmehr kann jede Komponente Events
+erzeugen und and die EBS-Infrastruktur übergeben, die diese dann verteilt.
+Komponenten können ihr Interesse an bestimmten Events, Event-Klassen
+oder auch bestimmten Event-Mustern bei der EBS-Infrastruktur registrieren
+und werden benachrichtigt, sobald passende Events oder Muster auftreten.
+Ein Beispiel könnte sein, dass eine Komponente eines Börseinformationssystem
+informiert werden will, wenn eine Aktie unter einen gewissen Wert
+fällt.
+
+Die Unterschiede zur Push-Architektur liegen darin, dass Events einerseits
+prinzipiell kleine Informationsmengen repräsentieren und dass die
+Spezifizierung der gewünschten Information viel genauer ist.
+
+Ein besondere Herausforderung ist ein effizientes Routing der Events,
+insbesondere wenn Muster von Events unterstützt werden, da es bei
+vielen Komponenten und entsprechender Event-Frequenz schnell zu großen
+Ressourcenverbrauch kommt.
+
+
+\section{Agenten-Architektur}
+
+Ein Softwareagent ist ein Computerprogramm, das zielorientiert in
+einem dynamischen Umfeld für einen Menschen oder eine andere Software
+ohne direkte Überwachung möglichst selbständig Aufgaben lösen soll.
+
+Folgendes Szeneario will man mit Hilfe einer Agenten-Architektur erreichen:
+\begin{quote}
+Ein Benutzer will sich eine Reise zusammenstellen und bedient sich
+dazu eines Softwareagenten. Unter einem solchen Agenten kann man sich
+eine Einheit vorstellen, die für den Benutzer die günstigste Reiseroute
+zusammenstellt (in Bezug auf Zeit, Geld, zurückgelegte Strecke) und
+den günstigsten Reiseveranstalter selbständig ausfindig macht. Dazu
+bekommen sie vom Benutzer die Vorgaben bezüglich Reisezeit, Budget,
+notwendige Zwischenstopps,... und ermittelt selbständig eine möglichst
+optimale Lösung. Dazu kann sie bei Reiseveranstaltern, Datenbanken,...
+Anfragen stellen oder auch andere Agenten um Hilfe bitten. Unter Umständen
+ist es notwendig, dass sich der Agent auch zu anderen Rechner verschiebt
+und zum Schluss mit der Lösung wieder zum Benutzer zurückkehrt (z.B.
+damit Bandbreite gespart wird). 
+\end{quote}
+Um die Verschiebbarkeit der Agenten realisieren zu können benötigt
+man das Konzept der Code-Migration, das im nachsten Abschnitt besprochen
+wird. Danach wird auf die eigentlichen Softwareagenten etwas genauer
+eingegangen.
+
+
+\subsection{Code-Migration}
+
+Zur Erreichung einer Migrationstransparenz bzw.~einer Relokationstransparenz
+auf Ausführungsebene, müssen auch Threads bzw.~Prozesse von einer
+Maschine zu einer anderen Maschine verschoben werden können.
+
+Um dies durchführen zu können, muss das System eine Möglichkeit der
+Code-Migration zur Verfügung stellen.
+
+Gründe in einer erwünschten Code-Migration liegen meistens darin,
+dass die allgemeine Systemleistung verbessert werden soll, z.B.:
+\begin{itemize}
+\item Code soll immer auf der Client-Maschine ausgeführt werden (z.B. Applet). 
+\item eine Maschine ist ausgelastet, eine andere Maschine soll übernehmen. 
+\item die Netzwerksbandbreite ist ausgeschöpft. 
+\item Der Code soll in die physische Nähe der Daten transportiert werden
+(um wiederum den Netzwerksoverhead zu minimieren). 
+\end{itemize}
+Aber auch die Flexibilität ist ein Grund für den Wunsch den Code an
+beliebigen Stellen zur Ausführung zu bringen: Am Client kann dynamisch
+eine Konfiguration durchgeführt werden!
+
+Grundsätzlich müssen die Maschinen zwischen denen eine Code-Migration
+stattfinden entweder:
+\begin{itemize}
+\item auf der Ebene der Plattform (Hardware, Betriebssystem) eine gemeinsame
+Basis aufweisen, oder 
+\item eine Ebene mit Zwischencode existieren, mit der plattformübergreifend
+agiert werden kann (Java, C\#, Perl, Python, Ruby, Tcl) oder die Programmiersprache
+ist eine reine Interpretersprache, sodass der Quellcode transferiert
+wird. 
+\end{itemize}
+Prinzipiell werden wir nur zwischen zwei Arten der Code-Migration
+unterscheiden (obwohl vielfältige und feine Unterscheidungen möglich
+sind):
+\begin{itemize}
+\item schwache Mobilität: Es wird nur das Codesegment übertragen (eventuell
+mit Initialisierungsdaten). Deshalb wird bei dieser Art der Mobilität
+ein übertragener Code immer von seinem Ausgangsstatus aus gestartet
+(z.B. Java Applet). 
+\item starke Mobilität: Im Gegensatz zur schwachen Mobilität wird zusätzlich
+zum Codesegment auch das Ausführungssegment übertragen. Das charakteristische
+Merkmal der starken Mobilität ist, dass ein ausgeführter Prozess unterbrochen,
+auf eine andere Maschine verschoben und dann fortgesetzt werden kann.
+
+
+Ein spezielles Problem, das hauptsächlich bei der starken Mobilität
+auftritt ist: Was passiert mit den Ressourcen auf die der Thread zugreift?
+Eine offene Datei kann nicht bewegt werden und auch Hardware kann
+nicht über das Netz verschoben werden. 
+
+\end{itemize}
+Besonderes Augenmerk: Sicherheit!
+
+
+\subsection{Softwareagenten}
+
+\label{sec:sw-agent}
+
+Software-Agenten sind ein Beispiel, wo u.U. Code-Migration auftritt.
+
+Agenten spielen im Kontext verteilter Systeme eine immer wichtiger
+werdende Rolle. Es handelt sich dabei um autonome Einheiten, die in
+Zusammenarbeit mit anderen (u.U. entfernten) Agenten eine Aufgabe
+lösen.
+
+Allen Softwareagenten ist gemein, dass sie die folgenden Eigenschaften
+aufweisen. Sie sind: 
+\begin{itemize}
+\item autonom: kann eigenständig agieren. 
+\item reaktiv: reagiert rechtzeitig auf Änderungen in seiner Umgebung. 
+\item proaktiv: initiiert Aktionen, die seine Umgebung beeinflussen. 
+\item kommunikativ: kann Informationen mit Benutzern und anderen Agenten
+austauschen. 
+\end{itemize}
+Agenten können auch noch folgende Eigenschaften aufweisen: 
+\begin{itemize}
+\item mobil: kann von einem System auf ein anderes migrieren. 
+\item adaptiv: ist lernfähig. Oft handelt es sich dabei um Systeme, die
+den Endbenutzer helfen sollen, eine oder mehrere Applikationen zu
+benutzen. Solche Agenten sind lernfähig: je länger ein Benutzer mit
+dem Agenten arbeitet, desto besser kann der Agent dem Benutzer helfen: 
+
+\begin{itemize}
+\item Ein Agent, der Käufer und Verkäufer zusammenbringen soll, erkennt
+bevorzugte Suchanfragen, Vorlieben,... 
+\item Ein E-Mail-Agent kann in der Lage sein, unerwünschte E-Mail aus der
+Mailbox entfernen, oder automatisch in die entsprechenden themenspezifizschen
+Mailboxen verteilen. 
+\end{itemize}
+\end{itemize}
+

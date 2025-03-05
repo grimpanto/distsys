@@ -1,0 +1,273 @@
+#LyX 1.5.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass scrbook
+\begin_preamble
+
+\end_preamble
+\language ngerman
+\inputencoding latin1
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 0
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Prozesse
+\end_layout
+
+\begin_layout Section
+Prozesse vs.
+ Threads
+\end_layout
+
+\begin_layout Minisec
+Prozesse
+\end_layout
+
+\begin_layout Itemize
+Was ist ein 
+\emph on
+Prozess
+\emph default
+? 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Programm besteht aus Anweisungen 
+\end_layout
+
+\begin_layout Itemize
+Prozess entsteht bei Ausführung eines Programmes 
+\end_layout
+
+\begin_layout Itemize
+Ein Prozess hat einen oder mehrere Threads 
+\end_layout
+
+\begin_layout Itemize
+Aus allgemeiner Sicht ist jeder Prozess ein eigener Ablaufpfad (und kann
+ daher im Computer entweder durch einen Prozess oder durch einen Thread
+ repräsentiert werden).
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Wir verwenden im weiteren Text den Begriff Prozess sowohl für die Bedeutung
+ in allgemeiner Sicht als auch für die konkrete Sicht als Betriebssystemprozess.
+ 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+Vorteile
+\series default
+: Nichtbeinflussung durch andere Prozesse.
+ Dies wird erreicht, indem jedem Prozess ein eigener virtueller Prozessor
+ mit einem eigenen Adressraum vorgespielt wird.
+ Abgesehen von dem Adressraum greift der Prozessor natürlich auch auf die
+ anderen Ressourcen im System zu, die von anderen Prozessen genutzt werden.
+ Dazu benötigt das Betriebssystem Unterstützung seitens der Hardware (z.B.
+ MMU).
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Nachteile
+\series default
+: Diese Art der Nebenläufigkeitstransparenz hat einen relativ hohen Preis:
+ Bei jeder Erzeugung eines Prozesses muss ein eigener unabhängiger Adressraum
+ gebildet werden (Speichersegmente initialisieren,...), ein Stack angelegt
+ werden,...
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Weiters ist auch die Umschaltung zwischen den Prozessen relativ aufwändig
+ (Context switching overhead): CPU Kontext (Register, Programmzähler, Stackpoint
+er,...), MMU Register, Prozesse auf Festplatte auslagern bzw.
+ in den Hauptspeicher laden, CPU Abrechnungen erstellen,...
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Zur Kommunikation zwischen Prozessen (Interprocess Communication, IPC) können
+ Pipes, Shared Memory, Sockets (TCP) oder Datagrams (UDP) oder auch Dateien
+ verwendet werden.
+\end_layout
+
+\begin_layout Minisec
+Threads
+\end_layout
+
+\begin_layout Itemize
+Was ist ein 
+\emph on
+Thread
+\emph default
+? 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Jeder Thread bedeutet eigenen Ausführungszweig 
+\emph on
+innerhalb
+\emph default
+ eines Prozesses.
+ 
+\end_layout
+
+\begin_layout Itemize
+Basis für effiziente und robuste Server 
+\end_layout
+
+\begin_layout Itemize
+zwischen Threads kann direkt auf Variablen zugegriffen werden (bei Prozessen
+ nicht).
+ 
+\end_layout
+
+\begin_layout Itemize
+Zugriff auf die lokalen Daten eines anderen Thread nicht möglich (Stack,
+ primitive vs.
+ Objekttypen!) 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+Vorteile
+\series default
+: geringerer Overhead (es müssen hauptsächlich die CPU Register gewechselt
+ werden), Zugriff auf Daten und offene Dateien,...
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Nachteile
+\series default
+: Beeinflussung durch andere Threads 
+\end_layout
+
+\begin_layout Itemize
+Kommunikation zwischen Threads: wie bei Prozessen und zusätzlich über gemeinsame
+ Daten.
+\end_layout
+
+\begin_layout Standard
+Prozesse und Threads vereinfachen einerseits die Programmierung, da quasi-parall
+ele (nur ein Prozessor, Zeitscheiben) oder auch parallele Aktionen (mehrere
+ Prozessoren) leicht programmiert werden können.
+ Als gemeinsamer Nachteil sind die Probleme zu nennen, die durch die gemeinsame
+ Kommunikation entstehen (
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Synchronisation).
+\end_layout
+
+\begin_layout Standard
+Beispiele für nebenläufige Anwendungen, die Threads oder Prozesse verwenden
+ (Client und/oder Server) sind Web services, Anwendungen der nummerische
+ Mathematik und Simulation, I/O Verarbeitung, GUI-basierte Anwendungen (X-Window
+: Server/Client) und Embedded systems (Verwendung in Echtzeitsystemen).
+\end_layout
+
+\begin_layout Section
+Threads
+\end_layout
+
+\begin_layout Standard
+Verwendung finden Threads auch oft in nicht verteilten Systemen: hauptsächlich,
+ um bei dem Aufruf von 
+\emph on
+blockierenden Systemaufrufen
+\emph default
+ nicht die Gesamtanwendung zum Stillstand zu bringen.
+\end_layout
+
+\begin_layout Standard
+Beispiele: 
+\end_layout
+
+\begin_layout Itemize
+Zugriff auf Ein-/Ausgabegeräte, wie serielle Schnittstelle, das Netzwerk,
+ den Drucker, aber auch die Festplatte.
+ 
+\end_layout
+
+\begin_layout Itemize
+Durchführen von langen Berechnungen bei GUI Anwendungen (z.B.
+ einer Tabellenkalkulation), damit weitere Benutzereingaben getätigt werden
+ können.
+ In so einem Fall werden meistens zwei Threads verwendet: einer für die
+ Interaktion und einer für die Berechnungen.
+ 
+\end_layout
+
+\begin_layout Itemize
+Nutzung von mehreren Prozessoren in Multiprozessor-Maschinen.
+ 
+\end_layout
+
+\begin_layout Standard
+Weiters kann der Entwurf einfacher werden, da die Gesamtanwendung in mehrere
+ Teile zerlegt werden kann, wobei jeder Thread für einen dedizierten Teil
+ der Gesamtanwendung zuständig ist.
+\end_layout
+
+\begin_layout Standard
+Obwohl die Erzeugung und Verwaltung von Threads weniger kostspielig ist,
+ als die entsprechenden Operationen für Prozesse, kann es durchaus sinnvoll
+ sein, auch hier Optimierungen vorzunehmen: Das Ziel ist es, Threads nur
+ so oft zu erzeugen wie dies unbedingt notwendig ist -- dies wird mit Threadpool
+ing erreicht.
+\end_layout
+
+\begin_layout Standard
+ 
+\end_layout
+
+\end_body
+\end_document

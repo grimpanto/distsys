@@ -1,0 +1,236 @@
+
+\chapter{Mechanismen}
+
+Es gibt verschiedene Mechanismen, mit denen sich die oben angeführten
+Sicherheitsdienste realisieren lassen. Information z.B. unter www.rsasecurity.com/rsalabs!
+
+
+\section{Symmetrische Verschlüsselung}
+
+Symmetrische Verschlüsselung (symmetric key encryption) basiert darauf,
+dass Sender und Empfänger ein gemeinsames Geheimnis (den Schlüssel)
+besitzen, mit dem sie die Daten einerseits verschlüsseln und andererseits
+auch wieder entschlüsseln können.
+
+
+\minisec{Prinzip}
+
+Ein Schlüssel K wird sowohl zum Verschlüsseln ($E$, encryption) als
+auch zum Entschlüsseln ($D$, decryption) verwendet. Ein Paket $P$
+wird mit $E(K,P)$ verschlüsselt, das Ergebnis wird zum Empfänger
+übertragen. Der kann dies mit $P=D(K,E(K,P))$ entschlüsseln und erhält
+dadurch das ursprüngliche Paket.
+
+Grundbausteine jeder symmetrischen Verschlüsselung sind: Substitution
+(Ersetzung) und Permutation (Vertauschung).
+
+Eine Verschlüsselung, die aus einer Kombination von Substitution und
+Permutation besteht wird Produktchiffre genannt.
+
+
+\minisec{Vorteile}
+
+Prinzipieller Vorteil ist die schnelle Ver- bzw.~Entschlüsselung,
+die darauf beruht, dass hauptsächlich Substitutionen und Permutationen
+verwendet werden.
+
+Symmetrische Verschlüsselungsverfahren sind in der Regel auch in HW
+zu realisieren. Dadurch lässt sich die Performance noch weiter steigern.
+
+
+\minisec{Nachteile}
+
+Die Schlüsselverwaltung ist bei symmetrischen Verschlüsselungen kompliziert,
+da
+\begin{itemize}
+\item für jede Kombination von Kombinationspartnern ein eigener Schlüssel
+benötigt wird. 
+\item dieser Schlüssel über einen sicheren Kanal ausgetauscht werden muss. 
+\end{itemize}
+
+\minisec{Verfahren}
+\begin{itemize}
+\item DES (Data Encryption Standard): Schlüssellänge 56 Bits. Wurde 1999
+in 22 Stunden gebrochen (ca. 100.000 Computer) 
+\item 3DES (Triple DES): Schlüssellänge je nach Modus bis zu 168 Bits 
+\item AES (Advanced Encryption Standard): Schlüssellänge 128, 192 oder 256
+Bits 
+\item IDEA (International Data Encryption Algorithm): Schlüssellänge 128
+Bits 
+\item Blowfisch: Schlüssellänge variabel bis 448 Bits 
+\end{itemize}
+Abschätzung der Schlüssellänge: 64 Bits sind ungefähr 20 Stellen,
+128 Bits ca.~40 Stellen.
+
+
+\section{Asymmetrische Verschlüsselung}
+
+Asymmetrische Verschlüsselung (public key encryption) basiert darauf,
+dass Sender und Empfänger \emph{kein} gemeinsames Geheimnis besitzen
+müssen. Sender und Empfänger besitzen jeder einen eigenen Schlüssel,
+der aus zwei Teilen besteht: einen öffentlichen Teil (public key)
+und einen privaten Teil (private key). Der public key wird z.B. in
+einem geeigneten Verzeichnis veröffentlicht, der private key wird
+sicher (geheim) von seinem Besitzer verwahrt.
+
+
+\minisec{Prinzip}
+
+Der öffentliche Schlüssel $K_{pub}$ wird verwendet, um ein Paket
+$P$ zu verschlüsseln: $E(K_{pub},P)$. Der Empfänger kann das verschlüsselte
+Paket mit seinem private key entschlüsseln: $P=D(K_{pri},E(K_{pub},P))$.
+Ein mit einem öffentlichen Schlüssel verschlüsseltes Paket kann nur
+mit dem dazugehörigen privaten Schlüssel wieder entschlüsselt werden.
+Aus diesem Grund (verschiedene Schlüssel zum Ver- und Entschlüsseln)
+nennt man diese Verfahren asymmetrisch.
+
+Grundbausteine einer asymmetrischen Verschlüsselung sind meistens
+mathematische Probleme wie das Finden von Primfaktoren von sehr großen
+Zahlen.
+
+
+\minisec{Vorteile}
+
+Die Schlüsselverwaltung ist einfacher, da der öffentliche Schlüssel
+publiziert werden kann (z.B. auf einem Webserver oder bei einer vertrauenwürdigen
+Instanz) und nicht für jede Kombination von Kommunikationspartner
+ein eigener Schlüssel benötigt wird. Trotzdem gibt es auch hier viele
+Probleme, wie z.B.:
+\begin{itemize}
+\item Die Identität des Benutzers muss überprüft werden, wenn der öffentliche
+Schlüssel veröffentlicht wird. Das zugrundeliegende Problem ist, dass
+sichergestellt sein muss, dass der öffentliche Schlüssel wirklich
+zu der Person gehört und nicht zu einer anderen. 
+\item Der Instanz, die den Schlüssel veröffentlicht muss vertraut werden
+(siehe vorhergehenden Punkt). 
+\item Diese Instanz ist einer besonderer Gefahr ausgesetzt, dass eingebrochen
+wird. 
+\item Wie wird ein öffentlicher Schlüssel wieder zurückgezogen? 
+\end{itemize}
+
+\minisec{Nachteile}
+
+Performance: Diese ist geringer, da sie auf mathematischen Methoden
+(Primfaktorzerlegung, Lösen algebraischer Gleichungen) basieren.
+
+
+\minisec{Verfahren}
+\begin{itemize}
+\item RSA (Rivest-Shamir-Adlman): asymmetrisch, siehe ADAT 
+\item Diffie-Hellmann: nur Schlüsselaustausch.
+
+
+Diffie Hellman Schlüsselaustauschverfahren basiert auf der Exponentialfunktion
+im Galoisfeld GF(p). Vereinfacht $f(x)=a^{x}\textrm{ mod }p$ Damit
+wird folgender Ablauf realisiert:
+\begin{enumerate}
+\item Einer der beiden denkt sich eine große Primzahl p aus und teilt diese
+seinem Partner mit. Weiters bestimmt dieser noch eine sogenannte Primitivwurzel
+zur Zahl p. Diese Zahlen müssen nicht geheim sein.
+\item Partner A erfindet $x_{A}$ sendet $y_{A}=\alpha^{x_{A}}\textrm{mod }p$
+an B
+\item Partner B erfindet $x_{B}$ sendet $y_{B}=\alpha^{x_{B}}\textrm{mod }p$
+an A
+\item Partner A berechnet $y_{B}^{x_{A}}$ $\textrm{mod }p$ und erhält
+$z_{BA}=a^{x_{B}x_{A}}$$\textrm{ mod }p$
+\item Partner B berechnet $y_{A}^{x_{B}}$ $\textrm{mod }p$ und erhält
+$z_{AB}=a^{x_{A}x_{B}}$$\textrm{ mod }p$
+
+
+Beide verfügen also über eine gemeinsame Zahl $z_{AB}=z_{AB}$, die
+nicht im Netz übertragen wurde und von keinem Dritten ermittelt werden
+kann.
+
+\end{enumerate}
+\item ElGamal: basiert auf Diffie-Hellmann, kann und wird auch für die Verschlüsselung
+verwendet. 
+\item Elliptic Curve Cryptography (ECC): basiert auf dem Lösen von elliptischen
+Kurven in endlichen Körpern. 
+\item DSA (Digital Signature Algorithm): amerikanischer Standard für digitale
+Signaturen. 
+\end{itemize}
+Abschätzung der Schlüssellänge: mind. 1024 Bits (Ausnahme sind elliptische
+Kurven: 180 Bits); 1024 Bits sind ungefähr 300 Stellen, 2048 Bits
+ca.~600 Stellen.
+
+
+\section{Message Digests\label{sec:MessageDigests}}
+\begin{itemize}
+\item Message Digests liefern ein Ergebnis mit fixer Länge mittels einer
+Einweg-Hashfunktion. 
+
+\begin{itemize}
+\item Einweg: Die Funktion kann in die eine Richtung leicht berechnet werden,
+die andere Richtung ist nicht berechenbar (oder nur mit extrem viel
+Aufwand). 
+\item Hash: möglichst gleichmäßige Abdeckung des Bildraumes und kollisionsresistent. 
+\end{itemize}
+\item Ein Message Digest wird meist am Ende der Nachricht angehängt oder
+separat übertragen. 
+\item Zweck ist die Erkennung einer etwaigen Veränderung: In diesem Fall
+ändert sich auch der Hashwert. 
+\item Verfahren 
+
+\begin{itemize}
+\item MD5 (Message Digest 5, RFC 1321): 128 Bits 
+\item SHA-1 (Secure Hash Algorithm): 160 Bits
+\item SHA-2 wie SHA-256, SHA-384 oder SHA-512
+\end{itemize}
+\end{itemize}
+
+\section{Message Authentication Code\label{sec:MessageAuthenticationCode}}
+\begin{itemize}
+\item Message Authenticaation Codes (MAC) sind verwandt mit den Message
+Digests, benötigen aber ein Paßwort als Eingabe. 
+\item Anwendung 
+
+\begin{itemize}
+\item Schlüssel bekannt, dann Verifikation der Integrität 
+\item Symmetrische Form der Authentifizierung 
+\end{itemize}
+\item Verfahren: HMAC 
+\item Abschätzung für 160 Bits 
+
+\begin{itemize}
+\item 2 hoch 160 verschiedene Hashwerte sind möglich; Erde hat ca.~2 hoch
+170 Atome 
+\item Rechenzeit: Annahme eines schnellen Rechners: für ca.~2 hoch 24 (ca.
+16Mio) Nachrichten kann der Hashwert in einer Sekunde bestimmt werden.
+Ein Jahr besteht aus 2 hoch 25 Sekunden.
+
+
+$2^{30}$ (ca.~1 Milliarde) Rechner arbeiten gleichzeitig. Das ergibt
+$2^{160}/(2^{24}*2^{25}*2^{30}=2^{81}=1208925819614629174706176$
+Jahre. Die Sonne wird in $2^{30}$ Jahren zur Supernova! 
+
+\end{itemize}
+\end{itemize}
+
+\section{Digitale Signatur}
+\begin{itemize}
+\item Eine digitale Signatur garantiert, dass die Nachricht von dem Signierer
+stammt und diese nicht verändert wurde. 
+\item Vorgang: Erzeugung eines Message Digest und verschlüsseln mit dem
+privaten Schlüssel.
+\item Überprüfung: mit öffentlichen Schlüssel entschlüsseln, Message Digest
+berechnen und vergleichen.
+\item Eigenschaften:
+
+\begin{itemize}
+\item ist nicht fälschbar (Änderung wird erkannt, Quelle authentisch).
+\item ist einfach überprüfbar.
+\item ist nicht abstreitbar.
+\end{itemize}
+\item Verfahren: PGP (Pretty Good Privacy), X.509 
+\end{itemize}
+
+\section{Zertifikat\label{sec:certificate}}
+\begin{itemize}
+\item Zertifikat ist ein ,,digitaler Ausweis'': Stellt einen Zusammenhang
+zwischen dem öffentlichen Schlüssel und einer bestimmten Person dar. 
+\item Enthält Angaben über: Name des Zertifikatsinhabers, öffentlicher Schlüssel
+des Zertifikatsinhabers, Name der Zertifizierungsinstanz, Gültigkeitszeitraum 
+\item Signiert mit privaten Schlüssel der Zertifizierungsinstanz 
+\item Format: z.B. X.509.
+\end{itemize}
+

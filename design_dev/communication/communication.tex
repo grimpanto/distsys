@@ -1,0 +1,1241 @@
+
+\chapter{Kommunikation}
+
+
+\section{TCP/IP Programmierung in Java}
+
+
+\subsection{Allgemeine Aspekte}
+
+
+\minisec{IP Adresse in Java}
+
+Die Klasse java.net.InetAddress (abstrakte Basisklasse) stellt eine
+Repräsentierung einer IPv4 bzw.~IPv6 Adresse dar, die die folgenden
+Methoden aufweist: 
+\begin{itemize}
+\item public static InetAddress getByName(String host) 
+\item public static InetAddress getLocalHost() 
+\item public String getHostName() 
+\item public byte{[}{]} getAddress() 
+\item public boolean isReachable(int timeout) throws IOException // testet,
+ob Rechner innerhalb angegebener Zeit erreichbar ist (mittel ICMP
+Echo Request oder TCP Verbingung zu Port 7 (Echo). 
+\end{itemize}
+Beispiel eines Code-Fragmentes für ein `nslookup', `host' oder `dig'-artiges
+Programm:
+
+
+\begin{lstlisting}
+try {
+  InetAddress address;
+  address = InetAddress.getByName("www.htlwrn.ac.at"); 
+  System.out.println(address);
+} catch (java.net.UnknownHostException e) {
+  e.printStackTrace();
+}
+\end{lstlisting}
+
+
+Das folgende Beispiel gibt die lokale IP Adresse aus: 
+
+
+\begin{lstlisting}
+import java.net.InetAddress;
+
+public class LocalIP {
+  public static void main(String[] args) {
+    try {
+      InetAddress a;
+      a = InetAddress.getLocalHost();
+      System.out.println("localhost: name = " + a.getHostName());
+      byte[] addr = a.getAddress();
+      System.out.print("localhost: addr= ");
+
+      for (int i = 0; i < addr.length; i++) {
+        // addr ist ein byte Array; jeder Wert in -128..+127
+        // wir benötigen einen ganzzahligen Wert! Alle Werte in Java sind
+        // vorzeichenbehaftet im Zweierkomplement gespeichert
+        int ub = addr[i] < 0 ? addr[i] + 256 : addr[i];
+        System.out.print(ub + "."); 
+      }
+      System.out.println();  
+    } catch (java.net.UnknownHostException e) {
+      e.printStackTrace(); // zu Testzwecken
+    }
+  }
+}
+\end{lstlisting}
+
+
+
+\minisec{URL in Java}
+
+Mit der \verb+java.net.URL+ Klasse kann man auf einfache Art und
+Weise Dateien aus dem Internet laden.
+
+Dazu gibt es die folgenden Konstruktoren (die alle die MalformedURLException
+werfen können): 
+\begin{itemize}
+\item public URL(String url) 
+\item public URL(String protocol, String host, String file) 
+\item public URL(String protocol, String host, int port, String file) 
+\end{itemize}
+Folgende Methoden stehen zur Verfügung: 
+\begin{itemize}
+\item String getProtocol(), String getHost(), int getPort() 
+\item String getPath(), String getQuery(), String getFile() // Path+Query 
+\item String getRef() 
+\item InputStream openStream() throws IOException 
+\item URLConnection openConnection() throws IOExceptione // URLConnection
+erlaubt auch ConnectionTimeout und andere Charakteristika einer Verbindung
+zu setzen. 
+\end{itemize}
+Das folgende Programm zeigt die Daten zu einer (mit einer von Java
+unterstützten Protokoll) URL (http, https, file, jar, ftp sind im
+J2SE 5.0 enthalten). Aufzurufen mittels \verb+java WebPageReader http://www.orf.at+:
+
+
+\begin{lstlisting}
+public class WebPageReader {
+  public static void main(String[] args) {
+    URL u; String line; 
+    try {
+      u = new URL(args[0]);
+      // Stream ... byte
+      // Reader/Writer ... char
+      BufferedReader br = new BufferedReader (
+        new InputStreamReader(u.openStream()));
+
+      while ((line = br.readLine()) != null)
+        System.out.println(line);
+    } catch (Exception e) {
+      e.printStackTrace(); // zu Testzwecken
+    }
+  }
+}
+\end{lstlisting}
+
+
+
+\subsection{TCP Programmierung}
+
+Die \emph{Berkeley-Sockets} wurden erstmals im Berkeley UNIX im Jahre
+1986 implementiert. Sie stellen einerseits ein Konzept dar und bieten
+andererseits ein API. Diese Schnittstelle hat sich als \emph{die}
+Programmierschnittstelle für die Kommunikation (im Internet) etabliert.
+
+Vom Konzept her ist ein Socket ein \emph{Kommunikationsendpunkt},
+an dem eine Applikation Daten schreiben kann, die über das zugrunde
+liegende Netzwerk versendet werden sollen, und von dem eingehende
+Daten gelesen werden können. Sockets kann es sowohl für TCP als auch
+für UDP geben.
+
+Aus der Sicht von TCP/IP besteht solch ein Kommunikationsendpunkt
+aus einer Kombination von Protokoll (TCP oder UDP), IP Adresse und
+Portnummer und identifiziert als solches eindeutig einen Netzwerkprozess.
+
+Ein Paar von zwei Sockets identifiziert damit \emph{eindeutig} eine
+Verbindung bei verbindungsorientierten Protokollen (wie z.B. TCP).
+
+
+\minisec{Interoperabilität}
+
+Eine TCP Verbindung im Internet verbindet in der Regel nicht nur Maschinen
+des gleichen Typs, sondern verschiedenste Hardware- und Softwareplattformen
+miteinander. Aus diesem Grund ist es, im Sinne der \emph{Interoperabilität},
+wichtig, sich Gedanken über die Darstellung der Daten zu machen. Wie
+erwähnt, stellt der TCP/IP Protokollstack keine Darstellungsschicht
+zur Verfügung.
+
+Probleme treten auf bei: 
+\begin{itemize}
+\item Übertragung von Zeichendaten. Wie sind diese codiert? ASCII, ISO 8859-1,
+ISO-8859-15, EBCDIC oder 16-Bit Zeichensätze wie in der chinesischen
+oder japanischen Sprache verwendet wird (Unicode). 
+\item Übertragung von Zahlen 
+
+\begin{itemize}
+\item big-endian vs. little-endian 
+
+\begin{itemize}
+\item big-endian: erstes Byte enthält signifikante Bits (z.B. Java, JPEG,
+WAV,...,Intel, Alpha). Weitere Bytes mit steigender Adresse enthalten
+die weniger signifikanten Bits. big-endian bedeutet so viel wie {}``big
+end first''. Wird auch als \emph{network byte order} bezeichnet! 
+\item little-endian: letztes Byte enthält signifikante Bits (z.B. BMP, GIF,...,Motorala,
+Sparc) 
+\end{itemize}
+\item signed vs. unsigned 
+\item Fließkommazahlen: IEEE Format oder eigene Formate 
+\end{itemize}
+\item Übertragung von Objekten 
+\end{itemize}
+\emph{Lösungsmöglichkeiten}:
+\begin{itemize}
+\item Schaffung eines properitären, binären Austauschformates 
+\item Schaffung eines binären offenen Austauschformates, wie z.B. XDR (siehe
+Abschnitt \vref{sec:ONC-RPC}) oder CDR (siehe Abschnitt \vref{sec:corba}).
+\item Schaffung eines textorientierten Austauschformates, wie z.B. bei Verwendung
+von XML-RPC (siehe Abschnitt \vref{sec:XML-RPC}) oder SOAP (siehe
+Abschnitt \vref{sec:SOAP}). 
+\end{itemize}
+
+\minisec{Socket-Basisoperationen}
+
+Die \emph{Socket-Basisoperationen} sind aufgeschlüsselt nach Client
+und Server:
+\begin{itemize}
+\item Client 
+
+\begin{itemize}
+\item Verbinden zu einem entfernten Host 
+\item Senden von Daten 
+\item Empfangen von Daten 
+\item Schließen der Verbindung 
+\end{itemize}
+\item Server 
+
+\begin{itemize}
+\item Binden eines Sockets zu einem Port 
+\item Warten auf eine Verbindungsanfrage und akzeptieren dieser. 
+\item Senden und Empfangen von Daten 
+\item Schließen einer Verbindung 
+\end{itemize}
+\end{itemize}
+
+\minisec{Clients in Java}
+
+Die Klasse\texttt{ java.net.Socket} stellt die Client-Seite einer
+Socketverbindung dar:
+
+Folgende Konstruktoren gibt es in der Socket-Klasse: 
+\begin{itemize}
+\item Socket(String host, int port) throws UnknownHostException, IOException 
+\item Socket(InetAddress host, int port) throws IOException 
+\item Socket(String host, int port, InetAddress localHost, int localPort)
+throws IOException // bindet zu spezifizierter lokaler Adresse 
+\item Socket(InetAddress host, int port, InetAddress localHost, int localPort)
+throws IOException 
+\item Socket() // ab JDK 1.4 
+\end{itemize}
+An public Methoden gibt es:
+\begin{itemize}
+\item InetAddress getInetAddress(), int getPort() 
+\item InetAddress getLocalAddress(), int getLocalPort() 
+\item InputStream getInputStream() throws IOException 
+\item OutputStream getOutputStream() throws IOException 
+\item void connect(SocketAddress endpoint, int timeout) throws IO Exception,
+SocketTimeoutException // ab JDK 1.4 
+\item synchronized void close() throws IOException 
+
+\begin{itemize}
+\item Freigabe aller Netzwerk- und Systemressourcen 
+\item wenn gepufferter Outputstream: zuerst schließen! 
+\item schließen des Input- oder des Outputstream schließt auch die Netzwerksverbindung! 
+\end{itemize}
+\item void shutdownOutput() throws SocketException 
+\item void shutdownInput() throws SocketException 
+\item void setSoTimeout(int) throws SocketException 
+
+\begin{itemize}
+\item in Millisekunden nach der eine blockende Leseoperation abbricht (0ms
+entspricht kein Abbruch) 
+\end{itemize}
+\end{itemize}
+Folgendes Codefragment demonstriert die Verwendung der Socket-Klasse:
+
+
+\begin{lstlisting}
+try {
+  Socket s = new Socket(host, port);
+  InputStream is = s.getInputStream();
+  OutputStream os = s.getOutputStream();
+  // normale Stream Operationen!
+} catch (IOException e) {
+  e.printStackTrace(); // zu Testzwecken
+}
+\end{lstlisting}
+
+
+
+\minisec{Adresse und Port in Java}
+
+Im Gegensatz zur Klasse \texttt{java.net.InetAddress}, repräsentiert
+die Klasse \texttt{java.net.InetSocketAddress} eine IP Adresse samt
+einer zugehörigen Port-Nummer und stellt somit alle Informationen
+zur Verwendung in der Socket-Verarbeitung dar.
+
+Diese Klasse ist eine Unterklasse der Klasse java.net.SocketAddress,
+die in der Signatur der \texttt{connect()} Methode der Klasse Socket
+verwendet wird. Auch diese Klasse gibt es erst ab JDK 1.4.
+
+Folgende public Konstruktoren (throws IllegalArgumentException): 
+\begin{itemize}
+\item InetSocketAddress(int port) 
+\item InetSocketAddress(InetAddress ia, int port) 
+\item InetSocketAddress(String host, int port) 
+\end{itemize}
+
+\minisec{Server in Java}
+
+Die java.net.ServerSocket Klasse stellt somit die Server - Seite einer
+Socketverbindung dar.
+
+Folgende Konstruktoren: 
+\begin{itemize}
+\item public ServerSocket(int port) throws IOException // 0 \ldots{} freier
+Port 
+\item public ServerSocket(int port, int queueLength) throws IOException 
+\item public ServerSocket(int port, int queueLength, InetAddress bindAddress)
+throws IOException 
+\end{itemize}
+Anwendung dieser Klasse um alle belegten Ports am Computer festzustellen:
+
+
+\begin{lstlisting}
+import java.io.*; 
+import java.net.*;
+
+public class LocalPortScanner {
+  static ServerSocket s;
+
+  public static void main(String[] args) {
+    for (int port = 1; port <= 65535; port++) {
+      try  s = new ServerSocket(port); 
+    } catch (BindException e) {
+      System.out.println("port " + port + " in use");
+    } catch (IOException e) {
+      e.printStackTrace(); // zu Testzwecken
+    }
+  }
+}
+\end{lstlisting}
+
+
+Weitere public Methoden:
+\begin{itemize}
+\item Socket accept() throws IOException 
+\item void close() throws IOException 
+\item InetAddress getInetAddress(), int getLocalPort() 
+\item void setSoTimeout(int) throws SocketException // Timeout bei accept()! 
+\end{itemize}
+Gemäß den oben genannten Basisoperationen sieht die Grundstruktur
+eines Javaprogrammes mit \texttt{ServerSocket}s folgendermaßen aus:
+
+
+\begin{lstlisting}
+ServerSocket server = new ServerSocket(port); // anlegen und binden
+Socket client = server.accept(); // auf Client warten 
+server.close(); // ServerSocket kann schon geschlossen werden 
+OutputStream out = client.getOutputStream(); 
+InputStream in = client.getInputStream();
+// tatsächlichen Datenaustausch durchführen
+client.close(); // Verbindung zum Client schließen
+\end{lstlisting}
+
+
+
+\subsection{UDP Programmierung}
+
+
+\minisec{java.net.DatagramPacket}
+
+Konstruktoren
+\begin{itemize}
+\item DatagramPacket(byte{[}{]} buffer, int length) // zum Empfangen von
+Paketen; length <= 65535! 
+\item DatagramPacket(byte{[}{]} buffer, int length, InetAddress address,
+int port) // zum Senden 
+\item DatagramPacket(byte{[}{]} buffer, int length, SocketAddress address) 
+\end{itemize}
+Methoden 
+\begin{itemize}
+\item InetAddress getAddress(), getPort() 
+\item byte{[}{]} getData(), int getLength() 
+\item void setAddress(InetAddress address), void setPort(int port) 
+\item void setData(byte{[}{]} buffer), void setLength(int length) 
+\end{itemize}
+
+\minisec{java.net.DatagramSocket}
+
+Konstruktoren (throws SocketException)
+\begin{itemize}
+\item DatagramSocket() 
+\item DatagramSocket(int port) 
+\item DatagramSocket(int port, InetAddress address) // multihomed machines 
+\end{itemize}
+Public Methoden 
+\begin{itemize}
+\item void send(DatagramPacket) throws IOException 
+\item void receive(DatagramPacket) throws IOException 
+\item void close() // alle in receive() $\rightarrow$ SocketException 
+\item InetAddress getLocalAddress(), int getLocalPort() 
+\item void setSoTimeout(int timeout) throws SocketException // receive! 
+\end{itemize}
+
+\minisec{Minibeispiel}
+
+
+\begin{lstlisting}
+// auch wenn der Name "Socket" ist,
+// impliziert dies keine Verbindung wie in TCP!
+DatagramSocket socket = new DatagramSocket();
+DatagramPacket packet = new DatagramPacket(data, data.length);
+socket.receive(packet);
+socket.close();
+\end{lstlisting}
+
+
+
+\subsection{Beispiele}
+
+mit TCP und UDP
+
+
+\minisec{daytime}
+
+Dieses Protokoll fragt die lokale Zeit eines entfernten Servers ab.
+Es ist sicher eines der einfachsten Protokolle: Verbindung aufbauen,
+Antwort lesen, Verbindung schließen.
+
+\textbf{Beschreibung}
+\begin{itemize}
+\item Server sendet Zeit in der Form einer Zeichenkette (in ASCII) 
+\item Beschrieben in RFC 867 
+\item TCP Port 13, Verbindung (Socket) öffnen, Antwort lesen, fertig
+\item UDP Port 13, leeres Paket senden, Antwort lesen, fertig
+\item Format der Antwort ist nicht spezifiziert, deshalb für eine Maschine-Maschine
+Kommunikation nicht geeignet. 
+\item $\rightarrow$ www.time.gov bzw.~time.nist.gov port 17 
+\end{itemize}
+\textbf{Beispiel: DaytimeClient mit UDP}
+
+
+\begin{lstlisting}
+DatagramSocket socket = new DatagramSocket();
+socket.setSoTimeout(5000); // Timeout für Socketoperationen auf 5s
+// Länge 1 Byte!
+DatagramPacket packet = new DatagramPacket(new byte[256], 1, host, port);
+socket.send(packet);
+
+packet.setLength(packet.getData().length); // Empfangspuffer: 256 Bytes!
+socket.receive(packet);
+socket.close();
+
+byte[] data = packet.getData();
+int length = packet.getLength();
+System.out.println(new String(data, 0, length, "latin1")); // oder utf-8...
+\end{lstlisting}
+
+
+\textbf{Beispiel: DaytimeServer mit UDP}
+
+
+\begin{lstlisting}
+DatagramSocket socket = new DatagramSocket(p);
+DatagramPacket packet = new DatagramPacket(new byte[1], 1); // 1 Byte!
+
+while (true) {
+  socket.receive(packet); 
+  System.out.println("Received from:...");
+  byte[] outBuffer = new java.util.Date().toString().getBytes("latin1");
+
+  packet.setData(outBuffer); 
+  packet.setLength(outBuffer.length); // setze aktuelle Länge
+  socket.send(packet);
+}
+\end{lstlisting}
+
+
+
+\minisec{time}
+
+Das Internet Time Protocol umgeht den Nachteil vom daytime - Protokoll,
+das das Format der Zeit nicht spezifiziert indem die Sekunden seit
+Mitternacht des 1.1.1900 GMT zurückgesendet werden. Außerdem wird
+der Wert binär übertragen (in network byteorder).
+
+\textbf{Beschreibung} 
+\begin{itemize}
+\item Server sendet Zeit in Form von 4 Byte Integer zurück. 
+\item RFC 868 
+\item TCP, UDP Port 37 
+\item TCP: Verbindung öffnen, Antwort lesen, fertig 
+\item UDP: Leeres Datagramm senden, Antwort empfangen, fertig 
+\end{itemize}
+\textbf{Beispiel in Python}
+
+Zum besseren Verständnis für das Socket-API folgt nun ein in Python
+programmierter Server für das time, da sich das Python-API für die
+Socketprogrammierung am C API orientiert:
+
+
+\begin{lstlisting}[language=Python]
+import socket, struct, time
+PORT = 8037
+# Referenzzeit
+TIME1970 = 2208988800L # Anzahl Sek. zw. 1.1.1900 bis 1.1.1970
+
+# lege Socket an als:
+#   AFINET ... INET Socket (und nicht Unix Sockets)
+#   SOCKSTREAM ... TCP (und nicht UDP)
+serversock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# binde einen Port an den Socket ("" ... localhost)
+serversock.bind(("", PORT))
+
+# ab wird auf ankommende Verbindungsanfragen gewartet
+# backlog: max. Anzahl der Connections in der Queue ist 3
+# d.h. es können allerdings maximal 3 Verbindungen darauf warten,
+# verarbeitet zu werden
+serversock.listen(3)
+
+print "Lauschen an Port", PORT
+
+while 1:
+    # mit accept werden Verbindungen angenommen
+    # clientsock ... Socket zum Client
+    # clientaddr ... IP Adresse und Port von Client
+    clientsock, clientaddr = serversock.accept()
+    print "Verbindung von", clientaddr
+    t = int(time.time()) + TIME1970 # time(): Zeit in s seit 1.1.1970
+
+    # packe unsigned int (I) in network-byte-order (!) in einen String
+    t = struct.pack("!I", t)
+
+    # nun senden (wir nehmen an, dass 4 Bytes gesendet werden können)
+    clientsock.send(t)
+    # und den Client-Socket wieder schließen
+    clientsock.close()
+\end{lstlisting}
+
+
+Der entsprechende Client dazu:
+
+
+\begin{lstlisting}
+import socket, struct, time, datetime
+
+PORT = 8037
+TIME1970 = 2208988800L
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# zum Server verbinden
+sock.connect(("", PORT))
+
+# und nun empfangen (wir nehmen an, dass die 4 Bytes empfangen werden...)
+t = sock.recv(4)
+
+# wieder auspacken ([0] ... da unpack ein Tupel zurückliefert)
+# und Sekunden zw. 1.1.1900 und 1.1.1970 wieder abziehen
+t = struct.unpack("!I", t)[0] - TIME1970
+
+# und den Socket wieder schließen
+sock.close()
+
+# und auf der Konsole ausgeben
+# Module datetime: Typ datetime mit Factory Funktion fromtimestamp
+print datetime.datetime.fromtimestamp(t)
+\end{lstlisting}
+
+
+
+\minisec{finger}
+
+Dieses Protokoll fragt die Informationen über lokale Benutzer eines
+entfernten Servers ab. Es ist ein etwas komplexeres, aber trotzdem
+sehr einfaches Protokoll: Verbindung aufbauen, Liste der Benutzernamen
+senden, Antwort lesen, Verbindung schließen. Die eigentliche Spezifikation
+ist doch um einiges umfangreicher, aber das Prinzip ist wie beschrieben.
+
+\textbf{Beschreibung}
+\begin{itemize}
+\item Client sendet Benutzernamen (optional) und danach $<$CRLF$>$ 
+\item Server sendet Informationen zurück 
+\item Beschrieben in RFC 1288 
+\item TCP Port 79, Socket öffnen, Namen senden, Antwort lesen, fertig 
+\item $\rightarrow$ finger Kommando 
+\end{itemize}
+\textbf{Beispiel: Finger Client}
+
+
+\begin{lstlisting}
+import java.net.*;
+import java.io.*;
+
+public class Finger {
+  private static Socket sock;
+  private static String hostname = "localhost";
+  private static String line = "";
+
+  public static void main(String[] args) {
+    try {
+      sock = new Socket(hostname, 10079);
+      OutputStreamWriter wr = new OutputStreamWriter(
+        sock.getOutputStream());
+      if (args.length > 0) {
+        wr.write(args[0]);
+      }
+      wr.write("");
+      wr.flush();
+      // charset angeben, ansonsten default charset des Systems!
+      BufferedReader br = new BufferedReader(
+        new InputStreamReader(sock.getInputStream(), "US-ASCII"));
+
+      String line;
+      while ((line = br.readLine()) != null)
+        System.out.println(line);  
+    }
+    catch (UnknownHostException e) { e.printStackTrace(); }
+    catch (IOException e) { e.printStackTrace(); } // zu Testzwecken
+  }
+}
+\end{lstlisting}
+
+
+
+\minisec{echo}
+
+Ein weiteres Protokoll, das analog dem Finger Protokoll funktioniert:
+Die Zeichen, die der Client an den Server sendet, sendet dieser als
+Antwort wieder zurück.
+
+Als weitere Ausbaustufe wird das Beispiel auch als Server entwickelt
+(in einer Single-Threaded Version).
+
+\textbf{Beispiel: EchoClient mit TCP}
+
+
+\begin{lstlisting}
+public class EchoClientTCP {
+  public static void main(String[] args) throws IOException {
+    String host = "localhost";
+    int port = 9999;
+    Socket sock;
+    InputStream in;
+    OutputStream out;
+
+    sock = new Socket();
+    sock.setSoTimeout(4000); // 4s für read()
+    try {
+      // 2s time-out 
+      sock.connect(new InetSocketAddress(host, port), 2000);
+    } catch (IOException e) {
+      System.out.println("EchoClient: Connection refused");
+      System.exit(1);
+    }
+    in = sock.getInputStream();
+    out = sock.getOutputStream();
+    System.out.println("Socket port: " + sock.getPort());
+
+    // es wird keine Exception abgefangen...
+    int c; // read liefert int!
+    while ((c = System.in.read()) != -1) {
+      out.write(c);
+      System.out.write(in.read());
+    }
+  }
+}
+\end{lstlisting}
+
+
+\textbf{Beispiel: EchoServerST mit TCP}
+
+Gerüst für einen Single-Threaded Echo-Server:
+
+
+\begin{lstlisting}
+import java.io.*;
+import java.net.*;
+
+public class EchoServerST {
+  static int port = 9999;
+
+  public static void main(String[] args) throws IOException {
+    ServerSocket server = new ServerSocket(port);
+    Socket client = server.accept();
+    client.setSoTimeout(10000); // max. 10s warten!
+    server.close();
+    OutputStream out = client.getOutputStream();
+    InputStream in = client.getInputStream();
+    int x;
+
+    try {
+      while ((x = in.read()) > -1)
+        out.write(x);
+    } catch (InterruptedIOException e) {
+      client.close();
+    }
+  }
+}
+\end{lstlisting}
+
+
+
+\section{Nachrichtenorientierte Kommunikation}
+
+Das charakteristische Merkmal der nachrichtenorientierten Kommunikation
+ist, dass die Kommunikation durch Versenden von Nachrichten stattfindet.
+
+Im Prinzip lässt sich jede Kommunikation auf diese Abstraktionsebene
+zurückführen. Genauso wie sich jede Programmierung letztendlich auf
+die Maschinensprachen- bzw. Assemblerprogrammierung zurückführen lässt.
+
+
+\subsection{Typen von Nachrichten\label{sec:message_types}}
+
+Prinzipiell kann zwischen \emph{zwei verschiedenen Arten} der Nachrichtenübermittlung
+unterschieden werden: 
+\begin{description}
+\item [{synchron}] Operation beginnt nur, wenn Sender die Nachricht initiiert
+hat und der Empfänger bereit ist die Nachricht zu empfangen. Diese
+Art kann noch mit einem Timeout versehen werden. D.h.~es handelt
+sich bei einer Operation zum synchronen Nachrichtenaustauch um einen
+blockenden Aufruf. 
+\item [{asynchron}] Sender initiert das Senden der Nachricht, unabhängig
+ob Empfänger bereit ist oder nicht. Prinzipiell handelt es sich bei
+einer Operation zum asynchronen Nachrichtenaustausch um einen nicht
+blockenden Aufruf. Da die Nachrichten u.U. in einem Puffer zwischengespeichert
+werden wird möglicherweise trotzdem blockiert, damit es zu keinem
+Pufferüberlauf kommt.
+\end{description}
+Untersucht man die Semantik der Interprozesskommunikation genauer,
+kann zwischen drei Arten unterschieden werden: 
+\begin{description}
+\item [{no-wait~send}] Der Sendeprozess wartet lediglich bis die Nachricht
+im Transportsystem zum Absenden bereitgestellt ist (siehe Abbildung
+\vref{fig:no_wait_send}).
+\item [{synchronization~send}] Der Sendeprozess wartet bis die Nachricht
+vom Empfangsprozess entgegengenommen worden ist (siehe Abbildung \vref{fig:synchronization_send}).
+\item [{remote-invocation~send}] Der Sendeprozess wartet bis die Nachricht
+vom Empfangsprozess verarbeitet und beantwortet worden ist (siehe
+Abbildung \vref{fig:remote_invocation_send}).
+\end{description}
+%
+\begin{figure}
+\centering
+
+\includegraphics[bb=0bp 0bp 19cm 75mm,clip,scale=0.7]{design_dev/communication/no-wait_send}
+
+\caption{\label{fig:no_wait_send}no-wait send}
+
+\end{figure}
+
+
+%
+\begin{figure}
+\centering
+
+\includegraphics[bb=0bp 0bp 19cm 75mm,clip,scale=0.7]{design_dev/communication/synchronization_send}
+
+\caption{\label{fig:synchronization_send}synchronization send}
+
+\end{figure}
+
+
+%
+\begin{figure}
+\centering
+
+\includegraphics[bb=0bp 0bp 19cm 75mm,clip,scale=0.7]{design_dev/communication/remote-invocation_send}
+
+\caption{\label{fig:remote_invocation_send}remote-invocation send}
+
+\end{figure}
+
+
+Seitens der Implementierung kann man folgende IPC Varianten erkennen: 
+\begin{description}
+\item [{non-blocking~send}] $\rightarrow$ no-wait send 
+\item [{blocking~send}] Der Sendeprozess wartet bis die Nachricht den
+Rechner verlassen hat, d.h.~ins Netz eingespeist worden ist. 
+\item [{reliable-blocking~send}] Der Sendeprozess wartet bis die Nachricht
+beim Empfangsrechner eingetroffen ist bzw.~von dem Betriebssystem
+angenommen worden ist. 
+\item [{explicit-blocking~send}] $\rightarrow$ synchronization send 
+\item [{request/reply}] $\rightarrow$ remote-invocation send 
+\end{description}
+
+\subsection{Transiente Kommunikation}
+
+Die \emph{transiente Kommunikation} als Form der nachrichtenorientierten
+Kommunikation ist dadurch gekennzeichnet, dass beide Kommunikationspartner
+online sein müssen und die Nachrichten vom unterliegenden Kommunikationssystem
+nur solange gespeichert werden, wie die sendende und die empfangene
+Applikation ausgeführt wird. D.h.~auf diesem niedrigen Abstraktionsniveau
+ist diese Kommunikation als synchron zu betrachten.
+
+Normalerweise unterstützen alle Kommunikationsdienste auf der Transportebene
+nur die transiente Kommunikation. Diese Art entspricht der Kommunikation
+wie in den obigen Beispielen und wird mittels Sockets oder Datagrams
+realisiert.
+
+
+\subsection{Persistente Kommunikation}
+
+Bei einer \emph{persistenten Kommunikation} wird eine Nachricht vom
+Kommunikationssystem solange gespeichert, wie es dauert, sie an den
+Empfänger auszuliefern.
+
+Im Sinne der Einteilung der Typen der Nachrichten sind auch hier sowohl
+synchrone als auch asynchrone Nachrichten möglich.
+
+Motivation: 
+\begin{itemize}
+\item Was ist, wenn der Server offline ist? 
+\item Was ist, wenn es keine Netzwerkroute zum Server gibt? 
+\end{itemize}
+Ein konkrete Implementierung der persistenten Kommunikation ist unter
+dem Titel `Message Oriented Middleware' bekannt.
+
+
+\section{Message Oriented Middleware\label{sec:MOM}}
+
+Bei der `Message Oriented Middleware' handelt es sich um eine Abstraktion
+der persistenten nachrichtenorientierten Kommunikation, die eine Programmierung
+mit Nachrichten auf einer höheren Abstraktionsebene zur Verfügung
+stellt.
+
+Unter \emph{Message Oriented Middleware} (MOM) versteht man 
+\begin{itemize}
+\item eine Softwareinfrastruktur, die 
+\item durch asynchrone Verbindungen charakterisiert ist und 
+\item mehrere Systeme durch 
+\item Nachrichten miteinander verbindet. 
+\end{itemize}
+MOM Systeme unterstützen persisitente Kommunikation und lassen sich
+folgendermaßen \emph{charakterisieren}: 
+\begin{itemize}
+\item Abstraktion der Schnittstellen erfolgt mittels Datenbeschreibungen:
+Der zugrundeliegende Mechanismus sieht den einfachen Austausch durch
+Nachrichten vor. 
+\item Abstraktion der unterliegenden Transportkommunikation: Die Anwendung
+muss nicht wissen welche Transportprotokolle verwendet werden. D.h.
+als zugrundeliegendes Transportprotokoll kann HTTP, SMTP, FTP,...
+verwendet werden. 
+\item Lose gekoppelte (asynchrone) Kommunikation: Es ist nicht erforderlich,
+dass der Empfänger ausgeführt wird, wenn eine Nachricht gesendet wird.
+Analog dazu ist es nicht erforderlich, dass der Sender ausgeführt
+wird, wenn seine Nachricht vom Empfänger entgegengenommen wird. 
+\item Mehrere Kommunikationsmodelle sind möglich (siehe weiter unten). 
+\item Bei der Kommunikation sind viele Knoten beteiligt. 
+\item Außerdem stellt die MOM-Software meistens Transaktionen (Auslieferung
+mehrer Nachrichten als atomare Aktion), Persistenz und Quality-of-Service
+(QoS) Dienste (z.B. Priorität oder Time-to-Live) zur Verfügung. 
+\end{itemize}
+\textbf{Beispiel (fiktiv)}
+
+Alle Kassenautomaten der ÖBB sind vernetzt. Jeder Kassenautomat ist
+direkt mit genau einem Router verbunden, die wiederum untereinander
+verbunden sind. Der Tarifrechner der ÖBB ist ebenfalls an das Netzwerk
+angeschlossen und mit einem Router verbunden.
+
+Die Tarife müssen (wieder einmal) um 10\% erhöht werden. Dazu sendet
+(asynchron) der Tarifrechner eine Nachricht (die an alle Kassenautomaten
+adressiert ist) an seinen Router. Dieser speichert diese Nachricht
+persistent ab und sendet sie an alle Router weiter, die notwendig
+sind, um alle Kassen zu verständigen. Ist eine Kasse nicht in Betrieb
+(z.B. auf Grund einer Störung; soll schon vorgekommen sein), dann
+speichert der zugehörige Router die Nachricht bis diese ausgeliefert
+werden kann.
+
+Derartige Router werden auch Broker genannt und können auch geclustered
+werden, um die Verfügbarkeit und den Durchsatz zu erhöhen.
+
+Die \emph{zwei wichtigsten Kommunikationsmodelle} im Zusammenhang
+mit MOM sind: 
+\begin{description}
+\item [{Publish/Subscribe}] Es handelt sich um eine one-to-many Kommunikationsart.
+Ein Client publiziert Nachrichten zu einem Thema (topic) und andere
+Clients können ein Topic subskribieren. Alle subskribierten Clients
+bekommen die Nachrichten, wenn sie sich das nächste Mal mit dem Broker
+verbinden. 
+\item [{Point-to-Point}] Die Nachricht wird in eine (Sender-)Queue gestellt
+und aus einer (Empfänger-)Queue sequentiell gelesen. 
+\end{description}
+Produkte: JMS (Sun), MSMQ (Microsoft), MQSeries (IBM), SwiftMQ (IIT
+Software),...
+
+
+\section{Entfernte Prozeduraufrufe}
+
+Nachrichtenorientierte Kommunikation wie vorhergehend besprochen,
+verbergen den unterliegenden Kommunikationscharakter nicht vollständig
+im Sinne der Zugriffstransparenz (d.h.~dass Nachrichten versendet
+werden).
+
+Deshalb ist man dazu übergegangen die Semantik der lokalen Funktionsaufrufe
+auf \emph{entfernte Funktionsaufrufe} (Remote Procedure Call, RPC)
+auszudehnen.
+
+Die Funktionsweise derartiger entfernter Funktionsaufrufe sieht folgendermaßen
+aus: Wenn ein Prozess auf Maschine A eine Prozedur auf Maschine B
+aufruft, wird der ausführende Prozess auf A unterbrochen, die Ausführung
+der entfernten Prozedur auf B findet statt und danach wird der Prozess
+auf A fortgeführt. Alle notwendigen Parameter, Rückgabewerte und auch
+eventuelle Exception werden transparent übertragen.
+
+Diese Eleganz hat einige Probleme, die gelöst werden müssen: 
+\begin{itemize}
+\item Was passiert, wenn es sich um unterschiedliche Plattformen handelt,
+die die zugrundeliegenden Datentypen unterschiedlich repräsentieren?
+
+
+Eine 16 Bit ganze Zahl verschieden abgespeichert werden kann ($\rightarrow$
+Interoperabilität, Darstellungsschicht). Aber auch die Abspeicherung
+in verschiedenen Dateiformaten variert.
+
+Aus diesen Gründen gibt es zwei Möglichkeiten wie Daten über das Netzwerk
+übertragen werden können: 
+\begin{itemize}
+\item Entweder werden die Daten in ein maschinenunabhängiges Format transformiert
+in das beide Kommunikationspartner ihre Daten wandeln und wieder zurückwandeln
+(Overhead, wenn beide Partner, die gleiche Darstellung verwenden,
+die jedoch von der maschinenunabhängigen Darstellung differiert):
+single-canonical format. 
+\item Oder der Empfänger muss sich um eine evtl. notwendige Konvertierung
+kümmern. Dazu spezifiziert der Sender den Datentyp aus einer Liste
+von vorgegebenen Datentypen: receiver-makes-it-right. 
+\end{itemize}
+Probleme wie little-endian vs.~big-endian treten z.B. \emph{auch}
+bei der Übertragung von 16-bit Unicodezeichen auf.
+
+Ein weiteres Beispiel: Wie ist zu verfahren, wenn eine Architektur
+keine unsigned Zahlen kennt, diese aber über das Netzwerk empfängt
+(z.B. Java kennt keine unsigned Zahlen)? 
+
+\item Wie wird mit Parametern umgegangen, die mittels call-by-reference
+übergeben werden? Wie werden Objekte mit call-by-value übertragen
+(zwischen verschiedenen Plattformen)?
+\item Wie wird mit auftretenden Exceptions verfahren?
+\item Wie wird verfahren, wenn die eine oder die andere Maschine abstürzt? 
+\end{itemize}
+Um diese Probleme zu lösen und die Transparenz zu gewährleisten wird
+folgender Ansatz gewählt: Es werden \emph{Client- und Server Stubs}
+generiert. Der Client Stub stellt eine Schnittstelle der entfernten
+Funktion zur Verfügung, wandelt alle Parameter in die Datenrepräsentierung
+und spricht über ein Protokoll mit dem Server Stub. Der Server Stub
+wandelt die Daten und ruft die lokale Funktion am Server auf. Der
+Rückgabewert geht den umgekehrten Weg wieder zurück.
+
+Der Server Stub wird auch oft als Skeleton bezeichnet.
+
+D.h. man benötigt die folgenden 3 Komponenten, um entfernte Prozeduraufrufe
+durch führen zu können:
+\begin{enumerate}
+\item Maschinen-unabhängige Datenrepräsentierung samt der notwendigen Runtime
+Software. 
+\item Ein Protokoll, das die Stubs verwenden, um miteinander zu kommunizieren. 
+\item Einen Protokoll-Compiler, der aus einer Funktionsdefinition die Stubs
+generiert. 
+\end{enumerate}
+Schaut man sich die Fernaufrufe etwas genauer an, dann erkennt man
+wieder, dass auch hier verschiedene Varianten möglich sind: 
+\begin{description}
+\item [{synchrone}] Funktionsaufrufe haben die Semantik `remote-invocation
+send' 
+\item [{synchrone}] Prozeduraufrufe haben die Semantik `synchronization
+send' 
+\item [{asynchrone}] Prozeduraufrufe haben die Semantik `no-wait send' 
+\item [{asynchrone}] Funktionsaufrufe haben ebenfalls die Semantik `no-wait
+send'. Um auf den Rückgabewert zuzugreifen gibt es zwei Möglichkeiten: 
+
+\begin{description}
+\item [{polling}] Modell Es wird ein Objekt beim Aufruf mitzugeben. In
+diesem Objekt wird das Resultat zu einem späteren Zeitpunkt eingetragen.
+Dieses Objekt kann auf das Resultat abgefragt werden (blockend oder
+pollend). 
+\item [{callback}] Modell Beim Aufruf wird eine Callback-Funktion mitgegeben.
+Diese wird dann aufgerufen, wenn das Resultat eingelangt ist. 
+\end{description}
+\end{description}
+Funktionsaufrufe (liefert einen Wert) und Prozeduraufrufe (liefert
+keinen Wert) stehen hier auch für das objektorientierte Gegenstück
+(der Methode). D.h.~Methoden werden als objektgebundene Funktionen
+gesehen (was sie letzlich auch sind).
+
+
+\subsection{ONC RPC\label{sec:ONC-RPC}}
+
+ONC (Open Network Computing) RPC wurde von Sun spezifiziert und implementiert
+und war lange Zeit ein defacto Standard (1995 als RFC 1831 standardisiert)
+für die Kommunikation zwischen verschiedenen Rechner (auch zwischen
+verschiedenartigen Rechnerarchitekturen und Betriebssystemen) basierend
+auf der Semantik von entfernten Prozeduraufrufen (und wird heute noch
+z.B. für das Network File System - NFS verwendet).
+
+ONC RPC kann als unterliegendes Transportprotokoll sowohl TCP als
+auch UDP verwenden.
+
+Das Ziel dieser Technologie war es, eine einfache synchrone Kommunikation
+aufzubauen, die transparent den Zugriff auf die entfernte Maschine
+ermöglicht.
+
+Im Sun RPC Modell wird eine single-canonical format Datenrepräsentierung
+in einem binären Format verwendet. Diese wird XDR (eXternal Data Representation)
+genannt.
+
+Dazu müssen die Funktionsdeklarationen in einer eigenen Interface
+Definition Language (IDL) festgeschrieben, die in diesem Fall RPCL
+(RPC Language) genannt wird. Diese RPCL ist eine C ähnliche Sprache.
+Aus dieser RPCL generiert ein Protokollcompiler (RPCGEN genannt) die
+Stubs.
+
+In gewisser Weise kann auch das ONC RPC auf das OSI Modell abgebildet
+werden:
+\begin{itemize}
+\item Schicht 7 (Anwendung) 
+\item Schicht 6 (Darstellung): XDR 
+\item Schicht 5 (Session): RPC 
+\item Schicht 4 (Transport): TCP oder UDP 
+\item Schicht 3 (Vermittlung): IP 
+\end{itemize}
+Eine Frage bleibt derzeit noch offen: Wie findet ein Client seinen
+entfernte Funktion? 
+\begin{itemize}
+\item Ein Serverprozess wird auf einer Maschine gestartet und lauscht an
+einem Port auf einkommende Funktionsaufrufe. Wie kann der Client die
+Portnummer erfahren? 
+\item Jedes Programm muss sich, aus einem gewissen Bereich, eine eindeutige
+Programmnummer wählen, weiters eine Versionsnummer und für jede Funktion,
+die über das Netzwerk angeboten wird, eine Funktionsnummer. Diese
+Angaben werden bei einem speziellen Server (dem portmapper) registriert.
+Dieser Server lauscht an einem definierten Port (111). 
+\item Ein Client richtet eine Anfrage bzgl.~eines Programmes in einer bestimmten
+Version an den Portmapper und erhält von diesem die Portnummer, unter
+der der Serverprozess läuft mitgeteilt, sodass der Client direkt eine
+Verbindung aufnehmen kann. 
+\end{itemize}
+Es handelt sich um ein allgemeines Prinzip, das im Abschnitt `Serverseitiges
+Programmieren' nochmals behandelt wird.
+
+Zusätzlich sind im ONC-RPC noch einige Erweiterungen, wie z.B. eine
+einfache Authentifierung enthalten. Trotzdem ist dieses Technologie
+weitgehend durch DCE-RPCs (Distributed Computing Environment von der
+Open Software Foundation, OSF) und objektbasierte und objektorientierte
+RPCs verdrängt worden.
+
+
+\section{Entfernte Methodenaufrufe}
+
+Mit der Objektorientierung sind zusätzlich noch weitere Anforderungen
+an die Systeme zum \emph{Aufruf von entfernten Methoden} aufgetreten:
+\begin{itemize}
+\item Serialisierung/Deserialisierung der Objekte (marshalling). Da es sich
+um Objekte handelt, die Instanzen von Klassen sind, muss entweder
+die Klasse am Client vorhanden sein, oder diese muss dynamisch zur
+Laufzeit geladen (übertragen) werden. 
+\item Rückübermittlung der Exceptions 
+\item Distributed Garbage Collection 
+\item Activation: Es ist nicht immer sinnvoll oder gar machbar, dass alle
+Serverimplementierungen die gesamte Zeit laufen zu lassen. Folglich
+sollte es eine Möglichkeit geben Serverobjekte zur Laufzeit zu aktivieren. 
+\item Versionsmanagement (der Programme, der Objekte) 
+\end{itemize}
+Diese und ähnliche Aspekte werden von objektbasierten verteilten System
+wie CORBA, DCOM oder Java-RMI abgedeckt.
+
+Der folgende Abschnitt behandelt im speziellen die RMI Technologie,
+die in der J2SE und der J2EE enthalten ist.
+
+
+\subsection{RMI}
+
+\emph{Remote Method Invocation} (RMI) ist einerseits ein Überbegriff
+für eine Objekt-zu-Objekt Kommunikation. Andererseits wird damit eine
+spezielle Technologie in der Java Plattform bezeichnet.
+
+In RMI wird der Server Stub als Skeleton bezeichnet. Weiters gibt
+es einen 'Remote Reference Layer', der für die Verwaltung der entfernten
+Referenzen zuständig und auch eine 'Distributed Garbage Collection'
+durchführt.
+
+Folgende Übersicht stellt wieder eine Möglichkeit zur Einordnung in
+das OSI Modell vor: 
+\begin{itemize}
+\item Schicht 7 (Anwendung): Client, der eine Methode aufruft und entferntes
+Objekt, das eine Methode zur Verfügung stellt. Achtung: aus dieser
+Sicht handelt es sich nicht um den Anwenderprozess.
+\item Schicht 6 (Darstellung): Stub bzw. Skeleton 
+\item Schicht 5 (Session): Remote Reference Layer 
+\item Schicht 4 (Transport): JRMP (Java Remote Method Protocol) über TCP;
+Gibt es Firewallprobleme, dann ist es auch möglich RMI über IIOP (Internet
+Inter-ORB-Protocol) zu betreiben. 
+\item Schicht 3 (Vermittlung): IP 
+\end{itemize}
+Vorgehensweise zum Entwickeln von Applikationen mit RMI: 
+\begin{enumerate}
+\item Ein Remote Interface definieren, das die Methoden enthält, die über
+entfernt zur Verfügung gestellt werden können.
+
+
+Dazu muss dieses Interface public sein, von java.rmi.Remote abgeleitet
+werden und alle Methoden müssen die java.rmi.RemoteException in ihrer
+throws Klausel enthalten. Zusätzlich kann natürlich jede Methode eigene
+Exceptions definieren. 
+
+\item Eine Klasse schreiben, die dieses Remote Interface implementiert.
+
+
+Diese Klasse muss von java.rmi.server.UnicastRemoteObject (oder java.rmi.activation.Activatable)
+abgeleitet werden, damit es als Serverobjekt auftreten kann.
+
+Wenn die Klasse jedoch schon von einer anderen Klasse abgeleitet ist,
+besteht die Möglichkeit mittels 'UnicastRemoteObject.exportObject(this)'
+im Konstruktor der Klasse dieses zu einem Serverobjekt zu machen. 
+
+\item Danach ist der Client zu schreiben.
+
+
+Dazu wird eine Möglichkeit benötigt, um auf das entfernte Objekt zuzugreifen.
+Dazu gibt es prinzipiell zwei Möglichkeiten: 
+\begin{itemize}
+\item Zugriff über einen RMI eigenen Zugriff. 
+\item Zugriff über das Java Naming and Directory Interface (JNDI), das auch
+den Zugriff auf ein LDAP Verzeichnis erlaubt. 
+\end{itemize}
+\item Im Anschluss sind die Stubs und die Skeletons zu generieren.
+
+
+Ab JDK 1.2 werden keine Skeletons mehr benötigt, da diese Information
+jetzt durch Reflection gewonnen werden kann. 
+
+\item Danach ist die Registry zu starten und die Serverobjekte müssen registriert
+werden.
+
+
+Dazu muss ein eigenes Programm geschrieben werden, das ein Serverobjekt
+anlegt und dieses bei der Registry registriert. Diese Registry ist
+außerdem noch zu starten. Entweder mittels dem Kommandozeilenprogramm
+rmiregistry oder mittels der Klasse LocateRegistry.
+
+Beim Starten der Registry ist zu beachten, dass der CLASSPATH schon
+richtig gesetzt ist, der alle Stubs .class Dateien enthält (oder den
+automatischen Download von class Dateien verwenden kann).
+
+Wenn das automatische Laden von class Dateien über das Netzwerk gewünscht
+ist, dann muss noch folgendes gemacht werden: 
+\begin{itemize}
+\item Es muss eine Policy - Datei erstellt werden. 
+\item Die Registry muss mit Angabe dieser Policy Datei gestartet werden. 
+\item Der Client muss einen SecurityManager instanzieren. 
+\end{itemize}
+\item Danach kann sowohl der Server als auch der Client gestartet werden. 
+\end{enumerate}
+
+\minisec{Beispiel: Berechnung der Potenz}
+
+Zuerst das Interface, der schon bekannten Methode zur Berechnung der
+Potenz:
+
+
+\begin{lstlisting}
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface Power extends Remote {
+  public double pow(double x, double y) throws RemoteException;
+}
+\end{lstlisting}
+
+
+Und jetzt die Implementierung dieses Interfaces:
+
+
+\begin{lstlisting}
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+public class SimpleCalculator extends UnicastRemoteObject implements Power {
+  public SimpleCalculator() throws RemoteException {
+    super();
+  }
+
+public double pow(double x, double y) throws RemoteException {
+  return Math.pow(x, y);
+}
+\end{lstlisting}
+
+
+Und jetzt wird der Clientcode entwickelt:
+
+
+\begin{lstlisting}
+import java.rmi.*;
+import java.net.MalformedURLException;
+
+public class Client {
+  public static void main(String[] args) {
+    if (args.length != 1) {
+      System.out.println("usage: Client <hostname>");
+      System.exit(1);
+    }
+    String url = "rmi://" + args[0] + "/SimpleCalculator";
+    try {
+      Power obj = (Power) Naming.lookup(url);
+      double res = obj.pow(2, 3);
+      System.out.println("2 ** 3 = " + res);
+    } catch (NotBoundException e) {
+      System.out.println("/SimpleCalculator nicht in Registry vorhanden");
+      System.exit(1);
+    } catch (MalformedURLException e) {
+      System.out.println("URL fehlerhaft: " + url);
+      System.exit(1);
+    } catch (RemoteException e) {
+      System.out.println("Fehler bei Datenübertragung" + e.getMessage());
+      System.exit(1);
+    }
+  }
+}
+\end{lstlisting}
+
+
+Danach sind die Stubs (und die Skeletons) zu generieren: \verb+$ rmic -v1.2 SimpleCalculator+
+
+Jetzt ist noch in Serverobjekt bei der Registry zu registrieren:
+
+
+\begin{lstlisting}
+import java.rmi.*;
+public class Server {
+  public static void main(String[] args) {
+    try {
+      SimpleCalculator obj = new SimpleCalculator();
+      Naming.rebind("/SimpleCalculator", obj);
+      System.out.println("SimpleCalculator in registry eingetragen!");
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+}
+\end{lstlisting}
+
+
+Um dieses Programm ablaufen zu lassen, muss zuerst die Registry gestartet
+werden: \texttt{rmiregistry}. Danach wird der Server und danach die
+Clients gestartet.
+
+
+\section{Stream-orientierte Kommunikation}
+
+Stream-orientierte Kommunikation unterscheidet sich insofern von den
+vorhergehenden Kommunikationsarten, dass 
+\begin{itemize}
+\item nicht abgeschlossene Informationseinheiten ausgetauscht werden und 
+\item das Zeitverhalten wesentlich ist. 
+\end{itemize}
+Beispiel: Die Übertragung eines Audio-Stream, der mit einer Frequenz
+von 44100 Hz aufgezeichnet. Um den Originalklang herzustellen, ist
+es wesentlich, dass die Samples im Audio-Stream in derselben Reihenfolge
+abgespielt und in den Intervallen zu 1/44100 Sekunden abgespielt werden.
+
+Besonders wichtig ist, dass das unterliegende Kommunikationssystem
+QoS (Quality of Service, Dienstgüte) Anforderungen erfüllen kann.
+
+Diese sind z.B. Bandbreite, Übertragungsschwierigkeiten, Verzögerungen
+usw. zu nennen.
+
+Noch komplizierter wird es, wenn mehrere Streams zu synchronisieren
+sind (z.B. den Audio Kanal zu einer Videoübertragung).

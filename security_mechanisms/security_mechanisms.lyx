@@ -1,0 +1,643 @@
+#LyX 1.6.4.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass scrbook
+\use_default_options false
+\language ngerman
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Mechanismen
+\end_layout
+
+\begin_layout Standard
+Es gibt verschiedene Mechanismen, mit denen sich die oben angeführten Sicherheit
+sdienste realisieren lassen.
+ Information z.B.
+ unter www.rsasecurity.com/rsalabs!
+\end_layout
+
+\begin_layout Section
+Symmetrische Verschlüsselung
+\end_layout
+
+\begin_layout Standard
+Symmetrische Verschlüsselung (symmetric key encryption) basiert darauf,
+ dass Sender und Empfänger ein gemeinsames Geheimnis (den Schlüssel) besitzen,
+ mit dem sie die Daten einerseits verschlüsseln und andererseits auch wieder
+ entschlüsseln können.
+\end_layout
+
+\begin_layout Minisec
+Prinzip
+\end_layout
+
+\begin_layout Standard
+Ein Schlüssel K wird sowohl zum Verschlüsseln (
+\begin_inset Formula $E$
+\end_inset
+
+, encryption) als auch zum Entschlüsseln (
+\begin_inset Formula $D$
+\end_inset
+
+, decryption) verwendet.
+ Ein Paket 
+\begin_inset Formula $P$
+\end_inset
+
+ wird mit 
+\begin_inset Formula $E(K,P)$
+\end_inset
+
+ verschlüsselt, das Ergebnis wird zum Empfänger übertragen.
+ Der kann dies mit 
+\begin_inset Formula $P=D(K,E(K,P))$
+\end_inset
+
+ entschlüsseln und erhält dadurch das ursprüngliche Paket.
+\end_layout
+
+\begin_layout Standard
+Grundbausteine jeder symmetrischen Verschlüsselung sind: Substitution (Ersetzung
+) und Permutation (Vertauschung).
+\end_layout
+
+\begin_layout Standard
+Eine Verschlüsselung, die aus einer Kombination von Substitution und Permutation
+ besteht wird Produktchiffre genannt.
+\end_layout
+
+\begin_layout Minisec
+Vorteile
+\end_layout
+
+\begin_layout Standard
+Prinzipieller Vorteil ist die schnelle Ver- bzw.
+\begin_inset space ~
+\end_inset
+
+Entschlüsselung, die darauf beruht, dass hauptsächlich Substitutionen und
+ Permutationen verwendet werden.
+\end_layout
+
+\begin_layout Standard
+Symmetrische Verschlüsselungsverfahren sind in der Regel auch in HW zu realisier
+en.
+ Dadurch lässt sich die Performance noch weiter steigern.
+\end_layout
+
+\begin_layout Minisec
+Nachteile
+\end_layout
+
+\begin_layout Standard
+Die Schlüsselverwaltung ist bei symmetrischen Verschlüsselungen kompliziert,
+ da
+\end_layout
+
+\begin_layout Itemize
+für jede Kombination von Kombinationspartnern ein eigener Schlüssel benötigt
+ wird.
+ 
+\end_layout
+
+\begin_layout Itemize
+dieser Schlüssel über einen sicheren Kanal ausgetauscht werden muss.
+ 
+\end_layout
+
+\begin_layout Minisec
+Verfahren
+\end_layout
+
+\begin_layout Itemize
+DES (Data Encryption Standard): Schlüssellänge 56 Bits.
+ Wurde 1999 in 22 Stunden gebrochen (ca.
+ 100.000 Computer) 
+\end_layout
+
+\begin_layout Itemize
+3DES (Triple DES): Schlüssellänge je nach Modus bis zu 168 Bits 
+\end_layout
+
+\begin_layout Itemize
+AES (Advanced Encryption Standard): Schlüssellänge 128, 192 oder 256 Bits
+ 
+\end_layout
+
+\begin_layout Itemize
+IDEA (International Data Encryption Algorithm): Schlüssellänge 128 Bits
+ 
+\end_layout
+
+\begin_layout Itemize
+Blowfisch: Schlüssellänge variabel bis 448 Bits 
+\end_layout
+
+\begin_layout Standard
+Abschätzung der Schlüssellänge: 64 Bits sind ungefähr 20 Stellen, 128 Bits
+ ca.
+\begin_inset space ~
+\end_inset
+
+40 Stellen.
+\end_layout
+
+\begin_layout Section
+Asymmetrische Verschlüsselung
+\end_layout
+
+\begin_layout Standard
+Asymmetrische Verschlüsselung (public key encryption) basiert darauf, dass
+ Sender und Empfänger 
+\emph on
+kein
+\emph default
+ gemeinsames Geheimnis besitzen müssen.
+ Sender und Empfänger besitzen jeder einen eigenen Schlüssel, der aus zwei
+ Teilen besteht: einen öffentlichen Teil (public key) und einen privaten
+ Teil (private key).
+ Der public key wird z.B.
+ in einem geeigneten Verzeichnis veröffentlicht, der private key wird sicher
+ (geheim) von seinem Besitzer verwahrt.
+\end_layout
+
+\begin_layout Minisec
+Prinzip
+\end_layout
+
+\begin_layout Standard
+Der öffentliche Schlüssel 
+\begin_inset Formula $K_{pub}$
+\end_inset
+
+ wird verwendet, um ein Paket 
+\begin_inset Formula $P$
+\end_inset
+
+ zu verschlüsseln: 
+\begin_inset Formula $E(K_{pub},P)$
+\end_inset
+
+.
+ Der Empfänger kann das verschlüsselte Paket mit seinem private key entschlüssel
+n: 
+\begin_inset Formula $P=D(K_{pri},E(K_{pub},P))$
+\end_inset
+
+.
+ Ein mit einem öffentlichen Schlüssel verschlüsseltes Paket kann nur mit
+ dem dazugehörigen privaten Schlüssel wieder entschlüsselt werden.
+ Aus diesem Grund (verschiedene Schlüssel zum Ver- und Entschlüsseln) nennt
+ man diese Verfahren asymmetrisch.
+\end_layout
+
+\begin_layout Standard
+Grundbausteine einer asymmetrischen Verschlüsselung sind meistens mathematische
+ Probleme wie das Finden von Primfaktoren von sehr großen Zahlen.
+\end_layout
+
+\begin_layout Minisec
+Vorteile
+\end_layout
+
+\begin_layout Standard
+Die Schlüsselverwaltung ist einfacher, da der öffentliche Schlüssel publiziert
+ werden kann (z.B.
+ auf einem Webserver oder bei einer vertrauenwürdigen Instanz) und nicht
+ für jede Kombination von Kommunikationspartner ein eigener Schlüssel benötigt
+ wird.
+ Trotzdem gibt es auch hier viele Probleme, wie z.B.:
+\end_layout
+
+\begin_layout Itemize
+Die Identität des Benutzers muss überprüft werden, wenn der öffentliche
+ Schlüssel veröffentlicht wird.
+ Das zugrundeliegende Problem ist, dass sichergestellt sein muss, dass der
+ öffentliche Schlüssel wirklich zu der Person gehört und nicht zu einer
+ anderen.
+ 
+\end_layout
+
+\begin_layout Itemize
+Der Instanz, die den Schlüssel veröffentlicht muss vertraut werden (siehe
+ vorhergehenden Punkt).
+ 
+\end_layout
+
+\begin_layout Itemize
+Diese Instanz ist einer besonderer Gefahr ausgesetzt, dass eingebrochen
+ wird.
+ 
+\end_layout
+
+\begin_layout Itemize
+Wie wird ein öffentlicher Schlüssel wieder zurückgezogen? 
+\end_layout
+
+\begin_layout Minisec
+Nachteile
+\end_layout
+
+\begin_layout Standard
+Performance: Diese ist geringer, da sie auf mathematischen Methoden (Primfaktorz
+erlegung, Lösen algebraischer Gleichungen) basieren.
+\end_layout
+
+\begin_layout Minisec
+Verfahren
+\end_layout
+
+\begin_layout Itemize
+RSA (Rivest-Shamir-Adlman): asymmetrisch, siehe ADAT 
+\end_layout
+
+\begin_layout Itemize
+Diffie-Hellmann: nur Schlüsselaustausch.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Diffie Hellman Schlüsselaustauschverfahren basiert auf der Exponentialfunktion
+ im Galoisfeld GF(p).
+ Vereinfacht 
+\begin_inset Formula $f(x)=a^{x}\textrm{ mod }p$
+\end_inset
+
+ Damit wird folgender Ablauf realisiert:
+\end_layout
+
+\begin_layout Enumerate
+Einer der beiden denkt sich eine große Primzahl p aus und teilt diese seinem
+ Partner mit.
+ Weiters bestimmt dieser noch eine sogenannte Primitivwurzel zur Zahl p.
+ Diese Zahlen müssen nicht geheim sein.
+\end_layout
+
+\begin_layout Enumerate
+Partner A erfindet 
+\begin_inset Formula $x_{A}$
+\end_inset
+
+ sendet 
+\begin_inset Formula $y_{A}=\alpha^{x_{A}}\textrm{mod }p$
+\end_inset
+
+ an B
+\end_layout
+
+\begin_layout Enumerate
+Partner B erfindet 
+\begin_inset Formula $x_{B}$
+\end_inset
+
+ sendet 
+\begin_inset Formula $y_{B}=\alpha^{x_{B}}\textrm{mod }p$
+\end_inset
+
+ an A
+\end_layout
+
+\begin_layout Enumerate
+Partner A berechnet 
+\begin_inset Formula $y_{B}^{x_{A}}$
+\end_inset
+
+ 
+\begin_inset Formula $\textrm{mod }p$
+\end_inset
+
+ und erhält 
+\begin_inset Formula $z_{BA}=a^{x_{B}x_{A}}$
+\end_inset
+
+
+\begin_inset Formula $\textrm{ mod }p$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Partner B berechnet 
+\begin_inset Formula $y_{A}^{x_{B}}$
+\end_inset
+
+ 
+\begin_inset Formula $\textrm{mod }p$
+\end_inset
+
+ und erhält 
+\begin_inset Formula $z_{AB}=a^{x_{A}x_{B}}$
+\end_inset
+
+
+\begin_inset Formula $\textrm{ mod }p$
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Beide verfügen also über eine gemeinsame Zahl 
+\begin_inset Formula $z_{AB}=z_{AB}$
+\end_inset
+
+, die nicht im Netz übertragen wurde und von keinem Dritten ermittelt werden
+ kann.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+ElGamal: basiert auf Diffie-Hellmann, kann und wird auch für die Verschlüsselung
+ verwendet.
+ 
+\end_layout
+
+\begin_layout Itemize
+Elliptic Curve Cryptography (ECC): basiert auf dem Lösen von elliptischen
+ Kurven in endlichen Körpern.
+ 
+\end_layout
+
+\begin_layout Itemize
+DSA (Digital Signature Algorithm): amerikanischer Standard für digitale
+ Signaturen.
+ 
+\end_layout
+
+\begin_layout Standard
+Abschätzung der Schlüssellänge: mind.
+ 1024 Bits (Ausnahme sind elliptische Kurven: 180 Bits); 1024 Bits sind
+ ungefähr 300 Stellen, 2048 Bits ca.
+\begin_inset space ~
+\end_inset
+
+600 Stellen.
+\end_layout
+
+\begin_layout Section
+Message Digests
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:MessageDigests"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Message Digests liefern ein Ergebnis mit fixer Länge mittels einer Einweg-Hashfu
+nktion.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Einweg: Die Funktion kann in die eine Richtung leicht berechnet werden,
+ die andere Richtung ist nicht berechenbar (oder nur mit extrem viel Aufwand).
+ 
+\end_layout
+
+\begin_layout Itemize
+Hash: möglichst gleichmäßige Abdeckung des Bildraumes und kollisionsresistent.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Ein Message Digest wird meist am Ende der Nachricht angehängt oder separat
+ übertragen.
+ 
+\end_layout
+
+\begin_layout Itemize
+Zweck ist die Erkennung einer etwaigen Veränderung: In diesem Fall ändert
+ sich auch der Hashwert.
+ 
+\end_layout
+
+\begin_layout Itemize
+Verfahren 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+MD5 (Message Digest 5, RFC 1321): 128 Bits 
+\end_layout
+
+\begin_layout Itemize
+SHA-1 (Secure Hash Algorithm): 160 Bits
+\end_layout
+
+\begin_layout Itemize
+SHA-2 wie SHA-256, SHA-384 oder SHA-512
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Message Authentication Code
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:MessageAuthenticationCode"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Message Authenticaation Codes (MAC) sind verwandt mit den Message Digests,
+ benötigen aber ein Paßwort als Eingabe.
+ 
+\end_layout
+
+\begin_layout Itemize
+Anwendung 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Schlüssel bekannt, dann Verifikation der Integrität 
+\end_layout
+
+\begin_layout Itemize
+Symmetrische Form der Authentifizierung 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Verfahren: HMAC 
+\end_layout
+
+\begin_layout Itemize
+Abschätzung für 160 Bits 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+2 hoch 160 verschiedene Hashwerte sind möglich; Erde hat ca.
+\begin_inset space ~
+\end_inset
+
+2 hoch 170 Atome 
+\end_layout
+
+\begin_layout Itemize
+Rechenzeit: Annahme eines schnellen Rechners: für ca.
+\begin_inset space ~
+\end_inset
+
+2 hoch 24 (ca.
+ 16Mio) Nachrichten kann der Hashwert in einer Sekunde bestimmt werden.
+ Ein Jahr besteht aus 2 hoch 25 Sekunden.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula $2^{30}$
+\end_inset
+
+ (ca.
+\begin_inset space ~
+\end_inset
+
+1 Milliarde) Rechner arbeiten gleichzeitig.
+ Das ergibt 
+\begin_inset Formula $2^{160}/(2^{24}*2^{25}*2^{30}=2^{81}=1208925819614629174706176$
+\end_inset
+
+ Jahre.
+ Die Sonne wird in 
+\begin_inset Formula $2^{30}$
+\end_inset
+
+ Jahren zur Supernova! 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Section
+Digitale Signatur
+\end_layout
+
+\begin_layout Itemize
+Eine digitale Signatur garantiert, dass die Nachricht von dem Signierer
+ stammt und diese nicht verändert wurde.
+ 
+\end_layout
+
+\begin_layout Itemize
+Vorgang: Erzeugung eines Message Digest und verschlüsseln mit dem privaten
+ Schlüssel.
+\end_layout
+
+\begin_layout Itemize
+Überprüfung: mit öffentlichen Schlüssel entschlüsseln, Message Digest berechnen
+ und vergleichen.
+\end_layout
+
+\begin_layout Itemize
+Eigenschaften:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+ist nicht fälschbar (Änderung wird erkannt, Quelle authentisch).
+\end_layout
+
+\begin_layout Itemize
+ist einfach überprüfbar.
+\end_layout
+
+\begin_layout Itemize
+ist nicht abstreitbar.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Verfahren: PGP (Pretty Good Privacy), X.509 
+\end_layout
+
+\begin_layout Section
+Zertifikat
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:certificate"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Zertifikat ist ein 
+\begin_inset Quotes pld
+\end_inset
+
+digitaler Ausweis
+\begin_inset Quotes prd
+\end_inset
+
+: Stellt einen Zusammenhang zwischen dem öffentlichen Schlüssel und einer
+ bestimmten Person dar.
+ 
+\end_layout
+
+\begin_layout Itemize
+Enthält Angaben über: Name des Zertifikatsinhabers, öffentlicher Schlüssel
+ des Zertifikatsinhabers, Name der Zertifizierungsinstanz, Gültigkeitszeitraum
+ 
+\end_layout
+
+\begin_layout Itemize
+Signiert mit privaten Schlüssel der Zertifizierungsinstanz 
+\end_layout
+
+\begin_layout Itemize
+Format: z.B.
+ X.509.
+\end_layout
+
+\end_body
+\end_document

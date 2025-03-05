@@ -1,0 +1,492 @@
+#LyX 1.6.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass scrbook
+\use_default_options false
+\language ngerman
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Sicherheitsanwendungen
+\end_layout
+
+\begin_layout Section
+Sicherheitsprotokolle
+\end_layout
+
+\begin_layout Subsection
+TLS
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:TLS"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TLS (transport layer security) wird seit vielen Jahren unter anderem für
+ die Absicherung (Vertraulichkeit, Integrität und ab Version 3 Authentifikation
+ von Client und Server) von http-Verbindungen und auch Diensten wie z.B.
+ IMAP eingesetzt.
+\end_layout
+
+\begin_layout Standard
+Ursprünglich wurde TLS unter dem Name SSL (secure socket layer) von der
+ Fa.
+ Netscape entwickelt.
+ Später wurde SSL bei der IETF unter dem RFC 2245 eingereicht und in TLS
+ umbenannt.
+ Die aktuelle Version von TLS ist 1.0, die sich jedoch im Protokoll noch
+ immer mit der Versionsbezeichnung 
+\begin_inset Quotes pld
+\end_inset
+
+SSL 3.1
+\begin_inset Quotes prd
+\end_inset
+
+ meldet.
+\end_layout
+
+\begin_layout Standard
+TLS ist im Schichtenmodell zwischen der Anwendungsschicht und der Transportschic
+ht eingefügt und steht für das Transportprotokoll TCP zur Verfügung.
+ Es verhält sich gegenüber der Anwendungsschicht wie TCP.
+ Damit müssen Anwendungen nicht speziell angepasst werden.
+ Als solches ist es heute Bestandteil von Web-Browsern.
+\end_layout
+
+\begin_layout Standard
+TLS kann viele kryptographische Algorithmen benutzen.
+ Für den Schlüsselaustausch sind dies RSA (mit Zertifikat) oder Diffie-Hellman
+ (ohne Zertifikat).
+ Vertraulichkeit wird durch symmetrische Verschlüsselung hergestellt (RC2,
+ RC4, IDEA, DES, Triple-DES).
+ Um Integrität zur gewährleisten MD5 und SHA-1 verwendet.
+ Die Authifikation wird mittels Zertifikaten nach X.509 sichergestellt.
+\end_layout
+
+\begin_layout Subsubsection
+OpenVPN
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:OpenVPN"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+OpenVPN ist ein vergleichsweises neues VPN Produkt, mit dem man ebenso einzelne
+ Rechner übers Internet miteinander verbinden kann, komplette Netze koppeln
+ oder Heimarbeitern einen sicheren Zugang zum Firmennetz gewähren kann.
+ Auch bei der Zugangskontrolle und Verschlüsselung in Funknetzen oder für
+ die Fernwartung leistet es gute Dienste.
+\end_layout
+
+\begin_layout Standard
+Für Verschlüsselung und Authentifizierung setzt OpenVPN auf TLS auf.
+ Damit nutzt es für diese grundlegenden, sicherheitsrelevanten Funktionen
+ ein bewährtes Protokoll und die bewährte Bibliothek OpenSSL, die sehr gut
+ untersucht und getestet ist.
+\end_layout
+
+\begin_layout Standard
+Je nach eingesetztem Modus kann OpenVPN entweder Schicht 3 Pakete (also
+ IP Datagramme) transportieren (Modus Routing) oder Schicht 2 Pakete (also
+ Ethernet Frames) weiterleiten (Modus Bridging).
+\end_layout
+
+\begin_layout Standard
+Es ist einfacher zu konfigurieren als IPSec, weist jedoch eine etwas geringere
+ Performance auf.
+ Allerdings hat es zusätzliche Vorteile: transparenter Schlüsselaustausch,
+ verfügbar für alle Betriebssysteme und Firewall- bzw.
+ NAT-Durchgängigkeit und ist nicht direkt in das Betriebssystem integriert.
+\end_layout
+
+\begin_layout Subsubsection
+Stunnel
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Stunnel"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Stunnel ist ein Produkt, um einen Tunnel über SSL bzw.
+ TLS aufzubauen.
+ Als solches kann es viele TCP Protokolle wie z.B.
+ STMP, POP3, IMAP oder HTTP tunneln.
+ Da dieses Produkt auf Tunnel über auf TLS und TCP aufbaut kann es kein
+ UDP Protokoll tunneln.
+ Auch können keine Protokolle, die mehrere Verbindungen -- wie ftp -- benötigen
+ nicht verwendet werden.
+\end_layout
+
+\begin_layout Subsection
+SSH
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:SSH_protocol"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Secure Shell (ssh) ist ein Protokoll, das von der IETF (in vielen RFCs)
+ beschrieben und hiermit standardisiert ist.
+ Es ermöglicht eine authentifizierte und verschlüsselte Verbindung und wird,
+ ähnlich wie TLS, über das zuverlässige aber unsichere Transportprotokoll
+ TCP verwendet.
+ D.h.
+ es findet eine Punkt-zu-Punkt Verschlüsselung statt.
+ Es stehen verschiedene symmetrische und asymmetrische Verschlüsselungs-
+ und Hashmethoden zur Verfügung.
+\end_layout
+
+\begin_layout Standard
+Der Standardport ist 22.
+ Damit kommt es auch nicht zu den Problemen mit einer Firewall (ähnlich
+ der Problematik bei Betrieb von ftp).
+\end_layout
+
+\begin_layout Standard
+Der Client baut eine TCP Verbindung zum Port 22 am Server auf.
+\end_layout
+
+\begin_layout Minisec
+Funktionsweise
+\end_layout
+
+\begin_layout Enumerate
+Nach dem TCP Handshake tauschen Client und Server die zu verwendende SSH-Version
+ und auch die Verschlüsselungsparameter aus.
+\end_layout
+
+\begin_layout Enumerate
+Der Server schickt seinen Public Key.
+ Bis hier her läuft die Kommunikation im Klartext.
+ Hat der Client schon diesen Public Key für den angegebenen Host gespeichert
+ und sind diese gleich, dann kann dieser verwendet werden.
+ Ist noch kein Public Key für diesen Host am Client gespeichert, dann wird
+ ein "Fingerprint" angezeigt und der Benutzer gefragt, ob dieser Fingerprint
+ zu diesem Server gehört.
+ Wenn ja, dann wird dieser gespeichert, wenn nein, dann wird die Verbindung
+ abgebrochen.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Anschließend wird der symmetrische Schlüssels mittels dem Diffie Hellman
+ Schlüsselaustauschverfahren (1976! quasi Beginn der Public-Key-Kryptographie)
+ ausgetauscht.
+\end_layout
+
+\begin_layout Enumerate
+Danach kann die Kommunikation mittels symmetrischer Verschlüsselung durchgeführt
+ werden.
+ Das bedeutet in der Regel, dass der Benutzer seinen Benutzernamen und sein
+ Passwort sendet.
+\end_layout
+
+\begin_layout Standard
+Alternativ zur Benutzernamen/Passwort - Authentifizierung kann auch eine
+ Public Key - Authentifizierung des Benutzers durchgeführt werden.
+ Dazu wird am Client ein Schlüsselpaar generiert und der Public Key am Server
+ abgelegt.
+\end_layout
+
+\begin_layout Standard
+Mittels des port forwarding von ssh kann man gesicherte Tunnel aufbauen.
+ Damit ist die Kommunikation zwischen zwei Partnern vollkommen transparent.
+ Daher ist seitens der Programmierung nichts zu beachten!
+\end_layout
+
+\begin_layout Standard
+Der Vorteil von ssh gegenüber ssl ist, dass es ein größeres Anwendungsspektrum
+ aufweist und mehr Konfigurationsmöglichkeiten aufweist.
+\end_layout
+
+\begin_layout Standard
+Die heute meist verwendete Implementierung ist das Produkt OpenSSH.
+\end_layout
+
+\begin_layout Subsection
+IPSec
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:IPSec"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+IPSec (IP Security, RFCs 1825-1829, 2401-2409) ist ein integraler Bestandteil
+ von IPv6 und steht allerdings als eigenständige Technologie auch in IPv4
+ Netzen zur Verfügung.
+ Der wesentliche Punkt bei IPSec ist, dass die Verschlüsselung, Authentifikation
+ und und Integritätsprüfung auf der Paketebene (Internet Layer) durchgeführt
+ wird.
+\end_layout
+
+\begin_layout Standard
+IPSec besteht aus 2 Teilprotokollen, die entweder getrennt oder gemeinsam
+ verwendet werden können:
+\end_layout
+
+\begin_layout Itemize
+ESP (Encapsulated Security Payload) stellt die Vertraulichkeit von IP Paketen
+ mittels symmetrischer Verschlüsselung (wie Blowfish oder 3DES) sicher.
+ Es gibt einerseits den Transportmodus bei dem nur die Nutzdaten verschlüsselt
+ werden und andererseits den Tunnelmodus, der auch den IP-Header verschlüsselt.
+ Damit ist auch die Quelladresse und die Zieladresse nicht einsehbar!
+\end_layout
+
+\begin_layout Itemize
+AH (Authentication Header) ist ein zusätzlicher Header zum IP Header, der
+ für die Authentifizierung und die Integrität sicherstellt.
+ Das wird mittels Message Digests (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:MessageDigests"
+
+\end_inset
+
+) wie z.B.
+ MD5 oder SHA-1 und Message Authentication Codes (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:MessageAuthenticationCode"
+
+\end_inset
+
+) wie z.B.
+ HMAC erzielt.
+\end_layout
+
+\begin_layout Standard
+Der Schlüsselaustausch wird mittels IKE (Internet Key Exchange) realisiert.
+\end_layout
+
+\begin_layout Section
+Firewalls
+\end_layout
+
+\begin_layout Standard
+Die Aufgabe einer Firewall ist es das interne Netz vom externen Netz zu
+ trennen und gegen Angriffe von außen abzuschotten.
+\end_layout
+
+\begin_layout Standard
+Oft wird noch ein spezielles Netz die DMZ (demilitarized zone, dt.
+ entmilitarisierte Zone) eingerichtet, die z.B.
+ den Mail-Server oder den http-Server enthält.
+ Der Zugriff von extern auf die DMZ ist (eingeschränkt) möglich, das interne
+ Netz ist natürlich unterbunden.
+\end_layout
+
+\begin_layout Standard
+Aus verschiedenen Überlegungen heraus kann es sinnvoll sein, bestimmte Protokoll
+e durch die Firewall zu tunneln.
+ Oft ist dies allerdings nicht erwünscht, widerspricht der Security-Policy
+ und ist somit verboten.
+\end_layout
+
+\begin_layout Standard
+Unter einer sogenannten Personal-Firewall versteht man eine Software, die
+ den Verkehr eines einzelnen Rechners überwacht und diesen schützt.
+ Prinzipiell kann man zwei Typen von Firewalls unterscheiden: Paketfilter
+ oder Application-Gateway.
+\end_layout
+
+\begin_layout Subsection
+Paketfilter
+\end_layout
+
+\begin_layout Standard
+Ein Paketfilter wertet nur den Header der Netzpakete aus.
+ Im Header werden hauptsächlich IP Header-Felder Quelladresse, Zieladresse,
+ Protokoll, das DF und MF Flag verwendet.
+ Im TCP Header werden meistens die Portinformationen sowie die Flags SYN,
+ FIN, ACK und RST herangezogen.
+\end_layout
+
+\begin_layout Standard
+Als Erweiterung zu einem reinen Paketfilter wird ein zustandsbezogener Paketfilt
+er (engl.
+ stateful packet filter) nicht nur die Pakete für sich alleine sondern die
+ Pakete in Folge betrachten.
+ Damit kann z.B.
+ auch der Zustand einer Verbindung verfolgt werden.
+\end_layout
+
+\begin_layout Subsection
+Application-Gateway
+\end_layout
+
+\begin_layout Standard
+Im Gegensatz zu einem Paketfilter, der nur den Header von Paketen auswertet,
+ untersucht ein Application-Gateway den Inhalt aller eingehenden und ausgehenden
+ Nachrichten.
+ Ein typisches Beispiel ist ein Mail-Gateway, das eingehende oder ausgehende
+ Mails verwirft, wenn sie eine bestimmte Größe überschreiten oder Spam-E-Mails
+ ausfiltert.
+ Solch eine Firewall kann auch Teile aus einer Nachricht herausschneiden,
+ wie z.B.
+ ausführbare Dateien.
+ Im Zusammenhang mit dem Internet kann auch ein Proxy, der falsche Pakete
+ verwirft oder Zugangsbeschränkungen implementiert als Beispiel genannt
+ werden.
+ Auch speziell auf eine Anwendung zugeschnittene Gateways fallen in diese
+ Kategorie.
+\end_layout
+
+\begin_layout Section
+Intrusion Detection System
+\end_layout
+
+\begin_layout Standard
+Ein Intrusion Detection System (IDS, dt.
+ System zur Einbruchserkennung) versucht Einbruchsversuche zu erkennen und
+ zu melden.
+ Prinzipiell unterscheidet man in Host Intrusion Detection Systeme (HIDS),
+ die einen einzelnen Host überwachen und Network Intrusion Detection Systeme
+ (NIDS), die ein Netzsegment überwachen.
+ An prinzipiellen Ansätzen gibt es die Möglichkeit Einbrüche an Hand von
+ Mustern zu erkennen, die in der Kommunikation stattfinden.
+ Oft werden solche Systeme schon in Firewalls eingebaut oder aber auch eigenstän
+dig eingesetzt.
+ Ein bekanntes eigenständiges Open Source IDS ist Snort.
+ Ein anderer Ansatz ist, Veränderungen an Dateien zu erkennen.
+ Verfolgt ein HIDS lediglich den zweiten Ansatz, also Veränderungen an Dateien
+ zu erkennen, spricht man auch von einem System Integrity Verifier (SIV).
+ Die Open Source Produkte tripwire, AIDE oder radmind sind SIV.
+\end_layout
+
+\begin_layout Standard
+Versucht ein solches System auch einen Einbruchsversuch abzuwehren, dann
+ spricht man von einem Intrusion Prevention System (IPS, dt.
+ System zur Einbruchsverhinderung).
+ Dazu kann in weiterer Folge auch die Firewall temporär angepasst werden
+ und weitere Verbindungen von der Quelladresse zu blockieren.
+ Allerdings kann dadurch auch ein DoS Angriff vorgenommen werden, wenn der
+ Angreifer gefälschte IP Adressen verwendet.
+\end_layout
+
+\begin_layout Section
+Audit-Tools
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Audit-Tools"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Im Zuge des Audit-Trail Management (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:security_organisational_actions"
+
+\end_inset
+
+) werden auch verschiedene Tools eingesetzt, die helfen den Zustand des
+ Systems zu erfassen.
+ In Abhängigkeit von der Schicht gibt es verschiedene kommerzielle und frei
+ verfügbare Tools:
+\end_layout
+
+\begin_layout Description
+Anwendungsschicht Schwachstellenscanner, Brute Force Tools, Exploits, Virenscann
+er
+\end_layout
+
+\begin_layout Description
+Transportschicht Scanner, Probes, OS-Fingerprinting, wie z.B.
+ nmap 
+\end_layout
+
+\begin_layout Description
+Vermittlungsschicht ICMP-Packet-Injectors, wie z.B.
+ Nemesis 
+\end_layout
+
+\begin_layout Description
+Sicherungsschicht ARP-Spoofer, wie z.B.
+ Ettercap.
+ Will man die Zuordnung von IP Adresse und MAC Adresse überwachen, damit
+ es zu keinen Veränderungen kommt, gibt es das Tool Arpwatch.
+ 
+\end_layout
+
+\begin_layout Description
+Bitübertragungsschicht Sniffer, wie z.B.
+ Wireshark (früher Ethereal)
+\end_layout
+
+\begin_layout Standard
+Es gibt verschiedene Tools, die sich nicht direkt nur einer Schicht zuordnen
+ lassen, wie z.B.
+ 
+\end_layout
+
+\begin_layout Itemize
+Kismet, das ein Tool zum Finden von WLANs ist.
+ Es ermöglicht das Sniffen in WLANs und dient auch einer Erkennung von Angriffen.
+\end_layout
+
+\begin_layout Itemize
+Ein Tool zum Erkennen von Schwachstellen in einem Netz ist Nessus.
+\end_layout
+
+\end_body
+\end_document

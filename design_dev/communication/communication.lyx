@@ -1,0 +1,3743 @@
+#LyX 1.5.4 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass scrbook
+\begin_preamble
+
+\end_preamble
+\language ngerman
+\inputencoding latin1
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry false
+\use_amsmath 0
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Kommunikation
+\end_layout
+
+\begin_layout Section
+TCP/IP Programmierung in Java
+\end_layout
+
+\begin_layout Subsection
+Allgemeine Aspekte
+\end_layout
+
+\begin_layout Minisec
+IP Adresse in Java
+\end_layout
+
+\begin_layout Standard
+Die Klasse java.net.InetAddress (abstrakte Basisklasse) stellt eine Repräsentierun
+g einer IPv4 bzw.\InsetSpace ~
+IPv6 Adresse dar, die die folgenden Methoden aufweist: 
+\end_layout
+
+\begin_layout Itemize
+public static InetAddress getByName(String host) 
+\end_layout
+
+\begin_layout Itemize
+public static InetAddress getLocalHost() 
+\end_layout
+
+\begin_layout Itemize
+public String getHostName() 
+\end_layout
+
+\begin_layout Itemize
+public byte[] getAddress() 
+\end_layout
+
+\begin_layout Itemize
+public boolean isReachable(int timeout) throws IOException // testet, ob
+ Rechner innerhalb angegebener Zeit erreichbar ist (mittel ICMP Echo Request
+ oder TCP Verbingung zu Port 7 (Echo).
+ 
+\end_layout
+
+\begin_layout Standard
+Beispiel eines Code-Fragmentes für ein `nslookup', `host' oder `dig'-artiges
+ Programm:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+try {
+\end_layout
+
+\begin_layout Standard
+
+  InetAddress address;
+\end_layout
+
+\begin_layout Standard
+
+  address = InetAddress.getByName("www.htlwrn.ac.at"); 
+\end_layout
+
+\begin_layout Standard
+
+  System.out.println(address);
+\end_layout
+
+\begin_layout Standard
+
+} catch (java.net.UnknownHostException e) {
+\end_layout
+
+\begin_layout Standard
+
+  e.printStackTrace();
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Das folgende Beispiel gibt die lokale IP Adresse aus: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+import java.net.InetAddress;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+public class LocalIP {
+\end_layout
+
+\begin_layout Standard
+
+  public static void main(String[] args) {
+\end_layout
+
+\begin_layout Standard
+
+    try {
+\end_layout
+
+\begin_layout Standard
+
+      InetAddress a;
+\end_layout
+
+\begin_layout Standard
+
+      a = InetAddress.getLocalHost();
+\end_layout
+
+\begin_layout Standard
+
+      System.out.println("localhost: name = " + a.getHostName());
+\end_layout
+
+\begin_layout Standard
+
+      byte[] addr = a.getAddress();
+\end_layout
+
+\begin_layout Standard
+
+      System.out.print("localhost: addr= ");
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+      for (int i = 0; i < addr.length; i++) {
+\end_layout
+
+\begin_layout Standard
+
+        // addr ist ein byte Array; jeder Wert in -128..+127
+\end_layout
+
+\begin_layout Standard
+
+        // wir benötigen einen ganzzahligen Wert! Alle Werte in Java sind
+\end_layout
+
+\begin_layout Standard
+
+        // vorzeichenbehaftet im Zweierkomplement gespeichert
+\end_layout
+
+\begin_layout Standard
+
+        int ub = addr[i] < 0 ? addr[i] + 256 : addr[i];
+\end_layout
+
+\begin_layout Standard
+
+        System.out.print(ub + "."); 
+\end_layout
+
+\begin_layout Standard
+
+      }
+\end_layout
+
+\begin_layout Standard
+
+      System.out.println();  
+\end_layout
+
+\begin_layout Standard
+
+    } catch (java.net.UnknownHostException e) {
+\end_layout
+
+\begin_layout Standard
+
+      e.printStackTrace(); // zu Testzwecken
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Minisec
+URL in Java
+\end_layout
+
+\begin_layout Standard
+Mit der 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+verb+java.net.URL+
+\end_layout
+
+\end_inset
+
+ Klasse kann man auf einfache Art und Weise Dateien aus dem Internet laden.
+\end_layout
+
+\begin_layout Standard
+Dazu gibt es die folgenden Konstruktoren (die alle die MalformedURLException
+ werfen können): 
+\end_layout
+
+\begin_layout Itemize
+public URL(String url) 
+\end_layout
+
+\begin_layout Itemize
+public URL(String protocol, String host, String file) 
+\end_layout
+
+\begin_layout Itemize
+public URL(String protocol, String host, int port, String file) 
+\end_layout
+
+\begin_layout Standard
+Folgende Methoden stehen zur Verfügung: 
+\end_layout
+
+\begin_layout Itemize
+String getProtocol(), String getHost(), int getPort() 
+\end_layout
+
+\begin_layout Itemize
+String getPath(), String getQuery(), String getFile() // Path+Query 
+\end_layout
+
+\begin_layout Itemize
+String getRef() 
+\end_layout
+
+\begin_layout Itemize
+InputStream openStream() throws IOException 
+\end_layout
+
+\begin_layout Itemize
+URLConnection openConnection() throws IOExceptione // URLConnection erlaubt
+ auch ConnectionTimeout und andere Charakteristika einer Verbindung zu setzen.
+ 
+\end_layout
+
+\begin_layout Standard
+Das folgende Programm zeigt die Daten zu einer (mit einer von Java unterstützten
+ Protokoll) URL (http, https, file, jar, ftp sind im J2SE 5.0 enthalten).
+ Aufzurufen mittels 
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+verb+java WebPageReader http://www.orf.at+
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+public class WebPageReader {
+\end_layout
+
+\begin_layout Standard
+
+  public static void main(String[] args) {
+\end_layout
+
+\begin_layout Standard
+
+    URL u; String line; 
+\end_layout
+
+\begin_layout Standard
+
+    try {
+\end_layout
+
+\begin_layout Standard
+
+      u = new URL(args[0]);
+\end_layout
+
+\begin_layout Standard
+
+      // Stream ...
+ byte
+\end_layout
+
+\begin_layout Standard
+
+      // Reader/Writer ...
+ char
+\end_layout
+
+\begin_layout Standard
+
+      BufferedReader br = new BufferedReader (
+\end_layout
+
+\begin_layout Standard
+
+        new InputStreamReader(u.openStream()));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+      while ((line = br.readLine()) != null)
+\end_layout
+
+\begin_layout Standard
+
+        System.out.println(line);
+\end_layout
+
+\begin_layout Standard
+
+    } catch (Exception e) {
+\end_layout
+
+\begin_layout Standard
+
+      e.printStackTrace(); // zu Testzwecken
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+TCP Programmierung
+\end_layout
+
+\begin_layout Standard
+Die 
+\emph on
+Berkeley-Sockets
+\emph default
+ wurden erstmals im Berkeley UNIX im Jahre 1986 implementiert.
+ Sie stellen einerseits ein Konzept dar und bieten andererseits ein API.
+ Diese Schnittstelle hat sich als 
+\emph on
+die
+\emph default
+ Programmierschnittstelle für die Kommunikation (im Internet) etabliert.
+\end_layout
+
+\begin_layout Standard
+Vom Konzept her ist ein Socket ein 
+\emph on
+Kommunikationsendpunkt
+\emph default
+, an dem eine Applikation Daten schreiben kann, die über das zugrunde liegende
+ Netzwerk versendet werden sollen, und von dem eingehende Daten gelesen
+ werden können.
+ Sockets kann es sowohl für TCP als auch für UDP geben.
+\end_layout
+
+\begin_layout Standard
+Aus der Sicht von TCP/IP besteht solch ein Kommunikationsendpunkt aus einer
+ Kombination von Protokoll (TCP oder UDP), IP Adresse und Portnummer und
+ identifiziert als solches eindeutig einen Netzwerkprozess.
+\end_layout
+
+\begin_layout Standard
+Ein Paar von zwei Sockets identifiziert damit 
+\emph on
+eindeutig
+\emph default
+ eine Verbindung bei verbindungsorientierten Protokollen (wie z.B.
+ TCP).
+\end_layout
+
+\begin_layout Minisec
+Interoperabilität
+\end_layout
+
+\begin_layout Standard
+Eine TCP Verbindung im Internet verbindet in der Regel nicht nur Maschinen
+ des gleichen Typs, sondern verschiedenste Hardware- und Softwareplattformen
+ miteinander.
+ Aus diesem Grund ist es, im Sinne der 
+\emph on
+Interoperabilität
+\emph default
+, wichtig, sich Gedanken über die Darstellung der Daten zu machen.
+ Wie erwähnt, stellt der TCP/IP Protokollstack keine Darstellungsschicht
+ zur Verfügung.
+\end_layout
+
+\begin_layout Standard
+Probleme treten auf bei: 
+\end_layout
+
+\begin_layout Itemize
+Übertragung von Zeichendaten.
+ Wie sind diese codiert? ASCII, ISO 8859-1, ISO-8859-15, EBCDIC oder 16-Bit
+ Zeichensätze wie in der chinesischen oder japanischen Sprache verwendet
+ wird (Unicode).
+ 
+\end_layout
+
+\begin_layout Itemize
+Übertragung von Zahlen 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+big-endian vs.
+ little-endian 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+big-endian: erstes Byte enthält signifikante Bits (z.B.
+ Java, JPEG, WAV,...,Intel, Alpha).
+ Weitere Bytes mit steigender Adresse enthalten die weniger signifikanten
+ Bits.
+ big-endian bedeutet so viel wie 
+\begin_inset Quotes eld
+\end_inset
+
+big end first
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Wird auch als 
+\emph on
+network byte order
+\emph default
+ bezeichnet! 
+\end_layout
+
+\begin_layout Itemize
+little-endian: letztes Byte enthält signifikante Bits (z.B.
+ BMP, GIF,...,Motorala, Sparc) 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+signed vs.
+ unsigned 
+\end_layout
+
+\begin_layout Itemize
+Fließkommazahlen: IEEE Format oder eigene Formate 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Übertragung von Objekten 
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Lösungsmöglichkeiten
+\emph default
+:
+\end_layout
+
+\begin_layout Itemize
+Schaffung eines properitären, binären Austauschformates 
+\end_layout
+
+\begin_layout Itemize
+Schaffung eines binären offenen Austauschformates, wie z.B.
+ XDR (siehe Abschnitt 
+\begin_inset LatexCommand vref
+reference "sec:ONC-RPC"
+
+\end_inset
+
+) oder CDR (siehe Abschnitt 
+\begin_inset LatexCommand vref
+reference "sec:corba"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Itemize
+Schaffung eines textorientierten Austauschformates, wie z.B.
+ bei Verwendung von XML-RPC (siehe Abschnitt 
+\begin_inset LatexCommand vref
+reference "sec:XML-RPC"
+
+\end_inset
+
+) oder SOAP (siehe Abschnitt 
+\begin_inset LatexCommand vref
+reference "sec:SOAP"
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Minisec
+Socket-Basisoperationen
+\end_layout
+
+\begin_layout Standard
+Die 
+\emph on
+Socket-Basisoperationen
+\emph default
+ sind aufgeschlüsselt nach Client und Server:
+\end_layout
+
+\begin_layout Itemize
+Client 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Verbinden zu einem entfernten Host 
+\end_layout
+
+\begin_layout Itemize
+Senden von Daten 
+\end_layout
+
+\begin_layout Itemize
+Empfangen von Daten 
+\end_layout
+
+\begin_layout Itemize
+Schließen der Verbindung 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Server 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Binden eines Sockets zu einem Port 
+\end_layout
+
+\begin_layout Itemize
+Warten auf eine Verbindungsanfrage und akzeptieren dieser.
+ 
+\end_layout
+
+\begin_layout Itemize
+Senden und Empfangen von Daten 
+\end_layout
+
+\begin_layout Itemize
+Schließen einer Verbindung 
+\end_layout
+
+\end_deeper
+\begin_layout Minisec
+Clients in Java
+\end_layout
+
+\begin_layout Standard
+Die Klasse
+\family typewriter
+ java.net.Socket
+\family default
+ stellt die Client-Seite einer Socketverbindung dar:
+\end_layout
+
+\begin_layout Standard
+Folgende Konstruktoren gibt es in der Socket-Klasse: 
+\end_layout
+
+\begin_layout Itemize
+Socket(String host, int port) throws UnknownHostException, IOException 
+\end_layout
+
+\begin_layout Itemize
+Socket(InetAddress host, int port) throws IOException 
+\end_layout
+
+\begin_layout Itemize
+Socket(String host, int port, InetAddress localHost, int localPort) throws
+ IOException // bindet zu spezifizierter lokaler Adresse 
+\end_layout
+
+\begin_layout Itemize
+Socket(InetAddress host, int port, InetAddress localHost, int localPort)
+ throws IOException 
+\end_layout
+
+\begin_layout Itemize
+Socket() // ab JDK 1.4 
+\end_layout
+
+\begin_layout Standard
+An public Methoden gibt es:
+\end_layout
+
+\begin_layout Itemize
+InetAddress getInetAddress(), int getPort() 
+\end_layout
+
+\begin_layout Itemize
+InetAddress getLocalAddress(), int getLocalPort() 
+\end_layout
+
+\begin_layout Itemize
+InputStream getInputStream() throws IOException 
+\end_layout
+
+\begin_layout Itemize
+OutputStream getOutputStream() throws IOException 
+\end_layout
+
+\begin_layout Itemize
+void connect(SocketAddress endpoint, int timeout) throws IO Exception, SocketTim
+eoutException // ab JDK 1.4 
+\end_layout
+
+\begin_layout Itemize
+synchronized void close() throws IOException 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Freigabe aller Netzwerk- und Systemressourcen 
+\end_layout
+
+\begin_layout Itemize
+wenn gepufferter Outputstream: zuerst schließen! 
+\end_layout
+
+\begin_layout Itemize
+schließen des Input- oder des Outputstream schließt auch die Netzwerksverbindung
+! 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+void shutdownOutput() throws SocketException 
+\end_layout
+
+\begin_layout Itemize
+void shutdownInput() throws SocketException 
+\end_layout
+
+\begin_layout Itemize
+void setSoTimeout(int) throws SocketException 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+in Millisekunden nach der eine blockende Leseoperation abbricht (0ms entspricht
+ kein Abbruch) 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Folgendes Codefragment demonstriert die Verwendung der Socket-Klasse:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+try {
+\end_layout
+
+\begin_layout Standard
+
+  Socket s = new Socket(host, port);
+\end_layout
+
+\begin_layout Standard
+
+  InputStream is = s.getInputStream();
+\end_layout
+
+\begin_layout Standard
+
+  OutputStream os = s.getOutputStream();
+\end_layout
+
+\begin_layout Standard
+
+  // normale Stream Operationen!
+\end_layout
+
+\begin_layout Standard
+
+} catch (IOException e) {
+\end_layout
+
+\begin_layout Standard
+
+  e.printStackTrace(); // zu Testzwecken
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Minisec
+Adresse und Port in Java
+\end_layout
+
+\begin_layout Standard
+Im Gegensatz zur Klasse 
+\family typewriter
+java.net.InetAddress
+\family default
+, repräsentiert die Klasse 
+\family typewriter
+java.net.InetSocketAddress
+\family default
+ eine IP Adresse samt einer zugehörigen Port-Nummer und stellt somit alle
+ Informationen zur Verwendung in der Socket-Verarbeitung dar.
+\end_layout
+
+\begin_layout Standard
+Diese Klasse ist eine Unterklasse der Klasse java.net.SocketAddress, die in
+ der Signatur der 
+\family typewriter
+connect()
+\family default
+ Methode der Klasse Socket verwendet wird.
+ Auch diese Klasse gibt es erst ab JDK 1.4.
+\end_layout
+
+\begin_layout Standard
+Folgende public Konstruktoren (throws IllegalArgumentException): 
+\end_layout
+
+\begin_layout Itemize
+InetSocketAddress(int port) 
+\end_layout
+
+\begin_layout Itemize
+InetSocketAddress(InetAddress ia, int port) 
+\end_layout
+
+\begin_layout Itemize
+InetSocketAddress(String host, int port) 
+\end_layout
+
+\begin_layout Minisec
+Server in Java
+\end_layout
+
+\begin_layout Standard
+Die java.net.ServerSocket Klasse stellt somit die Server - Seite einer Socketverbi
+ndung dar.
+\end_layout
+
+\begin_layout Standard
+Folgende Konstruktoren: 
+\end_layout
+
+\begin_layout Itemize
+public ServerSocket(int port) throws IOException // 0 \SpecialChar \ldots{}
+ freier Port 
+\end_layout
+
+\begin_layout Itemize
+public ServerSocket(int port, int queueLength) throws IOException 
+\end_layout
+
+\begin_layout Itemize
+public ServerSocket(int port, int queueLength, InetAddress bindAddress)
+ throws IOException 
+\end_layout
+
+\begin_layout Standard
+Anwendung dieser Klasse um alle belegten Ports am Computer festzustellen:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+import java.io.*; 
+\end_layout
+
+\begin_layout Standard
+
+import java.net.*;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+public class LocalPortScanner {
+\end_layout
+
+\begin_layout Standard
+
+  static ServerSocket s;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+  public static void main(String[] args) {
+\end_layout
+
+\begin_layout Standard
+
+    for (int port = 1; port <= 65535; port++) {
+\end_layout
+
+\begin_layout Standard
+
+      try  s = new ServerSocket(port); 
+\end_layout
+
+\begin_layout Standard
+
+    } catch (BindException e) {
+\end_layout
+
+\begin_layout Standard
+
+      System.out.println("port " + port + " in use");
+\end_layout
+
+\begin_layout Standard
+
+    } catch (IOException e) {
+\end_layout
+
+\begin_layout Standard
+
+      e.printStackTrace(); // zu Testzwecken
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Weitere public Methoden:
+\end_layout
+
+\begin_layout Itemize
+Socket accept() throws IOException 
+\end_layout
+
+\begin_layout Itemize
+void close() throws IOException 
+\end_layout
+
+\begin_layout Itemize
+InetAddress getInetAddress(), int getLocalPort() 
+\end_layout
+
+\begin_layout Itemize
+void setSoTimeout(int) throws SocketException // Timeout bei accept()! 
+\end_layout
+
+\begin_layout Standard
+Gemäß den oben genannten Basisoperationen sieht die Grundstruktur eines
+ Javaprogrammes mit 
+\family typewriter
+ServerSocket
+\family default
+s folgendermaßen aus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+ServerSocket server = new ServerSocket(port); // anlegen und binden
+\end_layout
+
+\begin_layout Standard
+
+Socket client = server.accept(); // auf Client warten 
+\end_layout
+
+\begin_layout Standard
+
+server.close(); // ServerSocket kann schon geschlossen werden 
+\end_layout
+
+\begin_layout Standard
+
+OutputStream out = client.getOutputStream(); 
+\end_layout
+
+\begin_layout Standard
+
+InputStream in = client.getInputStream();
+\end_layout
+
+\begin_layout Standard
+
+// tatsächlichen Datenaustausch durchführen
+\end_layout
+
+\begin_layout Standard
+
+client.close(); // Verbindung zum Client schließen
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+UDP Programmierung
+\end_layout
+
+\begin_layout Minisec
+java.net.DatagramPacket
+\end_layout
+
+\begin_layout Standard
+Konstruktoren
+\end_layout
+
+\begin_layout Itemize
+DatagramPacket(byte[] buffer, int length) // zum Empfangen von Paketen;
+ length <= 65535! 
+\end_layout
+
+\begin_layout Itemize
+DatagramPacket(byte[] buffer, int length, InetAddress address, int port)
+ // zum Senden 
+\end_layout
+
+\begin_layout Itemize
+DatagramPacket(byte[] buffer, int length, SocketAddress address) 
+\end_layout
+
+\begin_layout Standard
+Methoden 
+\end_layout
+
+\begin_layout Itemize
+InetAddress getAddress(), getPort() 
+\end_layout
+
+\begin_layout Itemize
+byte[] getData(), int getLength() 
+\end_layout
+
+\begin_layout Itemize
+void setAddress(InetAddress address), void setPort(int port) 
+\end_layout
+
+\begin_layout Itemize
+void setData(byte[] buffer), void setLength(int length) 
+\end_layout
+
+\begin_layout Minisec
+java.net.DatagramSocket
+\end_layout
+
+\begin_layout Standard
+Konstruktoren (throws SocketException)
+\end_layout
+
+\begin_layout Itemize
+DatagramSocket() 
+\end_layout
+
+\begin_layout Itemize
+DatagramSocket(int port) 
+\end_layout
+
+\begin_layout Itemize
+DatagramSocket(int port, InetAddress address) // multihomed machines 
+\end_layout
+
+\begin_layout Standard
+Public Methoden 
+\end_layout
+
+\begin_layout Itemize
+void send(DatagramPacket) throws IOException 
+\end_layout
+
+\begin_layout Itemize
+void receive(DatagramPacket) throws IOException 
+\end_layout
+
+\begin_layout Itemize
+void close() // alle in receive() 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ SocketException 
+\end_layout
+
+\begin_layout Itemize
+InetAddress getLocalAddress(), int getLocalPort() 
+\end_layout
+
+\begin_layout Itemize
+void setSoTimeout(int timeout) throws SocketException // receive! 
+\end_layout
+
+\begin_layout Minisec
+Minibeispiel
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+// auch wenn der Name "Socket" ist,
+\end_layout
+
+\begin_layout Standard
+
+// impliziert dies keine Verbindung wie in TCP!
+\end_layout
+
+\begin_layout Standard
+
+DatagramSocket socket = new DatagramSocket();
+\end_layout
+
+\begin_layout Standard
+
+DatagramPacket packet = new DatagramPacket(data, data.length);
+\end_layout
+
+\begin_layout Standard
+
+socket.receive(packet);
+\end_layout
+
+\begin_layout Standard
+
+socket.close();
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Beispiele
+\end_layout
+
+\begin_layout Standard
+mit TCP und UDP
+\end_layout
+
+\begin_layout Minisec
+daytime
+\end_layout
+
+\begin_layout Standard
+Dieses Protokoll fragt die lokale Zeit eines entfernten Servers ab.
+ Es ist sicher eines der einfachsten Protokolle: Verbindung aufbauen, Antwort
+ lesen, Verbindung schließen.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Beschreibung
+\end_layout
+
+\begin_layout Itemize
+Server sendet Zeit in der Form einer Zeichenkette (in ASCII) 
+\end_layout
+
+\begin_layout Itemize
+Beschrieben in RFC 867 
+\end_layout
+
+\begin_layout Itemize
+TCP Port 13, Verbindung (Socket) öffnen, Antwort lesen, fertig
+\end_layout
+
+\begin_layout Itemize
+UDP Port 13, leeres Paket senden, Antwort lesen, fertig
+\end_layout
+
+\begin_layout Itemize
+Format der Antwort ist nicht spezifiziert, deshalb für eine Maschine-Maschine
+ Kommunikation nicht geeignet.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ www.time.gov bzw.\InsetSpace ~
+time.nist.gov port 17 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Beispiel: DaytimeClient mit UDP
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+DatagramSocket socket = new DatagramSocket();
+\end_layout
+
+\begin_layout Standard
+
+socket.setSoTimeout(5000); // Timeout für Socketoperationen auf 5s
+\end_layout
+
+\begin_layout Standard
+
+// Länge 1 Byte!
+\end_layout
+
+\begin_layout Standard
+
+DatagramPacket packet = new DatagramPacket(new byte[256], 1, host, port);
+\end_layout
+
+\begin_layout Standard
+
+socket.send(packet);
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+packet.setLength(packet.getData().length); // Empfangspuffer: 256 Bytes!
+\end_layout
+
+\begin_layout Standard
+
+socket.receive(packet);
+\end_layout
+
+\begin_layout Standard
+
+socket.close();
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+byte[] data = packet.getData();
+\end_layout
+
+\begin_layout Standard
+
+int length = packet.getLength();
+\end_layout
+
+\begin_layout Standard
+
+System.out.println(new String(data, 0, length, "latin1")); // oder utf-8...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Beispiel: DaytimeServer mit UDP
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+DatagramSocket socket = new DatagramSocket(p);
+\end_layout
+
+\begin_layout Standard
+
+DatagramPacket packet = new DatagramPacket(new byte[1], 1); // 1 Byte!
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+while (true) {
+\end_layout
+
+\begin_layout Standard
+
+  socket.receive(packet); 
+\end_layout
+
+\begin_layout Standard
+
+  System.out.println("Received from:...");
+\end_layout
+
+\begin_layout Standard
+
+  byte[] outBuffer = new java.util.Date().toString().getBytes("latin1");
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+  packet.setData(outBuffer); 
+\end_layout
+
+\begin_layout Standard
+
+  packet.setLength(outBuffer.length); // setze aktuelle Länge
+\end_layout
+
+\begin_layout Standard
+
+  socket.send(packet);
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Minisec
+time
+\end_layout
+
+\begin_layout Standard
+Das Internet Time Protocol umgeht den Nachteil vom daytime - Protokoll,
+ das das Format der Zeit nicht spezifiziert indem die Sekunden seit Mitternacht
+ des 1.1.1900 GMT zurückgesendet werden.
+ Außerdem wird der Wert binär übertragen (in network byteorder).
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Beschreibung
+\series default
+ 
+\end_layout
+
+\begin_layout Itemize
+Server sendet Zeit in Form von 4 Byte Integer zurück.
+ 
+\end_layout
+
+\begin_layout Itemize
+RFC 868 
+\end_layout
+
+\begin_layout Itemize
+TCP, UDP Port 37 
+\end_layout
+
+\begin_layout Itemize
+TCP: Verbindung öffnen, Antwort lesen, fertig 
+\end_layout
+
+\begin_layout Itemize
+UDP: Leeres Datagramm senden, Antwort empfangen, fertig 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Beispiel in Python
+\end_layout
+
+\begin_layout Standard
+Zum besseren Verständnis für das Socket-API folgt nun ein in Python programmiert
+er Server für das time, da sich das Python-API für die Socketprogrammierung
+ am C API orientiert:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "language=Python"
+inline false
+status open
+
+\begin_layout Standard
+
+import socket, struct, time
+\end_layout
+
+\begin_layout Standard
+
+PORT = 8037
+\end_layout
+
+\begin_layout Standard
+
+# Referenzzeit
+\end_layout
+
+\begin_layout Standard
+
+TIME1970 = 2208988800L # Anzahl Sek.
+ zw.
+ 1.1.1900 bis 1.1.1970
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+# lege Socket an als:
+\end_layout
+
+\begin_layout Standard
+
+#   AFINET ...
+ INET Socket (und nicht Unix Sockets)
+\end_layout
+
+\begin_layout Standard
+
+#   SOCKSTREAM ...
+ TCP (und nicht UDP)
+\end_layout
+
+\begin_layout Standard
+
+serversock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+# binde einen Port an den Socket ("" ...
+ localhost)
+\end_layout
+
+\begin_layout Standard
+
+serversock.bind(("", PORT))
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+# ab wird auf ankommende Verbindungsanfragen gewartet
+\end_layout
+
+\begin_layout Standard
+
+# backlog: max.
+ Anzahl der Connections in der Queue ist 3
+\end_layout
+
+\begin_layout Standard
+
+# d.h.
+ es können allerdings maximal 3 Verbindungen darauf warten,
+\end_layout
+
+\begin_layout Standard
+
+# verarbeitet zu werden
+\end_layout
+
+\begin_layout Standard
+
+serversock.listen(3)
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+print "Lauschen an Port", PORT
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+while 1:
+\end_layout
+
+\begin_layout Standard
+
+    # mit accept werden Verbindungen angenommen
+\end_layout
+
+\begin_layout Standard
+
+    # clientsock ...
+ Socket zum Client
+\end_layout
+
+\begin_layout Standard
+
+    # clientaddr ...
+ IP Adresse und Port von Client
+\end_layout
+
+\begin_layout Standard
+
+    clientsock, clientaddr = serversock.accept()
+\end_layout
+
+\begin_layout Standard
+
+    print "Verbindung von", clientaddr
+\end_layout
+
+\begin_layout Standard
+
+    t = int(time.time()) + TIME1970 # time(): Zeit in s seit 1.1.1970
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    # packe unsigned int (I) in network-byte-order (!) in einen String
+\end_layout
+
+\begin_layout Standard
+
+    t = struct.pack("!I", t)
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    # nun senden (wir nehmen an, dass 4 Bytes gesendet werden können)
+\end_layout
+
+\begin_layout Standard
+
+    clientsock.send(t)
+\end_layout
+
+\begin_layout Standard
+
+    # und den Client-Socket wieder schließen
+\end_layout
+
+\begin_layout Standard
+
+    clientsock.close()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Der entsprechende Client dazu:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+import socket, struct, time, datetime
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+PORT = 8037
+\end_layout
+
+\begin_layout Standard
+
+TIME1970 = 2208988800L
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+# zum Server verbinden
+\end_layout
+
+\begin_layout Standard
+
+sock.connect(("", PORT))
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+# und nun empfangen (wir nehmen an, dass die 4 Bytes empfangen werden...)
+\end_layout
+
+\begin_layout Standard
+
+t = sock.recv(4)
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+# wieder auspacken ([0] ...
+ da unpack ein Tupel zurückliefert)
+\end_layout
+
+\begin_layout Standard
+
+# und Sekunden zw.
+ 1.1.1900 und 1.1.1970 wieder abziehen
+\end_layout
+
+\begin_layout Standard
+
+t = struct.unpack("!I", t)[0] - TIME1970
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+# und den Socket wieder schließen
+\end_layout
+
+\begin_layout Standard
+
+sock.close()
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+# und auf der Konsole ausgeben
+\end_layout
+
+\begin_layout Standard
+
+# Module datetime: Typ datetime mit Factory Funktion fromtimestamp
+\end_layout
+
+\begin_layout Standard
+
+print datetime.datetime.fromtimestamp(t)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Minisec
+finger
+\end_layout
+
+\begin_layout Standard
+Dieses Protokoll fragt die Informationen über lokale Benutzer eines entfernten
+ Servers ab.
+ Es ist ein etwas komplexeres, aber trotzdem sehr einfaches Protokoll: Verbindun
+g aufbauen, Liste der Benutzernamen senden, Antwort lesen, Verbindung schließen.
+ Die eigentliche Spezifikation ist doch um einiges umfangreicher, aber das
+ Prinzip ist wie beschrieben.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Beschreibung
+\end_layout
+
+\begin_layout Itemize
+Client sendet Benutzernamen (optional) und danach 
+\begin_inset Formula $<$
+\end_inset
+
+CRLF
+\begin_inset Formula $>$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+Server sendet Informationen zurück 
+\end_layout
+
+\begin_layout Itemize
+Beschrieben in RFC 1288 
+\end_layout
+
+\begin_layout Itemize
+TCP Port 79, Socket öffnen, Namen senden, Antwort lesen, fertig 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ finger Kommando 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Beispiel: Finger Client
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+import java.net.*;
+\end_layout
+
+\begin_layout Standard
+
+import java.io.*;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+public class Finger {
+\end_layout
+
+\begin_layout Standard
+
+  private static Socket sock;
+\end_layout
+
+\begin_layout Standard
+
+  private static String hostname = "localhost";
+\end_layout
+
+\begin_layout Standard
+
+  private static String line = "";
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+  public static void main(String[] args) {
+\end_layout
+
+\begin_layout Standard
+
+    try {
+\end_layout
+
+\begin_layout Standard
+
+      sock = new Socket(hostname, 10079);
+\end_layout
+
+\begin_layout Standard
+
+      OutputStreamWriter wr = new OutputStreamWriter(
+\end_layout
+
+\begin_layout Standard
+
+        sock.getOutputStream());
+\end_layout
+
+\begin_layout Standard
+
+      if (args.length > 0) {
+\end_layout
+
+\begin_layout Standard
+
+        wr.write(args[0]);
+\end_layout
+
+\begin_layout Standard
+
+      }
+\end_layout
+
+\begin_layout Standard
+
+      wr.write("");
+\end_layout
+
+\begin_layout Standard
+
+      wr.flush();
+\end_layout
+
+\begin_layout Standard
+
+      // charset angeben, ansonsten default charset des Systems!
+\end_layout
+
+\begin_layout Standard
+
+      BufferedReader br = new BufferedReader(
+\end_layout
+
+\begin_layout Standard
+
+        new InputStreamReader(sock.getInputStream(), "US-ASCII"));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+      String line;
+\end_layout
+
+\begin_layout Standard
+
+      while ((line = br.readLine()) != null)
+\end_layout
+
+\begin_layout Standard
+
+        System.out.println(line);  
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    catch (UnknownHostException e) { e.printStackTrace(); }
+\end_layout
+
+\begin_layout Standard
+
+    catch (IOException e) { e.printStackTrace(); } // zu Testzwecken
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Minisec
+echo
+\end_layout
+
+\begin_layout Standard
+Ein weiteres Protokoll, das analog dem Finger Protokoll funktioniert: Die
+ Zeichen, die der Client an den Server sendet, sendet dieser als Antwort
+ wieder zurück.
+\end_layout
+
+\begin_layout Standard
+Als weitere Ausbaustufe wird das Beispiel auch als Server entwickelt (in
+ einer Single-Threaded Version).
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Beispiel: EchoClient mit TCP
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+public class EchoClientTCP {
+\end_layout
+
+\begin_layout Standard
+
+  public static void main(String[] args) throws IOException {
+\end_layout
+
+\begin_layout Standard
+
+    String host = "localhost";
+\end_layout
+
+\begin_layout Standard
+
+    int port = 9999;
+\end_layout
+
+\begin_layout Standard
+
+    Socket sock;
+\end_layout
+
+\begin_layout Standard
+
+    InputStream in;
+\end_layout
+
+\begin_layout Standard
+
+    OutputStream out;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    sock = new Socket();
+\end_layout
+
+\begin_layout Standard
+
+    sock.setSoTimeout(4000); // 4s für read()
+\end_layout
+
+\begin_layout Standard
+
+    try {
+\end_layout
+
+\begin_layout Standard
+
+      // 2s time-out 
+\end_layout
+
+\begin_layout Standard
+
+      sock.connect(new InetSocketAddress(host, port), 2000);
+\end_layout
+
+\begin_layout Standard
+
+    } catch (IOException e) {
+\end_layout
+
+\begin_layout Standard
+
+      System.out.println("EchoClient: Connection refused");
+\end_layout
+
+\begin_layout Standard
+
+      System.exit(1);
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    in = sock.getInputStream();
+\end_layout
+
+\begin_layout Standard
+
+    out = sock.getOutputStream();
+\end_layout
+
+\begin_layout Standard
+
+    System.out.println("Socket port: " + sock.getPort());
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    // es wird keine Exception abgefangen...
+\end_layout
+
+\begin_layout Standard
+
+    int c; // read liefert int!
+\end_layout
+
+\begin_layout Standard
+
+    while ((c = System.in.read()) != -1) {
+\end_layout
+
+\begin_layout Standard
+
+      out.write(c);
+\end_layout
+
+\begin_layout Standard
+
+      System.out.write(in.read());
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Beispiel: EchoServerST mit TCP
+\end_layout
+
+\begin_layout Standard
+Gerüst für einen Single-Threaded Echo-Server:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+import java.io.*;
+\end_layout
+
+\begin_layout Standard
+
+import java.net.*;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+public class EchoServerST {
+\end_layout
+
+\begin_layout Standard
+
+  static int port = 9999;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+  public static void main(String[] args) throws IOException {
+\end_layout
+
+\begin_layout Standard
+
+    ServerSocket server = new ServerSocket(port);
+\end_layout
+
+\begin_layout Standard
+
+    Socket client = server.accept();
+\end_layout
+
+\begin_layout Standard
+
+    client.setSoTimeout(10000); // max.
+ 10s warten!
+\end_layout
+
+\begin_layout Standard
+
+    server.close();
+\end_layout
+
+\begin_layout Standard
+
+    OutputStream out = client.getOutputStream();
+\end_layout
+
+\begin_layout Standard
+
+    InputStream in = client.getInputStream();
+\end_layout
+
+\begin_layout Standard
+
+    int x;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    try {
+\end_layout
+
+\begin_layout Standard
+
+      while ((x = in.read()) > -1)
+\end_layout
+
+\begin_layout Standard
+
+        out.write(x);
+\end_layout
+
+\begin_layout Standard
+
+    } catch (InterruptedIOException e) {
+\end_layout
+
+\begin_layout Standard
+
+      client.close();
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Nachrichtenorientierte Kommunikation
+\end_layout
+
+\begin_layout Standard
+Das charakteristische Merkmal der nachrichtenorientierten Kommunikation
+ ist, dass die Kommunikation durch Versenden von Nachrichten stattfindet.
+\end_layout
+
+\begin_layout Standard
+Im Prinzip lässt sich jede Kommunikation auf diese Abstraktionsebene zurückführe
+n.
+ Genauso wie sich jede Programmierung letztendlich auf die Maschinensprachen-
+ bzw.
+ Assemblerprogrammierung zurückführen lässt.
+\end_layout
+
+\begin_layout Subsection
+Typen von Nachrichten
+\begin_inset LatexCommand label
+name "sec:message_types"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Prinzipiell kann zwischen 
+\emph on
+zwei verschiedenen Arten
+\emph default
+ der Nachrichtenübermittlung unterschieden werden: 
+\end_layout
+
+\begin_layout Description
+synchron Operation beginnt nur, wenn Sender die Nachricht initiiert hat
+ und der Empfänger bereit ist die Nachricht zu empfangen.
+ Diese Art kann noch mit einem Timeout versehen werden.
+ D.h.\InsetSpace ~
+es handelt sich bei einer Operation zum synchronen Nachrichtenaustauch
+ um einen blockenden Aufruf.
+ 
+\end_layout
+
+\begin_layout Description
+asynchron Sender initiert das Senden der Nachricht, unabhängig ob Empfänger
+ bereit ist oder nicht.
+ Prinzipiell handelt es sich bei einer Operation zum asynchronen Nachrichtenaust
+ausch um einen nicht blockenden Aufruf.
+ Da die Nachrichten u.U.
+ in einem Puffer zwischengespeichert werden wird möglicherweise trotzdem
+ blockiert, damit es zu keinem Pufferüberlauf kommt.
+\end_layout
+
+\begin_layout Standard
+Untersucht man die Semantik der Interprozesskommunikation genauer, kann
+ zwischen drei Arten unterschieden werden: 
+\end_layout
+
+\begin_layout Description
+no-wait\InsetSpace ~
+send Der Sendeprozess wartet lediglich bis die Nachricht im Transportsyst
+em zum Absenden bereitgestellt ist (siehe Abbildung 
+\begin_inset LatexCommand vref
+reference "fig:no_wait_send"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Description
+synchronization\InsetSpace ~
+send Der Sendeprozess wartet bis die Nachricht vom Empfangsprozes
+s entgegengenommen worden ist (siehe Abbildung 
+\begin_inset LatexCommand vref
+reference "fig:synchronization_send"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Description
+remote-invocation\InsetSpace ~
+send Der Sendeprozess wartet bis die Nachricht vom Empfangsproz
+ess verarbeitet und beantwortet worden ist (siehe Abbildung 
+\begin_inset LatexCommand vref
+reference "fig:remote_invocation_send"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename no-wait_send.pdf
+	scale 70
+	BoundingBox 0bp 0bp 19cm 75mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+\begin_inset LatexCommand label
+name "fig:no_wait_send"
+
+\end_inset
+
+no-wait send
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename synchronization_send.pdf
+	scale 70
+	BoundingBox 0bp 0bp 19cm 75mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+\begin_inset LatexCommand label
+name "fig:synchronization_send"
+
+\end_inset
+
+synchronization send
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename remote-invocation_send.pdf
+	scale 70
+	BoundingBox 0bp 0bp 19cm 75mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+\begin_inset LatexCommand label
+name "fig:remote_invocation_send"
+
+\end_inset
+
+remote-invocation send
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Seitens der Implementierung kann man folgende IPC Varianten erkennen: 
+\end_layout
+
+\begin_layout Description
+non-blocking\InsetSpace ~
+send 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ no-wait send 
+\end_layout
+
+\begin_layout Description
+blocking\InsetSpace ~
+send Der Sendeprozess wartet bis die Nachricht den Rechner verlassen
+ hat, d.h.\InsetSpace ~
+ins Netz eingespeist worden ist.
+ 
+\end_layout
+
+\begin_layout Description
+reliable-blocking\InsetSpace ~
+send Der Sendeprozess wartet bis die Nachricht beim Empfangsrec
+hner eingetroffen ist bzw.\InsetSpace ~
+von dem Betriebssystem angenommen worden ist.
+ 
+\end_layout
+
+\begin_layout Description
+explicit-blocking\InsetSpace ~
+send 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ synchronization send 
+\end_layout
+
+\begin_layout Description
+request/reply 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ remote-invocation send 
+\end_layout
+
+\begin_layout Subsection
+Transiente Kommunikation
+\end_layout
+
+\begin_layout Standard
+Die 
+\emph on
+transiente Kommunikation
+\emph default
+ als Form der nachrichtenorientierten Kommunikation ist dadurch gekennzeichnet,
+ dass beide Kommunikationspartner online sein müssen und die Nachrichten
+ vom unterliegenden Kommunikationssystem nur solange gespeichert werden,
+ wie die sendende und die empfangene Applikation ausgeführt wird.
+ D.h.\InsetSpace ~
+auf diesem niedrigen Abstraktionsniveau ist diese Kommunikation als synchron
+ zu betrachten.
+\end_layout
+
+\begin_layout Standard
+Normalerweise unterstützen alle Kommunikationsdienste auf der Transportebene
+ nur die transiente Kommunikation.
+ Diese Art entspricht der Kommunikation wie in den obigen Beispielen und
+ wird mittels Sockets oder Datagrams realisiert.
+\end_layout
+
+\begin_layout Subsection
+Persistente Kommunikation
+\end_layout
+
+\begin_layout Standard
+Bei einer 
+\emph on
+persistenten Kommunikation
+\emph default
+ wird eine Nachricht vom Kommunikationssystem solange gespeichert, wie es
+ dauert, sie an den Empfänger auszuliefern.
+\end_layout
+
+\begin_layout Standard
+Im Sinne der Einteilung der Typen der Nachrichten sind auch hier sowohl
+ synchrone als auch asynchrone Nachrichten möglich.
+\end_layout
+
+\begin_layout Standard
+Motivation: 
+\end_layout
+
+\begin_layout Itemize
+Was ist, wenn der Server offline ist? 
+\end_layout
+
+\begin_layout Itemize
+Was ist, wenn es keine Netzwerkroute zum Server gibt? 
+\end_layout
+
+\begin_layout Standard
+Ein konkrete Implementierung der persistenten Kommunikation ist unter dem
+ Titel `Message Oriented Middleware' bekannt.
+\end_layout
+
+\begin_layout Section
+Message Oriented Middleware
+\begin_inset LatexCommand label
+name "sec:MOM"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Bei der `Message Oriented Middleware' handelt es sich um eine Abstraktion
+ der persistenten nachrichtenorientierten Kommunikation, die eine Programmierung
+ mit Nachrichten auf einer höheren Abstraktionsebene zur Verfügung stellt.
+\end_layout
+
+\begin_layout Standard
+Unter 
+\emph on
+Message Oriented Middleware
+\emph default
+ (MOM) versteht man 
+\end_layout
+
+\begin_layout Itemize
+eine Softwareinfrastruktur, die 
+\end_layout
+
+\begin_layout Itemize
+durch asynchrone Verbindungen charakterisiert ist und 
+\end_layout
+
+\begin_layout Itemize
+mehrere Systeme durch 
+\end_layout
+
+\begin_layout Itemize
+Nachrichten miteinander verbindet.
+ 
+\end_layout
+
+\begin_layout Standard
+MOM Systeme unterstützen persisitente Kommunikation und lassen sich folgendermaß
+en 
+\emph on
+charakterisieren
+\emph default
+: 
+\end_layout
+
+\begin_layout Itemize
+Abstraktion der Schnittstellen erfolgt mittels Datenbeschreibungen: Der
+ zugrundeliegende Mechanismus sieht den einfachen Austausch durch Nachrichten
+ vor.
+ 
+\end_layout
+
+\begin_layout Itemize
+Abstraktion der unterliegenden Transportkommunikation: Die Anwendung muss
+ nicht wissen welche Transportprotokolle verwendet werden.
+ D.h.
+ als zugrundeliegendes Transportprotokoll kann HTTP, SMTP, FTP,...
+ verwendet werden.
+ 
+\end_layout
+
+\begin_layout Itemize
+Lose gekoppelte (asynchrone) Kommunikation: Es ist nicht erforderlich, dass
+ der Empfänger ausgeführt wird, wenn eine Nachricht gesendet wird.
+ Analog dazu ist es nicht erforderlich, dass der Sender ausgeführt wird,
+ wenn seine Nachricht vom Empfänger entgegengenommen wird.
+ 
+\end_layout
+
+\begin_layout Itemize
+Mehrere Kommunikationsmodelle sind möglich (siehe weiter unten).
+ 
+\end_layout
+
+\begin_layout Itemize
+Bei der Kommunikation sind viele Knoten beteiligt.
+ 
+\end_layout
+
+\begin_layout Itemize
+Außerdem stellt die MOM-Software meistens Transaktionen (Auslieferung mehrer
+ Nachrichten als atomare Aktion), Persistenz und Quality-of-Service (QoS)
+ Dienste (z.B.
+ Priorität oder Time-to-Live) zur Verfügung.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Beispiel (fiktiv)
+\end_layout
+
+\begin_layout Standard
+Alle Kassenautomaten der ÖBB sind vernetzt.
+ Jeder Kassenautomat ist direkt mit genau einem Router verbunden, die wiederum
+ untereinander verbunden sind.
+ Der Tarifrechner der ÖBB ist ebenfalls an das Netzwerk angeschlossen und
+ mit einem Router verbunden.
+\end_layout
+
+\begin_layout Standard
+Die Tarife müssen (wieder einmal) um 10% erhöht werden.
+ Dazu sendet (asynchron) der Tarifrechner eine Nachricht (die an alle Kassenauto
+maten adressiert ist) an seinen Router.
+ Dieser speichert diese Nachricht persistent ab und sendet sie an alle Router
+ weiter, die notwendig sind, um alle Kassen zu verständigen.
+ Ist eine Kasse nicht in Betrieb (z.B.
+ auf Grund einer Störung; soll schon vorgekommen sein), dann speichert der
+ zugehörige Router die Nachricht bis diese ausgeliefert werden kann.
+\end_layout
+
+\begin_layout Standard
+Derartige Router werden auch Broker genannt und können auch geclustered
+ werden, um die Verfügbarkeit und den Durchsatz zu erhöhen.
+\end_layout
+
+\begin_layout Standard
+Die 
+\emph on
+zwei wichtigsten Kommunikationsmodelle
+\emph default
+ im Zusammenhang mit MOM sind: 
+\end_layout
+
+\begin_layout Description
+Publish/Subscribe Es handelt sich um eine one-to-many Kommunikationsart.
+ Ein Client publiziert Nachrichten zu einem Thema (topic) und andere Clients
+ können ein Topic subskribieren.
+ Alle subskribierten Clients bekommen die Nachrichten, wenn sie sich das
+ nächste Mal mit dem Broker verbinden.
+ 
+\end_layout
+
+\begin_layout Description
+Point-to-Point Die Nachricht wird in eine (Sender-)Queue gestellt und aus
+ einer (Empfänger-)Queue sequentiell gelesen.
+ 
+\end_layout
+
+\begin_layout Standard
+Produkte: JMS (Sun), MSMQ (Microsoft), MQSeries (IBM), SwiftMQ (IIT Software),...
+\end_layout
+
+\begin_layout Section
+Entfernte Prozeduraufrufe
+\end_layout
+
+\begin_layout Standard
+Nachrichtenorientierte Kommunikation wie vorhergehend besprochen, verbergen
+ den unterliegenden Kommunikationscharakter nicht vollständig im Sinne der
+ Zugriffstransparenz (d.h.\InsetSpace ~
+dass Nachrichten versendet werden).
+\end_layout
+
+\begin_layout Standard
+Deshalb ist man dazu übergegangen die Semantik der lokalen Funktionsaufrufe
+ auf 
+\emph on
+entfernte Funktionsaufrufe
+\emph default
+ (Remote Procedure Call, RPC) auszudehnen.
+\end_layout
+
+\begin_layout Standard
+Die Funktionsweise derartiger entfernter Funktionsaufrufe sieht folgendermaßen
+ aus: Wenn ein Prozess auf Maschine A eine Prozedur auf Maschine B aufruft,
+ wird der ausführende Prozess auf A unterbrochen, die Ausführung der entfernten
+ Prozedur auf B findet statt und danach wird der Prozess auf A fortgeführt.
+ Alle notwendigen Parameter, Rückgabewerte und auch eventuelle Exception
+ werden transparent übertragen.
+\end_layout
+
+\begin_layout Standard
+Diese Eleganz hat einige Probleme, die gelöst werden müssen: 
+\end_layout
+
+\begin_layout Itemize
+Was passiert, wenn es sich um unterschiedliche Plattformen handelt, die
+ die zugrundeliegenden Datentypen unterschiedlich repräsentieren?
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Eine 16 Bit ganze Zahl verschieden abgespeichert werden kann (
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Interoperabilität, Darstellungsschicht).
+ Aber auch die Abspeicherung in verschiedenen Dateiformaten variert.
+\end_layout
+
+\begin_layout Standard
+Aus diesen Gründen gibt es zwei Möglichkeiten wie Daten über das Netzwerk
+ übertragen werden können: 
+\end_layout
+
+\begin_layout Itemize
+Entweder werden die Daten in ein maschinenunabhängiges Format transformiert
+ in das beide Kommunikationspartner ihre Daten wandeln und wieder zurückwandeln
+ (Overhead, wenn beide Partner, die gleiche Darstellung verwenden, die jedoch
+ von der maschinenunabhängigen Darstellung differiert): single-canonical
+ format.
+ 
+\end_layout
+
+\begin_layout Itemize
+Oder der Empfänger muss sich um eine evtl.
+ notwendige Konvertierung kümmern.
+ Dazu spezifiziert der Sender den Datentyp aus einer Liste von vorgegebenen
+ Datentypen: receiver-makes-it-right.
+ 
+\end_layout
+
+\begin_layout Standard
+Probleme wie little-endian vs.\InsetSpace ~
+big-endian treten z.B.
+ 
+\emph on
+auch
+\emph default
+ bei der Übertragung von 16-bit Unicodezeichen auf.
+\end_layout
+
+\begin_layout Standard
+Ein weiteres Beispiel: Wie ist zu verfahren, wenn eine Architektur keine
+ unsigned Zahlen kennt, diese aber über das Netzwerk empfängt (z.B.
+ Java kennt keine unsigned Zahlen)? 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Wie wird mit Parametern umgegangen, die mittels call-by-reference übergeben
+ werden? Wie werden Objekte mit call-by-value übertragen (zwischen verschiedenen
+ Plattformen)?
+\end_layout
+
+\begin_layout Itemize
+Wie wird mit auftretenden Exceptions verfahren?
+\end_layout
+
+\begin_layout Itemize
+Wie wird verfahren, wenn die eine oder die andere Maschine abstürzt? 
+\end_layout
+
+\begin_layout Standard
+Um diese Probleme zu lösen und die Transparenz zu gewährleisten wird folgender
+ Ansatz gewählt: Es werden 
+\emph on
+Client- und Server Stubs
+\emph default
+ generiert.
+ Der Client Stub stellt eine Schnittstelle der entfernten Funktion zur Verfügung
+, wandelt alle Parameter in die Datenrepräsentierung und spricht über ein
+ Protokoll mit dem Server Stub.
+ Der Server Stub wandelt die Daten und ruft die lokale Funktion am Server
+ auf.
+ Der Rückgabewert geht den umgekehrten Weg wieder zurück.
+\end_layout
+
+\begin_layout Standard
+Der Server Stub wird auch oft als Skeleton bezeichnet.
+\end_layout
+
+\begin_layout Standard
+D.h.
+ man benötigt die folgenden 3 Komponenten, um entfernte Prozeduraufrufe
+ durch führen zu können:
+\end_layout
+
+\begin_layout Enumerate
+Maschinen-unabhängige Datenrepräsentierung samt der notwendigen Runtime
+ Software.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Ein Protokoll, das die Stubs verwenden, um miteinander zu kommunizieren.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Einen Protokoll-Compiler, der aus einer Funktionsdefinition die Stubs generiert.
+ 
+\end_layout
+
+\begin_layout Standard
+Schaut man sich die Fernaufrufe etwas genauer an, dann erkennt man wieder,
+ dass auch hier verschiedene Varianten möglich sind: 
+\end_layout
+
+\begin_layout Description
+synchrone Funktionsaufrufe haben die Semantik `remote-invocation send' 
+\end_layout
+
+\begin_layout Description
+synchrone Prozeduraufrufe haben die Semantik `synchronization send' 
+\end_layout
+
+\begin_layout Description
+asynchrone Prozeduraufrufe haben die Semantik `no-wait send' 
+\end_layout
+
+\begin_layout Description
+asynchrone Funktionsaufrufe haben ebenfalls die Semantik `no-wait send'.
+ Um auf den Rückgabewert zuzugreifen gibt es zwei Möglichkeiten: 
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+polling Modell Es wird ein Objekt beim Aufruf mitzugeben.
+ In diesem Objekt wird das Resultat zu einem späteren Zeitpunkt eingetragen.
+ Dieses Objekt kann auf das Resultat abgefragt werden (blockend oder pollend).
+ 
+\end_layout
+
+\begin_layout Description
+callback Modell Beim Aufruf wird eine Callback-Funktion mitgegeben.
+ Diese wird dann aufgerufen, wenn das Resultat eingelangt ist.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Funktionsaufrufe (liefert einen Wert) und Prozeduraufrufe (liefert keinen
+ Wert) stehen hier auch für das objektorientierte Gegenstück (der Methode).
+ D.h.\InsetSpace ~
+Methoden werden als objektgebundene Funktionen gesehen (was sie letzlich
+ auch sind).
+\end_layout
+
+\begin_layout Subsection
+ONC RPC
+\begin_inset LatexCommand label
+name "sec:ONC-RPC"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+ONC (Open Network Computing) RPC wurde von Sun spezifiziert und implementiert
+ und war lange Zeit ein defacto Standard (1995 als RFC 1831 standardisiert)
+ für die Kommunikation zwischen verschiedenen Rechner (auch zwischen verschieden
+artigen Rechnerarchitekturen und Betriebssystemen) basierend auf der Semantik
+ von entfernten Prozeduraufrufen (und wird heute noch z.B.
+ für das Network File System - NFS verwendet).
+\end_layout
+
+\begin_layout Standard
+ONC RPC kann als unterliegendes Transportprotokoll sowohl TCP als auch UDP
+ verwenden.
+\end_layout
+
+\begin_layout Standard
+Das Ziel dieser Technologie war es, eine einfache synchrone Kommunikation
+ aufzubauen, die transparent den Zugriff auf die entfernte Maschine ermöglicht.
+\end_layout
+
+\begin_layout Standard
+Im Sun RPC Modell wird eine single-canonical format Datenrepräsentierung
+ in einem binären Format verwendet.
+ Diese wird XDR (eXternal Data Representation) genannt.
+\end_layout
+
+\begin_layout Standard
+Dazu müssen die Funktionsdeklarationen in einer eigenen Interface Definition
+ Language (IDL) festgeschrieben, die in diesem Fall RPCL (RPC Language)
+ genannt wird.
+ Diese RPCL ist eine C ähnliche Sprache.
+ Aus dieser RPCL generiert ein Protokollcompiler (RPCGEN genannt) die Stubs.
+\end_layout
+
+\begin_layout Standard
+In gewisser Weise kann auch das ONC RPC auf das OSI Modell abgebildet werden:
+\end_layout
+
+\begin_layout Itemize
+Schicht 7 (Anwendung) 
+\end_layout
+
+\begin_layout Itemize
+Schicht 6 (Darstellung): XDR 
+\end_layout
+
+\begin_layout Itemize
+Schicht 5 (Session): RPC 
+\end_layout
+
+\begin_layout Itemize
+Schicht 4 (Transport): TCP oder UDP 
+\end_layout
+
+\begin_layout Itemize
+Schicht 3 (Vermittlung): IP 
+\end_layout
+
+\begin_layout Standard
+Eine Frage bleibt derzeit noch offen: Wie findet ein Client seinen entfernte
+ Funktion? 
+\end_layout
+
+\begin_layout Itemize
+Ein Serverprozess wird auf einer Maschine gestartet und lauscht an einem
+ Port auf einkommende Funktionsaufrufe.
+ Wie kann der Client die Portnummer erfahren? 
+\end_layout
+
+\begin_layout Itemize
+Jedes Programm muss sich, aus einem gewissen Bereich, eine eindeutige Programmnu
+mmer wählen, weiters eine Versionsnummer und für jede Funktion, die über
+ das Netzwerk angeboten wird, eine Funktionsnummer.
+ Diese Angaben werden bei einem speziellen Server (dem portmapper) registriert.
+ Dieser Server lauscht an einem definierten Port (111).
+ 
+\end_layout
+
+\begin_layout Itemize
+Ein Client richtet eine Anfrage bzgl.\InsetSpace ~
+eines Programmes in einer bestimmten
+ Version an den Portmapper und erhält von diesem die Portnummer, unter der
+ der Serverprozess läuft mitgeteilt, sodass der Client direkt eine Verbindung
+ aufnehmen kann.
+ 
+\end_layout
+
+\begin_layout Standard
+Es handelt sich um ein allgemeines Prinzip, das im Abschnitt `Serverseitiges
+ Programmieren' nochmals behandelt wird.
+\end_layout
+
+\begin_layout Standard
+Zusätzlich sind im ONC-RPC noch einige Erweiterungen, wie z.B.
+ eine einfache Authentifierung enthalten.
+ Trotzdem ist dieses Technologie weitgehend durch DCE-RPCs (Distributed
+ Computing Environment von der Open Software Foundation, OSF) und objektbasierte
+ und objektorientierte RPCs verdrängt worden.
+\end_layout
+
+\begin_layout Section
+Entfernte Methodenaufrufe
+\end_layout
+
+\begin_layout Standard
+Mit der Objektorientierung sind zusätzlich noch weitere Anforderungen an
+ die Systeme zum 
+\emph on
+Aufruf von entfernten Methoden
+\emph default
+ aufgetreten:
+\end_layout
+
+\begin_layout Itemize
+Serialisierung/Deserialisierung der Objekte (marshalling).
+ Da es sich um Objekte handelt, die Instanzen von Klassen sind, muss entweder
+ die Klasse am Client vorhanden sein, oder diese muss dynamisch zur Laufzeit
+ geladen (übertragen) werden.
+ 
+\end_layout
+
+\begin_layout Itemize
+Rückübermittlung der Exceptions 
+\end_layout
+
+\begin_layout Itemize
+Distributed Garbage Collection 
+\end_layout
+
+\begin_layout Itemize
+Activation: Es ist nicht immer sinnvoll oder gar machbar, dass alle Serverimplem
+entierungen die gesamte Zeit laufen zu lassen.
+ Folglich sollte es eine Möglichkeit geben Serverobjekte zur Laufzeit zu
+ aktivieren.
+ 
+\end_layout
+
+\begin_layout Itemize
+Versionsmanagement (der Programme, der Objekte) 
+\end_layout
+
+\begin_layout Standard
+Diese und ähnliche Aspekte werden von objektbasierten verteilten System
+ wie CORBA, DCOM oder Java-RMI abgedeckt.
+\end_layout
+
+\begin_layout Standard
+Der folgende Abschnitt behandelt im speziellen die RMI Technologie, die
+ in der J2SE und der J2EE enthalten ist.
+\end_layout
+
+\begin_layout Subsection
+RMI
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Remote Method Invocation
+\emph default
+ (RMI) ist einerseits ein Überbegriff für eine Objekt-zu-Objekt Kommunikation.
+ Andererseits wird damit eine spezielle Technologie in der Java Plattform
+ bezeichnet.
+\end_layout
+
+\begin_layout Standard
+In RMI wird der Server Stub als Skeleton bezeichnet.
+ Weiters gibt es einen 'Remote Reference Layer', der für die Verwaltung
+ der entfernten Referenzen zuständig und auch eine 'Distributed Garbage
+ Collection' durchführt.
+\end_layout
+
+\begin_layout Standard
+Folgende Übersicht stellt wieder eine Möglichkeit zur Einordnung in das
+ OSI Modell vor: 
+\end_layout
+
+\begin_layout Itemize
+Schicht 7 (Anwendung): Client, der eine Methode aufruft und entferntes Objekt,
+ das eine Methode zur Verfügung stellt.
+ Achtung: aus dieser Sicht handelt es sich nicht um den Anwenderprozess.
+\end_layout
+
+\begin_layout Itemize
+Schicht 6 (Darstellung): Stub bzw.
+ Skeleton 
+\end_layout
+
+\begin_layout Itemize
+Schicht 5 (Session): Remote Reference Layer 
+\end_layout
+
+\begin_layout Itemize
+Schicht 4 (Transport): JRMP (Java Remote Method Protocol) über TCP; Gibt
+ es Firewallprobleme, dann ist es auch möglich RMI über IIOP (Internet Inter-ORB
+-Protocol) zu betreiben.
+ 
+\end_layout
+
+\begin_layout Itemize
+Schicht 3 (Vermittlung): IP 
+\end_layout
+
+\begin_layout Standard
+Vorgehensweise zum Entwickeln von Applikationen mit RMI: 
+\end_layout
+
+\begin_layout Enumerate
+Ein Remote Interface definieren, das die Methoden enthält, die über entfernt
+ zur Verfügung gestellt werden können.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Dazu muss dieses Interface public sein, von java.rmi.Remote abgeleitet werden
+ und alle Methoden müssen die java.rmi.RemoteException in ihrer throws Klausel
+ enthalten.
+ Zusätzlich kann natürlich jede Methode eigene Exceptions definieren.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Eine Klasse schreiben, die dieses Remote Interface implementiert.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Diese Klasse muss von java.rmi.server.UnicastRemoteObject (oder java.rmi.activation.Ac
+tivatable) abgeleitet werden, damit es als Serverobjekt auftreten kann.
+\end_layout
+
+\begin_layout Standard
+Wenn die Klasse jedoch schon von einer anderen Klasse abgeleitet ist, besteht
+ die Möglichkeit mittels 'UnicastRemoteObject.exportObject(this)' im Konstruktor
+ der Klasse dieses zu einem Serverobjekt zu machen.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Danach ist der Client zu schreiben.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Dazu wird eine Möglichkeit benötigt, um auf das entfernte Objekt zuzugreifen.
+ Dazu gibt es prinzipiell zwei Möglichkeiten: 
+\end_layout
+
+\begin_layout Itemize
+Zugriff über einen RMI eigenen Zugriff.
+ 
+\end_layout
+
+\begin_layout Itemize
+Zugriff über das Java Naming and Directory Interface (JNDI), das auch den
+ Zugriff auf ein LDAP Verzeichnis erlaubt.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Im Anschluss sind die Stubs und die Skeletons zu generieren.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Ab JDK 1.2 werden keine Skeletons mehr benötigt, da diese Information jetzt
+ durch Reflection gewonnen werden kann.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Danach ist die Registry zu starten und die Serverobjekte müssen registriert
+ werden.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Dazu muss ein eigenes Programm geschrieben werden, das ein Serverobjekt
+ anlegt und dieses bei der Registry registriert.
+ Diese Registry ist außerdem noch zu starten.
+ Entweder mittels dem Kommandozeilenprogramm rmiregistry oder mittels der
+ Klasse LocateRegistry.
+\end_layout
+
+\begin_layout Standard
+Beim Starten der Registry ist zu beachten, dass der CLASSPATH schon richtig
+ gesetzt ist, der alle Stubs .class Dateien enthält (oder den automatischen
+ Download von class Dateien verwenden kann).
+\end_layout
+
+\begin_layout Standard
+Wenn das automatische Laden von class Dateien über das Netzwerk gewünscht
+ ist, dann muss noch folgendes gemacht werden: 
+\end_layout
+
+\begin_layout Itemize
+Es muss eine Policy - Datei erstellt werden.
+ 
+\end_layout
+
+\begin_layout Itemize
+Die Registry muss mit Angabe dieser Policy Datei gestartet werden.
+ 
+\end_layout
+
+\begin_layout Itemize
+Der Client muss einen SecurityManager instanzieren.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Danach kann sowohl der Server als auch der Client gestartet werden.
+ 
+\end_layout
+
+\begin_layout Minisec
+Beispiel: Berechnung der Potenz
+\end_layout
+
+\begin_layout Standard
+Zuerst das Interface, der schon bekannten Methode zur Berechnung der Potenz:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+import java.rmi.Remote;
+\end_layout
+
+\begin_layout Standard
+
+import java.rmi.RemoteException;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+public interface Power extends Remote {
+\end_layout
+
+\begin_layout Standard
+
+  public double pow(double x, double y) throws RemoteException;
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Und jetzt die Implementierung dieses Interfaces:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+import java.rmi.RemoteException;
+\end_layout
+
+\begin_layout Standard
+
+import java.rmi.server.UnicastRemoteObject;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+public class SimpleCalculator extends UnicastRemoteObject implements Power
+ {
+\end_layout
+
+\begin_layout Standard
+
+  public SimpleCalculator() throws RemoteException {
+\end_layout
+
+\begin_layout Standard
+
+    super();
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+public double pow(double x, double y) throws RemoteException {
+\end_layout
+
+\begin_layout Standard
+
+  return Math.pow(x, y);
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Und jetzt wird der Clientcode entwickelt:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+import java.rmi.*;
+\end_layout
+
+\begin_layout Standard
+
+import java.net.MalformedURLException;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+public class Client {
+\end_layout
+
+\begin_layout Standard
+
+  public static void main(String[] args) {
+\end_layout
+
+\begin_layout Standard
+
+    if (args.length != 1) {
+\end_layout
+
+\begin_layout Standard
+
+      System.out.println("usage: Client <hostname>");
+\end_layout
+
+\begin_layout Standard
+
+      System.exit(1);
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    String url = "rmi://" + args[0] + "/SimpleCalculator";
+\end_layout
+
+\begin_layout Standard
+
+    try {
+\end_layout
+
+\begin_layout Standard
+
+      Power obj = (Power) Naming.lookup(url);
+\end_layout
+
+\begin_layout Standard
+
+      double res = obj.pow(2, 3);
+\end_layout
+
+\begin_layout Standard
+
+      System.out.println("2 ** 3 = " + res);
+\end_layout
+
+\begin_layout Standard
+
+    } catch (NotBoundException e) {
+\end_layout
+
+\begin_layout Standard
+
+      System.out.println("/SimpleCalculator nicht in Registry vorhanden");
+\end_layout
+
+\begin_layout Standard
+
+      System.exit(1);
+\end_layout
+
+\begin_layout Standard
+
+    } catch (MalformedURLException e) {
+\end_layout
+
+\begin_layout Standard
+
+      System.out.println("URL fehlerhaft: " + url);
+\end_layout
+
+\begin_layout Standard
+
+      System.exit(1);
+\end_layout
+
+\begin_layout Standard
+
+    } catch (RemoteException e) {
+\end_layout
+
+\begin_layout Standard
+
+      System.out.println("Fehler bei Datenübertragung" + e.getMessage());
+\end_layout
+
+\begin_layout Standard
+
+      System.exit(1);
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Danach sind die Stubs (und die Skeletons) zu generieren: 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+verb+$ rmic -v1.2 SimpleCalculator+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Jetzt ist noch in Serverobjekt bei der Registry zu registrieren:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Standard
+
+import java.rmi.*;
+\end_layout
+
+\begin_layout Standard
+
+public class Server {
+\end_layout
+
+\begin_layout Standard
+
+  public static void main(String[] args) {
+\end_layout
+
+\begin_layout Standard
+
+    try {
+\end_layout
+
+\begin_layout Standard
+
+      SimpleCalculator obj = new SimpleCalculator();
+\end_layout
+
+\begin_layout Standard
+
+      Naming.rebind("/SimpleCalculator", obj);
+\end_layout
+
+\begin_layout Standard
+
+      System.out.println("SimpleCalculator in registry eingetragen!");
+\end_layout
+
+\begin_layout Standard
+
+    } catch (Exception e) {
+\end_layout
+
+\begin_layout Standard
+
+      e.printStackTrace();
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+  }
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Um dieses Programm ablaufen zu lassen, muss zuerst die Registry gestartet
+ werden: 
+\family typewriter
+rmiregistry
+\family default
+.
+ Danach wird der Server und danach die Clients gestartet.
+\end_layout
+
+\begin_layout Section
+Stream-orientierte Kommunikation
+\end_layout
+
+\begin_layout Standard
+Stream-orientierte Kommunikation unterscheidet sich insofern von den vorhergehen
+den Kommunikationsarten, dass 
+\end_layout
+
+\begin_layout Itemize
+nicht abgeschlossene Informationseinheiten ausgetauscht werden und 
+\end_layout
+
+\begin_layout Itemize
+das Zeitverhalten wesentlich ist.
+ 
+\end_layout
+
+\begin_layout Standard
+Beispiel: Die Übertragung eines Audio-Stream, der mit einer Frequenz von
+ 44100 Hz aufgezeichnet.
+ Um den Originalklang herzustellen, ist es wesentlich, dass die Samples
+ im Audio-Stream in derselben Reihenfolge abgespielt und in den Intervallen
+ zu 1/44100 Sekunden abgespielt werden.
+\end_layout
+
+\begin_layout Standard
+Besonders wichtig ist, dass das unterliegende Kommunikationssystem QoS (Quality
+ of Service, Dienstgüte) Anforderungen erfüllen kann.
+\end_layout
+
+\begin_layout Standard
+Diese sind z.B.
+ Bandbreite, Übertragungsschwierigkeiten, Verzögerungen usw.
+ zu nennen.
+\end_layout
+
+\begin_layout Standard
+Noch komplizierter wird es, wenn mehrere Streams zu synchronisieren sind
+ (z.B.
+ den Audio Kanal zu einer Videoübertragung).
+\end_layout
+
+\end_body
+\end_document

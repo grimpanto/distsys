@@ -1,0 +1,930 @@
+#LyX 1.6.4.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass scrbook
+\use_default_options false
+\language ngerman
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\float_placement H
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\bullet 0 2 5 -1
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+E-Mail
+\end_layout
+
+\begin_layout Section
+SMTP
+\end_layout
+
+\begin_layout Standard
+Bei 
+\emph on
+SMTP
+\emph default
+ handelt es sich um ein relativ einfaches, zustandsbehaftetes Protokoll,
+ das über TCP übertragen wird.
+\end_layout
+
+\begin_layout Minisec
+Beschreibung
+\end_layout
+
+\begin_layout Standard
+Simple Mail Transfer Protocol (SMTP) ist ein 
+\end_layout
+
+\begin_layout Itemize
+zuverlässiges, verbindungsorientiertes Protokoll zum Versenden von E-Mails
+ im Internet.
+ 
+\end_layout
+
+\begin_layout Itemize
+end-to-end Protokoll: Es baut direkt eine Verbindung zum Zielrechner auf.
+ Dazu stellt das E-Mail-Programm (User Agent, UA) die E-Mail in die Queue
+ der lokalen E-Mail-Versendestelle (Message Transfer Agent, MTA) zum Versand.
+ Dieser MTA baut eine Verbindung zum MTA des Zielrechners auf und übermittelt
+ die E-Mail.
+ Der MDA (Message Delivery Agent) stellt die Mail dem lokalen Benutzer zu
+ (in seine Mailbox).
+ Ein UA am Zielrechner liest diese aus der Mailbox und stellt sie dem Benutzer
+ zur Verfügung.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Oft wird jedoch ein Relay System aufgebaut: Dazu nimmt der lokale MTA die
+ E-Mail entgegen und übergibt sie einem (lokalen) Relay MTA, der sie an
+ einen (entfernten) Relay MTA übergibt.
+ Der Relay MTA des Zielempfängers versucht Kontakt zum lokalen MTA aufzunehmen
+ und die E-Mail diesem zu übergeben.
+ Eine derartige Organisation hat zwei Vorteile:
+\end_layout
+
+\begin_layout Itemize
+Die Konfiguration wird einfacher, da nur die Relay MTAs 
+\begin_inset Quotes pld
+\end_inset
+
+kompliziert
+\begin_inset Quotes prd
+\end_inset
+
+ zu konfigurieren sind.
+\end_layout
+
+\begin_layout Itemize
+Die Relay MTAs agieren als Hub für eine gesamte Organisation, die alle individue
+llen Systeme der Organisation verstecken.
+\end_layout
+
+\begin_layout Standard
+Im Gegensatz zu end-to-end Verbindungen verwenden z.B.
+ UUCP (Unix-to-Unix Copy; nicht mehr in Verwendung) und X.400 (defakto nicht
+ im Einsatz, da so kompliziert, dass keine vernünftigen Implementierungen
+ vorhanden), eine 
+\emph on
+store-and-forward
+\emph default
+ Strategie.
+ Natürlich wird eine E-Mail über SMTP auch über mehrere Rechner geroutet,
+ dieser Mechanismus ist aber transparent (da über TCP/IP).
+ Eine UUCP Adresse beinhaltet jedoch den Pfad, den eine E-Mail nimmt, um
+ an das Ziel zu gelangen (
+\begin_inset Quotes pld
+\end_inset
+
+at!ac!htlwrn!ko
+\begin_inset Quotes prd
+\end_inset
+
+): In diesem Fall kontaktiert der lokale MTA den MTA von 
+\begin_inset Quotes pld
+\end_inset
+
+at
+\begin_inset Quotes prd
+\end_inset
+
+ und übergibt diesem die E-Mail und hiermit ist der E-Mail - Versand für
+ den lokalen MTA abgeschlossen.
+ Dieser wiederum kontaktiert den MTA von 
+\begin_inset Quotes pld
+\end_inset
+
+ac
+\begin_inset Quotes prd
+\end_inset
+
+ und dieser wieder 
+\begin_inset Quotes pld
+\end_inset
+
+htlwrn
+\begin_inset Quotes prd
+\end_inset
+
+, der die E-Mail dem Benutzer 
+\begin_inset Quotes pld
+\end_inset
+
+ko
+\begin_inset Quotes prd
+\end_inset
+
+ zustellen kann.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+zeichenorientiertes Protokoll, d.h.
+ es werden die Kommandos und die Daten als ASCII Text übertragen:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Kommandos:
+\end_layout
+
+\begin_layout Itemize
+HELO client-hostname 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Reply: 250 
+\end_layout
+
+\begin_layout Itemize
+MAIL FROM:<source-address> 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Reply: 250
+\end_layout
+
+\begin_layout Itemize
+RCPT TO:<dest-address> 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Reply: 250
+\end_layout
+
+\begin_layout Itemize
+DATA (endet mit einem Punkt '.' in eigener Zeile) 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Reply: 354,250
+\end_layout
+
+\begin_layout Itemize
+QUIT 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Reply: 221
+\end_layout
+
+\begin_layout Standard
+Reply - Codes:
+\end_layout
+
+\begin_layout Itemize
+220 <domain> ready 
+\end_layout
+
+\begin_layout Itemize
+250 Angeforderte Aktion ok und fertig
+\end_layout
+
+\begin_layout Itemize
+251 Benutzer nicht lokal; weitergeleitet zu <...>
+\end_layout
+
+\begin_layout Itemize
+354 Maileingabe starten; mit <CR><LF>.<CR><LF> beenden
+\end_layout
+
+\begin_layout Itemize
+551 Benutzer nicht lokal; bitte <...> versuchen
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Envelopes, Headers, Body 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Envelope (Umschlag) wird vom MTA zur Auslieferung der E-Mail verwendet.
+ Beispiele sind:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+MAIL FROM:<gk@foxl.htlwrn.ac.at>
+\end_layout
+
+\begin_layout Itemize
+RCPT TO:<ko@htlwrn.ac.at>
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Headers werden vom UA verwendet.
+ Beispiele sind:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Received-By: mail.htlwrn.ac.at 
+\end_layout
+
+\begin_layout Itemize
+Delieverd-To: ko@htlwrn.ac.at 
+\end_layout
+
+\begin_layout Itemize
+Date: Wed, 13 Aug 2003 10:54:17 +0200 (CEST) 
+\end_layout
+
+\begin_layout Itemize
+From: gk@foxl.htlwrn.ac.at 
+\end_layout
+
+\begin_layout Itemize
+To: ko@htlwrn.ac.at
+\end_layout
+
+\begin_layout Itemize
+Reply-To: ko@htlwrn.ac.at 
+\end_layout
+
+\begin_layout Itemize
+Subject: bla,bla
+\end_layout
+
+\begin_layout Itemize
+Header, die mit 'X-' beginnen, sind benutzerdefinierte Felder (z.B.
+ X-Phone, X-Mailer,...)
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+TCP Port 25 
+\end_layout
+
+\begin_layout Itemize
+Beschrieben 1982 in 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+RFC 821, STD 10 das eigentliche Protokoll
+\end_layout
+
+\begin_layout Itemize
+RFC 822 Struktur der Nachricht 
+\end_layout
+
+\begin_layout Itemize
+ESMTP (Extended SMTP) 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Verwandte Standards 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Post Office Protocol (POP; siehe 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:POP"
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Itemize
+Interactive Mail Access Protocol (IMAP; siehe 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:IMAP"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Itemize
+SMTP-after-POP erlaubt nur ein Versenden einer E-Mail nach erfolgter POP
+ Authentifizierung.
+\end_layout
+
+\begin_layout Itemize
+SMTP-Auth: RFC 2554; SMTP Service Extension for Authentication
+\end_layout
+
+\end_deeper
+\begin_layout Minisec
+Beispiel: telnet Sitzung einer SMTP Verbindung
+\end_layout
+
+\begin_layout Standard
+Beispielsitzung (>>> zeigt Benutzereingaben an): 
+\end_layout
+
+\begin_layout LyX-Code
+$ telnet localhost 25
+\end_layout
+
+\begin_layout LyX-Code
+Trying 127.0.0.1...
+\end_layout
+
+\begin_layout LyX-Code
+Connected to localhost.
+ Escape character is '^]'
+\end_layout
+
+\begin_layout LyX-Code
+220 rom.com ESMTP Postfix 
+\end_layout
+
+\begin_layout LyX-Code
+>>>helo gallien.com
+\end_layout
+
+\begin_layout LyX-Code
+250 gallien.com
+\end_layout
+
+\begin_layout LyX-Code
+>>>mail from:<asterix@dorf.gallien.com>
+\end_layout
+
+\begin_layout LyX-Code
+250 Ok
+\end_layout
+
+\begin_layout LyX-Code
+>>>rcpt to:<caesar@rom.com>
+\end_layout
+
+\begin_layout LyX-Code
+250 Ok
+\end_layout
+
+\begin_layout LyX-Code
+>>>data 354 End data with <CR><LF>.<CR><LF>
+\end_layout
+
+\begin_layout LyX-Code
+>>>Hi Julius!
+\end_layout
+
+\begin_layout LyX-Code
+>>>.
+\end_layout
+
+\begin_layout LyX-Code
+250 Ok: queued as BB6B9B8245
+\end_layout
+
+\begin_layout LyX-Code
+>>>quit 221 Bye
+\end_layout
+
+\begin_layout Section
+MIME
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:MIME"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Multi Purpose Internet Mail Extensions (MIME, RFCs 2045-2049) wurde primär
+ zum Verbinden eines Typs zu einer Nachricht geschaffen und auch zum Beschreiben
+ der verwendeten Kodierung.
+ Es wird nicht nur für E-Mails verwendet, sondern auch z.B.
+ im http Protokoll.
+\end_layout
+
+\begin_layout Minisec
+Typ
+\end_layout
+
+\begin_layout Standard
+Der Typ einer Nachricht oder im Prinzip jeder Art von Information (auch
+ einer Datei) wird durch den 
+\begin_inset Quotes pld
+\end_inset
+
+Content-Type
+\begin_inset Quotes prd
+\end_inset
+
+ angegeben.
+ Es gibt insgesamt neun top-level Typen und zu jedem Typ dazu passende Subtypen.
+ Die top-level Typangabe wird durch einen Schrägstrich vom Subtyp getrennt.
+ Folgend sind die 9 top-level Typen mit den wichtigsten Subtypen angeführt:
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+application application/gzip, application/javascript, application/json,
+ application/msword, application/octet-stream (ausführbare oder allgemein
+ binäre Daten), application/pdf, application/xhtml+xml (xhtml Daten), applicatio
+n/xml, 
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+audio Audioinformation: audio/x-pn-realaudio, audio/x-wav, audio/x-midi
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+example vorgesehen für Beispiele; wird ansonsten nicht verwendet.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+image Bildinformationen: image/gif, image/jpeg, image/png
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+message für E-Mail: message/rfc822 (RFC 2822!)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+model Daten mit mehrdimensionalen Strukturen: model/vrml (Virtual Reality
+ Markup Language)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+multipart Daten aus mehreren Teilen (z.B.
+ bei E-Mails): multipart/mixed (verschiedene Teile), multipart/alternative
+ (mehrere alternative Teile, z.B.
+ einfacher Text und HTML Text)
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+text Textinformation: text/plain, text/html, text/css, text/xml
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+video Videoinformation: video/mpeg, video/quicktime
+\end_layout
+
+\begin_layout Minisec
+Transferkodierung
+\end_layout
+
+\begin_layout Standard
+Um das entsprechende Encoding für die Übertragung anzugeben, wird 
+\begin_inset Quotes pld
+\end_inset
+
+Content-Transfer-Encoding
+\begin_inset Quotes prd
+\end_inset
+
+ verwendet.
+ Werte sind 
+\begin_inset Quotes pld
+\end_inset
+
+7bit
+\begin_inset Quotes prd
+\end_inset
+
+, 
+\begin_inset Quotes pld
+\end_inset
+
+8bit
+\begin_inset Quotes prd
+\end_inset
+
+, 
+\begin_inset Quotes pld
+\end_inset
+
+binary
+\begin_inset Quotes prd
+\end_inset
+
+, 
+\begin_inset Quotes pld
+\end_inset
+
+quoted-printable
+\begin_inset Quotes prd
+\end_inset
+
+, 
+\begin_inset Quotes pld
+\end_inset
+
+base64
+\begin_inset Quotes prd
+\end_inset
+
+.
+ Da das ursprüngliche SMTP nur 7 Bit ASCII verstanden hat, hängt es auch
+ heute noch von der verwendeten Software ab, ob z.B.
+ 
+\begin_inset Quotes pld
+\end_inset
+
+8bit
+\begin_inset Quotes prd
+\end_inset
+
+ oder 
+\begin_inset Quotes pld
+\end_inset
+
+binary
+\begin_inset Quotes prd
+\end_inset
+
+ verwendet werden kann.
+ Um Daten auch in solchem Fall zu übertragen, muss man auf 
+\begin_inset Quotes pld
+\end_inset
+
+quoted-printable
+\begin_inset Quotes prd
+\end_inset
+
+ oder 
+\begin_inset Quotes pld
+\end_inset
+
+base64
+\begin_inset Quotes prd
+\end_inset
+
+ zurückgreifen.
+\end_layout
+
+\begin_layout Standard
+Die Header einer SMTP Nachricht müssen im US-ASCII Zeichensatz verfasst
+ sein.
+ Um beliebige Zeichen hier einfügen zu können gibt es mit RFC2047 das Konzept
+ 
+\begin_inset Quotes pld
+\end_inset
+
+encoded-word
+\begin_inset Quotes prd
+\end_inset
+
+.
+ Im folgenden Beispiel sind die einzelnen Trennzeichen jeweils fett markiert:
+ 
+\series bold
+=?
+\series default
+utf-8
+\series bold
+?
+\series default
+B
+\series bold
+?
+\series default
+R8O8bnRlcg==
+\backslash
+n
+\series bold
+?=
+\series default
+ bedeutet, dass der Inhalt des Headerfeldes in utf-8 kodiert ist, dann mittels
+ base64 (
+\begin_inset Quotes pld
+\end_inset
+
+B
+\begin_inset Quotes prd
+\end_inset
+
+ zwischen den beiden Fragezeichen) in eine ASCII Form 
+\begin_inset Quotes pld
+\end_inset
+
+R8O8bnRlcg==
+\backslash
+n
+\begin_inset Quotes prd
+\end_inset
+
+ gebracht worden ist.
+ Nebenbei: der Inhalt lautet 
+\begin_inset Quotes pld
+\end_inset
+
+Günter
+\begin_inset Quotes prd
+\end_inset
+
+ ;-).
+ Der Trick ist, dass die MUA diese Transformation selbständig durchführen.
+\end_layout
+
+\begin_layout Minisec
+Mehrere Teile
+\end_layout
+
+\begin_layout Standard
+Eine Multipart-Message enthält mehrere Bodyparts, die durch eine Grenzlinie
+ (boundary) abgegrenzt werden.
+ Beispiel für eine einfache Multipart-Message (mit einem verkürzten boundary,
+ das hier als example-1 festgelegt ist):
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+From: Max Mustermann <max@muster-mann.at>
+\end_layout
+
+\begin_layout Plain Layout
+
+To: Mini Musterfrau <mini@muster-frau.at>
+\end_layout
+
+\begin_layout Plain Layout
+
+Date: Mon, 27 Aug 2007 09:41:09 +0200 (CEST)
+\end_layout
+
+\begin_layout Plain Layout
+
+Subject: Multipart E-Mail mit mehreren alternativen Darstellungen
+\end_layout
+
+\begin_layout Plain Layout
+
+MIME-Version: 1.0
+\end_layout
+
+\begin_layout Plain Layout
+
+Content-Type: multipart/alternative; boundary=trennzeichen
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+--trennzeichen
+\end_layout
+
+\begin_layout Plain Layout
+
+Content-Type: text/plain; charset=us-ascii
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Text-Version...
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+--trennzeichen
+\end_layout
+
+\begin_layout Plain Layout
+
+Content-Type: text/html; charset=utf-8
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+HTML-Version...
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+--trennzeichen
+\end_layout
+
+\begin_layout Plain Layout
+
+Content-Type: application/pdf
+\end_layout
+
+\begin_layout Plain Layout
+
+Content-Transfer-Encoding: base64
+\end_layout
+
+\begin_layout Plain Layout
+
+Content-Disposition: attachment; filename="mail.pdf"
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+base64 kodierte PDF-Version
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+--trennzeichen--
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Es gibt eine Erweiterung dieses Standards namens S/MIME (Secure MIME), der
+ auch das Verschlüsseln und digitales Signieren von Nachrichten erlaubt.
+ Außerdem existiert mit PGP/MIME (beschrieben in RFC 2015 und RFC 3156)
+ auch eine PGP-kompatible Erweiterung für sicheren Datenaustausch.
+\end_layout
+
+\begin_layout Section
+POP
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:POP"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+POP3 (Post Office Protocol, Version 3, RFC 1939) ist ein Protokoll, das
+ einen MUA erlaubt auf die entfernte Daten zuzugreifen.
+ Es handelt sich um ein textorientiertes, zustandsorientiertes Protokoll
+ über TCP Port 110, das eine Authentifizierung mittels Passwort (im Klartext)
+ durchführt und es erlaubt, die E-Mails auf den Client zu laden bzw.
+ von dort zu löschen.
+ Erweiterte Funktionen wie z.B.
+ das Durchsuchen von E-Mails sind im Protokoll IMAP zu finden.
+\end_layout
+
+\begin_layout Section
+IMAP
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:IMAP"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+IMAP (Internet Mail Access Protocol, Version 4rev1, RFC 3501) ist ein Protokoll,
+ um auf E-Mails direkt auf dem Server zuzugreifen.
+ Es handelt sich um ein zustandsorientiertes Protokoll über TCP Port 143,
+ Es stellt im Vergleich zu POP3 viele zusätzliche Funktionen zur Verfügung:
+\end_layout
+
+\begin_layout Itemize
+Daten bleiben in der Regel am Server und können damit von mehreren verschiedenen
+ Clients aus verwendet werden.
+\end_layout
+
+\begin_layout Itemize
+Flags wie 
+\begin_inset Quotes pld
+\end_inset
+
+seen
+\begin_inset Quotes prd
+\end_inset
+
+, 
+\begin_inset Quotes pld
+\end_inset
+
+answered
+\begin_inset Quotes prd
+\end_inset
+
+, 
+\begin_inset Quotes pld
+\end_inset
+
+deleted
+\begin_inset Quotes prd
+\end_inset
+
+ und benutzerdefinierte Flags werden direkt am Server verwaltet.
+\end_layout
+
+\begin_layout Itemize
+Mail-Boxen können von mehreren Benutzern genutzt werden.
+\end_layout
+
+\begin_layout Itemize
+Verwalten von mehreren Foldern am Server: herunterladen, speichern und verschieb
+en von E-Mails.
+\end_layout
+
+\begin_layout Itemize
+In E-Mails kann direkt am Server gesucht werden bzw.
+ können direkt am Server sortiert werden.
+ Damit wird Bandbreite gespart und die Clients müssen nicht so leistungsfähig
+ sein.
+\end_layout
+
+\begin_layout Standard
+Diese zusätzlichen Funktionen bedingen auch ein komplexeres Protokoll und
+ damit auch komplexere Implementierungen sowohl auf der Serverseite als
+ auch auf der Clientseite.
+\end_layout
+
+\end_body
+\end_document

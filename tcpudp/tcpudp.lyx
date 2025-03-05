@@ -1,0 +1,2176 @@
+#LyX 1.5.4 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass scrbook
+\language ngerman
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Transportprotokolle TCP und UDP
+\begin_inset LatexCommand label
+name "sec:tcpudp"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Adressierung
+\end_layout
+
+\begin_layout Standard
+Die Adresserierung in IP wird über die IP Adressen vorgenommen, die global
+ eindeutig sein müssen.
+ Auf der Transportebene wird eine weitere Form der Adressierung benötigt,
+ da es sich um eine Ende-zu-Ende Kommunikation auf Prozessebene handelt.
+ Das bedeutet, dass über die Transportschicht direkt zwei Prozesse miteinander
+ verbunden sind und miteinander kommunizieren.
+\end_layout
+
+\begin_layout Standard
+In diesem Sinne muss es eine Möglichkeit geben, einen Prozess auf einem
+ Host zu identifizieren.
+ Das Konzept, das TCP/IP auf dieser Ebene eingeführt hat sind die Ports.
+ Es handelt sich dabei um einen nummerischen Bezeichner, der Werte im Bereich
+ von 0 bis 65535 annehmen kann.
+\end_layout
+
+\begin_layout Standard
+In diesem Zusammenhang führt TCP das Konzept eines Kommunikationsendpunktes
+ ein, der als 
+\begin_inset Quotes pld
+\end_inset
+
+socket
+\begin_inset Quotes prd
+\end_inset
+
+ bezeichnet wird und sich aus der IP Adresse und dem Port zusammensetzt.
+ Zwei Sockets, nämlich der Sender-Socket und der Empfänger-Socket identifizieren
+ gemeinsam mit der Angabe des verwendeten Transportprotokolls eindeutig
+ eine Kommunikation in Internet! Ein lokaler Socket kann gleichzeitig in
+ mehreren Kommunikationsverbindungen verwendet werden.
+\end_layout
+
+\begin_layout Standard
+Für jede Nachricht, die von einem Senderprozess (also eine laufende Anwendung)
+ an einen Empfängerprozess (ebenfalls eine laufende Anwendung) gesendet
+ wird, gibt es einen Sender-Socket und einen Empfänger-Socket.
+ In der Regel ist es so, dass ein Prozess an einem Empfänger-Socket lauscht
+ und Nachrichten an diesem empfangen kann.
+ Der Senderprozess schickt eine Nachricht mittels eines Sender-Socket unter
+ Angabe des Transportprotokolls über den Empfänger-Socket an den Empfängerprozes
+s.
+ Dieser Empfangsprozess erbringt in der Regel einen Dienst und wird auf
+ die eingegangenen Nachrichten mittels Antworten reagieren.
+\end_layout
+
+\begin_layout Standard
+Dieses Senden der Nachrichten verwendet das unterliegende IP.
+ Der Sendeprozess übergibt die Nachricht an die Transportschicht.
+ Die Transportschicht packt die Nachricht in ein TCP oder UDP Paket und
+ reicht dieses an IP weiter.
+ Beim Empfänger werden die Pakete wieder entpackt und an den richtigen Prozess
+ weitergegeben.
+ Dies wird, analog zu den Signalen, als Multiplexing bzw.
+ Demultiplexing bezeichnet.
+ Die zentrale Information, die zum Multiplexen bzw.
+ Demultiplexen verwendet wird sind die Ports.
+\end_layout
+
+\begin_layout Standard
+Portnummern von 0 bis 1023 werden als sogenannte 
+\begin_inset Quotes pld
+\end_inset
+
+well known ports
+\begin_inset Quotes prd
+\end_inset
+
+ bezeichnet und von der IANA verwaltet und für Anwendungen reserviert.
+ Unter Unix werden diese Ports insoferne speziell behandelt als das ein
+ passives Öffnen (siehe 
+\begin_inset LatexCommand vref
+reference "sec:tcp_fsm"
+
+\end_inset
+
+) nur Prozessen mit der Benutzernummer 0 erlaubt wird.
+ Bestimmte Ports sind bestimmten Diensten zugeordnet, wichtige Dienste sind:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="18" columns="4">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="left" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Port#
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Protokoll
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Schlüsselwort
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Beschreibung
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+tcp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+ftp-data
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+file transfer protocol (Datenkanal)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+21
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+tcp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+ftp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+file transfer protocol (Steuerkanal)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+22
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+tcp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+ssh
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+secure socket shell
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+25
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+tcp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+smtp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+simple mail transfer protocol
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+53
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+tcp+udp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+domain
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+domain name system
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+67
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+udp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+dhcp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+dynamic host configuration protocol (server)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+68
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+udp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+dhcp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+dynamic host configuration protocol (server)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+80
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+tcp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+http
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+hyper text transfer protocol
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+110
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+tcp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+pop
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+post office protocol
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+113
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+tcp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+ident
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+ident protocol
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+119
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+tcp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+nntp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+network news transfer protocol
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+123
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+tcp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+ntp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+network time protocol
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+143
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+tcp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+imap
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+internet mail access protocol
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+161
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+udp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+snmp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+simple network management protocol
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+389
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+tcp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+ldap
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+lightweight directory access protocol
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+443
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+tcp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+https
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+http over SSL
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+514
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+tcp
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+syslog
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+syslog
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+UDP
+\begin_inset LatexCommand label
+name "sec:udp"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+UDP (engl.
+ user datagram protocol) ist das einfachere Transportprotokoll, das TCP/IP
+ zur Verfügung stellt.
+ Es wurde 1980 im RFC 768 publiziert und seit dem nicht verändert.
+\end_layout
+
+\begin_layout Standard
+Das Entwurfsziel war ein verbindungsloses, unzuverlässiges Ende-zu-Ende
+ Transportprotokoll zur Verfügung zu stellen, das einfach ist und eine schnelle
+ Kommunikation erlaubt.
+ Es ist charakterisiert durch folgende Eigenschaften:
+\end_layout
+
+\begin_layout Itemize
+Es ist unzuverlässig: Es gibt keine Garantie ob Daten angekommen sind, es
+ wird nicht erkannt, ob Daten verloren gegangen sind und es gibt keine Garantie,
+ dass die Daten in der Reihenfolge ankommen, in der sie abgesendet worden
+ sind.
+\end_layout
+
+\begin_layout Itemize
+Es gibt keinen Mechanismus zur Flusskontrolle.
+\end_layout
+
+\begin_layout Itemize
+Es erfolgt eine einfache Überprüfung auf die Korrektheit der übertragenen
+ Daten
+\end_layout
+
+\begin_layout Standard
+Man sieht, dass UDP an sich nur zwei zusätzliche Eigenschaften gegenüber
+ IP zur Verfügung stellt: Multiplexing/Demultiplexing und Überprüfung auf
+ Korrektheit der Daten.
+\end_layout
+
+\begin_layout Standard
+UDP eignet sich gut für Audio- und Videostreams und außerdem wird es auch
+ bei einigen wichtigen Protokollen, wie DNS, SNMP und DHCP eingesetzt.
+\end_layout
+
+\begin_layout Subsection
+Aufbau eines Datagrams
+\end_layout
+
+\begin_layout Standard
+Der Aufbau eines UDP Datagram ist in Abbildung 
+\begin_inset LatexCommand vref
+reference "fig:udp_datagram"
+
+\end_inset
+
+ zu sehen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename udp-datagram.pdf
+	BoundingBox 0bp 0bp 102mm 40mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+\begin_inset LatexCommand label
+name "fig:udp_datagram"
+
+\end_inset
+
+Aufbau eine UDP Datagrams
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Source\InsetSpace ~
+Port 0--65535
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Destination\InsetSpace ~
+Port 0--65535
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Len Länge des vollständigen UDP Datagrams inklusive Header und Datenfeld
+ in Bytes.
+ D.h.
+ der minimale Wert ist 8.
+ Man beachte, dass es sich hierbei um eine redundante Information handelt,
+ da im Feld Len von IP ebenfalls die Länge des Datenbereichs angegeben ist.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Checksum Prüfsumme.
+ Der Algorithmus funktioniert wie derjenige zur Berechnung der Prüfsumme
+ in IP, jedoch wird als Grundlage der Header des UDP Datagrams, das Datenfeld
+ des UDP Datagrams und ein sogenannter Pseudoheader herangezogen, der sich
+ folgendermaßen zusammensetzt: IP Quelladresse (32 Bits), IP Zieladresse
+ (32 Bits), der Wert 0 (8 Bits) das Feld Protocol vom IP Header (8 Bits)
+ und das Feld Len vom UDP Header (16 Bits).
+ Der Pseudoheader wird nicht übertragen: er wird nur zur Berechnung der
+ Prüfsumme herangezogen!
+\newline
+Man sieht, dass im Gegensatz zu IP auch das Datenfeld
+ bei der Berechnung der Prüfsumme herangezogen wird.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Data Datenfeld
+\end_layout
+
+\begin_layout Standard
+Dass UDP die Prüfsumme ebenfalls über das Datenfeld berechnet ist einerseits
+ ein Vorteil, aber auch andererseits unter Umständen ein Nachteil, wenn
+ der Overhead durch die Berechnung (z.B.
+ bei Datenraten größer als 1 GBit/s) zu groß ausfällt.
+ 
+\end_layout
+
+\begin_layout Section
+TCP
+\begin_inset LatexCommand label
+name "sec:tcp"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TCP (engl.
+ transmission control protocol) ist das komplexere Transportprotokoll, das
+ TCP/IP zur Verfügung stellt.
+ Es wurde 1981 im RFC 793 publiziert und seit dem nicht verändert.
+ Erweiterungen sind in zusätzlichen RFCs spezifiziert.
+\end_layout
+
+\begin_layout Standard
+Das Entwurfsziel war ein verbindungsorientiertes, zuverlässiges Ende-zu-Ende
+ Transportprotokoll zur Verfügung zu stellen, das einfach ist und eine schnelle
+ Kommunikation erlaubt.
+ Es ist charakterisiert durch folgende Eigenschaften:
+\end_layout
+
+\begin_layout Itemize
+Es ist zuverlässig: verloren gegangene oder falsche Daten werden wieder
+ neu übermittelt, doppelt ankommende Daten werden verworfen und es wird
+ sichergestellt, dass die Daten in der Reihenfolge des Absendens dem Empfängerpr
+ozess weitergereicht werden.
+\end_layout
+
+\begin_layout Itemize
+Verbindungen werden unterstützt und verwaltet: Verbindungsauf- und Abbau.
+\end_layout
+
+\begin_layout Itemize
+Die Datenübertragung ist vollduplex: es werden gleichzeitig zwei Datenströme
+ (einer in jeder Richtung) unterstützt.
+\end_layout
+
+\begin_layout Itemize
+Zur Datenübertragung wird eine Abstraktion über Streams zur Verfügung gestellt.
+ D.h.
+ die Anwendungsschicht kann einen Byte-Strom zu TCP senden bzw.
+ einen Byte-Strom von TCP lesen.
+ Dazu stellt TCP eine Art von Segmentierung zur Verfügung (siehe Abschnitt
+ 
+\begin_inset LatexCommand vref
+reference "sec:tcp_segment"
+
+\end_inset
+
+ und 
+\begin_inset LatexCommand vref
+reference "sec:tcp_segmenting"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Itemize
+Es gibt einen Mechanismus zur Flusskontrolle.
+ Flusskontrolle hindert den Sender daran, die Kapazität des Empfängers zu
+ überschreiten.
+ Es handelt sich also um einen Mechanismus auf der Ende-zu-Ende Ebene und
+ betrifft die beiden kommunizierenden Hosts.
+\end_layout
+
+\begin_layout Itemize
+Es gibt eine Überlastkontrolle.
+ Überlastkontrolle bietet einen Schutz vor Überlastung des Netzes.
+ Es handelt sich um einen Mechanismus der einerseits den Sender und andererseits
+ das Netz betrifft.
+\end_layout
+
+\begin_layout Itemize
+Es erfolgt eine einfache Überprüfung auf Korrektheit der übertragenen Daten.
+\end_layout
+
+\begin_layout Itemize
+Es ist als robustes Protokoll entworfen und folgt dem Grundsatz: konservativ
+ in dem was gesendet wird und tolerant bzgl.
+ der empfangenen Segmente.
+\end_layout
+
+\begin_layout Subsection
+Aufbau eines Segmentes
+\begin_inset LatexCommand label
+name "sec:tcp_segment"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Bei TCP werden die einzelnen Pakete als Segmente genannt.
+ Der Aufbau eines TCP Segmentes ist in Abbildung 
+\begin_inset LatexCommand vref
+reference "fig:tcp_segment"
+
+\end_inset
+
+ zu sehen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename tcp-segment.pdf
+	BoundingBox 0bp 0bp 102mm 79mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+\begin_inset LatexCommand label
+name "fig:tcp_segment"
+
+\end_inset
+
+Aufbau eine TCP Segmentes
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+SourcePort 0--65535
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+DestinationPort 0--65535
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+SequenceNum Die Sequenznummer wird für den Window Sliding Mechanismus verwendet.
+ Da TCP ein byte-orientiertes Protokoll ist, hat jedes Byte eine Sequenznummer.
+ Dieses Feld enthält die Sequenznummer des ersten Byte im Datenfeld.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+AcknowledgmentNum Wird dem Sender ein Segment gesendet, das das ACK Bit
+ gesetzt hat, dann enthält dieses Feld die Bestätigungsnummer.
+ Sie gibt die Nummer der nächsten erwarteten Sequenznummer an.
+ Alle Bytes mit einer kleineren Bestätigungsnummer werden hiermit bestätigt.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+HLen 4 Bit: Länge des Headers in 32 Bitworten bis zum Beginn des Datenfeldes.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Reserved 6 Bit langes Bitfeld, das lauter 0en enthalten muss.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+URG Das Bit URG (urgent) zeigt der empfangenen Anwendung an, dass Daten
+ priorisiert behandelt werden sollen.
+ Die dringenden Daten befinden sich am Anfang des Datenbereiches und reichen
+ bis zu der Stelle, die durch das Feld UrgentPtr angezeigt werden, das auf
+ das letzte Oktett der dringlichen Daten zeigt.
+ URG wird selten verwendet, z.B.
+ bei telnet oder rlogin.
+ Diese Kennzeichnung ist deshalb notwendig, da TCP den Inhalt der Daten
+ nicht kennt; für TCP handelt es sich um einen Strom von Daten, die auf
+ Grund der Stream-Eigenschaft mittels des FIFO Prinzips übertragen werden.
+\newline
+Überträ
+gt man z.B.
+ eine große Datei und will diesen Transfer der Daten abbrechen, dann ist
+ es nicht sinnvoll ein Abbruch-Kommando am Ende des Datei hinten anzufügen.
+ Es muss eine Möglichkeit geben das Abbruch-Kommando vorzureihen.
+ TCP stellt eine Möglichkeit zur Verfügung solche dringenden Daten zu versenden.
+ Es werden diese Daten am Anfang des Datenbereiches eines Segmentes platziert,
+ das URG Flag gesetzt und der UrgentPtr richtig gesetzt.
+ Beim Empfänger werden diese Daten vorgereiht und dem Prozess vorrangig
+ und als 
+\begin_inset Quotes pld
+\end_inset
+
+urgent
+\begin_inset Quotes prd
+\end_inset
+
+ markiert ausgeliefert.
+ Die restlichen Daten des Datenbereiches werden normal im Datenstream ausgeliefe
+rt.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+ACK Mittels ACK (acknowledgement) bestätigt TCP den Erhalt von Daten (siehe
+ Acknowledgment Number).
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+PSH Ist PSH (push) gesetzt, dann soll der TCP/IP Stack dieses Segment ohne
+ weiteres Zwischenspeichern an die Anwendung weiterreichen.
+ Dafür bietet TCP eine push Funktion an, die von der Anwendungsschicht aufgerufe
+n werden kann.
+ D.h.
+ die normale Pufferung der Bytes bis sich genügend Bytes angesammelt haben,
+ wird ausgeschalten, das PSH Flag gesetzt und alle Daten werden sofort abgesende
+t.
+ Auf der Empfängerseite wird erkannt, dass das PSH Flag gesetzt ist und
+ die Daten werden sofort an die Anwendung weitergereicht.
+ D.h.
+ auch hier wird nicht gewartet bis 
+\begin_inset Quotes pld
+\end_inset
+
+genügend
+\begin_inset Quotes prd
+\end_inset
+
+ Daten eingetroffen sind.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+RST Dieses Bit RST (reset) wird verwendet, um eine sofortige Auflösung der
+ TCP Verbindung anzuzeigen und sollte nicht der normale Vorgang zum Beenden
+ einer Verbindung sein.
+ Es wird z.B.
+ verwendet, wenn der Empfänger ein unerwartetes Segment erhalten hat, wodurch
+ ein Fehlerzustand eingetreten ist und dadurch die Verbindung abgebrochen
+ werden muss.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+SYN Beim Verbindungsaufbau wird SYN (synchronize) verwendet (siehe 
+\begin_inset LatexCommand vref
+reference "sec:connection_management"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+FIN Beim Verbindungsabbau wird FIN (finish) verwendet (siehe 
+\begin_inset LatexCommand vref
+reference "sec:connection_management"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Window Dieses Feld gibt die Fenstergröße an.
+ Gemeinsam mit SequenceNum, AcknowledgeNum wird der Sliding Window Mechanismus
+ in TCP realisiert (siehe Abschnitt 
+\begin_inset LatexCommand vref
+reference "sec:tcp_sliding_window"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Checksum Prüfsumme.
+ Der Algorithmus funktioniert wie derjenige zur Berechnung der Prüfsumme
+ in IP, jedoch wird als Grundlage der Header des TCP Segmentes, das Datenfeld
+ des TCP Segmentes und ein sogenannter Pseudoheader herangezogen, der sich
+ folgendermaßen zusammensetzt: IP Quelladresse (32 Bits), IP Zieladresse
+ (32 Bits), der leere Checksum-Wert 0 (8 Bits) das Feld Protocol vom IP
+ Header (8 Bits) und das Feld Len vom TCP Header (16 Bits).
+ Der Pseudoheader wird nicht übertragen: er wird nur zur Berechnung der
+ Prüfsumme herangezogen!
+\newline
+Man sieht wiederum, dass im Gegensatz zu IP auch
+ das Datenfeld bei der Berechnung der Prüfsumme herangezogen wird.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+UrgentPtr Bei dem Feld UrgentPtr handelt es sich um einen Zeiger auf das
+ letzte Oktett der dringlichen Daten und wird nur interpretiert, wenn das
+ URG Flag gesetzt ist.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Options Das Feld Options kann mehrere Optionen beinhalten.
+ Jede Option besteht aus einem Feld 
+\begin_inset Quotes pld
+\end_inset
+
+Art der Option
+\begin_inset Quotes prd
+\end_inset
+
+ (option-kind) und eventuell einem Feld 
+\begin_inset Quotes pld
+\end_inset
+
+Länge der Option
+\begin_inset Quotes prd
+\end_inset
+
+ (option-length) gefolgt von einem Feld 
+\begin_inset Quotes pld
+\end_inset
+
+Daten der Option
+\begin_inset Quotes prd
+\end_inset
+
+ (option-data).
+ Einige Optionen haben keine Daten und damit auch kein Längenfeld.
+ In RFC 793 sind nur 3 Optionen definiert:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Quotes pld
+\end_inset
+
+End of Option List
+\begin_inset Quotes prd
+\end_inset
+
+ (option-kind=0) kennzeichnet das Ende der Optionen und wird nur verwendet,
+ wenn das Ende der Optionen nicht mit dem Ende des TCP Headers übereinstimmt.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes pld
+\end_inset
+
+No-Operation
+\begin_inset Quotes prd
+\end_inset
+
+ (option-kind=1) kann verwendet werden, um Optionen von einander zu trennen
+ und wird eingesetzt, wenn der Sender Optionen an Wortgrenzen beginnen lassen
+ will.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes pld
+\end_inset
+
+Maximum Segment Size (MSS)
+\begin_inset Quotes prd
+\end_inset
+
+ (option-kind=2, option-length=4, option-data enthält MSS).
+ Bzgl.
+ MSS siehe Abschnitt 
+\begin_inset LatexCommand vref
+reference "sec:tcp_segmenting"
+
+\end_inset
+
+.
+ Diese Option kann nur in einem Segment vorhanden sein, das das SYN Bit
+ gesetzt hat.
+\end_layout
+
+\begin_layout Standard
+Nach dem Ende der Optionen muss der verbleibende Platz zur nächsten 32 Bit
+ Grenze mit Nullen aufgefüllt (engl.
+ padding) werden.
+ Weitere Optionen wurden in getrennten RFCs definiert.
+\end_layout
+
+\end_deeper
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+Data Datenfeld.
+ Betrachtet man die maximale MTU bei Ethernet-Netzen sieht man folgendes:
+ der minimale TCP Header ist 20 Bytes und damit entsteht gemeinsam mit dem
+ IP Header eine minimale Headerlänge von 40 Bytes.
+ Da die maximale Größe des Datenbereiches eines Ethernet-Frames bei 1500
+ Bytes liegt, kommt man auf eine max.
+ Datengröße bei TCP auf 1460 Bytes.
+\end_layout
+
+\begin_layout Subsection
+Verbindungsauf- und Abbau
+\begin_inset LatexCommand label
+name "sec:connection_management"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Verbindungsaufbau
+\end_layout
+
+\begin_layout Standard
+Der Verbindungsaufbau wird in TCP mittels eines 3-Wege-Handshake (engl.
+ three-way handshake) vorgenommen und wird durch die Synchronisierung zweier
+ Sequenznummern (eine am Server, eine am Client) erreicht:
+\end_layout
+
+\begin_layout Enumerate
+Der Client sendet ein Segment zum Server mit:
+\newline
+SYN = 
+\begin_inset Formula $1$
+\end_inset
+
+; SequenceNum = 
+\begin_inset Formula $x$
+\end_inset
+
+
+\newline
+Das bedeutet, dass der Client eine Verbindung aufbauen will und mit dem
+ Server bzgl.
+ seiner SequenceNum synchronisieren will.
+ Der Client hat als anfänglichen Wert dafür einen beliebigen Wert 
+\begin_inset Formula $x$
+\end_inset
+
+ gewählt.
+ Dieser Vorgang wird als aktives Öffnen bezeichnet (d.h.
+ der Host beginnt den Verbindungsaufbau).
+\end_layout
+
+\begin_layout Enumerate
+Der Server antwortet mit einem Seqment an den Client:
+\newline
+SYN = 
+\begin_inset Formula $1$
+\end_inset
+
+; ACK = 
+\begin_inset Formula $1$
+\end_inset
+
+; SequenceNum = 
+\begin_inset Formula $y$
+\end_inset
+
+; AcknowledgeNum = 
+\begin_inset Formula $x+1$
+\end_inset
+
+
+\newline
+Damit wird angezeigt, dass der Server die Verbindung prinzipiell akzeptiert,
+ mit dem Client seine SequenceNum 
+\begin_inset Formula $y$
+\end_inset
+
+ synchronisieren will und gleichzeitig die SequenceNum 
+\begin_inset Formula $x$
+\end_inset
+
+ des Clients bestätigt indem er als AcknowledgeNum 
+\begin_inset Formula $x+1$
+\end_inset
+
+ zurücksendet.
+ Das bedeutet, dass der Server als nächste SequenceNum vom Client 
+\begin_inset Formula $x+1$
+\end_inset
+
+ erwartet.
+\newline
+Damit der Server auf diese Weise antwortet, muss er zuerst ein
+ sogenanntes passives Öffnen (d.h.
+ der Server wartet auf einen Verbindungsaufbau) durchgeführt haben.
+\end_layout
+
+\begin_layout Enumerate
+Als Abschluss schickt der Client an den Server ein Segment mit:
+\newline
+ACK = 
+\begin_inset Formula $1$
+\end_inset
+
+, AcknowledgeNum = 
+\begin_inset Formula $y+1$
+\end_inset
+
+
+\newline
+Hiermit wird der Verbindungsaufbau abgeschlossen, da der Client die Sequenznumme
+r des Servers akzeptiert und damit mitteilt, dass er vom Server beim nächsten
+ Seqment die Sequenznummer 
+\begin_inset Formula $y+1$
+\end_inset
+
+ erwartet.
+\end_layout
+
+\begin_layout Standard
+Mittels einer um eins erhöhten AcknowledgeNum wird eigentlich angezeigt,
+ dass alle vorangegangenen Sequenznummern bestätigt werden.
+ Beim Senden des ersten Datensegmentes hat demzufolge das erste Datenbyte
+ die Sequenznummer 
+\begin_inset Formula $x+1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Nicht ersichtlich ist, dass entsprechende Timer gesetzt werden, die bei
+ Ablauf vor der Bestätigung bewirken, dass das jeweilige Segment neu gesendet
+ wird.
+\end_layout
+
+\begin_layout Subsubsection
+Zustandsübergangsdiagramm
+\begin_inset LatexCommand label
+name "sec:tcp_fsm"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In Abbildung 
+\begin_inset LatexCommand vref
+reference "fig:tcp_fsm"
+
+\end_inset
+
+ finden sich alle Zustände, die beim Aufbau (alles oberhalb des Zustandes
+ ESTABLISHED) und beim Abbau einer Verbindung (alles unterhalb des Zustandes
+ ESTABLISHED) auftreten.
+ Der Vorgang der eigentlichen Datenübertragung ist im Zustand ESTABLISHED
+ verborgen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename tcp_fsm.pdf
+	BoundingBox 0bp 0bp 140mm 83mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+\begin_inset LatexCommand label
+name "fig:tcp_fsm"
+
+\end_inset
+
+Zustandsübergangsdiagramm
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Das Diagramm verwendet die übliche Notation für Zustandsübergangsdiagramme,
+ wobei alle in Großbuchstaben verfassten Bezeichner entweder empfangene
+ Segmente (vor dem /) bzw.
+ gesendete Segmente (nach dem /) angeben.
+ Die in Kleinbuchstaben angegebenen Bezeichner 
+\begin_inset Quotes pld
+\end_inset
+
+close
+\begin_inset Quotes prd
+\end_inset
+
+, 
+\begin_inset Quotes pld
+\end_inset
+
+passive open
+\begin_inset Quotes prd
+\end_inset
+
+ und 
+\begin_inset Quotes pld
+\end_inset
+
+active open
+\begin_inset Quotes prd
+\end_inset
+
+ geben Funktionen an, die der Anwendungsprozess aufruft und der Bezeichner
+ 
+\begin_inset Quotes pld
+\end_inset
+
+timeout
+\begin_inset Quotes prd
+\end_inset
+
+ kennzeichnet einen Zeitablauf.
+\end_layout
+
+\begin_layout Standard
+Drei Punkte gibt es zu beachten:
+\end_layout
+
+\begin_layout Enumerate
+Auch wenn das ACK vom Client an den Server verloren geht, funktioniert die
+ Verbindung noch korrekt.
+ Das liegt daran, dass der Client sich schon im Zustand ESTABLISHED befindet
+ und der Server zwar noch im Zustand SYN_RECEIVED ist, aber beim nächsten
+ empfangenen Segment in den Zustand ESTABLISHED wechselt.
+ Dieser Wechsel in ESTABLISHED kann deshalb durchgeführt werden, da das
+ Flag ACK in jedem Datensegment gesetzt ist und das Feld Acknowledgment
+ den korrekten Wert enthält.
+ Das ist wichtiger Punkt in TCP: Jedes Segment meldet, welche Sequenznummer
+ als nächstes erwartet wird, auch wenn sich dabei die gleiche Sequenznummer
+ wiederholt, die in einem der vorherigen Segmente enthalten war.
+\end_layout
+
+\begin_layout Enumerate
+Der Übergang von LISTEN nach SYN_SENT ist im TCP Standard vorgesehen, aber
+ wird in der Regel von keiner TCP Implementierung dem Anwenerprozess als
+ Funktion zur Verfügung gestellt: In den Zustand LISTEN kommt man vom Zustand
+ CLOSED mittels passiven Öffnen, das durch einen Funktionsaufruf am Server
+ erfolgt.
+ Normalerweise kann danach nicht direkt gesendet werden.
+\end_layout
+
+\begin_layout Enumerate
+Viele Zustandsübergänge sind nicht eingezeichnet.
+ Kommt innerhalb eines gesetzten Timeouts kein Acknowledgment an, dann wird
+ das Segment neu gesendet.
+ Diese Neuübertragungen sind nicht eingezeichnet.
+ Nach mehreren Versuchen gibt TCP auf und wechselt in den Zustand CLOSED.
+\end_layout
+
+\begin_layout Subsubsection
+Verbindungsabbau
+\end_layout
+
+\begin_layout Standard
+Beim Abbau einer Verbindung ist es wichtig, dass die Anwendungsprozesse
+ auf beiden Seiten die Verbindung schließen.
+ Schließt nur eine Seite die Verbindung bedeutet das, dass diese Seite keine
+ Daten mehr senden darf, aber sehr wohl noch bereit für den Empfang von
+ Segmenten sein muss.
+ Aus diesem Grund ist das Zustandsübergangsdiagramm für den Abbau einer
+ Verbindung komplizierter, weil die Möglichkeit beachtet werden muss, dass
+ beide Seiten die close Funktion aufrufen.
+ Ferner besteht die Möglichkeit, dass zuerst die eine Seite und später die
+ andere Seite close aufruft.
+ Daraus resultieren drei Möglichkeiten:
+\end_layout
+
+\begin_layout Itemize
+Ein Anwenderprozess initiert den Verbindungsabbau mittels 
+\begin_inset Quotes pld
+\end_inset
+
+close
+\begin_inset Quotes prd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Der entfernte Kommunikationspartner initiert den Verbindungsabbau mittels
+ Senden eines 
+\begin_inset Quotes pld
+\end_inset
+
+FIN
+\begin_inset Quotes prd
+\end_inset
+
+ (passives Schließen).
+\end_layout
+
+\begin_layout Itemize
+Beide Anwenderprozesse wollen gleichzeitig die Verbindung mittels 
+\begin_inset Quotes pld
+\end_inset
+
+close
+\begin_inset Quotes prd
+\end_inset
+
+ beenden (simultanes Schließen).
+\end_layout
+
+\begin_layout Standard
+Da beide Partner die Verbindung abbauen müssen, kommt es zum Austausch von
+ insgesamt 4 Segmenten.
+ Allerdings kann das ACK Segment und das FIN Seqment, die der Host sendet,
+ der passives Schließen durchführt in ein Segment zusammengefasst werden.
+ Damit werden -- analog zum Verbindungsaufbau -- ebenfalls nur 3 Segmente
+ versendet.
+\end_layout
+
+\begin_layout Standard
+Das Timeout vom Zustand TIME-WAIT ist notwendig, dass sicher ist, dass das
+ ACK angekommen ist bzw.
+ dass es zu keiner Überschneidung mit einer folgenden Verbindung kommt.
+\end_layout
+
+\begin_layout Subsection
+Datenübertragung
+\end_layout
+
+\begin_layout Subsubsection
+Segmentierung
+\begin_inset LatexCommand label
+name "sec:tcp_segmenting"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Aus Sicht der Anwendung stellt TCP als Schnittstelle zwei Byte-Streams zur
+ Verfügung.
+ Ein Byte-Stream wird zum Lesen und einer zum Schreiben verwendet.
+ Das heißt die Anwendung kann einzelne Bytes mittels dieser Streams schreiben
+ bzw.
+ lesen.
+ 
+\end_layout
+
+\begin_layout Standard
+Andererseits werden in der Internet-Schicht IP Pakete übertragen und es
+ wäre sehr ineffizient jedes Byte in einem eigenen IP Paket zu versenden.
+ Das Verhältnis von Header Daten zu Nutzdaten wäre sehr ungünstig.
+ Aus diesem Grund speichert TCP die Bytes in einem Puffer zwischen und erzeugt
+ daraus eine Folge von Segmenten.
+ Diese Segmente werden mittels IP Paketen übertragen und auf der Empfängerseite
+ wieder in TCP Segmente zurückgewandelt.
+ Auf der Empfangsseite werden diese Segmente wieder in einem Puffer gespeichert
+ und der Anwendung als Byte-Stream zur Verfügung gestellt.
+\end_layout
+
+\begin_layout Standard
+Daraus folgt, dass große Segmente im Grunde die effizientere Wahl darstellen.
+ Es gibt allerdings zwei Gründe, die gegen eine groß gewählte Segmentgröße
+ sprechen: Einerseits kommt es dann zu langen Wartezeiten, bis Seqmente
+ versendet werden und andererseits kommt es wahrscheinlich zur Fragmentierung,
+ da die Segmente bei dem Transport über Netztechnologien, die eine MTU aufweisen
+, die kleiner ist als das in ein IP Datagram verpackte Segment.
+\end_layout
+
+\begin_layout Standard
+Das Versenden eines Segmentes hängt von drei Kriterien ab:
+\end_layout
+
+\begin_layout Itemize
+Die maximale Segmentgröße (engl.
+ maximum segment size, MSS) ist erreicht.
+ MSS definiert die Anzahl der Bytes, die als Nutzdaten in einem TCP Segment
+ gesendet werden können.
+ Da die Header von IP und TCP zusammen mind.
+ 40 Bytes groß sind, muss die MSS um mind.
+ 40 Bytes kleiner sein als die MTU.
+ Im Falle von Ethernet beträgt die MSS also 1460 Bytes.
+ Wird z.B.
+ allerdings PPP über Ethernet verwendet, vermindert sich um weitere 8 Byte
+ auf 1452 Bytes.
+\end_layout
+
+\begin_layout Itemize
+Die Anwendung wünscht einen sofortigen Versand (push).
+\end_layout
+
+\begin_layout Itemize
+Der Timer, der beim Einspeisen eines Bytes in den Sendepuffer gestartet
+ wird läuft ab.
+ D.h.
+ es wurde eine gewissse Zeit von der Anwendung keine neuen Daten in den
+ Stream geschrieben.
+\end_layout
+
+\begin_layout Subsubsection
+Sliding-Window
+\begin_inset LatexCommand label
+name "sec:tcp_sliding_window"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Das Prinzip Sliding-Window Algorithmus wurde schon detailiert im Abschnitt
+ 
+\begin_inset LatexCommand vref
+reference "sec:sliding-window"
+
+\end_inset
+
+ beschrieben.
+ Der in TCP implementierte Algorithmus unterscheidet sich in folgenden Punkten
+ von dem schon beschriebenen Algorithmus:
+\end_layout
+
+\begin_layout Enumerate
+Die Fenstergröße in TCP hat keine feste Größe, sondern wird dem Sender mittels
+ des 
+\begin_inset Quotes pld
+\end_inset
+
+Window
+\begin_inset Quotes prd
+\end_inset
+
+ Feldes im TCP Header bekanntgegeben.
+ Das bedeutet, dass der Empfänger das 
+\begin_inset Quotes pld
+\end_inset
+
+Window
+\begin_inset Quotes prd
+\end_inset
+
+ Feld im TCP Header auf Grundlage der freien Puffergröße auswählt (siehe
+ auch nächsten Punkt).
+\end_layout
+
+\begin_layout Enumerate
+In der TCP Variante wird auch noch der Sendepuffer und der Empfangspuffer
+ beachtet (siehe 
+\begin_inset LatexCommand vref
+reference "sec:tcp_segmenting"
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Standard
+Mit jeder Bestätigung eines Segmentes sendet der Empfänger auch die neue
+ Windowgröße mit.
+ Kann der Empfänger keine weiteren Daten annehmen, wird in der Bestätigungsantwo
+rt der Wert 0 für 
+\begin_inset Quotes pld
+\end_inset
+
+Window
+\begin_inset Quotes prd
+\end_inset
+
+ gesetzt.
+ Damit weiß der Sender, dass der Empfänger derzeit keine weiteren Daten
+ annehmen kann.
+ Damit stellt sich allerdings die Frage, wie der Sender weiß wann er wieder
+ mit dem Senden fortfahren kann.
+ Das Problem wird folgendermaßen gelöst: Der Sender sendet in regelmäßigen
+ Abständen Segmente mit der Datenlänge 1 mit dem Wissen, dass diese Daten
+ wahrscheinlich verworfen werden.
+ Kann der Empfänger wieder Daten annehmen, dann wird er dieses 1 Byte lange
+ Datum annehmen und mit einer Bestätigungsnachricht mit neu gesetzter 
+\begin_inset Quotes pld
+\end_inset
+
+Window
+\begin_inset Quotes prd
+\end_inset
+
+ Größe reagieren.
+\end_layout
+
+\begin_layout Standard
+In diesem Zusammenhang ist es wichtig darauf hinzuweisen, dass ein ACK nicht
+ bedeutet, dass der Anwenderprozess die Daten entgegengenommen hat!
+\end_layout
+
+\begin_layout Subsubsection
+Flusskontrolle
+\begin_inset LatexCommand label
+name "sec:tcp_flow_control"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Wie schon beschrieben ist es die Aufgabe der Flusskontrolle den Empfänger
+ vor Überlauf zu schützen.
+ Kommen mehr Segmente beim Empfänger an als dieser in seinem Puffer zwischenspei
+chern kann, dann werden diese Segmente vom Empfänger verworfen.
+ In TCP wird die Flusskontrolle mittels des Sliding-Window Algorithmus (siehe
+ Abschnitt 
+\begin_inset LatexCommand vref
+reference "sec:tcp_sliding_window"
+
+\end_inset
+
+) realisiert.
+\end_layout
+
+\begin_layout Standard
+Das bedeutet, dass TCP ein Verfahren mit positiven Quittungen implementiert,
+ die Summenquittungen darstellen.
+\end_layout
+
+\begin_layout Subsubsection
+Überlastkontrolle
+\end_layout
+
+\begin_layout Standard
+Unter Überlastkontrolle versteht man die Mechanismen zur Vermeidung von
+ Überlastung des Netzes (engl.
+ congestion avoidance).
+ Im Gegensatz zur Flusskontrolle, dessen Aufgabe es ist, den Empfänger vor
+ Überlauf zu schützen, werden mittels Mechanismen der Überlastkontrolle
+ die Router am Weg zwischen Sender und Empfänger geschützt.
+\end_layout
+
+\begin_layout Standard
+Eine Überlastsituation kann im Netz leicht entstehen, obwohl u.U.
+ keine Überlast in einem Empfänger auftritt.
+ Senden viele Sender über einen Router, dann kann dieser leicht überlastet
+ werden.
+ Diese Situation verschlimmert sich noch weiter dadurch, dass in TCP verlorengeg
+angene Segmente eine erhöhte Netzaktivität hervorrufen, da es zu sinnlosen
+ Wiederholungen kommen kann, wenn die Bestätigungen den Sender erst nach
+ Ablauf des Timeouts erreichen.
+\end_layout
+
+\begin_layout Standard
+Da die Überlastkontrolle in TCP jedoch beim Sender angesiedelt ist, benötigt
+ dieser Informationen über die Netzauslastung, um seine Sendegeschwindigkeit
+ an die aktuelle Situation anpassen zu können.
+ Das ist jedoch das Schwierige an der Überlastkontrolle, da der Sender diese
+ Information nicht direkt vom Netz erfragen kann, sondern diese indirekt
+ ermitteln muss.
+\end_layout
+
+\begin_layout Standard
+Folgende grundlegende Mechanismen zur Überlastkontrolle sind direkt in TCP
+ vorhanden, wobei es auch etliche fortgeschrittene Verfahren gibt:
+\end_layout
+
+\begin_layout Minisec
+Nagle-Algorithmus
+\end_layout
+
+\begin_layout Standard
+Betrachten wir nochmals den Aspekt wann ein Segment zu senden ist, diesmal
+ jedoch unter dem Gesichtspunkt der Überlastkontrolle: Gehen wir davon aus,
+ dass der Sender MSS Daten-Bytes senden will und das Fenster um zumindest
+ diese Anzahl an Bytes offen ist.
+ In diesem Fall wird der Sender senden, wenn einer der Fälle eintritt, die
+ im Abschnitt 
+\begin_inset LatexCommand vref
+reference "sec:tcp_segmenting"
+
+\end_inset
+
+ beschrieben sind.
+ Was passiert jedoch, wenn das Fenster nur zur Hälfte offen ist? Soll kein
+ Segment gesendet werden oder soll ein Segment mit der Hälfte der Bytes
+ gesendet werden?
+\end_layout
+
+\begin_layout Standard
+Der Standard definiert diesbezüglich kein Vorgehen.
+ In den ersten TCP Implementierungen wurde die Entscheidung getroffen, die
+ Hälfte der Datenbytes zu senden.
+ Es stellte sich jedoch heraus, dass genau dieses Vorgehen zu einer Überlastung
+ des Netzes führen kann.
+ Es trat das sogenannte 
+\begin_inset Quotes pld
+\end_inset
+
+Silly-Window-Syndrom
+\begin_inset Quotes prd
+\end_inset
+
+ auf: Gehen wir davon aus, dass der Puffer des Empfängers voll ist und der
+ Empfänger deshalb keine weiteren Daten annehmen kann.
+ Gehen wir weiters davon aus, dass die Anwendung am Empfänger ein einziges
+ Byte aus dem Puffer ausliest.
+ D.h.
+ es kann eine Bestätigung zum Sender gesendet werden, die eine Fenstergröße
+ von 1 enthält.
+ Worauf der Sender wieder ein Segment mit der Datenlänge 1 senden kann.
+ Wenn der Empfänger wieder genau ein Byte ausliest, dann wird wieder eine
+ Bestätigung mit der Fenstergröße 1 zurückgesendet.
+ D.h.
+ das Netz wird mit vielen kleinen Segmenten überschwemmt, wodurch eine potentiel
+le Überlastsituation entsteht.
+\end_layout
+
+\begin_layout Standard
+Das Silly-Window-Syndrom stellt nur dann ein Problem dar, wenn entweder
+ der Sender ein kleines Segment überträgt oder der Empfänger das Fenster
+ nur ein wenig öffnet.
+\end_layout
+
+\begin_layout Standard
+Wie kann man mit dieser Situation umgehen? Man kann einfach eine gewisse
+ Zeit warten bis verfügbare Daten gesendet werden.
+ Die Frage ist wie lange eine vernünftige Zeitdauer bemessen ist.
+ Wird zu lange gewartet, dann werden interaktive Anwendungen wie telnet
+ oder ssh beeinträchtigt.
+ Wird hingegen zu kurz gewartet, dann entsteht wieder das Silly-Window-Syndrom.
+\end_layout
+
+\begin_layout Standard
+TCP implementiert den sogenannten Nagle-Algorithmus, der nach John Nagle
+ benannt ist.
+ Die zugrundeliegende Idee ist, dass der Sender irgendwann ein ACK empfangen
+ wird, solgange TCP Daten unterwegs sind.
+ Dieses ACK kann wie ein Timerablauf behandelt werden, wobei dadurch die
+ Übertragung von mehr Daten angestoßen wird.
+\end_layout
+
+\begin_layout Standard
+Wenn die Anwendung sendebereite Daten produziert, dann:
+\end_layout
+
+\begin_layout Enumerate
+Wenn sowohl die verfügbaren Daten als auch das Fenster 
+\begin_inset Formula $\geq$
+\end_inset
+
+ MSS, dann sende Daten.
+\end_layout
+
+\begin_layout Enumerate
+Anderenfalls: Wenn unbestätigte Daten anstehen, 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+dann puffere die neuen Daten bis ein ACK kommt.
+\end_layout
+
+\begin_layout Enumerate
+Anderenfalls: Sende alle neuen Daten jetzt.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Um interaktive Anwendungen vom Nagle-Algorithmus nicht zu beeinträchtigen,
+ besteht die Möglichkeit diesen auszuschalten.
+ Dies geschieht über das Socket-API mittels der Option TCP_NODELAY.
+\end_layout
+
+\begin_layout Minisec
+Slow-Start
+\end_layout
+
+\begin_layout Standard
+Am Anfang einer Übertragung ist noch keine Information über die Auslastung
+ eines Netzes bekannt.
+ Die Idee ist, die Senderate langsam zu steigern bis entweder der Fall eines
+ Segmentverlustes oder ein ACK-Timeout eintritt.
+\end_layout
+
+\begin_layout Minisec
+Fast-Retransmit
+\end_layout
+
+\begin_layout Standard
+Die Idee von Fast-Retransmit ist, nach einem Paketverlust schneller auf
+ eine Stausituation zu reagieren.
+ Dazu informiert der Empfänger den Sender, wenn Pakete außer der Reihe ankommen
+ und somit ein Paketverlust vorliegt.
+ Das wird dadurch erreicht, dass der Empfänger das zuletzt korrekt empfangene
+ Paket für jedes außer der Reihe empfangene Paket jedes Mal neu bestätigt.
+ Diese mehrfach versendeten Bestätigungen werden 
+\begin_inset Quotes pld
+\end_inset
+
+Dup-Acks
+\begin_inset Quotes prd
+\end_inset
+
+ genannt.
+ Hat der Sender drei solcher Dup-Acks erhalten schließt er daraus, dass
+ ein Paket verloren gegangen ist und sendet es auch vor Ablauf des Timeout
+ wieder an den Empfänger.
+ Außerdem schließt der Sender, dass Folgepakete sehr wohl angekommen sind
+ und erhöht das Sendefenster um die Anzahl der empfangenen Dup-Acks.
+\end_layout
+
+\end_body
+\end_document

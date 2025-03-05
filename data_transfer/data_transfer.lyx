@@ -1,0 +1,220 @@
+#LyX 1.6.4.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass scrbook
+\use_default_options false
+\language ngerman
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\float_placement H
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\bullet 0 2 5 -1
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Entfernter Zugriff
+\end_layout
+
+\begin_layout Section
+FTP
+\end_layout
+
+\begin_layout Standard
+Datenzugriff mittels ftp (RFC 959) ist ein relativ altes und noch immer
+ sehr weit verbreitetes Protokoll.
+ 
+\end_layout
+
+\begin_layout Standard
+Anders als http benützt ftp 
+\emph on
+mehr
+\emph default
+ als eine Verbindung zwischen Client und Server: Zunächst baut der Client
+ eine Verbindung zum Port 21 (Control Port) des Servers auf.
+ Diese Verbindung dient zur Authentifizierung und Befehlsübertragung.
+ Zur eigentlichen Datenübertragung wird bei Bedarf eine eigene Verbindung
+ aufgebaut.
+\end_layout
+
+\begin_layout Standard
+Dazu gibt es 
+\emph on
+2 Betriebsarten
+\emph default
+:
+\end_layout
+
+\begin_layout Description
+Active
+\begin_inset space ~
+\end_inset
+
+Mode Der Server baut von seinem Port 20 (Data Port) eine Verbindung zu einem
+ vom Client gewählten Port (über 1023) auf.
+ 
+\end_layout
+
+\begin_layout Description
+Passive
+\begin_inset space ~
+\end_inset
+
+Mode Der Client baut eine Verbindung zu einem vom Server gewählten Port
+ auf (meistens beide größer 1023).
+ 
+\end_layout
+
+\begin_layout Standard
+Dieses Protokoll wird als relativ unsicher angesehen, da sowohl die Passwortüber
+tragung als auch die Datenübertragung unverschlüsselt stattfindet.
+ Technisch gesehen ist der Befehlskanal wie beim telnet Protokoll aufgebaut.
+ Aus diesem Grund sollte man Daten nur mit scp (secure copy protocol) oder
+ der Weiterentwicklung sftp (siehe 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:SSH"
+
+\end_inset
+
+) arbeiten.
+\end_layout
+
+\begin_layout Section
+Netzwerkdateisysteme
+\end_layout
+
+\begin_layout Standard
+Als Alternative zu einer Übertragung mit ftp, scp oder sftp kann für den
+ Datenzugriff ein Netzwerkdateisystem wie NFS (Network File System) oder
+ CIFS (Common Internet File System) verwendet werden.
+\end_layout
+
+\begin_layout Minisec
+NFS
+\end_layout
+
+\begin_layout Standard
+NFS wurde von SUN entwickelt und stellt ein Netzwerkdateisystem für Unix
+ dar.
+ NFS hat heutzutage keine dominante Bedeutung mehr.
+ Viele wichtige Punkte wie die Authentifizierung der Benutzer (und nicht
+ nur der Rechner wie in NFSv3) oder der Wegfall der Unix-Lastigkeit wurden
+ erst in NFSv4 eingeführt.
+ Diese Version hat sich jedoch nicht durchsetzen können.
+\end_layout
+
+\begin_layout Minisec
+CIFS
+\end_layout
+
+\begin_layout Standard
+CIFS wurde 1996 von Microsoft bei der IETF eingereicht und stellt eine Erweiteru
+ng von SMB (Server Message Blocks) dar.
+ SMB wurde von IBM mit dem Ziel entwickelt für DOS ein Netzwerkdateisystem
+ zur Verfügung zu haben.
+ Microsoft hat SMB weiterentwickelt und in ihre Produktlinie integriert.
+ CIFS bietet entfernten Zugriff auf Dateien, Drucker oder andere Geräten
+ als auch die Möglichkeit zur IPC.
+\end_layout
+
+\begin_layout Section
+Entfernte Ausführung
+\end_layout
+
+\begin_layout Subsection
+SSH
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:SSH"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+SSH ist nicht nur ein Protokoll (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:SSH_protocol"
+
+\end_inset
+
+), sondern auch eine Anwendung, die es erlaubt über das Netz sich auf einem
+ Rechner anzumelden und Befehle abzusetzen.
+\end_layout
+
+\begin_layout Standard
+Es ersetzt unsichere Protokolle wie rsh, rlogin oder telnet.
+ rcp kann durch scp (secure copy) ersetzt werden und ftp durch sftp (secure
+ file transfer protocol).
+ scp und sftp ersetzen die unverschlüsselten Protokolle, haben ansonst aber
+ keine Gemeinsamkeiten.
+ Z.B.
+ gibt es bei sftp auch keinen getrennten Daten- und Befehlskanal.
+ Es wird wie für ssh der Port 22 verwendet.
+\end_layout
+
+\begin_layout Subsection
+X-Window-Protokoll
+\end_layout
+
+\begin_layout Standard
+Mit dem X-Window-Protokoll kann man graphische Ausgaben zum Client (dieser
+ wird als Server bezeichnet) und Eingaben zum Server (das ist der eigentliche
+ Client) schicken.
+\end_layout
+
+\begin_layout Standard
+Ähnlich: Windows Terminal Server
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_body
+\end_document

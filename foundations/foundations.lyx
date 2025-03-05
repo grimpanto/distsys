@@ -1,0 +1,2040 @@
+#LyX 1.6.4.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass scrbook
+\use_default_options false
+\language ngerman
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 0
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language polish
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+Grundlagen und Basiskonzepte
+\end_layout
+
+\begin_layout Standard
+In diesem Kapitel werden die Grundlagen und Basiskonzepte der Rechernetze
+ dargestellt.
+ Diese Konzepte kommen alle auch im größeren Zusammenhang der Entwicklung
+ verteilter Systeme vor.
+\end_layout
+
+\begin_layout Standard
+Prinzipiell lässt sich sagen, dass diese Konzepte meistens in verschiedenen
+ Sichtweisen und Anwendungsfällen vorkommen.
+ Z.B.
+ treten sie entweder auf einer logischen oder einer physischen Ebene auf
+ oder sie betreffen entweder die Hardware oder die Software.
+\end_layout
+
+\begin_layout Standard
+Eine Definition der grundlegenden Konzepte ermöglicht es uns, diese für
+ die Erläuterungen der Grundlagen der Rechnernetze, der Beschreibung der
+ Anwendungen von Rechnernetzen als auch der Entwicklung von verteilten Systemen
+ konsistent anzuwenden.
+ Es ermöglicht hiermit eine klare Beschreibung der weitergehenden Konzepte.
+\end_layout
+
+\begin_layout Section
+Grundlegende Begriffe
+\end_layout
+
+\begin_layout Description
+System Wir verstehen unter einem System eine abgegrenzte oder abgrenzbare
+ Menge von Elementen, die miteinander in Relationen stehen.
+ Die Struktur des Systems ergibt sich aus der Gesamtheit aller Relationen
+ zwischen den Elementen, aus denen globale Systemeigenschaften entstehen.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Ein System lässt sich durch die Definition einer Systemgrenze von seiner
+ Umwelt abgrenzen.
+ Diese Systemgrenze stellt die Schnittstelle zur Umwelt dar.
+\end_layout
+
+\begin_layout Standard
+Zur weiteren Strukturierung lässt sich ein System in Subsysteme unterteilen.
+ Ein Subsystem ergibt sich damit aus der Zusammenfassung mehrerer Elemente,
+ die zusammen die Schnittstelle des Subsystems definieren und bereitstellen.
+ Ein Subsystem kann wiederum in weitere Subsysteme und Elemente gegliedert
+ sein.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Komponente Eine Komponente (engl.
+ component) ist eine 
+\emph on
+austauschbares
+\emph default
+ Element in einem System, das ihre innere Struktur nach außen kapselt und
+ ihre öffentliche Funktionalität über Schnittstellen zur Verfügung stellt.
+ Damit ist eine Komponente unabhängig verwendbar.
+\end_layout
+
+\begin_layout Description
+Objekt Unter einem Objekt versteht man allgemein einen Gegenstand oder das
+ Ziel des Denkens oder Handelns.
+ In der objekt-orientierten Programmierung versteht man darunter ein Element,
+ das zur Laufzeit existiert.
+ Objekte sind die Basisbausteine eines Programmes, die Nachrichten empfangen,
+ Daten verarbeiten und auch selbst Nachrichten versenden können.
+ Die drei grundlegenden Eigenschaftes eines Programmes sind, dass jedes
+ Objekt:
+\end_layout
+
+\begin_layout Itemize
+einen Zustand aufweist
+\end_layout
+
+\begin_layout Itemize
+ein Verhalten hat und
+\end_layout
+
+\begin_layout Itemize
+eine eindeutige Identität besitzt.
+\end_layout
+
+\begin_layout Description
+Zerlegung Eine Zerlegung (engl.
+ decomposition) eines Problems in kleinere Teilprobleme stellt in der Regel
+ eine Möglichkeit dar, die Komplexität des Gesamtproblems besser zu handhaben
+ bzw.
+ sogar die Komplexität zu verringern.
+ Das Prinzip der Zerlegung wird eben auch bei Systemen oder Komponenten
+ vorgenommen.
+ In diesem Fall wird die Gesamtaufgabe in einzelne Teilaufgaben zerlegt,
+ die von bestimmten Systemen, Komponenten oder Objekten erledigt werden,
+ sodass das Gesamtproblem gelöst wird.
+\end_layout
+
+\begin_layout Description
+Kapselung Kapselung (engl.
+ encapsulation oder auch information hiding) bedeutet, dass die innere Struktur
+ von außen nicht einsehbar ist.
+\end_layout
+
+\begin_layout Description
+Abstraktion Bei einer Abstraktion (engl.
+ abstraction) werden aus einer bestimmten Sicht (engl.
+ view) die wesentlichen Merkmale (engl.
+ feature) einer »Elementes« (beispielsweise ein Objektes, eine Komponente
+ oder ein Systems) betrachtet.
+ Abhängig von der Sicht können ganz unterschiedliche Merkmale abstrahiert
+ werden.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Je nach betrachteter Menge von Merkmalen erhält man daher unterschiedliche
+ Abstraktionen.
+ Das heißt, dass die Abstraktion von der verwendeten Sichtweise abhängt.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Hierarchie Eine Hierarchie (engl.
+ hierarchy) stellt eine 
+\emph on
+geordnete
+\emph default
+ Reihenfolge von Abstraktionen dar.
+ D.h., man versucht eine Abstraktion in weiterer Folge durch eine oder mehrere
+ Abstraktionen weiter zu verfeinern.
+\end_layout
+
+\begin_layout Description
+Schnittstelle Die Schnittstelle (engl.
+ interface) definiert detailiert wie mit einem Element oder einem System
+ interagiert werden kann.
+ Damit wird einerseits eine Abstraktion festgelegt und andererseits wird
+ eine Kapselung erreicht (wenn auf das Element nur über ihre Schnittstelle
+ zugegriffen werden kann).
+\end_layout
+
+\begin_layout Description
+Schicht Ordnet man mehrere Abstraktionen in einer Hierarchie an, dann wird
+ jeder Teil dieser Hierarchie eine Schicht genannt.
+ Jede Schicht dieser Hierarchie hat eine klar definierte Schnittstelle zu
+ seiner unten angrenzenden Schicht und eine klar definierte Schnittstelle
+ zu der oben angrenzenden Schicht (siehe 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:layers"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Description
+Nachricht Eine Nachricht (engl.
+ message) stellt einen Informationsfluss von einem Kommunikationspartner
+ zum anderen dar.
+ Unter Information wollen wir hier -- ohne eine Definition anzugeben --
+ die Struktur (Syntax), den Inhalt (Semantik) und die Bedeutung (Pragmatik)
+ einer Nachricht beschreiben.
+ Eine Nachricht wird durch die Auswahl aus einer Menge von vorgegebenen
+ Möglichkeiten (dem Zeichenvorrat) unter Verwendung von Regeln (Kodierung)
+ gebildet.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Jede Nachricht wird von einem Sender (der Quelle) über einen Kanal zu einem
+ Empfänger übertragen (der Senke).
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Kommunikation Elemente kommunizieren miteinander, um gemeinsam ein bestimmtes
+ Verhalten an den Tag zu legen.
+ Dies erreichen sie dadurch, dass sie Nachrichten austauschen.
+ Der Austausch der Nachrichten ist in einem Protokoll festgelegt.
+\end_layout
+
+\begin_layout Description
+Protokoll Der Austausch von Nachrichten muss gewissen Regeln entsprechen,
+ damit die Kommunikationspartner einander verstehen.
+ Protokolle sind präzise Festlegungen aller Regeln (z.B.
+ Abfolge von Nachrichten, Formate der zu übertragenden Daten, den zeitlichen
+ Einschränkungen,...), die für eine Kommunikation notwendig sind.
+ D.h.
+ Protokolle definieren eine Sprache zwischen Kommunikationspartnern.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Protokolle sind der Grund warum Komponenten austauschbar sind: Wenn beide
+ Kommunikationspartner das Protokoll verstehen, dann sind die Schnittstellen
+ dieser Kommunikationspartner zueinander kompatibel.
+ Daher kann eine Komponente durch eine beliebig andere Komponente ersetzt
+ werden, solange die neue Komponente wieder eine Schnittstelle aufweist,
+ die zu der Schnittstelle der anderen Komponente kompatibel ist.
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Kommunikation
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:communication"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Der Begriff der Kommunikation als Austausch von Nachrichten stellt die grundlege
+nde Sichtweise für das Thema der verteilten Systeme dar.
+\end_layout
+
+\begin_layout Description
+Signale Auf der pyhsikalischen Ebene werden Nachrichten in Form von Signalen
+ (elektrisch, optisch, Funk) über eine entsprechendes Übertragungsmedium
+ versendet.
+ Ein Signal ist die physikalische Darstellungsform einer Nachricht.
+ Es besteht aus einer diskreten oder kontinuierlichen Folge von Werten eines
+ Signalparameters (z.B.
+ Spannungswert, Stromwert oder Feldstärke).
+\end_layout
+
+\begin_layout Description
+Kommunikationsrichtung Wir unterscheiden zwischen:
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+Simplex Nur eine vorgegebene Richtung.
+\end_layout
+
+\begin_layout Description
+Half-Duplex Ebenfalls nur eine Richtung, aber diese kann sich ändern.
+\end_layout
+
+\begin_layout Description
+Duplex Beide Richtungen gleichzeitig.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Netzprozess Unter einem Netzprozess oder kurz Prozess versteht man eine
+ unabhängige Ausführung eines Programmes im Kontext eines Rechnernetzes.
+ Zwei oder mehrere Netzprozesse können miteinander kommunizieren bzw.
+ als Gesamtheit eine Ausführung einer verteilten Anwendung darstellen.
+ Dabei kann es sich um eine beliebige Anzahl an Hosts handeln, die einen
+ oder mehrere Betriebssystemprozesse ausführen.
+\end_layout
+
+\begin_layout Description
+Anzahl
+\begin_inset space ~
+\end_inset
+
+der
+\begin_inset space ~
+\end_inset
+
+Kommunikationspartner
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+Unicast 1:1 Kommunikation.
+\end_layout
+
+\begin_layout Description
+Multicast 1:n Kommunikation, d.h.
+ Gruppenruf: alle Teilnehmer einer Gruppe.
+\end_layout
+
+\begin_layout Description
+Anycast 1:1 Kommunikation, beliebiger Teilnehmer aus einer Gruppe.
+\end_layout
+
+\begin_layout Description
+Broadcast 1:n Kommunikation allerdings Rundruf: alle Teilnehmer im Netz.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Adresse Die Fragestellung, die man sich mit einer beliebigen Anzahl von
+ potenziellen Kommunikationspartnern stellen muss: Wie finden sich zwei
+ Kommunikationspartner, sodass sie überhaupt miteinander kommunizieren können?
+ Zur Identifizierung eines Kommunikationsparters führen wir dazu das Konzept
+ der Adresse ein, die einen Kommunikationspartner eindeutig identifiziert.
+ Wir gehen vorerst davon aus, dass diese Adresse bekannt ist und sich auch
+ nicht ändert.
+\end_layout
+
+\begin_layout Description
+Rolle Man kann oft die beiden Kommunikationspartner einteilen bzgl.
+ Diensterbringer (engl.
+ service provider) und Dienstnutzer (engl.
+ service user).
+ Der Diensterbringer wird meistens als Server bezeichnet und der Dienstnutzer
+ meistens als Client.
+ Der Server bietet einen gewissen Dienst (engl.
+ service) an, den beliebige Clients nutzen können.
+\end_layout
+
+\begin_layout Description
+Art
+\begin_inset space ~
+\end_inset
+
+der
+\begin_inset space ~
+\end_inset
+
+Kommunikation Man unterscheidet zwischen verbindungsorientierter (engl.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+linebreak
+\end_layout
+
+\end_inset
+
+ connection-oriented) und verbindungsloser (engl.
+ connectionless) Kommunikation:
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+verbindungsorientiert Eine Verbindung ist eine temporäre Beziehung zweier
+ Kommunikationspartner zum Zwecke des Datenaustausches.
+ Charakterisiert ist eine Beziehung dadurch, dass
+\end_layout
+
+\begin_layout Itemize
+eine Verbindung zuerst aufgebaut werden muss.
+ Dann können die Daten übertragen werden und am Ende wird eine Verbindung
+ wieder abgebaut.
+ D.h.
+ es gibt 3 Phasen: Verbindungsaufbau (engl.
+ connection establishment), Datentransfer (engl.
+ data transfer), Verbindungsabbau (engl.
+ connection release).
+ Der Vorgang des Abbauens einer Verbindung wird oft mit 
+\begin_inset Quotes pld
+\end_inset
+
+disconnect
+\begin_inset Quotes prd
+\end_inset
+
+ bezeichnet.
+\end_layout
+
+\begin_layout Itemize
+Verbindungsparameter, die die Übertragung der Daten betreffen, definiert
+ und ausgehandelt werden.
+\end_layout
+
+\begin_layout Itemize
+beim Aufbau der Verbindung oft ein Bezeichner (engl.
+ identifier) bereitgestellt wird, der die Verbindung eindeutig identifiziert
+ und dadurch beim Datentransfer der Overhead einer etwaigen wiederholten
+ Adressauflösung und Wegfindung vermieden wird.
+\end_layout
+
+\begin_layout Itemize
+eine Folge von Nachrichten genau so beim Empfänger ankommen wie sie der
+ Sender abgesendet hat.
+\end_layout
+
+\begin_layout Description
+verbindungslos Dabei wird jede einzelne Nachricht unabhängig von vorangehenden
+ oder nachfolgenden Nachrichten versendet.
+\end_layout
+
+\begin_layout Itemize
+Es gibt nur eine Phase, nämlich den Transfer der Daten.
+ Im Zuge der Übermittlung der Daten werden auch alle -- zur Übertragung
+ notwendinger Parameter -- mitgegeben.
+\end_layout
+
+\begin_layout Itemize
+Eine Übertragung wird in der Regel nicht garantiert.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Multiplexen Unter Multiplexen (wörtlich: mehrfach) versteht man das Konzept
+ der gemeinsamen Nutzung einer Systemressource durch mehrere Nutzer (siehe
+ Abschnitt 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+linebreak
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:multiplex"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Description
+Verbindung Eine Verbindung ist eine über einen bestimmten Zeitraum andauernde
+ Kommunikationsbeziehung, die eine verbindungsorientierte Kommunikation
+ ermöglicht.
+ Es gibt prinzipiell zwei Arten der Verbindungen:
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+leitungsvermittelt Bei der Leitungsvermittlung (engl.
+ circuit switching) wird eine physikalische Leitung wie z.B.
+ eine Wählleitung (engl.
+ switched circuit) oder eine Standleitung (engl.
+ leased line) geschalten (Raummultiplex, siehe Abschnitt
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:space_division_multiplex"
+
+\end_inset
+
+) oder eine virtuelle Leitung mittels synchronem Multiplexen (siehe Abschnitt
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:synchronous_multiplex"
+
+\end_inset
+
+) aufgebaut.
+\end_layout
+
+\begin_layout Description
+paketvermittelt Die Paketvermittlung (engl.
+ packet switching) ist eine Paketübertragung mittels asynchronen Zeitmultiplexve
+rfahren (siehe Abschnitt
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:asynchronous_multiplex"
+
+\end_inset
+
+) und bildet heute die Basis für Rechnernetze.
+ Es hat sich hier der Begriff Paket (engl.
+ packet) etabliert, da entweder eine Nachricht als Pakete aufgefasst wird
+ bzw.
+ die Nachrichten in einzelne Pakete aufgeteilt werden.
+ Danach werden die Pakete im asynchronen Zeitmultiplexverfahren übertragen.
+ In Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:messages_layers"
+
+\end_inset
+
+ werden wir den Begriff Paket noch genauer eingrenzen und im Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:packet_switching"
+
+\end_inset
+
+ die Paketvermittlung noch genauer behandeln.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Eine paketvermittelte Verbindung wird als virtuelle Verbindung (da eben
+ nicht physikalisch vorhanden) oder auch als logischer Kanal oder kurz Kanal
+ bezeichnet.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Section
+Leistung
+\end_layout
+
+\begin_layout Standard
+In weiterer Folge werden wir die 
+\begin_inset Quotes pld
+\end_inset
+
+Übertragungskapazität
+\begin_inset Quotes prd
+\end_inset
+
+ eines Kanales definieren.
+\end_layout
+
+\begin_layout Minisec
+Bandbreite und Datenrate
+\end_layout
+
+\begin_layout Standard
+Als 
+\emph on
+Bandbreite
+\emph default
+ (engl.
+ bandwidth) eines Übertragungskanales verstehen wir die Differenz der oberen
+ Grenzfrequenz und der unteren Grenzfrequenz eines physikalischen Übertragungska
+nales.
+ D.h.
+ zwischen oberer und unterer Grenzfrequenz ist eine Signalübertragung möglich.
+ Die konventionelle Telefonleitung hat eine untere Grenzfrequenz von 300Hz
+ und eine obere Grenzfrequenz von 3300Hz.
+ Damit übergibt sich eine Bandbreite von 3000Hz.
+\end_layout
+
+\begin_layout Standard
+In Abhängigkeit der Leitungskodierung (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:coding"
+
+\end_inset
+
+) ergibt sich eine (Roh-)
+\emph on
+Datenrate R
+\emph default
+ in Bit/s.
+ Aber Achtung: auch hier wird oft von der Bandbreite gesprochen: 
+\begin_inset Quotes pld
+\end_inset
+
+Die Bandbreite einer 10MBit Ethernet-Verbindung beträgt 10MBit/s
+\begin_inset Quotes prd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Minisec
+Durchsatz
+\end_layout
+
+\begin_layout Standard
+Die gemessene Datenrate eines Übertragungskanales wird als 
+\emph on
+Durchsatz
+\emph default
+ (engl.
+ throughput) bezeichnet und wird meistens in Bit/s angegeben.
+ Zum Beispiel kann der eigentliche Durchsatz auf einer 10MBit Ethernet-Verbindun
+g in Abhängigkeit von der Anzahl der gleichzeitigen Sender lediglich 2MBit/s
+ betragen.
+\end_layout
+
+\begin_layout Standard
+Aufpassen muss man außerdem, dass in der Regel der Durchsatz eines logischen
+ Kanales -- zum Beispiel über eine Verbindung -- gemessen wird.
+ Dadurch kann der eigentliche Durchsatz noch kleiner werden.
+ Das rührt daher, dass eine Verbindung ein Protokoll verwendet, das einen
+ gewissen Overhead erzeugt.
+ 
+\end_layout
+
+\begin_layout Standard
+Achtung: es wird oft der Begriff Bandbreite oft synonym zu Durchsatz verwendet!
+\end_layout
+
+\begin_layout Minisec
+Latenz
+\end_layout
+
+\begin_layout Standard
+Latenz (engl.
+ delay, latency) ist die Dauer, die eine Nachricht von einem Ende des Kanales
+ zu dem anderen Ende benötigt.
+ Bei dem Kanal kann es sich wiederum um den Übertragungskanal oder um einen
+ logischen Kanal handeln.
+ Auf der Ebene des Übertragungskanales ist die Latenz durch die Signalausbreitun
+gsgeschwindigkeit bestimmt.
+ Auf der Ebene der logischen Kanäle müssen die Verzögerungen der Zwischenknoten
+ und die durch die Protokolle bedingten Verzögerungen hinzugezählt werden.
+ Die Signalausbreitungsgeschwindigkeit liegt in der Größenordnung der Lichtgesch
+windigkeit (also ca.
+ 
+\begin_inset Formula $3.0\times10^{8}$
+\end_inset
+
+ m/s): Bei Kupferkabel ca.
+ 
+\begin_inset Formula $2.3\times10^{8}$
+\end_inset
+
+ m/s und bei Lichtwellenleiter ca 
+\begin_inset Formula $2.0\times10^{8}$
+\end_inset
+
+ m/s.
+ Die Laufzeit 
+\begin_inset Formula $t_{D}$
+\end_inset
+
+ des Signals berechnet sich also als 
+\begin_inset Formula $t_{D}=s/v$
+\end_inset
+
+ wobei 
+\begin_inset Formula $s$
+\end_inset
+
+ die Distanz und 
+\begin_inset Formula $v$
+\end_inset
+
+ die Signalausbreitungsgeschwindigkeit ist.
+ Die tatsächliche Verzögerung ensteht zwischen Senden des ersten Bit und
+ dem Empfangen des letzten Bit einer Nachricht berechnet sich als 
+\begin_inset Formula $t_{L}=t_{D}+t_{M}+t_{W}$
+\end_inset
+
+, wobei 
+\begin_inset Formula $t_{M}$
+\end_inset
+
+ die Sendedauer der Nachricht und 
+\begin_inset Formula $t_{W}$
+\end_inset
+
+ die Summe aller Wartezeiten der Zwischenknoten ist.
+ Die Sendedauer 
+\begin_inset Formula $t_{M}$
+\end_inset
+
+ berechnet sich als 
+\begin_inset Formula $t_{M}=N/R$
+\end_inset
+
+, wobei 
+\begin_inset Formula $N$
+\end_inset
+
+ die Datenmenge in Bit und 
+\begin_inset Formula $R$
+\end_inset
+
+ die Datenrate in Bit/s ist.
+\end_layout
+
+\begin_layout Standard
+Betrachtet man auf dieser Ebene den Durchsatz TP, dann entsteht dieser als
+ 
+\begin_inset Formula $TP=N/(2t_{D}+2t_{W}+N/R)$
+\end_inset
+
+.
+ Das Doppelte der Laufzeit des Signales -- also 
+\begin_inset Formula $2t_{D}$
+\end_inset
+
+ -- wird auch als Round-Trip-Time (RTT) bezeichnet.
+ D.h.
+ die RTT gibt an wie lange eine Nachricht von dem Sender zum Empfänger und
+ wieder zurück benötigt.
+ Eine etwaige Verarbeitungszeit beim Empfänger ist hiermit noch nicht eingerechn
+et.
+\end_layout
+
+\begin_layout Standard
+Es ist wieder zu beachten, dass die Begriffe in Abhängigkeit der gewählten
+ Abstraktion eine verschiedene Bedeutung aufweisen.
+\end_layout
+
+\begin_layout Minisec
+Verzögerung-Bandbreite-Produkt
+\end_layout
+
+\begin_layout Standard
+Stellen wir uns vor, dass auf einem Übertragungskanal einer direkten Verbindung
+ permanent gesendet wird, dann gibt das Verzögerung-Bandbreite-Produkt (engl.
+ bandwidth-delay product) die Anzahl der Bits an, die in dem Kanal gespeichert
+ sind: Wird ein Bit beim Sender abgeschickt, dann erreicht dieses den Empfänger
+ nach der Zeit 
+\begin_inset Formula $t_{D}$
+\end_inset
+
+.
+ Innerhalb dieser Zeitspanne befinden sich als 
+\begin_inset Formula $t_{D}\cdot R$
+\end_inset
+
+ Bits auf der Leitung.
+\end_layout
+
+\begin_layout Standard
+Betrachtet man eine Leitung mit einer Datenrate R von 10MBit/s sowie einer
+ Verzögerung 
+\begin_inset Formula $t_{D}$
+\end_inset
+
+ von 50ms, dann sind immer 
+\begin_inset Formula $50\times10^{-3}s\times10\times10^{6}\mathit{Bit}/s=500\times10^{3}\mathit{Bit}$
+\end_inset
+
+ in der Leitung gespeichert.
+ Es handelt sich also um ca.
+ 61KB.
+\end_layout
+
+\begin_layout Standard
+Aufpassen muss man wie die Größenangaben Kilo, Mega, Giga in der Informatik
+ und im speziellen in der Netzwerktechnik verwendet werden: Prinzipiell
+ kann ein Kilo entweder 1000 oder 1024 also entweder 
+\begin_inset Formula $10^{3}$
+\end_inset
+
+ oder 
+\begin_inset Formula $2^{10}$
+\end_inset
+
+ bedeuten! Warum ist das in der Netzwerktechnik besonders zu beachten? Die
+ Angaben für die Bandbreite wird wie schon besprochen in Hz -- also einer
+ physikalischen Größe -- angegeben.
+ Daraus resultiert, dass ein kHz also 1000Hz sind.
+ Wird jedoch von KB gesprochen, dann handelt es sich nicht um eine Größe
+ aus der Physik sondern um eine aus der Informatik.
+ Dementsprechend wird unter einem KB also 1024 Byte verstanden.
+\end_layout
+
+\begin_layout Section
+OSI Referenzmodell
+\end_layout
+
+\begin_layout Standard
+Die Schichtenbildung spielt bei verteilten Systemen und im speziellen in
+ der Netzwerktechnik eine große Rolle.
+ Die ISO (International Organization for Standardization) ist die wichtigste
+ internationale Normungsorganisation.
+ Sie gibt allgemein anwendbare Normen heraus wie z.B.
+ für Währungscodes, Ländercodes oder die bekannten SI-Einheiten für physikalisch
+e Größen, aber auch wichtige Normen für die Informatik, wie z.B.
+ die Zeichencodes (ISO-8859-15 oder UCS wie der UNICODE bei der ISO genannt
+ wird).
+ Für die Rechnernetze ist jedoch das OSI Referenzmodell der wichtigste Standard.
+ OSI steht für 
+\begin_inset Quotes pld
+\end_inset
+
+Open Systems Interconnection
+\begin_inset Quotes prd
+\end_inset
+
+ und ist ein Referenzmodell für die Kommunikation zwischen offenen Systemen.
+ Offen bedeutet in diesem Fall, dass sich diese Systeme an gemeinsame Standards
+ halten, sodass eine Zusammenarbeit unabhängig von konkreten Hard- und Softwarek
+omponenten möglich ist, solange sich diese Komponenten an diese Standards
+ halten.
+\end_layout
+
+\begin_layout Standard
+Das OSI Referenzmodell wurde herangezogen, um konkrete Systeme auf dieser
+ Basis zu entwickeln, die sich jedoch hauptsächlich nur in der Telekommunikation
+stechnologie etabliert konnten.
+ Das liegt daran, dass es sich um ein sehr umfangreiches Modell handelt,
+ das einen hohen Aufwand bei der Implementierung bedeutet.
+ Außerdem waren diese ersten Systeme nicht besonders effizient, nicht fehlerfrei
+ und auch nicht miteinander kompatibel.
+ Ein anderer, vielleicht der wichtigste, Grund liegt darin, dass das Internet
+ mit der Technologie TCP/IP vorherrschend im Einsatz ist und sich demzufolge
+ durchgesetzt hat.
+\end_layout
+
+\begin_layout Standard
+Heute wird das OSI Referenzmodell hauptsächlich dafür herangezogen die Grundlage
+n und das Verständnis für Netzprotokolle zu vermitteln.
+ In diesem Sinne wird das OSI Modell hier beschrieben.
+ Im Teil 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "par:tcpip"
+
+\end_inset
+
+ wird gezeigt wie das TCP/IP Modell auf das OSI Modell abgebildet wird und
+ welche die Unterschiede zwischen dem TCP/IP Modell und dem OSI Modell existiere
+n.
+\end_layout
+
+\begin_layout Subsection
+Schichtenbildung
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:layers"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Es handelt sich beim OSI Modell um eine Hierarchie von 7 Schichten.
+ Jede dieser Schichten besitzt eine Schnittstelle, die von der darüberliegenden
+ Schicht verwendet werden kann und eine Schnittstelle, die von der darunterliege
+nden Schicht verwendet werden kann.
+ Diese Hierarchie ist strikt.
+ Das bedeutet, dass eine beliebige Schicht nur genau auf die Funktionen
+ der direkt unterliegenden Schicht zugreifen kann.
+\end_layout
+
+\begin_layout Standard
+Warum eine Hierarchie? Wenn man sich die vielfältigen Aufgaben vor Augen
+ führt, die ein verteiltes System zu erfüllen hat, dann erkennt man, dass
+ es sich bei einer Netzwerksoftware um ein komplexes Gebilde handelt.
+ Wie schon erwähnt, ist es eine Möglichkeit mit Komplexität umzugehen, indem
+ eine Hierarchie von Abstraktionen gebildet wird.
+\end_layout
+
+\begin_layout Standard
+An Aufgaben fallen für die Netzwerksoftware zum Beispiel an:
+\end_layout
+
+\begin_layout Itemize
+Sicherstellung, dass auf einer Punkt-zu-Punkt Übertragungsstrecke die Daten
+ fehlerfrei übertragen werden.
+\end_layout
+
+\begin_layout Itemize
+Bereitstellung von Adressen, um Knoten identifizieren zu können.
+\end_layout
+
+\begin_layout Itemize
+Vermittlung und Wegsuche über mehrere Teilnetze hinweg.
+\end_layout
+
+\begin_layout Itemize
+Sicherstellung der Vollständigkeit und der Reihenfolge der einzelnen Information
+sblöcke.
+\end_layout
+
+\begin_layout Itemize
+Vergabe von Namen, die auf Adressen abgebildet werden und für den Benutzer
+ aussagekräftig sind.
+\end_layout
+
+\begin_layout Itemize
+Auf- und Abbau von Verbindungen.
+\end_layout
+
+\begin_layout Itemize
+Auf- und Abbau von Sitzungen.
+\end_layout
+
+\begin_layout Itemize
+Umwandlung von Datenrepräsentationen.
+\end_layout
+
+\begin_layout Itemize
+Bereitstellung von Diensten für Anwendungen wie z.B.
+ Dateiübertragung.
+\end_layout
+
+\begin_layout Standard
+Auf Grund dieser vielfältigen Aufgaben wurde eine Hierarchie von 7 Schichten
+ gewählt, die jeweils eine bestimmte Funktion erfüllen.
+ Diese Struktur mit den 7 Schichten ist in Abbildung 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:osi_layers"
+
+\end_inset
+
+ zu sehen.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename osi_layers.pdf
+	BoundingBox 0bp 0bp 77mm 45mm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:osi_layers"
+
+\end_inset
+
+OSI Schichtenmodell
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die Funktionen der einzelnen Schichten werden in den nachfolgenden Abschnitten
+ beschrieben.
+\end_layout
+
+\begin_layout Standard
+Zwei Netzwerksprozesse kommunizieren so miteinander, dass jeder Prozess
+ -- also jedes laufende Anwendungsprogramm -- ausschließlich direkten Kontakt
+ mit der obersten Schicht -- der Anwendungsschicht -- aufnimmt.
+ Diese Anwendungsschicht verwendet zur weiteren Erfüllung ihrer Funktionen
+ die direkt darunterliegende Schicht.
+ Jede einzelne Schicht verwendet ihrerseits jeweils nur die direkt darunterliege
+nde Schicht.
+ Das wird solange fortgeführt bis die unterste Schicht -- die Schicht 1
+ -- erreicht ist.
+ Diese Schicht ist die Bitübertragungsschicht, da auf dieser Ebene die eigentlic
+he Übertragung der Bits in Form von Signale stattfindet.
+ Danach wird beim Kommunikationspartner die Hierarchie der Schichten von
+ unten nach oben durchlaufen.
+ Bei der Antwort wird der gleiche Weg zurückgenommen.
+ Dieser Vorgang ist in Abbildung 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:communication_layers"
+
+\end_inset
+
+ dargestellt.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename osi_communication.pdf
+	BoundingBox 0bp 0bp 105mm 9cm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:communication_layers"
+
+\end_inset
+
+Kommunikation zwischen den Schichten im OSI Modell
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Protokollhierarchie
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:protocol_hierarchy"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Meistens ist es so, dass die Prozesse auf verschiedenen Knoten im Netz laufen.
+ Damit handelt es sich notwendigerweise auch um verschiedene Ausprägungen
+ der Netzwerksoftware.
+ Eine Schicht einer auf einem Knoten installierten Netzsoftware wird in
+ diesem Zusammenhang als Instanz einer Schicht bezeichnet.
+ In diesem Sinne kommunizieren zwei Instanzen einer Ebene untereinander
+ mittels eines Protokolles.
+ Da die eigentlichen Signale nur über die physikalische Übertragungsstrecke
+ übertragen werden können, findet die Kommunikation -- wie oben beschrieben
+ -- über den Umweg der darunterliegenden Instanzen statt.
+ Dadurch entsteht eine Protokollhierarchie, auch Protokollstack genannt
+ (siehe Abbildung 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:osi_protocol_hierarchy"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename osi_protocol_hierarchy.pdf
+	BoundingBox 0bp 0bp 120mm 8cm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:osi_protocol_hierarchy"
+
+\end_inset
+
+Protokollhierarchie der 7 OSI Schichten
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Eine beliebige benannte Schicht wird in der OSI Nomenklatur als (N)-Schicht
+ bezeichnet, wobei N die Werte 1 bis 7 annehmen kann.
+\end_layout
+
+\begin_layout Subsection
+Nachrichten zwischen Schichten
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:messages_layers"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die eigentliche Kommunikation wird so durchgeführt, dass jeder Informationsblock
+, der nach unten an die unterliegende Instanz gegeben wird, in einen Umschlag
+ (engl.
+ envelope) verpackt wird, der zusätzliche Informationen beinhaltet.
+ Bei diesem Umschlag handelt es sich um einen Vorspann (engl.
+ header) und manchmal auch um einen Nachspann (engl.
+ trailer).
+ Beim Prozess des Kommunikationspartners wird dieser Umschlag von der Partnerins
+tanz entfernt und der so erhaltene Informationsblock an die obenliegende
+ Instanz weitergereicht.
+ Der Rückweg wird wieder analog behandelt (siehe Abbildung 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:osi_messages_layers"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename osi_messages_layers.pdf
+	BoundingBox 0bp 0bp 120mm 9cm
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:osi_messages_layers"
+
+\end_inset
+
+Nachrichtenfluss zwischen den 7 OSI Schichten
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Die grau hinterlegten Teile der Datenblöcke sind Teile des Umschlags.
+ Bei TCP/IP wird ein Trailer nur auf Schicht 2 verwendet.
+ In Abbildung 
+\begin_inset CommandInset ref
+LatexCommand vpageref
+reference "fig:osi_messages_layers"
+
+\end_inset
+
+ wurde aus diesem Grund nur in der Schicht 2 ein Trailer eingezeichnet.
+\end_layout
+
+\begin_layout Standard
+Diese Informationsblöcke, die zwischen den einzelnen Schichten ausgetauscht
+ werden, sind die eigentlichen Nachrichten, die zwischen je zwei Instanzen
+ einer Schicht im Zuge des gemeinsamen Protokolls ausgetauscht werden.
+ Dabei haben sich teilweise je nach Schicht eigene Bezeichnungen etabliert:
+\end_layout
+
+\begin_layout Itemize
+Auf der Schicht 2 wird von einem Rahmen (engl.
+ frame) gesprochen.
+ Handelt es sich um kurze Rahmen mit fester Größe, dann werden diese Rahmen
+ als Zellen (engl.
+ cell) bezeichnet.
+\end_layout
+
+\begin_layout Itemize
+In der Schicht 3 wird von Datagrammen (engl.
+ datagram) oder auch von Paketen (engl.
+ packet) gesprochen.
+\end_layout
+
+\begin_layout Itemize
+Im Kontext von TCP werden die Nachrichten Segmente (engl.
+ segment) genannt.
+ Bei UDP wird ebenfalls von Datagrammen gesprochen.
+\end_layout
+
+\begin_layout Itemize
+Auf den restlichen Schichten 5 bis 7 bzw.
+ als Überbegriff wird der Begriff Nachricht (engl.
+ message) verwendet.
+\end_layout
+
+\begin_layout Standard
+Nachrichten im Sinne der Schichten 2-4 sind dadurch charakterisiert, dass
+ sie eine festgelegte maximale Größe aufweisen.
+ Dadurch unterscheiden sie sich von den Nachrichten, die direkt zwischen
+ den Anwendungen ausgetauscht werden, die keinerlei Einschränkung bzgl.
+ der Größe unterliegen.
+\end_layout
+
+\begin_layout Subsection
+Protokollmechanismen
+\end_layout
+
+\begin_layout Standard
+In den einzelnen Schichten gibt es Funktionen, die bzgl.
+ einer Abstraktion vergleichbar sind.
+ Diese Funktionen werden als Protokollmechanismen bezeichnet.
+ Diejenigen Funktionen, die spezifisch für eine jeweilige Schicht sind,
+ werden dann im Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:osi_layers"
+
+\end_inset
+
+ beschrieben.
+\end_layout
+
+\begin_layout Subsubsection
+Protokollauswahl
+\end_layout
+
+\begin_layout Standard
+Die Auswahl eines Protokolles (engl.
+ protocol selection) bzw.
+ die Identifizierung (engl.
+ identification) ist eine der ersten Aufgaben beim Kommunikationsbeginn.
+ Öfters ist es so, dass zwischen zwei Kommunikationspartnern oder spezieller
+ in einer Schicht mehrere Protokolle zur Verfügung stehen.
+ Eines dieser Protokolle muss zur Kommunikation ausgewählt werden.
+ Dazu muss es natürlich identifiziert, also benannt werden.
+\end_layout
+
+\begin_layout Standard
+Im Laufe der Lebenszeit eines Systemes ist es sehr wahrscheinlich, dass
+ das Protokoll an die laufenden Änderungen angepasst werden muss (Protokollevolu
+tion).
+ D.h.
+ das Protokoll wird in mehreren Versionen vorliegen und es ist die Auswahl
+ einer konkreten Version (engl.
+ protocol version selection) notwendig.
+\end_layout
+
+\begin_layout Standard
+Diese Auswahl eines geeigneten Protokolles bzw.
+ einer speziellen Version muss zwischen den beiden Kommunikationspartnern
+ ausgehandelt werden (engl.
+ negotiation mechanism).
+\end_layout
+
+\begin_layout Subsubsection
+Verbindungen
+\end_layout
+
+\begin_layout Standard
+Der Aufbau einer Verbindung (engl.
+ connection establishment), der Transfer der Daten und der Abbau einer Verbindun
+g (engl.
+ connection release) sind die grundlegenden Elemente im Lebenszyklus einer
+ Verbindung.
+ Allgemein verbindet eine Verbindung zwei Kommunikationspartner, bei denen
+ es sich wiederum speziell um Instanzen von Schichten handeln kann.
+\end_layout
+
+\begin_layout Standard
+Eine Verbindung in einer (N)-Schicht kann mittels einer Verbindung auf der
+ (N-1)-Schicht oder verbindungslos auf der (N-1)-Schicht realisiert werden.
+ Eine verbindungslose Kommunikation auf einer (N)-Schicht kann verbindungsorient
+iert oder verbindungslos mittels der (N-1)-Schicht realisiert werden.
+ Es ergeben sich daher 4 verschiedene Möglichkeiten.
+\end_layout
+
+\begin_layout Standard
+Abweichend vom normalen Datentransfer ist es manchmal sinnvoll, Daten vorrangig
+ auszuliefern.
+ Dies wird als Vorrang-Datentransfer (engl.
+ expedited data transfer) bezeichnet.
+\end_layout
+
+\begin_layout Standard
+Zusätzlich zum normalen Abbau einer Verbindung gibt es auch einen speziellen
+ Verbindungsabbruch (engl.
+ abort).
+ Dieser ist dadurch gekennzeichnet, dass ausstehende Übertragungen nicht
+ mehr durchgeführt werden, während bei einem normalen Verbindungsabbau diese
+ ausstehenden Übertragungen sehr wohl noch durchgeführt werden.
+\end_layout
+
+\begin_layout Standard
+Manche Dienste erfordern eine Zurücksetzfunktion (engl.
+ reset), die den Dienst oder im Speziellen die Verbindung in einen vordefinierte
+n Zustand zurücksetzen.
+ Das kann notwendig werden, wenn das Protokoll von einem Partner nicht mehr
+ eingehalten wurde.
+ Dadurch kann es zu einem Verlust oder zu einer Duplizierung von Daten kommen.
+\end_layout
+
+\begin_layout Standard
+D.h.
+ man kann zwischen verbindungsorientierten (engl.
+ connection-oriented) und verbindungslosen (engl.
+ connectionless) Protokollen unterscheiden:
+\end_layout
+
+\begin_layout Itemize
+Verbindungsloses
+\begin_inset space ~
+\end_inset
+
+Protokoll
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+effizient
+\end_layout
+
+\begin_layout Itemize
+wenn Netzwerk relativ zuverlässig ist (wie in einem LAN), d.h.
+ solange Pakete nicht verloren gehen oder beschädigt werden.
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Beispiel: Wenn keine Antwort kommt, dann muss z.B.
+ der Client nochmals schicken.
+ Problem: 
+\begin_inset Quotes pld
+\end_inset
+
+Überweise 10.000 Euro von meinem Konto
+\begin_inset Quotes prd
+\end_inset
+
+ sollte nicht nochmals gesendet werden.
+ D.h.
+ die Anforderung nochmals zu senden macht nur in bestimmten Fällen Sinn.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+Verbindungsorientiertes
+\begin_inset space ~
+\end_inset
+
+Protokoll
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Overhead, da Einrichten und Abbauen einer Verbindung relativ kostspielig
+ ist.
+\end_layout
+
+\begin_layout Itemize
+wenn Netzwerk nicht zuverlässig ist (wie in einem WAN).
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Prinzipiell kann auch noch zwischen einem 
+\emph on
+zustandsbehafteten
+\emph default
+ und einem 
+\emph on
+zustandslosen
+\emph default
+ Protokoll unterschieden werden.
+ D.h.
+ hängen im Protokoll die Nachrichten vom Zustand der vorhergehend gesendeten
+ Nachrichten ab oder nicht.
+\end_layout
+
+\begin_layout Standard
+http ist ein typisch zustandsloses Protokoll, das über ein verbindungsorientiert
+es Transportprotokoll übertragen wird.
+ Man beachte die verschiedenen Protokollhierarchieebenen, die hier eine
+ Rolle spielen.
+\end_layout
+
+\begin_layout Standard
+Eine 
+\emph on
+Sitzung
+\emph default
+ (Session) ist charakterisiert, dass es
+\end_layout
+
+\begin_layout Itemize
+eine feste Beziehung zwischen den kommunizierenden Prozessen auf Anwendungsebene
+ mit vereinbarten Eigenschaften (Namen, Ressourcen, Charakteristika,...) gibt.
+\end_layout
+
+\begin_layout Itemize
+einen gemeinsamen Zustand zwischen den kommunzierenden Prozessen während
+ der Session gibt.
+ 
+\end_layout
+
+\begin_layout Itemize
+meist auch Mechanismen der Authentifikation und Autorisierung gibt.
+\end_layout
+
+\begin_layout Standard
+D.h.
+ eine Session kann nur mit einem zustandsbehafteten Protokoll aufgebaut
+ werden.
+ Setzt man diese Aussage in den Zusammenhang mit Sessions im Web, dann kann
+ man einwerfen, dass es sich bei http um ein zustandsloses Protokoll handelt.
+ Das ist richtig, deshalb wird in solch einem Fall der Zustand explizit
+ zwischen den Kommunikationspartnern bei jedem Nachrichtenaustausch übertragen.
+ Oft wird jedoch nicht der gesamte Zustand (vgl.
+ Warenkorb) übertragen, sondern nur eine eindeutige Information unter der
+ der Zustand im Server gespeichert ist.
+\end_layout
+
+\begin_layout Subsubsection
+Sicherstellung einer zuverlässige Übertragung
+\end_layout
+
+\begin_layout Standard
+Zur Fehlererkennung (engl.
+ error detection) und Fehlerkorrektur (engl.
+ error correction) gibt es verschiedene Möglichkeiten.
+\end_layout
+
+\begin_layout Standard
+Ein Verlust einer Nachricht kann erkannt werden, wenn nach dem Absenden
+ einer Nachricht innerhalb einer vorgegebenen Zeitspanne (engl.
+ timeout) keine positive Quittierung (engl.
+ acknowledgement oder kurz ACK) empfangen wird.
+ Ein ACK kann entweder als eigene Nachricht oder als Huckepack-Quittierung
+ (engl.
+ piggy back acknowledgement) gesendet werden.
+\end_layout
+
+\begin_layout Standard
+Zur Erkennung von Fehlern innerhalb einer Nachricht werden Prüfsummen (engl.
+ check\SpecialChar \-
+sum) herangezogen.
+ Wird in einer Nachricht ein Fehler erkannt, dann gibt es die folgenden
+ Möglichkeiten: 
+\end_layout
+
+\begin_layout Itemize
+Die Nachricht wird verworfen.
+\end_layout
+
+\begin_layout Itemize
+Die Nachricht wird verworfen und es wird eine negative Quittierung (engl.
+ negative acknowledgment oder kurz NACK) gesendet.
+\end_layout
+
+\begin_layout Itemize
+Die Nachricht kann automatisch korrigiert werden.
+\end_layout
+
+\begin_layout Standard
+Allgemein: Die positive Quittierung dient als Bestätigung für das Erreichen
+ eines bestimmten Zustandes.
+ Bei Nichterreichen eines bestimmten Zustandes kann analag dazu eben eine
+ negative Quittierung gesendet.
+\end_layout
+
+\begin_layout Standard
+Damit die Reihenfolge der Nachrichten innerhalb eines Protokolle sichergestellt
+ werden kann, werden Sequenznummern verwendet (engl.
+ sequencing).
+ Diese Sequenznummern werden auch bei der Anpassung der Systemleistung (siehe
+ Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:performance_system"
+
+\end_inset
+
+) verwendet.
+\end_layout
+
+\begin_layout Subsubsection
+Anpassung an die Länge
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:segmenting"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Wie in schon Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:messages_layers"
+
+\end_inset
+
+ beschrieben ist es oft so, dass die maximale Größe einer Nachricht je Schicht
+ unterschiedlich sein kann.
+ Dadurch ergibt sich die Notwendigkeit die Größen der Nachrichten, die zwischen
+ einer (N)-Schicht und der (N-1)-Schicht ausgetauscht werden anzupassen.
+\end_layout
+
+\begin_layout Standard
+Den Vorgang des Aufteilens einer Nachricht auf mehrere Nachrichten geringerer
+ Größe zum Zwecke der Anpassung an die geringere maximale Größe der anderen
+ Schicht nennt man Segmentierung (engl.
+ segmenting).
+ Den umgekehrten Vorgang des Zusammensetzens mehrere kleinerer Nachrichten
+ zu einer größen Nachricht nennt man Reassemblierung (engl.
+ reassembling).
+\end_layout
+
+\begin_layout Subsubsection
+Anpassung an die Systemleistung
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:performance_system"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Der Empfänger von Nachrichten muss vor einer Überlastung durch den Sender
+ geschützt werden.
+ Dies nennt man 
+\emph on
+Flusskontrolle
+\emph default
+ (engl.
+ flow control).
+\end_layout
+
+\begin_layout Standard
+Der Schutz eines Netzes vor Überlastung durch die von allen Sendern gesendeten
+ Nachrichten nennt 
+\emph on
+Überlaststeuerung
+\emph default
+ (engl.
+ congestion control).
+\end_layout
+
+\begin_layout Subsubsection
+Anpassung der Übertragungsleistung
+\end_layout
+
+\begin_layout Standard
+Will man eine Übertragungsleistung einer Verbindung mehreren Kommunikationspartn
+er zur Verfügung stellen, spricht man von Multiplexen (engl.
+ multiplexing).
+ D.h.
+ allgemein wird eine (N-1)-Verbindung -- eine Verbindung in einer (N-1)-Schicht
+ -- für mehrere (N)-Verbindungen nutzbar gemacht.
+ Den analogen Vorgang die (N-1)-Verbindung wieder auf die (N)-Verbindungen
+ aufzuteilen heißt Demultiplexen (engl.
+ demultiplexing).
+\end_layout
+
+\begin_layout Standard
+Wird allerdings eine Übertragungsleistung gefordert, die nicht durch eine
+ Verbindung der unterliegenden Schicht erfüllt werden kann, dann müssen
+ mehrere Verbindungen dieser untenliegenden Schicht verwendet werden.
+ Dazu wird eine (N)-Verbindung auf mehrere (N-1)-Verbindungen aufgeteilt
+ (engl.
+ splitting) und beim Empfänger werden analog dazu die (N-1)-Verbindungen
+ wieder zu der (N)-Verbindung zusammengesetzt (engl.
+ recombining).
+\end_layout
+
+\begin_layout Subsubsection
+Dienstgüte
+\end_layout
+
+\begin_layout Standard
+Die Verhandlung einer bestimmten Dienstgüte (engl.
+ quality of service oder kurz QoS) fasst alle Parameter zusammen, die eine
+ Verbindung oder eine einzelne Nachrichtenübermittlung betreffen.
+ Diese Parameter werden beim Aufbau der Verbindung ausverhandelt (verbindungsori
+entiert) oder bei jeder einzelnen Nachrichtenübermittlung (verbindungslos).
+ D.h.
+ der Sender fordert Parameter an, die der Empfänger voll oder teilweise
+ akzeptiert.
+\end_layout
+
+\begin_layout Standard
+Beispiele für solche Parameter (nach Attributen aufgeschlüsselt):
+\end_layout
+
+\begin_layout Description
+Leistung
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+Durchsatz Unter dem Durchsatz (engl.
+ throughput) wird die zugesicherte Menge an Benutzerdaten pro Zeiteinheit
+ verstanden, die übertragen werden.
+\end_layout
+
+\begin_layout Description
+Übertragungsverzögerung Die Übertragungsverzögerung (engl.
+ transmission delay, latency) gibt die maximale Zeitdauer zwischen dem Absenden
+ der Anfrage und der Ankunft beim Emfänger an.
+\end_layout
+
+\begin_layout Description
+Schwankung
+\begin_inset space ~
+\end_inset
+
+der
+\begin_inset space ~
+\end_inset
+
+Übertragungsverzögerung (engl.
+ jitter) ist die Varianz der Latenzzeit von Datenpaketen.
+ Dieser Effekt ist insbesondere bei Multimedia-Anwendungen (zum Beispiel
+ Audio-Streaming und IP-Telefonie) unerwünscht.
+\end_layout
+
+\begin_layout Description
+Verbindungaufbauverzögerung (engl.
+ connection establishment delay) beschreibt die maximale Zeit die vergeht
+ bis eine Verbindung aufgebaut ist.
+\end_layout
+
+\begin_layout Description
+Verbindungsbeendigungsverzögerung (engl.
+ connection release delay) analog zur Verbindungsaufbauverzögerung.
+\end_layout
+
+\begin_layout Description
+Priorität Die Priorität (engl.
+ priority) des Datentransfers gibt an inwieweit vorrangig Daten übertragen
+ werden können.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Zuverlässigkeit
+\end_layout
+
+\begin_deeper
+\begin_layout Description
+Vollständigkeit Angabe inwieweit eine Zusicherung gegeben werden kann, dass
+ die Nachrichten zumindest einmal beim Kommunikationspartner ankommen bzw.
+ inwieweit es zu Verlust von Nachrichten kommt (engl.
+ probability of loss).
+\end_layout
+
+\begin_layout Description
+Fehlerraten Wahrscheinlichkeit der Datenveränderung (engl.
+ probability of corruption).
+\end_layout
+
+\begin_layout Description
+Eindeutigkeit Vermeidung der Duplizierung von Nachrichten (engl.
+ probability of duplication).
+\end_layout
+
+\begin_layout Description
+Reihenfolge Einhaltung der Reihenfolge der Nachrichten (engl.
+ probability of out of sequence delivery).
+\end_layout
+
+\begin_layout Description
+Garantien Angabe inwieweit die Leistungsparameter erbracht werden können.
+ Das meist genutzte Prinzip 
+\begin_inset Quotes pld
+\end_inset
+
+best effort
+\begin_inset Quotes prd
+\end_inset
+
+ gibt lediglich an, dass die Werte so gut wie möglich eingehalten werden,
+ aber keine Garantie angegeben werden kann.
+ Andere Angaben werden oft mit Wahrscheinlichkeiten beziffert, sofern andere
+ Bedingungen -- wie z.B.
+ funktionierende Software und Hardware -- erfüllt sind.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Sicherheit Darunter werden alle Maßnahmen angegeben, die die Sicherheit
+ der Kommunikation sicherstellen können (siehe Teil 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "par:security"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Subsection
+Schichten
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:osi_layers"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Schicht 1 -- Bitübertragungsschicht
+\end_layout
+
+\begin_layout Standard
+In der Bitübertragungsschicht (engl.
+ physical layer) werden die physikalischen Eigenschaften der Übertragungsstrecke
+ beschrieben.
+ Dies inkludiert das Übertragungsmedium (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:transmission_media"
+
+\end_inset
+
+) wie z.B.
+ ein Kabel, das Übertragungsverfahren (siehe Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:transmission_methods"
+
+\end_inset
+
+) und den Übergang auf das Übertragungsmedium wie z.B.
+ Steckverbindungen.
+ Im Detail handelt es sich um die elektrischen, mechanischen, optischen
+ oder elektromagnetischen Spezifikationen.
+\end_layout
+
+\begin_layout Standard
+Als Erweiterung zum OSI Modell kann die Bitübertragungsschicht noch weiter
+ unterteilt werden in:
+\end_layout
+
+\begin_layout Itemize
+Media
+\begin_inset space ~
+\end_inset
+
+Independent
+\begin_inset space ~
+\end_inset
+
+Interface (abgekürzt mit MII), bietet die einheitliche unterschiedlicher
+ Übertragungsmedien.
+\end_layout
+
+\begin_layout Itemize
+Physical
+\begin_inset space ~
+\end_inset
+
+Media
+\begin_inset space ~
+\end_inset
+
+Dependent (abgekürzt mit PMD) ist für den eigentlichen Zugriff auf das Übertragu
+ngsmedium zuständig.
+ Z.B.
+ kann als Übertragungsmedium entweder eine verdrillte Zweitdrahtleitung
+ oder ein Koaxialkabel verwendet werden.
+\end_layout
+
+\begin_layout Subsubsection
+Schicht 2 -- Sicherungsschicht 
+\end_layout
+
+\begin_layout Standard
+Die Hauptaufgabe der Sicherungsschicht (engl.
+ data link layer) liegt in der fehlerfreien Punkt-zu-Punkt Übertragung ganzer
+ Rahmen zwischen 
+\emph on
+benachbarten Stationen
+\emph default
+.
+ Diese Stationen können entweder direkt miteinander oder über einen Bus
+ verbunden sein.
+\end_layout
+
+\begin_layout Standard
+Im Falle eines Bussystems muss jeder Knoten auch eine eigene Adresse haben,
+ die MAC-Adresse (engl.
+ media access control) genannt wird.
+ Es handelt sich dabei um eine Hardwareadresse, die direkt dem Netzwerkadapter
+ des Knotens zugeordnet ist.
+ Als solches muss diese MAC-Adresse zumindest innerhalb des Bussystems eindeutig
+ sein.
+ Häufig sind diese MAC-Adressen jedoch global eindeutig vergeben (siehe
+ Abschnitt 
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "sec:ethernet"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Als Erweiterung zum OSI Modell kann die Sicherungsschicht noch weiter unterteilt
+ werden:
+\end_layout
+
+\begin_layout Description
+Logical
+\begin_inset space ~
+\end_inset
+
+Link
+\begin_inset space ~
+\end_inset
+
+Control (abgekürzt mit LLC), die die eigentlichen Funktionen der Schicht
+ 2 abdeckt.
+\end_layout
+
+\begin_layout Description
+Media
+\begin_inset space ~
+\end_inset
+
+Access
+\begin_inset space ~
+\end_inset
+
+Control (abgekürzt mit MAC), die den Zugriff auf das Übertragungsmedium
+ steuert.
+\end_layout
+
+\begin_layout Subsubsection
+Schicht 3 -- Vermittlungsschicht
+\end_layout
+
+\begin_layout Standard
+In der Vermittlungsschicht oder auch Netzwerksschicht (engl.
+ network layer) genannt werden hauptsächlich die Nachrichten weitervermittelt.
+ Die Übertragung geht über das gesamte Netzwerk hinweg und schließt das
+ Weiterleiten zwischen den Netzknoten mit ein.
+ D.h.
+ eine Nachricht wird von einem (End-)Knoten -- unter Umständen über mehrere
+ Zwischenknoten hinweg -- zu einem anderen (End-)Knoten übermittelt (Ende-zu-End
+e, engl.
+ end-to-end).
+ Ebenfalls auf dieser Ebene sind die Netzadressen angesiedelt, die über
+ das gesamte Netz eindeutig vergeben werden müssen.
+\end_layout
+
+\begin_layout Subsubsection
+Schicht 4 -- Transportschicht
+\end_layout
+
+\begin_layout Standard
+Die Transportschicht (engl.
+ transport layer) stellt Verbindungen zwischen den kommunizierenden Netzprozesse
+n als Ende-zu-Ende Verbindungen zur Verfügung.
+ D.h., dass auf dieser Ebene wird einerseits das Konzept der Verbindungen
+ und andererseits werden Mechanismen für eine Adressierung der Netzprozesse
+ als Kommunikationspartner zur Verfügung gestellt.
+ Wie schon erwähnt beinhaltet das Konzept der Verbindung auch, dass Nachrichten
+ vollständig, fehlerfrei, in der richtigen Reihenfolge und genau einmal
+ beim Empfänger eintreffen.
+ Dafür ist ebenfalls die Transportschicht zuständig.
+\end_layout
+
+\begin_layout Subsubsection
+Schicht 5 -- Sitzungsschicht
+\end_layout
+
+\begin_layout Standard
+In der Sitzungsschicht (engl.
+ session layer) wird die Steuerung der Kommunikation zwischen den kommunizierend
+en Netzprozessen gesteuert.
+ Sie unterstützt eine Dialogsteuerung, um zu verfolgen welche Partei gerade
+ spricht und stellt Funktionen für die Synchronisierung bereit.
+ Dazu wird ebenfalls eine Verbindung auf dieser Ebene realisiert, die auch
+ Wiederaufsetzpunkte (engl.
+ check point) einsetzt, um die Kommunikation bei einem Synchronisationsverlust
+ zwischen Sender und Empfänger wieder kontrolliert fortsetzen zu können.
+\end_layout
+
+\begin_layout Subsubsection
+Schicht 6 -- Darstellungsschicht
+\end_layout
+
+\begin_layout Standard
+Die Darstellungsschicht (engl.
+ presentation layer) ist für die korrekte Umwandlung unterschiedlicher Datenform
+ate (z.B.
+ ASCII in UTF-8, little-endian in big-endian oder allgemeine Umwandlung
+ von Zahlendarstellungen) zuständig.
+ Ebenfalls zählen Datenkompression und Verschlüsselung zu den Aufgaben dieser
+ Ebene.
+\end_layout
+
+\begin_layout Subsubsection
+Schicht 7 -- Anwendungsschicht
+\end_layout
+
+\begin_layout Standard
+Als oberste Schicht im OSI Modell stellt die Anwendungsschicht (engl.
+ application layer) die Schnittstelle zum Netzprozess dar.
+ Die Aufgaben dieser Schicht liegen im Bereitstellen von Diensten, die oft
+ von Netzprozessen benötigt werden, wie z.B.
+ Datenübertragung, E-Mail, oder entferntes Anmelden (engl.
+ remote login).
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,628 @@
+
+\chapter{Transportprotokolle TCP und UDP\label{sec:tcpudp}}
+
+
+\section{Adressierung}
+
+Die Adresserierung in IP wird über die IP Adressen vorgenommen, die
+global eindeutig sein müssen. Auf der Transportebene wird eine weitere
+Form der Adressierung benötigt, da es sich um eine Ende-zu-Ende Kommunikation
+auf Prozessebene handelt. Das bedeutet, dass über die Transportschicht
+direkt zwei Prozesse miteinander verbunden sind und miteinander kommunizieren.
+
+In diesem Sinne muss es eine Möglichkeit geben, einen Prozess auf
+einem Host zu identifizieren. Das Konzept, das TCP/IP auf dieser Ebene
+eingeführt hat sind die Ports. Es handelt sich dabei um einen nummerischen
+Bezeichner, der Werte im Bereich von 0 bis 65535 annehmen kann.
+
+In diesem Zusammenhang führt TCP das Konzept eines Kommunikationsendpunktes
+ein, der als ,,socket'' bezeichnet wird und sich aus der IP Adresse
+und dem Port zusammensetzt. Zwei Sockets, nämlich der Sender-Socket
+und der Empfänger-Socket identifizieren gemeinsam mit der Angabe des
+verwendeten Transportprotokolls eindeutig eine Kommunikation in Internet!
+Ein lokaler Socket kann gleichzeitig in mehreren Kommunikationsverbindungen
+verwendet werden.
+
+Für jede Nachricht, die von einem Senderprozess (also eine laufende
+Anwendung) an einen Empfängerprozess (ebenfalls eine laufende Anwendung)
+gesendet wird, gibt es einen Sender-Socket und einen Empfänger-Socket.
+In der Regel ist es so, dass ein Prozess an einem Empfänger-Socket
+lauscht und Nachrichten an diesem empfangen kann. Der Senderprozess
+schickt eine Nachricht mittels eines Sender-Socket unter Angabe des
+Transportprotokolls über den Empfänger-Socket an den Empfängerprozess.
+Dieser Empfangsprozess erbringt in der Regel einen Dienst und wird
+auf die eingegangenen Nachrichten mittels Antworten reagieren.
+
+Dieses Senden der Nachrichten verwendet das unterliegende IP. Der
+Sendeprozess übergibt die Nachricht an die Transportschicht. Die Transportschicht
+packt die Nachricht in ein TCP oder UDP Paket und reicht dieses an
+IP weiter. Beim Empfänger werden die Pakete wieder entpackt und an
+den richtigen Prozess weitergegeben. Dies wird, analog zu den Signalen,
+als Multiplexing bzw. Demultiplexing bezeichnet. Die zentrale Information,
+die zum Multiplexen bzw. Demultiplexen verwendet wird sind die Ports.
+
+Portnummern von 0 bis 1023 werden als sogenannte ,,well known ports''
+bezeichnet und von der IANA verwaltet und für Anwendungen reserviert.
+Unter Unix werden diese Ports insoferne speziell behandelt als das
+ein passives Öffnen (siehe \vref{sec:tcp_fsm}) nur Prozessen mit
+der Benutzernummer 0 erlaubt wird. Bestimmte Ports sind bestimmten
+Diensten zugeordnet, wichtige Dienste sind:
+
+\begin{tabular}{|c|c|c|l|}
+\hline 
+Port\# & Protokoll & Schlüsselwort & Beschreibung\tabularnewline
+\hline
+\hline 
+20 & tcp & ftp-data & file transfer protocol (Datenkanal)\tabularnewline
+\hline 
+21 & tcp & ftp & file transfer protocol (Steuerkanal)\tabularnewline
+\hline 
+22 & tcp & ssh & secure socket shell\tabularnewline
+\hline 
+25 & tcp & smtp & simple mail transfer protocol\tabularnewline
+\hline 
+53 & tcp+udp & domain & domain name system\tabularnewline
+\hline 
+67 & udp & dhcp & dynamic host configuration protocol (server)\tabularnewline
+\hline 
+68 & udp & dhcp & dynamic host configuration protocol (server)\tabularnewline
+\hline 
+80 & tcp & http & hyper text transfer protocol\tabularnewline
+\hline 
+110 & tcp & pop & post office protocol\tabularnewline
+\hline 
+113 & tcp & ident & ident protocol\tabularnewline
+\hline 
+119 & tcp & nntp & network news transfer protocol\tabularnewline
+\hline 
+123 & tcp & ntp & network time protocol\tabularnewline
+\hline 
+143 & tcp & imap & internet mail access protocol\tabularnewline
+\hline 
+161 & udp & snmp & simple network management protocol\tabularnewline
+\hline 
+389 & tcp & ldap & lightweight directory access protocol\tabularnewline
+\hline 
+443 & tcp & https & http over SSL\tabularnewline
+\hline 
+514 & tcp & syslog & syslog\tabularnewline
+\hline
+\end{tabular}
+
+
+\section{UDP\label{sec:udp}}
+
+UDP (engl. user datagram protocol) ist das einfachere Transportprotokoll,
+das TCP/IP zur Verfügung stellt. Es wurde 1980 im RFC 768 publiziert
+und seit dem nicht verändert.
+
+Das Entwurfsziel war ein verbindungsloses, unzuverlässiges Ende-zu-Ende
+Transportprotokoll zur Verfügung zu stellen, das einfach ist und eine
+schnelle Kommunikation erlaubt. Es ist charakterisiert durch folgende
+Eigenschaften:
+\begin{itemize}
+\item Es ist unzuverlässig: Es gibt keine Garantie ob Daten angekommen sind,
+es wird nicht erkannt, ob Daten verloren gegangen sind und es gibt
+keine Garantie, dass die Daten in der Reihenfolge ankommen, in der
+sie abgesendet worden sind.
+\item Es gibt keinen Mechanismus zur Flusskontrolle.
+\item Es erfolgt eine einfache Überprüfung auf die Korrektheit der übertragenen
+Daten
+\end{itemize}
+Man sieht, dass UDP an sich nur zwei zusätzliche Eigenschaften gegenüber
+IP zur Verfügung stellt: Multiplexing/Demultiplexing und Überprüfung
+auf Korrektheit der Daten.
+
+UDP eignet sich gut für Audio- und Videostreams und außerdem wird
+es auch bei einigen wichtigen Protokollen, wie DNS, SNMP und DHCP
+eingesetzt.
+
+
+\subsection{Aufbau eines Datagrams}
+
+Der Aufbau eines UDP Datagram ist in Abbildung \vref{fig:udp_datagram}
+zu sehen.
+
+%
+\begin{figure}
+\centering
+
+\includegraphics[bb=0bp 0bp 102mm 40mm,clip]{tcpudp/udp-datagram}
+
+\caption{\label{fig:udp_datagram}Aufbau eine UDP Datagrams}
+
+\end{figure}
+
+\begin{labeling}{00.00.0000}
+\item [{Source~Port}] 0--65535
+\item [{Destination~Port}] 0--65535
+\item [{Len}] Länge des vollständigen UDP Datagrams inklusive Header und
+Datenfeld in Bytes. D.h. der minimale Wert ist 8. Man beachte, dass
+es sich hierbei um eine redundante Information handelt, da im Feld
+Len von IP ebenfalls die Länge des Datenbereichs angegeben ist.
+\item [{Checksum}] Prüfsumme. Der Algorithmus funktioniert wie derjenige
+zur Berechnung der Prüfsumme in IP, jedoch wird als Grundlage der
+Header des UDP Datagrams, das Datenfeld des UDP Datagrams und ein
+sogenannter Pseudoheader herangezogen, der sich folgendermaßen zusammensetzt:
+IP Quelladresse (32 Bits), IP Zieladresse (32 Bits), der Wert 0 (8
+Bits) das Feld Protocol vom IP Header (8 Bits) und das Feld Len vom
+UDP Header (16 Bits). Der Pseudoheader wird nicht übertragen: er wird
+nur zur Berechnung der Prüfsumme herangezogen!\\
+Man sieht, dass im Gegensatz zu IP auch das Datenfeld bei der Berechnung
+der Prüfsumme herangezogen wird.
+\item [{Data}] Datenfeld
+\end{labeling}
+Dass UDP die Prüfsumme ebenfalls über das Datenfeld berechnet ist
+einerseits ein Vorteil, aber auch andererseits unter Umständen ein
+Nachteil, wenn der Overhead durch die Berechnung (z.B. bei Datenraten
+größer als 1 GBit/s) zu groß ausfällt. 
+
+
+\section{TCP\label{sec:tcp}}
+
+TCP (engl. transmission control protocol) ist das komplexere Transportprotokoll,
+das TCP/IP zur Verfügung stellt. Es wurde 1981 im RFC 793 publiziert
+und seit dem nicht verändert. Erweiterungen sind in zusätzlichen RFCs
+spezifiziert.
+
+Das Entwurfsziel war ein verbindungsorientiertes, zuverlässiges Ende-zu-Ende
+Transportprotokoll zur Verfügung zu stellen, das einfach ist und eine
+schnelle Kommunikation erlaubt. Es ist charakterisiert durch folgende
+Eigenschaften:
+\begin{itemize}
+\item Es ist zuverlässig: verloren gegangene oder falsche Daten werden wieder
+neu übermittelt, doppelt ankommende Daten werden verworfen und es
+wird sichergestellt, dass die Daten in der Reihenfolge des Absendens
+dem Empfängerprozess weitergereicht werden.
+\item Verbindungen werden unterstützt und verwaltet: Verbindungsauf- und
+Abbau.
+\item Die Datenübertragung ist vollduplex: es werden gleichzeitig zwei Datenströme
+(einer in jeder Richtung) unterstützt.
+\item Zur Datenübertragung wird eine Abstraktion über Streams zur Verfügung
+gestellt. D.h. die Anwendungsschicht kann einen Byte-Strom zu TCP
+senden bzw. einen Byte-Strom von TCP lesen. Dazu stellt TCP eine Art
+von Segmentierung zur Verfügung (siehe Abschnitt \vref{sec:tcp_segment}
+und \vref{sec:tcp_segmenting}).
+\item Es gibt einen Mechanismus zur Flusskontrolle. Flusskontrolle hindert
+den Sender daran, die Kapazität des Empfängers zu überschreiten. Es
+handelt sich also um einen Mechanismus auf der Ende-zu-Ende Ebene
+und betrifft die beiden kommunizierenden Hosts.
+\item Es gibt eine Überlastkontrolle. Überlastkontrolle bietet einen Schutz
+vor Überlastung des Netzes. Es handelt sich um einen Mechanismus der
+einerseits den Sender und andererseits das Netz betrifft.
+\item Es erfolgt eine einfache Überprüfung auf Korrektheit der übertragenen
+Daten.
+\item Es ist als robustes Protokoll entworfen und folgt dem Grundsatz: konservativ
+in dem was gesendet wird und tolerant bzgl. der empfangenen Segmente.
+\end{itemize}
+
+\subsection{Aufbau eines Segmentes\label{sec:tcp_segment}}
+
+Bei TCP werden die einzelnen Pakete als Segmente genannt. Der Aufbau
+eines TCP Segmentes ist in Abbildung \vref{fig:tcp_segment} zu sehen.
+
+%
+\begin{figure}
+\centering
+
+\includegraphics[bb=0bp 0bp 102mm 79mm,clip]{tcpudp/tcp-segment}
+
+\caption{\label{fig:tcp_segment}Aufbau eine TCP Segmentes}
+
+\end{figure}
+
+\begin{labeling}{00.00.0000}
+\item [{SourcePort}] 0--65535
+\item [{DestinationPort}] 0--65535
+\item [{SequenceNum}] Die Sequenznummer wird für den Window Sliding Mechanismus
+verwendet. Da TCP ein byte-orientiertes Protokoll ist, hat jedes Byte
+eine Sequenznummer. Dieses Feld enthält die Sequenznummer des ersten
+Byte im Datenfeld.
+\item [{AcknowledgmentNum}] Wird dem Sender ein Segment gesendet, das das
+ACK Bit gesetzt hat, dann enthält dieses Feld die Bestätigungsnummer.
+Sie gibt die Nummer der nächsten erwarteten Sequenznummer an. Alle
+Bytes mit einer kleineren Bestätigungsnummer werden hiermit bestätigt.
+\item [{HLen}] 4 Bit: Länge des Headers in 32 Bitworten bis zum Beginn
+des Datenfeldes.
+\item [{Reserved}] 6 Bit langes Bitfeld, das lauter 0en enthalten muss.
+\item [{URG}] Das Bit URG (urgent) zeigt der empfangenen Anwendung an,
+dass Daten priorisiert behandelt werden sollen. Die dringenden Daten
+befinden sich am Anfang des Datenbereiches und reichen bis zu der
+Stelle, die durch das Feld UrgentPtr angezeigt werden, das auf das
+letzte Oktett der dringlichen Daten zeigt. URG wird selten verwendet,
+z.B. bei telnet oder rlogin. Diese Kennzeichnung ist deshalb notwendig,
+da TCP den Inhalt der Daten nicht kennt; für TCP handelt es sich um
+einen Strom von Daten, die auf Grund der Stream-Eigenschaft mittels
+des FIFO Prinzips übertragen werden.\\
+Überträgt man z.B. eine große Datei und will diesen Transfer der
+Daten abbrechen, dann ist es nicht sinnvoll ein Abbruch-Kommando am
+Ende des Datei hinten anzufügen. Es muss eine Möglichkeit geben das
+Abbruch-Kommando vorzureihen. TCP stellt eine Möglichkeit zur Verfügung
+solche dringenden Daten zu versenden. Es werden diese Daten am Anfang
+des Datenbereiches eines Segmentes platziert, das URG Flag gesetzt
+und der UrgentPtr richtig gesetzt. Beim Empfänger werden diese Daten
+vorgereiht und dem Prozess vorrangig und als ,,urgent'' markiert
+ausgeliefert. Die restlichen Daten des Datenbereiches werden normal
+im Datenstream ausgeliefert.
+\item [{ACK}] Mittels ACK (acknowledgement) bestätigt TCP den Erhalt von
+Daten (siehe Acknowledgment Number).
+\item [{PSH}] Ist PSH (push) gesetzt, dann soll der TCP/IP Stack dieses
+Segment ohne weiteres Zwischenspeichern an die Anwendung weiterreichen.
+Dafür bietet TCP eine push Funktion an, die von der Anwendungsschicht
+aufgerufen werden kann. D.h. die normale Pufferung der Bytes bis sich
+genügend Bytes angesammelt haben, wird ausgeschalten, das PSH Flag
+gesetzt und alle Daten werden sofort abgesendet. Auf der Empfängerseite
+wird erkannt, dass das PSH Flag gesetzt ist und die Daten werden sofort
+an die Anwendung weitergereicht. D.h. auch hier wird nicht gewartet
+bis ,,genügend'' Daten eingetroffen sind.
+\item [{RST}] Dieses Bit RST (reset) wird verwendet, um eine sofortige
+Auflösung der TCP Verbindung anzuzeigen und sollte nicht der normale
+Vorgang zum Beenden einer Verbindung sein. Es wird z.B. verwendet,
+wenn der Empfänger ein unerwartetes Segment erhalten hat, wodurch
+ein Fehlerzustand eingetreten ist und dadurch die Verbindung abgebrochen
+werden muss.
+\item [{SYN}] Beim Verbindungsaufbau wird SYN (synchronize) verwendet (siehe
+\vref{sec:connection_management}).
+\item [{FIN}] Beim Verbindungsabbau wird FIN (finish) verwendet (siehe
+\vref{sec:connection_management}).
+\item [{Window}] Dieses Feld gibt die Fenstergröße an. Gemeinsam mit SequenceNum,
+AcknowledgeNum wird der Sliding Window Mechanismus in TCP realisiert
+(siehe Abschnitt \vref{sec:tcp_sliding_window}).
+\item [{Checksum}] Prüfsumme. Der Algorithmus funktioniert wie derjenige
+zur Berechnung der Prüfsumme in IP, jedoch wird als Grundlage der
+Header des TCP Segmentes, das Datenfeld des TCP Segmentes und ein
+sogenannter Pseudoheader herangezogen, der sich folgendermaßen zusammensetzt:
+IP Quelladresse (32 Bits), IP Zieladresse (32 Bits), der leere Checksum-Wert
+0 (8 Bits) das Feld Protocol vom IP Header (8 Bits) und das Feld Len
+vom TCP Header (16 Bits). Der Pseudoheader wird nicht übertragen:
+er wird nur zur Berechnung der Prüfsumme herangezogen!\\
+Man sieht wiederum, dass im Gegensatz zu IP auch das Datenfeld
+bei der Berechnung der Prüfsumme herangezogen wird.
+\item [{UrgentPtr}] Bei dem Feld UrgentPtr handelt es sich um einen Zeiger
+auf das letzte Oktett der dringlichen Daten und wird nur interpretiert,
+wenn das URG Flag gesetzt ist.
+\item [{Options}] Das Feld Options kann mehrere Optionen beinhalten. Jede
+Option besteht aus einem Feld ,,Art der Option'' (option-kind) und
+eventuell einem Feld ,,Länge der Option'' (option-length) gefolgt
+von einem Feld ,,Daten der Option'' (option-data). Einige Optionen
+haben keine Daten und damit auch kein Längenfeld. In RFC 793 sind
+nur 3 Optionen definiert:
+
+\begin{itemize}
+\item ,,End of Option List'' (option-kind=0) kennzeichnet das Ende der
+Optionen und wird nur verwendet, wenn das Ende der Optionen nicht
+mit dem Ende des TCP Headers übereinstimmt.
+\item ,,No-Operation'' (option-kind=1) kann verwendet werden, um Optionen
+von einander zu trennen und wird eingesetzt, wenn der Sender Optionen
+an Wortgrenzen beginnen lassen will.
+\item ,,Maximum Segment Size (MSS)'' (option-kind=2, option-length=4,
+option-data enthält MSS). Bzgl. MSS siehe Abschnitt \vref{sec:tcp_segmenting}.
+Diese Option kann nur in einem Segment vorhanden sein, das das SYN
+Bit gesetzt hat.
+\end{itemize}
+Nach dem Ende der Optionen muss der verbleibende Platz zur nächsten
+32 Bit Grenze mit Nullen aufgefüllt (engl. padding) werden. Weitere
+Optionen wurden in getrennten RFCs definiert.
+
+\item [{Data}] Datenfeld. Betrachtet man die maximale MTU bei Ethernet-Netzen
+sieht man folgendes: der minimale TCP Header ist 20 Bytes und damit
+entsteht gemeinsam mit dem IP Header eine minimale Headerlänge von
+40 Bytes. Da die maximale Größe des Datenbereiches eines Ethernet-Frames
+bei 1500 Bytes liegt, kommt man auf eine max. Datengröße bei TCP auf
+1460 Bytes.
+\end{labeling}
+
+\subsection{Verbindungsauf- und Abbau\label{sec:connection_management}}
+
+
+\subsubsection{Verbindungsaufbau}
+
+Der Verbindungsaufbau wird in TCP mittels eines 3-Wege-Handshake (engl.
+three-way handshake) vorgenommen und wird durch die Synchronisierung
+zweier Sequenznummern (eine am Server, eine am Client) erreicht:
+\begin{enumerate}
+\item Der Client sendet ein Segment zum Server mit:\\
+SYN = $1$; SequenceNum = $x$\\
+Das bedeutet, dass der Client eine Verbindung aufbauen will und
+mit dem Server bzgl. seiner SequenceNum synchronisieren will. Der
+Client hat als anfänglichen Wert dafür einen beliebigen Wert $x$
+gewählt. Dieser Vorgang wird als aktives Öffnen bezeichnet (d.h. der
+Host beginnt den Verbindungsaufbau).
+\item Der Server antwortet mit einem Seqment an den Client:\\
+SYN = $1$; ACK = $1$; SequenceNum = $y$; AcknowledgeNum = $x+1$\\
+Damit wird angezeigt, dass der Server die Verbindung prinzipiell
+akzeptiert, mit dem Client seine SequenceNum $y$ synchronisieren
+will und gleichzeitig die SequenceNum $x$ des Clients bestätigt indem
+er als AcknowledgeNum $x+1$ zurücksendet. Das bedeutet, dass der
+Server als nächste SequenceNum vom Client $x+1$ erwartet.\\
+Damit der Server auf diese Weise antwortet, muss er zuerst ein
+sogenanntes passives Öffnen (d.h. der Server wartet auf einen Verbindungsaufbau)
+durchgeführt haben.
+\item Als Abschluss schickt der Client an den Server ein Segment mit:\\
+ACK = $1$, AcknowledgeNum = $y+1$\\
+Hiermit wird der Verbindungsaufbau abgeschlossen, da der Client
+die Sequenznummer des Servers akzeptiert und damit mitteilt, dass
+er vom Server beim nächsten Seqment die Sequenznummer $y+1$ erwartet.
+\end{enumerate}
+Mittels einer um eins erhöhten AcknowledgeNum wird eigentlich angezeigt,
+dass alle vorangegangenen Sequenznummern bestätigt werden. Beim Senden
+des ersten Datensegmentes hat demzufolge das erste Datenbyte die Sequenznummer
+$x+1$.
+
+Nicht ersichtlich ist, dass entsprechende Timer gesetzt werden, die
+bei Ablauf vor der Bestätigung bewirken, dass das jeweilige Segment
+neu gesendet wird.
+
+
+\subsubsection{Zustandsübergangsdiagramm\label{sec:tcp_fsm}}
+
+In Abbildung \vref{fig:tcp_fsm} finden sich alle Zustände, die beim
+Aufbau (alles oberhalb des Zustandes ESTABLISHED) und beim Abbau einer
+Verbindung (alles unterhalb des Zustandes ESTABLISHED) auftreten.
+Der Vorgang der eigentlichen Datenübertragung ist im Zustand ESTABLISHED
+verborgen.
+
+%
+\begin{figure}
+\centering
+
+\includegraphics[bb=0bp 0bp 140mm 83mm,clip]{tcpudp/tcp_fsm}
+
+\caption{\label{fig:tcp_fsm}Zustandsübergangsdiagramm}
+
+\end{figure}
+
+
+Das Diagramm verwendet die übliche Notation für Zustandsübergangsdiagramme,
+wobei alle in Großbuchstaben verfassten Bezeichner entweder empfangene
+Segmente (vor dem /) bzw. gesendete Segmente (nach dem /) angeben.
+Die in Kleinbuchstaben angegebenen Bezeichner ,,close'', ,,passive
+open'' und ,,active open'' geben Funktionen an, die der Anwendungsprozess
+aufruft und der Bezeichner ,,timeout'' kennzeichnet einen Zeitablauf.
+
+Drei Punkte gibt es zu beachten:
+\begin{enumerate}
+\item Auch wenn das ACK vom Client an den Server verloren geht, funktioniert
+die Verbindung noch korrekt. Das liegt daran, dass der Client sich
+schon im Zustand ESTABLISHED befindet und der Server zwar noch im
+Zustand SYN\_RECEIVED ist, aber beim nächsten empfangenen Segment
+in den Zustand ESTABLISHED wechselt. Dieser Wechsel in ESTABLISHED
+kann deshalb durchgeführt werden, da das Flag ACK in jedem Datensegment
+gesetzt ist und das Feld Acknowledgment den korrekten Wert enthält.
+Das ist wichtiger Punkt in TCP: Jedes Segment meldet, welche Sequenznummer
+als nächstes erwartet wird, auch wenn sich dabei die gleiche Sequenznummer
+wiederholt, die in einem der vorherigen Segmente enthalten war.
+\item Der Übergang von LISTEN nach SYN\_SENT ist im TCP Standard vorgesehen,
+aber wird in der Regel von keiner TCP Implementierung dem Anwenerprozess
+als Funktion zur Verfügung gestellt: In den Zustand LISTEN kommt man
+vom Zustand CLOSED mittels passiven Öffnen, das durch einen Funktionsaufruf
+am Server erfolgt. Normalerweise kann danach nicht direkt gesendet
+werden.
+\item Viele Zustandsübergänge sind nicht eingezeichnet. Kommt innerhalb
+eines gesetzten Timeouts kein Acknowledgment an, dann wird das Segment
+neu gesendet. Diese Neuübertragungen sind nicht eingezeichnet. Nach
+mehreren Versuchen gibt TCP auf und wechselt in den Zustand CLOSED.
+\end{enumerate}
+
+\subsubsection{Verbindungsabbau}
+
+Beim Abbau einer Verbindung ist es wichtig, dass die Anwendungsprozesse
+auf beiden Seiten die Verbindung schließen. Schließt nur eine Seite
+die Verbindung bedeutet das, dass diese Seite keine Daten mehr senden
+darf, aber sehr wohl noch bereit für den Empfang von Segmenten sein
+muss. Aus diesem Grund ist das Zustandsübergangsdiagramm für den Abbau
+einer Verbindung komplizierter, weil die Möglichkeit beachtet werden
+muss, dass beide Seiten die close Funktion aufrufen. Ferner besteht
+die Möglichkeit, dass zuerst die eine Seite und später die andere
+Seite close aufruft. Daraus resultieren drei Möglichkeiten:
+\begin{itemize}
+\item Ein Anwenderprozess initiert den Verbindungsabbau mittels ,,close''.
+\item Der entfernte Kommunikationspartner initiert den Verbindungsabbau
+mittels Senden eines ,,FIN'' (passives Schließen).
+\item Beide Anwenderprozesse wollen gleichzeitig die Verbindung mittels
+,,close'' beenden (simultanes Schließen).
+\end{itemize}
+Da beide Partner die Verbindung abbauen müssen, kommt es zum Austausch
+von insgesamt 4 Segmenten. Allerdings kann das ACK Segment und das
+FIN Seqment, die der Host sendet, der passives Schließen durchführt
+in ein Segment zusammengefasst werden. Damit werden -- analog zum
+Verbindungsaufbau -- ebenfalls nur 3 Segmente versendet.
+
+Das Timeout vom Zustand TIME-WAIT ist notwendig, dass sicher ist,
+dass das ACK angekommen ist bzw. dass es zu keiner Überschneidung
+mit einer folgenden Verbindung kommt.
+
+
+\subsection{Datenübertragung}
+
+
+\subsubsection{Segmentierung\label{sec:tcp_segmenting}}
+
+Aus Sicht der Anwendung stellt TCP als Schnittstelle zwei Byte-Streams
+zur Verfügung. Ein Byte-Stream wird zum Lesen und einer zum Schreiben
+verwendet. Das heißt die Anwendung kann einzelne Bytes mittels dieser
+Streams schreiben bzw. lesen. 
+
+Andererseits werden in der Internet-Schicht IP Pakete übertragen und
+es wäre sehr ineffizient jedes Byte in einem eigenen IP Paket zu versenden.
+Das Verhältnis von Header Daten zu Nutzdaten wäre sehr ungünstig.
+Aus diesem Grund speichert TCP die Bytes in einem Puffer zwischen
+und erzeugt daraus eine Folge von Segmenten. Diese Segmente werden
+mittels IP Paketen übertragen und auf der Empfängerseite wieder in
+TCP Segmente zurückgewandelt. Auf der Empfangsseite werden diese Segmente
+wieder in einem Puffer gespeichert und der Anwendung als Byte-Stream
+zur Verfügung gestellt.
+
+Daraus folgt, dass große Segmente im Grunde die effizientere Wahl
+darstellen. Es gibt allerdings zwei Gründe, die gegen eine groß gewählte
+Segmentgröße sprechen: Einerseits kommt es dann zu langen Wartezeiten,
+bis Seqmente versendet werden und andererseits kommt es wahrscheinlich
+zur Fragmentierung, da die Segmente bei dem Transport über Netztechnologien,
+die eine MTU aufweisen, die kleiner ist als das in ein IP Datagram
+verpackte Segment.
+
+Das Versenden eines Segmentes hängt von drei Kriterien ab:
+\begin{itemize}
+\item Die maximale Segmentgröße (engl. maximum segment size, MSS) ist erreicht.
+MSS definiert die Anzahl der Bytes, die als Nutzdaten in einem TCP
+Segment gesendet werden können. Da die Header von IP und TCP zusammen
+mind. 40 Bytes groß sind, muss die MSS um mind. 40 Bytes kleiner sein
+als die MTU. Im Falle von Ethernet beträgt die MSS also 1460 Bytes.
+Wird z.B. allerdings PPP über Ethernet verwendet, vermindert sich
+um weitere 8 Byte auf 1452 Bytes.
+\item Die Anwendung wünscht einen sofortigen Versand (push).
+\item Der Timer, der beim Einspeisen eines Bytes in den Sendepuffer gestartet
+wird läuft ab. D.h. es wurde eine gewissse Zeit von der Anwendung
+keine neuen Daten in den Stream geschrieben.
+\end{itemize}
+
+\subsubsection{Sliding-Window\label{sec:tcp_sliding_window}}
+
+Das Prinzip Sliding-Window Algorithmus wurde schon detailiert im Abschnitt
+\vref{sec:sliding-window} beschrieben. Der in TCP implementierte
+Algorithmus unterscheidet sich in folgenden Punkten von dem schon
+beschriebenen Algorithmus:
+\begin{enumerate}
+\item Die Fenstergröße in TCP hat keine feste Größe, sondern wird dem Sender
+mittels des ,,Window'' Feldes im TCP Header bekanntgegeben. Das
+bedeutet, dass der Empfänger das ,,Window'' Feld im TCP Header auf
+Grundlage der freien Puffergröße auswählt (siehe auch nächsten Punkt).
+\item In der TCP Variante wird auch noch der Sendepuffer und der Empfangspuffer
+beachtet (siehe \vref{sec:tcp_segmenting}). 
+\end{enumerate}
+Mit jeder Bestätigung eines Segmentes sendet der Empfänger auch die
+neue Windowgröße mit. Kann der Empfänger keine weiteren Daten annehmen,
+wird in der Bestätigungsantwort der Wert 0 für ,,Window'' gesetzt.
+Damit weiß der Sender, dass der Empfänger derzeit keine weiteren Daten
+annehmen kann. Damit stellt sich allerdings die Frage, wie der Sender
+weiß wann er wieder mit dem Senden fortfahren kann. Das Problem wird
+folgendermaßen gelöst: Der Sender sendet in regelmäßigen Abständen
+Segmente mit der Datenlänge 1 mit dem Wissen, dass diese Daten wahrscheinlich
+verworfen werden. Kann der Empfänger wieder Daten annehmen, dann wird
+er dieses 1 Byte lange Datum annehmen und mit einer Bestätigungsnachricht
+mit neu gesetzter ,,Window'' Größe reagieren.
+
+In diesem Zusammenhang ist es wichtig darauf hinzuweisen, dass ein
+ACK nicht bedeutet, dass der Anwenderprozess die Daten entgegengenommen
+hat!
+
+
+\subsubsection{Flusskontrolle\label{sec:tcp_flow_control}}
+
+Wie schon beschrieben ist es die Aufgabe der Flusskontrolle den Empfänger
+vor Überlauf zu schützen. Kommen mehr Segmente beim Empfänger an als
+dieser in seinem Puffer zwischenspeichern kann, dann werden diese
+Segmente vom Empfänger verworfen. In TCP wird die Flusskontrolle mittels
+des Sliding-Window Algorithmus (siehe Abschnitt \vref{sec:tcp_sliding_window})
+realisiert.
+
+Das bedeutet, dass TCP ein Verfahren mit positiven Quittungen implementiert,
+die Summenquittungen darstellen.
+
+
+\subsubsection{Überlastkontrolle}
+
+Unter Überlastkontrolle versteht man die Mechanismen zur Vermeidung
+von Überlastung des Netzes (engl. congestion avoidance). Im Gegensatz
+zur Flusskontrolle, dessen Aufgabe es ist, den Empfänger vor Überlauf
+zu schützen, werden mittels Mechanismen der Überlastkontrolle die
+Router am Weg zwischen Sender und Empfänger geschützt.
+
+Eine Überlastsituation kann im Netz leicht entstehen, obwohl u.U.
+keine Überlast in einem Empfänger auftritt. Senden viele Sender über
+einen Router, dann kann dieser leicht überlastet werden. Diese Situation
+verschlimmert sich noch weiter dadurch, dass in TCP verlorengegangene
+Segmente eine erhöhte Netzaktivität hervorrufen, da es zu sinnlosen
+Wiederholungen kommen kann, wenn die Bestätigungen den Sender erst
+nach Ablauf des Timeouts erreichen.
+
+Da die Überlastkontrolle in TCP jedoch beim Sender angesiedelt ist,
+benötigt dieser Informationen über die Netzauslastung, um seine Sendegeschwindigkeit
+an die aktuelle Situation anpassen zu können. Das ist jedoch das Schwierige
+an der Überlastkontrolle, da der Sender diese Information nicht direkt
+vom Netz erfragen kann, sondern diese indirekt ermitteln muss.
+
+Folgende grundlegende Mechanismen zur Überlastkontrolle sind direkt
+in TCP vorhanden, wobei es auch etliche fortgeschrittene Verfahren
+gibt:
+
+
+\minisec{Nagle-Algorithmus}
+
+Betrachten wir nochmals den Aspekt wann ein Segment zu senden ist,
+diesmal jedoch unter dem Gesichtspunkt der Überlastkontrolle: Gehen
+wir davon aus, dass der Sender MSS Daten-Bytes senden will und das
+Fenster um zumindest diese Anzahl an Bytes offen ist. In diesem Fall
+wird der Sender senden, wenn einer der Fälle eintritt, die im Abschnitt
+\vref{sec:tcp_segmenting} beschrieben sind. Was passiert jedoch,
+wenn das Fenster nur zur Hälfte offen ist? Soll kein Segment gesendet
+werden oder soll ein Segment mit der Hälfte der Bytes gesendet werden?
+
+Der Standard definiert diesbezüglich kein Vorgehen. In den ersten
+TCP Implementierungen wurde die Entscheidung getroffen, die Hälfte
+der Datenbytes zu senden. Es stellte sich jedoch heraus, dass genau
+dieses Vorgehen zu einer Überlastung des Netzes führen kann. Es trat
+das sogenannte ,,Silly-Window-Syndrom'' auf: Gehen wir davon aus,
+dass der Puffer des Empfängers voll ist und der Empfänger deshalb
+keine weiteren Daten annehmen kann. Gehen wir weiters davon aus, dass
+die Anwendung am Empfänger ein einziges Byte aus dem Puffer ausliest.
+D.h. es kann eine Bestätigung zum Sender gesendet werden, die eine
+Fenstergröße von 1 enthält. Worauf der Sender wieder ein Segment mit
+der Datenlänge 1 senden kann. Wenn der Empfänger wieder genau ein
+Byte ausliest, dann wird wieder eine Bestätigung mit der Fenstergröße
+1 zurückgesendet. D.h. das Netz wird mit vielen kleinen Segmenten
+überschwemmt, wodurch eine potentielle Überlastsituation entsteht.
+
+Das Silly-Window-Syndrom stellt nur dann ein Problem dar, wenn entweder
+der Sender ein kleines Segment überträgt oder der Empfänger das Fenster
+nur ein wenig öffnet.
+
+Wie kann man mit dieser Situation umgehen? Man kann einfach eine gewisse
+Zeit warten bis verfügbare Daten gesendet werden. Die Frage ist wie
+lange eine vernünftige Zeitdauer bemessen ist. Wird zu lange gewartet,
+dann werden interaktive Anwendungen wie telnet oder ssh beeinträchtigt.
+Wird hingegen zu kurz gewartet, dann entsteht wieder das Silly-Window-Syndrom.
+
+TCP implementiert den sogenannten Nagle-Algorithmus, der nach John
+Nagle benannt ist. Die zugrundeliegende Idee ist, dass der Sender
+irgendwann ein ACK empfangen wird, solgange TCP Daten unterwegs sind.
+Dieses ACK kann wie ein Timerablauf behandelt werden, wobei dadurch
+die Übertragung von mehr Daten angestoßen wird.
+
+Wenn die Anwendung sendebereite Daten produziert, dann:
+\begin{enumerate}
+\item Wenn sowohl die verfügbaren Daten als auch das Fenster $\geq$ MSS,
+dann sende Daten.
+\item Anderenfalls: Wenn unbestätigte Daten anstehen, 
+
+\begin{enumerate}
+\item dann puffere die neuen Daten bis ein ACK kommt.
+\item Anderenfalls: Sende alle neuen Daten jetzt.
+\end{enumerate}
+\end{enumerate}
+Um interaktive Anwendungen vom Nagle-Algorithmus nicht zu beeinträchtigen,
+besteht die Möglichkeit diesen auszuschalten. Dies geschieht über
+das Socket-API mittels der Option TCP\_NODELAY.
+
+
+\minisec{Slow-Start}
+
+Am Anfang einer Übertragung ist noch keine Information über die Auslastung
+eines Netzes bekannt. Die Idee ist, die Senderate langsam zu steigern
+bis entweder der Fall eines Segmentverlustes oder ein ACK-Timeout
+eintritt.
+
+
+\minisec{Fast-Retransmit}
+
+Die Idee von Fast-Retransmit ist, nach einem Paketverlust schneller
+auf eine Stausituation zu reagieren. Dazu informiert der Empfänger
+den Sender, wenn Pakete außer der Reihe ankommen und somit ein Paketverlust
+vorliegt. Das wird dadurch erreicht, dass der Empfänger das zuletzt
+korrekt empfangene Paket für jedes außer der Reihe empfangene Paket
+jedes Mal neu bestätigt. Diese mehrfach versendeten Bestätigungen
+werden ,,Dup-Acks'' genannt. Hat der Sender drei solcher Dup-Acks
+erhalten schließt er daraus, dass ein Paket verloren gegangen ist
+und sendet es auch vor Ablauf des Timeout wieder an den Empfänger.
+Außerdem schließt der Sender, dass Folgepakete sehr wohl angekommen
+sind und erhöht das Sendefenster um die Anzahl der empfangenen Dup-Acks.

@@ -1,0 +1,40 @@
+
+\chapter{IPv6}
+
+Die wesentlichen funktionellen Unterschiede zu IPv4 sind:
+\begin{itemize}
+\item Adressraum: Einer der Beweggründe IPv6 zu entwickeln, war die geringe
+Anzahl an freien Adressbereichen. IPv6 hat 128 Bit lange Adressen.
+D.h. es gibt ca. $3.4\cdot10^{38}$ mögliche Adressen. Die Notation
+wird nicht mehr byteweise in Dezimalschreibweise durch Punkte getrennt,
+sondern wortweise (16 Bit) in Hexadezimalschreibweise durch Doppelpunkte
+getrennt angegeben. Z.B.: 2002:89d0:e02e::89d0:e02e.
+\item Durch die hohe Anzahl an verschiedenen Adressen besteht die Möglichkeit
+diese geographisch-hierarchisch zu vergeben. Dadurch können die Anzahl
+der Routereinträge weiter gesendet werden.
+\item Es wurde eine lokale Adressvergabe eingeführt, sodass Adressen automatisch
+vergeben werden. Dazu kann sich ein Host eine IPv6 Adresse direkt
+aus einer MAC Adresse geben und mit angrenzenden Hosts und Routern
+diesbezüglich abstimmen.
+\item Es gibt im IP Header keine Checksumme mehr. D.h. alle Überprüfungen
+müssen durch höhere Protokolle erledigt werden. Das liegt daran, dass
+viele Router die Checksum überhaupt nicht überprüft haben, sondern
+einfach um eins erhöht (wg. dem Header TTL) haben.
+
+
+Der Basisheader wurde generell kürzer gestaltet. Er enthält nur mehr
+7 anstatt 13 Felder. Es kann allerdings auch mehrere Header geben.
+Diese Änderungen ermöglichen Routern Paket schneller zu verarbeiten.
+
+\item Sicherheitsfunktionen wurden direkt eingebaut und basieren auf IPSec.
+IPSec kann zwar auch mit IPv4 verwendet werden, ist aber in IPv6 direkt
+integriert.
+\item Die Fragmentierung der Datenpakete in Routern wurde entfernt. Müsste
+ein Paket fragmentiert werden, dann wird eine Fehlermeldung an den
+Sender zurückgeschickt, der daraufhin die MSS anpassen muss und erneut
+sendet.
+\item QoS wurde ebenfalls integriert. Ziel ist die verbesserte Übertragung
+von Audio und Videodaten sowie die Übertragung von Daten in Echtzeit.
+\item Weiters gibt es zusätzlich zu Broadcast und Multicast auch Anycast-Adressen.
+\end{itemize}
+
