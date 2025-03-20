@@ -4,7 +4,6 @@ This script is a document that I have written for teaching purposes. The
 beginnings of this work date back about 20 years, but since the current version
 deals mainly with basic topics, the contents can be used for the most part.
 
-Here, you will find the built [[distsys1.pdf][distsys1.pdf]] and the corresponding examples
-in the following directory [[examples][examples]].
+Here, you will find the built [[distsys1.pdf][distsys1.pdf]]!
 
 Please note the license.
